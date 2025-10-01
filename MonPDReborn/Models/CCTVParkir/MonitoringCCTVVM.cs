@@ -49,7 +49,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public List<MonitoringCCTVDet> MonitoringCCTVDetList { get; set; } = new();
             public Detail(string nop, int vendor)
             {
-                MonitoringCCTVDetList = Method.GetMonitoringCCTVDetList(nop,(EnumFactory.EVendorParkirCCTV)vendor);
+                MonitoringCCTVDetList = Method.GetMonitoringCCTVDetList(nop, (EnumFactory.EVendorParkirCCTV)vendor);
             }
         }
         public class Kapasitas
@@ -67,7 +67,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 formattedNop = Utility.GetFormattedNOP(Nop);
                 var context = DBClass.GetContext();
                 var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop && m.Vendor == vendorId);
-                if(vendorId == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
+                if (vendorId == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
                 {
                     var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
                     if (jasnita != null)
@@ -86,7 +86,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     }
                 }
 
-                if(query != null)
+                if (query != null)
                 {
                     NamaOP = query.NamaOp;
                     AlamatOP = query.AlamatOp;
@@ -249,6 +249,8 @@ namespace MonPDReborn.Models.CCTVParkir
                             .OrderByDescending(l => ((dynamic)l).TglTerakhirAktif)
                             .FirstOrDefault();
 
+                        var isPaas = tglTerpasang.HasValue ? 1 : 0;
+
                         return new MonitoringCCTV
                         {
                             Nop = g.Nop,
@@ -259,12 +261,12 @@ namespace MonPDReborn.Models.CCTVParkir
                             TglTerpasang = tglTerpasang,
                             VedorId = g.Vendor,
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
-                            //StatusAktif = lastLog != null 
-                            //    ? ((dynamic)lastLog).Status 
+                            //StatusAktif = lastLog != null
+                            //    ? ((dynamic)lastLog).Status
                             //    : (tglTerpasang.HasValue)
                             //        ? "NON AKTIF"
                             //        : "BELUM TERPASANG",
-                            StatusAktif = g.IsPasang == 1 ? "TERPASANG" : "BELUM TERPASANG",
+                            StatusAktif = isPaas == 1 ? "TERPASANG" : "BELUM TERPASANG",
                             TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglTerakhirAktif : null
                         };
                     })
@@ -330,6 +332,8 @@ namespace MonPDReborn.Models.CCTVParkir
                             .OrderByDescending(l => ((dynamic)l).TglTerakhirAktif)
                             .FirstOrDefault();
 
+                        var isPaas = tglTerpasang.HasValue ? 1 : 0;
+
                         return new MonitoringCCTV
                         {
                             Nop = g.Nop,
@@ -345,7 +349,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             //    : (tglTerpasang.HasValue)
                             //        ? "NON AKTIF"
                             //        : "BELUM TERPASANG",
-                            StatusAktif = g.IsPasang == 1 ? "TERPASANG" : "BELUM TERPASANG",
+                            StatusAktif = isPaas == 1 ? "TERPASANG" : "BELUM TERPASANG",
                             TglTerakhirAktif = lastLog != null ? ((dynamic)lastLog).TglTerakhirAktif : null
                         };
                     })
@@ -389,7 +393,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     default:
                         break;
                 }
-                
+
 
                 return result;
             }
@@ -513,19 +517,19 @@ namespace MonPDReborn.Models.CCTVParkir
                         x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Motor)
                         && x.Bln == bln
                     ).Sum(q => q.Jml);
-                    
-                    int jmlMobil = kendaraanParkir.Where(x => 
-                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Mobil) 
+
+                    int jmlMobil = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Mobil)
                         && x.Bln == bln
                     ).Sum(q => q.Jml);
 
-                    int jmlTruck = kendaraanParkir.Where(x => 
-                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Truck) 
+                    int jmlTruck = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Truck)
                         && x.Bln == bln
                     ).Sum(q => q.Jml);
 
-                    int jmlUnknown = kendaraanParkir.Where(x => 
-                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Unknown) 
+                    int jmlUnknown = kendaraanParkir.Where(x =>
+                        x.JenisKend == ((int)EnumFactory.EJenisKendParkirCCTV.Unknown)
                         && x.Bln == bln
                     ).Sum(q => q.Jml);
 
@@ -537,7 +541,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     decimal omsetMobil = (4000 * (jmlMobil + jmlTruck));
                     decimal omsetUnknown = (tarifUnknown * (jmlUnknown));
 
-                    decimal estimasiPajakMotor = omsetMotor * 0.1m; 
+                    decimal estimasiPajakMotor = omsetMotor * 0.1m;
                     decimal estimasiPajakMobil = omsetMobil * 0.1m;
                     decimal estimasiPajakUnknown = omsetUnknown * 0.1m;
 
@@ -608,8 +612,8 @@ namespace MonPDReborn.Models.CCTVParkir
                     .ToList();
 
                 var kendaraanParkir = context.TOpParkirCctvs
-                    .Where(x => x.WaktuMasuk.Year == tahunIni 
-                        && x.WaktuMasuk.Month == bulan 
+                    .Where(x => x.WaktuMasuk.Year == tahunIni
+                        && x.WaktuMasuk.Month == bulan
                         && x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming)
                     )
                     .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Month, x.WaktuMasuk.Day })
