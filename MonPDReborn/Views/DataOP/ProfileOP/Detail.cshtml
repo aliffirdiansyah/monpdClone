@@ -58,6 +58,123 @@
 <input type="hidden" id="DetailNOP" value="@Model.DataDetail.IdentitasPajak.NOP" />
 <input type="hidden" id="DetailJenisPajak" value="@((int)Model.Pajak)" />
 
+@* <div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="position-relative w-100 d-flex justify-content-center align-items-center header-bg"
+                    style="height: 220px; border-radius: .5rem; overflow: hidden;">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+
+                <div class="avatar-xxl mb-3 position-relative rounded-circle overflow-hidden border border-1 border-dark"
+                        style="width:120px; height:120px; background:#fff;">
+                    <img src="~/assets/images/logosby.png"
+                            alt="Logo"
+                            style="width: 80%; height: 80%; object-fit: contain; margin: 10%; display: block;">
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="col-lg-4">
+                    <div class="d-flex p-3">
+                        @switch (Model.Pajak)
+                        {
+                            case EnumFactory.EPajak.MakananMinuman:
+                            <div class="flex-shrink-0">
+                                <div class="avatar-md me-3">
+                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                        <i class="ri-restaurant-line text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                                break;
+                            case EnumFactory.EPajak.JasaPerhotelan:
+                            <div class="flex-shrink-0">
+                                <div class="avatar-md me-3">
+                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                        <i class="ri-hotel-line text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                                break;
+                            case EnumFactory.EPajak.JasaParkir:
+                            <div class="flex-shrink-0">
+                                <div class="avatar-md me-3">
+                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                        <i class="ri-parking-fill text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                                break;
+                            case EnumFactory.EPajak.JasaKesenianHiburan:
+                            <div class="flex-shrink-0">
+                                <div class="avatar-md me-3">
+                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                        <i class="ri-ticket-2-line text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                                break;
+                            default:
+                             <div class="flex-shrink-0">
+                                <div class="avatar-md me-3">
+                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                        <i class="ri-home-line text-dark"></i>
+                                    </span>
+                                </div>
+                            </div>
+                                break;
+                        }
+                        
+                        <div class="mt-1">
+                            @switch (Model.Pajak)
+                            {
+                                case EnumFactory.EPajak.PBB:
+                                    <h4 class="fs-16 fw-semibold text-dark">
+                                        @Model.DataDetail.IdentitasPajak.NamaNpwpd
+                                    </h4>
+                                    <p class="fs-16 lh-base text-dark mb-1">
+                                        @Model.DataDetail.IdentitasPajak.AlamatLengkap
+                                    </p>
+                                    <p class="fs-16 text-dark">
+                                        @Model.DataDetail.IdentitasPajak.FormattedNOP
+                                    </p>
+                                    break;
+                                default:
+                                    <h4 class="fs-16 fw-semibold text-dark">
+                                        @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                                    </h4>
+                                    <p class="fs-16 lh-base text-dark mb-1">
+                                        @Model.DataDetail.IdentitasPajak.AlamatLengkap
+                                    </p>
+                                    <p class="fs-16 text-dark">
+                                        @Model.DataDetail.IdentitasPajak.FormattedNOP
+                                    </p>
+                                    break;
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> *@
 
 <div class="card position-relative overflow-hidden mb-4">
     <!-- Header Background Image -->
