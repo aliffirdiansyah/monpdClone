@@ -250,7 +250,7 @@ namespace CCTVParkirWorker
                     _taskTokens[e.RowIndex] = cts;
 
                     string id = row.Cells["IdTelkom"].Value?.ToString() ?? "";
-                    var parkir = GetParkirById(id);
+                    var parkir = GetParkirTelkomById(id);
 
                     if (parkir == null)
                     {
@@ -855,7 +855,7 @@ namespace CCTVParkirWorker
                     var dataCctvParkir = await GetDataParkirCctvTelkom(row, op, tglAwal, tglAkhir, token);
                     await InsertToDbCctvTelkom(op, dataCctvParkir, row, token);
 
-                    row.Cells["LastConnected"].Value = DateTime.Now.ToString();
+                    row.Cells["LastConnectedTelkom"].Value = DateTime.Now.ToString();
                     UpdateLogTelkom(row, "Inserted");
 
                     if (token.IsCancellationRequested)
@@ -877,19 +877,19 @@ namespace CCTVParkirWorker
                 {
                     BeginInvoke(new Action(() =>
                     {
-                        row.Cells["Error"].Value = ex.Message;
-                        row.Cells["Status"].Style.BackColor = Color.Red;
-                        row.Cells["Status"].Value = "Error";
-                        var btnCell = (DataGridViewButtonCell)row.Cells["Action"];
+                        row.Cells["ErrorTelkom"].Value = ex.Message;
+                        row.Cells["StatusTelkom"].Style.BackColor = Color.Red;
+                        row.Cells["StatusTelkom"].Value = "Error";
+                        var btnCell = (DataGridViewButtonCell)row.Cells["ActionTelkom"];
                         btnCell.Value = "Start";
                     }));
                 }
                 else
                 {
-                    row.Cells["Error"].Value = ex.Message;
-                    row.Cells["Status"].Style.BackColor = Color.Red;
-                    row.Cells["Status"].Value = "Error";
-                    var btnCell = (DataGridViewButtonCell)row.Cells["Action"];
+                    row.Cells["ErrorTelkom"].Value = ex.Message;
+                    row.Cells["StatusTelkom"].Style.BackColor = Color.Red;
+                    row.Cells["StatusTelkom"].Value = "Error";
+                    var btnCell = (DataGridViewButtonCell)row.Cells["ActionTelkom"];
                     btnCell.Value = "Start";
                 }
 
@@ -900,6 +900,7 @@ namespace CCTVParkirWorker
         }
         public async Task<List<TelkomEvent.Result>> GetDataParkirCctvTelkom(DataGridViewRow row, ParkirView op, DateTime tglAwal, DateTime tglAkhir, CancellationToken token)
         {
+            await GenerateTokenTelkom(row);
             var results = new List<TelkomEvent.Result>();
 
             using (var client = new HttpClient())
@@ -987,30 +988,48 @@ namespace CCTVParkirWorker
         }
         public async Task InsertToDbCctvTelkom(ParkirView op, List<TelkomEvent.Result> dataList, DataGridViewRow row, CancellationToken token)
         {
+            UpdateLogTelkom(row,"inserting...");
             var context = DBClass.GetContext();
             var toInsert = new List<TOpParkirCctv>();
+
+            int seq = 1;
+            int totalData = dataList.Count; // bukan toInsert.Count, karena toInsert diisi di dalam loop
+
             foreach (var item in dataList)
             {
                 bool isIdExist = context.TOpParkirCctvs.Any(x => x.Id == item.Id.ToString() && x.Nop == op.NOP && x.CctvId == op.CCTVId);
                 if (!isIdExist)
                 {
-                    var insert = new TOpParkirCctv();
-                    insert.Id = item.Id.ToString();
-                    insert.Nop = op.NOP;
-                    insert.CctvId = op.CCTVId;
-                    insert.NamaOp = op.Nama;
-                    insert.AlamatOp = op.Alamat;
-                    insert.WilayahPajak = op.Uptb;
-                    insert.WaktuMasuk = ParseFlexibleDate(item.Timestamp);
-                    insert.JenisKend = (int)GetJenisKendaraan(item.TipeKendaraan);
-                    insert.PlatNo = item.PlatNomor.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor.ToUpper();
-                    insert.WaktuKeluar = ParseFlexibleDate(item.Timestamp);
-                    insert.Direction = (int)EnumFactory.CctvParkirDirection.Incoming;
-                    insert.Log = "";
-                    insert.ImageUrl = item.Image;
+                    var insert = new TOpParkirCctv
+                    {
+                        Id = item.Id.ToString(),
+                        Nop = op.NOP,
+                        CctvId = op.CCTVId,
+                        NamaOp = op.Nama,
+                        AlamatOp = op.Alamat,
+                        WilayahPajak = op.Uptb,
+                        WaktuMasuk = ParseFlexibleDate(item.Timestamp),
+                        JenisKend = (int)GetJenisKendaraan(item.TipeKendaraan),
+                        PlatNo = item.PlatNomor.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor.ToUpper(),
+                        WaktuKeluar = ParseFlexibleDate(item.Timestamp),
+                        Direction = (int)EnumFactory.CctvParkirDirection.Incoming,
+                        Log = "",
+                        ImageUrl = item.Image
+                    };
 
                     toInsert.Add(insert);
                 }
+
+                // Hitung progres dalam persen
+                double progress = ((double)seq / totalData) * 100;
+
+                // Bulatkan dua angka di belakang koma
+                string progressText = progress.ToString("0.00");
+
+                // Tampilkan log seperti "Progress: 45.67%"
+                UpdateLogTelkom(row, $"Proses data {seq}/{totalData} ({progressText}%)");
+
+                seq++;
             }
 
             try
@@ -1342,13 +1361,13 @@ namespace CCTVParkirWorker
                 try
                 {
                     // URL endpoint login
-                    var url = "https://stage1.bigvision.id/api/user/vaq/login";
+                    var url = "https://stage1.bigvision.id/api/user/va/login";
 
                     // Body request (ubah sesuai kredensial sebenarnya)
                     var requestBody = new
                     {
-                        username = "qwe",
-                        password = "ewq"
+                        username = _USER_TELKOM,
+                        password = _PASS_TELKOM
                     };
 
                     // Serialize body ke JSON
@@ -1373,21 +1392,18 @@ namespace CCTVParkirWorker
 
                     // Simpan ke field global
                     _TOKEN_TELKOM = token ?? "";
-
-                    // Opsional: tampilkan di debug/log
-                    Console.WriteLine($"TOKEN_TELKOM: {_TOKEN_TELKOM}");
                 }
                 catch (HttpRequestException ex)
                 {
-                    MessageBox.Show($"Gagal menghubungi server Telkom: {ex.Message}");
+                    UpdateLogTelkom(row,$"Gagal menghubungi server Telkom: {ex.Message}");
                 }
                 catch (JsonException ex)
                 {
-                    MessageBox.Show($"Gagal parsing respon login Telkom: {ex.Message}");
+                    UpdateLogTelkom(row,$"Gagal parsing respon login Telkom: {ex.Message}");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error tidak terduga: {ex.Message}");
+                    UpdateLogTelkom(row,$"Error tidak terduga: {ex.Message}");
                 }
             }
         }
