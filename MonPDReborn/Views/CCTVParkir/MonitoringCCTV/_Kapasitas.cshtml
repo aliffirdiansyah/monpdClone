@@ -192,7 +192,18 @@
                                                 { dataField: "JenisKend", caption: "Jenis Kendaraan"  , alignment:"center"},
                                                 { dataField: "PlatNo", caption: "Plat Nomor" , alignment:"center" },
                                                 { dataField: "Direction", caption: "Direction"  , alignment:"center"},
-                                            ]
+                                                {
+                                                    caption: "Lampiran",
+                                                    alignment: "center",
+                                                    cellTemplate: lampiranCellTemplate // ← pakai function di atas
+                                                }
+                                            ],
+                                            export: {
+                                                enabled: true,
+                                                allowExportSelectedData: false,
+                                                formats: ["xlsx", "pdf"]
+                                            },
+                                            onExporting: exportGrid,
                                         });
 
                                         // tampilkan modal
@@ -211,6 +222,32 @@
                         .text("Error load data harian: " + xhr.responseText));
                 }
             });
+        }
+
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var imageUrl = cellInfo.data.ImageUrl || cellInfo.value;
+
+            if (imageUrl && imageUrl.length > 10) {
+                $('<a>')
+                    .attr('href', imageUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', imageUrl)
+                            .addClass('img-thumbnail')
+                            .css({
+                                height: '50px',
+                                width: 'auto',
+                                cursor: 'zoom-in',
+                                borderRadius: '6px',
+                                objectFit: 'cover'
+                            })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
         }
     </script>
 }
