@@ -379,9 +379,9 @@ namespace MonPDReborn.Models.CCTVParkir
                         .Select(l => new MonitoringCCTVDet
                         {
                             Nop = l.Nop,
-                            Tgl = l.TglAktif,
-                            TglAktif = l.TglAktif,
-                            TglDown = l.TglDown.Value,
+                            Tgl = l.TglTerakhirAktif,
+                            TglAktif = l.TglTerakhirAktif,
+                            TglDown = l.TglTerakhirDown.Value,
                             StatusAktif = l.Status
                         })
                         .ToList();
