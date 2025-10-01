@@ -14,10 +14,21 @@ public partial class DbAkunTargetObjekReklame
     [Unicode(false)]
     public string? NoFormulir { get; set; }
 
+    [Column("NOR")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? Nor { get; set; }
+
     [Column("FLAG_PERMOHONAN")]
     [StringLength(10)]
     [Unicode(false)]
     public string? FlagPermohonan { get; set; }
+
+    [Column("BULAN_BUKU", TypeName = "NUMBER")]
+    public decimal? BulanBuku { get; set; }
+
+    [Column("TARGET", TypeName = "NUMBER")]
+    public decimal? Target { get; set; }
 
     [Column("KATEGORI_ID", TypeName = "NUMBER")]
     public decimal? KategoriId { get; set; }
