@@ -487,6 +487,18 @@ namespace CCTVParkirWorker
 
             UpdateLog(row, $"Processing...");
 
+            var allIds = dataList
+                .SelectMany(d => d.Items.Select(i => i.Body.Guid))
+                .Distinct()
+                .ToList();
+
+            var existingIds = await context.TOpParkirCctvs
+                .Where(x => allIds.Contains(x.Id))
+                .Select(x => x.Id)
+                .ToListAsync(token);
+
+            var existingSet = new HashSet<string>(existingIds);
+
             foreach (var data in dataList)
             {
                 int index = 0;
@@ -506,8 +518,7 @@ namespace CCTVParkirWorker
 
                             var id = item.Body.Guid;
 
-                            bool dataExist = await context.TOpParkirCctvs.AnyAsync(x => x.Id == id, token);
-
+                            bool dataExist = existingSet.Contains(id);
                             if (!dataExist)
                             {
                                 var insert = new TOpParkirCctv
@@ -820,6 +831,22 @@ namespace CCTVParkirWorker
 
             if (dataLog != null)
             {
+                var lastDateScan = context.TOpParkirCctvs
+                    .Where(x => x.Nop == op.NOP && x.CctvId == op.CCTVId)
+                    .Max(q => (DateTime?)q.WaktuMasuk); // pakai nullable DateTime untuk aman
+
+                if (lastDateScan == null) 
+                {
+                    lastDateScan = DateTime.MinValue;
+                }; 
+
+                string lastStatus = dataLog.Status ?? "NON AKTIF";
+                if (lastDateScan > dataLog.TglTerakhirAktif)
+                {
+                    dataLog.TglTerakhirAktif = lastDateScan.Value;
+                    dataLog.Status = "AKTIF";
+                }
+
                 var existing = context.MOpParkirCctvJasnitaLogs.FirstOrDefault(x => x.Nop == op.NOP && x.CctvId == op.CCTVId);
                 if (existing != null)
                 {
@@ -833,6 +860,7 @@ namespace CCTVParkirWorker
                     // Tambah record baru
                     context.MOpParkirCctvJasnitaLogs.Add(dataLog);
                 }
+
             }
 
             UpdateLogLog(row, "Inserting...");
@@ -992,12 +1020,24 @@ namespace CCTVParkirWorker
             var context = DBClass.GetContext();
             var toInsert = new List<TOpParkirCctv>();
 
+            var allIds = dataList
+               .Select(x => x.Id.ToString())
+               .Distinct()
+               .ToList();
+
+            var existingIds = await context.TOpParkirCctvs
+                .Where(x => allIds.Contains(x.Id))
+                .Select(x => x.Id)
+                .ToListAsync(token);
+
+            var existingSet = new HashSet<string>(existingIds);
+
             int seq = 1;
             int totalData = dataList.Count; // bukan toInsert.Count, karena toInsert diisi di dalam loop
 
             foreach (var item in dataList)
             {
-                bool isIdExist = context.TOpParkirCctvs.Any(x => x.Id == item.Id.ToString() && x.Nop == op.NOP && x.CctvId == op.CCTVId);
+                bool isIdExist = existingSet.Contains(item.Id.ToString());
                 if (!isIdExist)
                 {
                     var insert = new TOpParkirCctv
