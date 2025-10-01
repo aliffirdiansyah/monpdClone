@@ -279,6 +279,12 @@ namespace MonPDReborn.Models.CCTVParkir
                             tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
                         }
 
+                        if(g.IsPasang != 1)
+                        {
+                            isAktif = "INACTIVE";
+                            statusTerpasang = "BELUM TERPASANG";
+                        }
+
                         return new MonitoringCCTV
                         {
                             Nop = g.Nop,
@@ -383,6 +389,12 @@ namespace MonPDReborn.Models.CCTVParkir
                         {
                             tglTerakhirAktif = (DateTime)lastLog;
                             tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
+                        }
+
+                        if (g.IsPasang != 1)
+                        {
+                            isAktif = "INACTIVE";
+                            statusTerpasang = "BELUM TERPASANG";
                         }
 
                         return new MonitoringCCTV
