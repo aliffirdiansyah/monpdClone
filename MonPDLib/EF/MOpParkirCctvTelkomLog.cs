@@ -22,11 +22,11 @@ public partial class MOpParkirCctvTelkomLog
     [Unicode(false)]
     public string CctvId { get; set; } = null!;
 
-    [Column("TGL_AKTIF", TypeName = "DATE")]
-    public DateTime TglAktif { get; set; }
+    [Column("TGL_TERAKHIR_AKTIF", TypeName = "DATE")]
+    public DateTime TglTerakhirAktif { get; set; }
 
-    [Column("TGL_DOWN", TypeName = "DATE")]
-    public DateTime? TglDown { get; set; }
+    [Column("TGL_TERAKHIR_DOWN", TypeName = "DATE")]
+    public DateTime? TglTerakhirDown { get; set; }
 
     [Column("STATUS")]
     [StringLength(20)]

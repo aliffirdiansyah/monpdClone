@@ -41,7 +41,13 @@
                 </div>
             </div>
             <div class="card-body">
-                <h5 class="mt-4 mb-2">Tahun 2025</h5>
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+                @* <h5 class="mt-4 mb-2">Tahun 2025</h5>
 
                 <div class="table-responsive mb-4">
                     <div id="gridContainerNow"></div>
@@ -53,7 +59,7 @@
                 <div class="table-responsive">
                     <div id="GridContainerMines"></div>
                     
-                </div>
+                </div> *@
             </div>
         </div>
     </div>
@@ -68,7 +74,13 @@
                 </div>
             </div>
             <div class="card-body">
-                <h5 class="mt-4 mb-2">Tahun 2025</h5>
+                <div class="text-center">
+                    <div id="loading2-Detail" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Detail"></div>
+                @* <h5 class="mt-4 mb-2">Tahun 2025</h5>
                 <div class="table-responsive">
                     <div id="gridContainerCumulativeNow"></div>
                 </div>
@@ -76,7 +88,7 @@
                 <h5 class="mt-4 mb-2">Tahun 2024</h5>
                 <div class="table-responsive">
                     <div id="gridContainerCumulativeMines"></div>
-                </div>
+                </div> *@
             </div>
         </div>
     </div>
@@ -84,6 +96,73 @@
 
 @section Scripts{
     <script>
+        $(document).ready(function () {
+            fnShow();
+            fnDetail();
+        });
+
+        function fnShow()
+        {
+            $.ajax({
+              url: '@(Url.Action("Show"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-Show').show();
+                 $('#Show').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-Show').hide();
+                        $('#Show').show();
+                        $('#Show').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-Show').hide();
+                 $('#Show').hide();
+                 $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function fnDetail()
+        {
+            $.ajax({
+              url: '@(Url.Action("Detail"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-Detail').show();
+                 $('#Detail').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-Detail').hide();
+                        $('#Detail').show();
+                        $('#Detail').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-Detail').hide();
+                 $('#Detail').hide();
+                 $('#Detail').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+    </script>
+    @* <script>
         $(function () {
             const data = [
                 {
@@ -761,5 +840,5 @@
                 return new Intl.NumberFormat("id-ID").format(cellInfo.value);
             }
         });
-    </script>
+    </script> *@
 }

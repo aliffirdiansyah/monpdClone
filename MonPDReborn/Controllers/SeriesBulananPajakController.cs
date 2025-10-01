@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExpress.DataAccess.Native.Web;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers
 {
@@ -15,6 +17,7 @@ namespace MonPDReborn.Controllers
         const string TD_KEY = "TD_KEY";
 
         const string INPUTPENDATAAN_ERROR_MESSAGE = "INPUTPENDATAAN_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
         public SeriesBulananPajakController(ILogger<SeriesBulananPajakController> logger)
         {
             URLView = string.Concat("../", GetType().Name.Replace("Controller", ""), "/");
@@ -50,20 +53,57 @@ namespace MonPDReborn.Controllers
                 var model = new Models.SeriesBulananPajakVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException e)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                // ini diganti
-                var model = new Models.SeriesBulananPajakVM.Index("Error, Pada Saat GetData");
-                return View($"{URLView}{actionName}", model);
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
-                ViewBag.ErrorMessage = "Terjadi kesalahan sistem. Silakan coba lagi.";
-                // ini diganti
-                var model = new Models.SeriesBulananPajakVM.Index("Terjadi kesalahan sistem. Silakan coba lagi.");
-                return View($"{URLView}{actionName}", model);
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult Show()
+        {
+            try
+            {
+                var model = new Models.SeriesBulananPajakVM.Show();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult Detail()
+        {
+            try
+            {
+                var model = new Models.SeriesBulananPajakVM.Detail();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
     }
