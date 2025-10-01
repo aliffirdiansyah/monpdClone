@@ -1,6 +1,9 @@
 ﻿@using MonPDLib.General
 @using System.Globalization
 @model MonPDReborn.Models.DataOP.ProfileOPVM.Detail
+@{
+    var pembayaran = (MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Detail)ViewBag.DetailPembayaran;
+}
 
 @{
     var currentYear = DateTime.Now.Year;
@@ -89,87 +92,104 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <div class="col-lg-4">
-                    <div class="d-flex p-3">
-                        @switch (Model.Pajak)
-                        {
-                            case EnumFactory.EPajak.MakananMinuman:
-                            <div class="flex-shrink-0">
-                                <div class="avatar-md me-3">
-                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
-                                        <i class="ri-restaurant-line text-dark"></i>
-                                    </span>
-                                </div>
-                            </div>
-                                break;
-                            case EnumFactory.EPajak.JasaPerhotelan:
-                            <div class="flex-shrink-0">
-                                <div class="avatar-md me-3">
-                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
-                                        <i class="ri-hotel-line text-dark"></i>
-                                    </span>
-                                </div>
-                            </div>
-                                break;
-                            case EnumFactory.EPajak.JasaParkir:
-                            <div class="flex-shrink-0">
-                                <div class="avatar-md me-3">
-                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
-                                        <i class="ri-parking-fill text-dark"></i>
-                                    </span>
-                                </div>
-                            </div>
-                                break;
-                            case EnumFactory.EPajak.JasaKesenianHiburan:
-                            <div class="flex-shrink-0">
-                                <div class="avatar-md me-3">
-                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
-                                        <i class="ri-ticket-2-line text-dark"></i>
-                                    </span>
-                                </div>
-                            </div>
-                                break;
-                            default:
-                             <div class="flex-shrink-0">
-                                <div class="avatar-md me-3">
-                                    <span class="avatar-title bg-header-color rounded-circle fs-1">
-                                        <i class="ri-home-line text-dark"></i>
-                                    </span>
-                                </div>
-                            </div>
-                                break;
-                        }
-                        
-                        <div class="mt-1">
+                <div class="row align-items-center">
+                    <div class="col-lg-4">
+                        <div class="d-flex p-3">
                             @switch (Model.Pajak)
                             {
-                                case EnumFactory.EPajak.PBB:
-                                    <h4 class="fs-16 fw-semibold text-dark">
-                                        @Model.DataDetail.IdentitasPajak.NamaNpwpd
-                                    </h4>
-                                    <p class="fs-16 lh-base text-dark mb-1">
-                                        @Model.DataDetail.IdentitasPajak.AlamatLengkap
-                                    </p>
-                                    <p class="fs-16 text-dark">
-                                        @Model.DataDetail.IdentitasPajak.FormattedNOP
-                                    </p>
+                                case EnumFactory.EPajak.MakananMinuman:
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                            <i class="ri-restaurant-line text-dark"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                    break;
+                                case EnumFactory.EPajak.JasaPerhotelan:
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                            <i class="ri-hotel-line text-dark"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                    break;
+                                case EnumFactory.EPajak.JasaParkir:
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                            <i class="ri-parking-fill text-dark"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                    break;
+                                case EnumFactory.EPajak.JasaKesenianHiburan:
+                                <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                            <i class="ri-ticket-2-line text-dark"></i>
+                                        </span>
+                                    </div>
+                                </div>
                                     break;
                                 default:
-                                    <h4 class="fs-16 fw-semibold text-dark">
-                                        @Model.DataDetail.IdentitasPajak.NamaObjekPajak
-                                    </h4>
-                                    <p class="fs-16 lh-base text-dark mb-1">
-                                        @Model.DataDetail.IdentitasPajak.AlamatLengkap
-                                    </p>
-                                    <p class="fs-16 text-dark">
-                                        @Model.DataDetail.IdentitasPajak.FormattedNOP
-                                    </p>
+                                    <div class="flex-shrink-0">
+                                    <div class="avatar-md me-3">
+                                        <span class="avatar-title bg-header-color rounded-circle fs-1">
+                                            <i class="ri-home-line text-dark"></i>
+                                        </span>
+                                    </div>
+                                </div>
                                     break;
-
                             }
+                        
+                            <div class="mt-1">
+                                @switch (Model.Pajak)
+                                {
+                                    case EnumFactory.EPajak.PBB:
+                                        <h4 class="fs-16 fw-semibold text-dark">
+                                            @Model.DataDetail.IdentitasPajak.NamaNpwpd
+                                        </h4>
+                                        <p class="fs-16 lh-base text-dark mb-1">
+                                            @Model.DataDetail.IdentitasPajak.AlamatLengkap
+                                        </p>
+                                        <p class="fs-16 text-dark">
+                                            @Model.DataDetail.IdentitasPajak.FormattedNOP
+                                        </p>
+                                        break;
+                                    default:
+                                        <h4 class="fs-16 fw-semibold text-dark">
+                                            @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                                        </h4>
+                                        <p class="fs-16 lh-base text-dark mb-1">
+                                            @Model.DataDetail.IdentitasPajak.AlamatLengkap
+                                        </p>
+                                        <p class="fs-16 text-dark">
+                                            @Model.DataDetail.IdentitasPajak.FormattedNOP
+                                        </p>
+                                        break;
+
+                                }
+                            </div>
                         </div>
                     </div>
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <div class="card border-color-custom h-100 d-flex flex-column justify-content-between">
+                            <div class="p-3 text-center">
+                                <h3 class="fs-16 fw-semibold text-dark mb-3">Detail Potensi</h3>
+                                <p class="fs-14 text-muted mb-4">Lihat detail potensi pajak objek ini</p>
+                                <button class="btn btn-light w-100"
+                                        onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                    <i class="ri-bar-chart-line me-1"></i> Potensi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
+                
             </div>
         </div>
     </div>
