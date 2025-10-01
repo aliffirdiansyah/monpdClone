@@ -127,38 +127,27 @@
             columns.AddFor(m => m.AlamatOp).Caption("Alamat OP");
             columns.AddFor(m => m.TglTerpasang).Caption("Tgl Terpasang").Format("dd MMM yyyy");
             columns.AddFor(m => m.Vendor).Caption("Vendor");
-            columns.AddFor(m => m.StatusAktif).Caption("Kondisi CCTV");
-            
-            columns.AddFor(m => m.TglTerakhirAktif)
-    .Caption("Terakhir Aktif")
-    .Alignment(HorizontalAlignment.Center) // Opsional: Agar badge di tengah
+            columns.AddFor(m => m.StatusTerpasang).Caption("Kondisi CCTV");
+            @* columns.AddFor(m => m.StatusAktif).Caption("Terakhir Aktif"); *@
+            // kalau status aktif == ACTIVE , maka buat badge hijau
+            // kalau status aktif == INACTIVE, maka buatkan badge merah dan tampilkan tgl terakhir aktifnya
+            columns.AddFor(m => m.StatusAktif)
+    .Caption("Status CCTV").Alignment(HorizontalAlignment.Center)
     .CellTemplate(@<text>
-        <div class="d-flex flex-column align-items-center">
-            <% 
-                @* // Asumsi data.TglTerakhirAktif adalah nilai tanggal (string/Date) atau null *@
-                var tglTerakhirAktif = data.TglTerakhirAktif; 
-
-                if (tglTerakhirAktif == null || tglTerakhirAktif === "") { 
-                    @* // KONDISI 1: NULL (ACTIVE/HIJAU) *@
-            %>
-                    <span class="badge bg-success mb-1" title="CCTV Aktif">
-                        <i class='bx bxs-circle me-1'></i> Active
-                    </span>
-                    @* <small class="text-success fw-bold">Nyala</small> *@
-            <% 
-                } else { 
-            %>
-                    <span class="badge bg-danger mb-1" title="CCTV Inaktif">
-                        <i class='bx bxs-circle me-1'></i> Inactive
-                    </span>
-                    <small class="text-muted">
-                        <%- new Date(tglTerakhirAktif).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) %>
-                    </small>
-            <% 
-                } 
-            %>
-        </div>
+        <% if (data.StatusTerpasang === "BELUM TERPASANG") { %>
+            <span class="badge bg-secondary">BELUM TERPASANG</span>
+        <% } else if (data.StatusAktif === "ACTIVE") { %>
+            <span class="badge bg-success">ACTIVE</span>
+        <% } else if (data.StatusAktif === "INACTIVE") { %>
+            <span class="badge bg-danger">INACTIVE</span><br />
+            <small><%- Globalize.dateFormatter({ raw: "dd MMM yyyy" })(data.TglTerakhirAktif) %></small>
+        <% } %>
     </text>);
+            
+    @*         columns.AddFor(m => m.TglTerakhirAktif)
+    .Caption("Terakhir Aktif")
+    .Alignment(HorizontalAlignment.Center) // Opsional: Agar badge di tengah *@
+
 
             // ✅ Kolom Action
             columns.Add()
