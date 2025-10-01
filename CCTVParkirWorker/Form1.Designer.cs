@@ -71,9 +71,6 @@
             btnStopAllLogJasnita = new Button();
             btnStartAllLogJasnita = new Button();
             TarikanCctvTelkom = new TabPage();
-            label3 = new Label();
-            btnStartAllTelkom = new Button();
-            btnStopAllTelkom = new Button();
             dataGridView3 = new DataGridView();
             NoTelkom = new DataGridViewTextBoxColumn();
             IdTelkom = new DataGridViewTextBoxColumn();
@@ -88,6 +85,15 @@
             StatusTelkom = new DataGridViewTextBoxColumn();
             ErrorTelkom = new DataGridViewTextBoxColumn();
             LogTelkom = new DataGridViewTextBoxColumn();
+            btnStopAllTelkom = new Button();
+            btnStartAllTelkom = new Button();
+            label3 = new Label();
+            TarikanLogTelkom = new TabPage();
+            LogTelkomLog = new TextBox();
+            btnStopAllLogTelkom = new Button();
+            btnStartAllLogTelkom = new Button();
+            label4 = new Label();
+            panelStatusTelkomLog = new Panel();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             TarikanCctvJasnita.SuspendLayout();
@@ -95,6 +101,7 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             TarikanCctvTelkom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            TarikanLogTelkom.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
@@ -206,6 +213,7 @@
             tabControl1.Controls.Add(TarikanCctvJasnita);
             tabControl1.Controls.Add(TarikanLogJasnita);
             tabControl1.Controls.Add(TarikanCctvTelkom);
+            tabControl1.Controls.Add(TarikanLogTelkom);
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -377,43 +385,15 @@
             TarikanCctvTelkom.Text = "TARIKAN CCTV TELKOM";
             TarikanCctvTelkom.UseVisualStyleBackColor = true;
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label3.Location = new Point(258, 25);
-            label3.Name = "label3";
-            label3.Size = new Size(225, 25);
-            label3.TabIndex = 4;
-            label3.Text = "TARIKAN CCTV TELKOM";
-            // 
-            // btnStartAllTelkom
-            // 
-            btnStartAllTelkom.Location = new Point(34, 46);
-            btnStartAllTelkom.Name = "btnStartAllTelkom";
-            btnStartAllTelkom.Size = new Size(75, 23);
-            btnStartAllTelkom.TabIndex = 5;
-            btnStartAllTelkom.Text = "Start All";
-            btnStartAllTelkom.UseVisualStyleBackColor = true;
-            // 
-            // btnStopAllTelkom
-            // 
-            btnStopAllTelkom.Location = new Point(115, 46);
-            btnStopAllTelkom.Name = "btnStopAllTelkom";
-            btnStopAllTelkom.Size = new Size(75, 23);
-            btnStopAllTelkom.TabIndex = 6;
-            btnStopAllTelkom.Text = "Stop All";
-            btnStopAllTelkom.UseVisualStyleBackColor = true;
-            // 
             // dataGridView3
             // 
             dataGridView3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView3.Columns.AddRange(new DataGridViewColumn[] { NoTelkom, IdTelkom, NopTelkom, NamaTelkom, AlamatTelkom, UptbTelkom, CctvIdTelkom, ModeTelkom, LastConnectedTelkom, ActionTelkom, StatusTelkom, ErrorTelkom, LogTelkom });
-            dataGridView3.Location = new Point(3, 75);
+            dataGridView3.Location = new Point(3, 57);
             dataGridView3.Name = "dataGridView3";
-            dataGridView3.Size = new Size(746, 327);
+            dataGridView3.Size = new Size(746, 345);
             dataGridView3.TabIndex = 7;
             // 
             // NoTelkom
@@ -485,6 +465,98 @@
             LogTelkom.HeaderText = "Log";
             LogTelkom.Name = "LogTelkom";
             // 
+            // btnStopAllTelkom
+            // 
+            btnStopAllTelkom.Location = new Point(115, 28);
+            btnStopAllTelkom.Name = "btnStopAllTelkom";
+            btnStopAllTelkom.Size = new Size(75, 23);
+            btnStopAllTelkom.TabIndex = 6;
+            btnStopAllTelkom.Text = "Stop All";
+            btnStopAllTelkom.UseVisualStyleBackColor = true;
+            // 
+            // btnStartAllTelkom
+            // 
+            btnStartAllTelkom.Location = new Point(34, 28);
+            btnStartAllTelkom.Name = "btnStartAllTelkom";
+            btnStartAllTelkom.Size = new Size(75, 23);
+            btnStartAllTelkom.TabIndex = 5;
+            btnStartAllTelkom.Text = "Start All";
+            btnStartAllTelkom.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label3.Location = new Point(259, 12);
+            label3.Name = "label3";
+            label3.Size = new Size(225, 25);
+            label3.TabIndex = 4;
+            label3.Text = "TARIKAN CCTV TELKOM";
+            // 
+            // TarikanLogTelkom
+            // 
+            TarikanLogTelkom.Controls.Add(panelStatusTelkomLog);
+            TarikanLogTelkom.Controls.Add(LogTelkomLog);
+            TarikanLogTelkom.Controls.Add(btnStopAllLogTelkom);
+            TarikanLogTelkom.Controls.Add(btnStartAllLogTelkom);
+            TarikanLogTelkom.Controls.Add(label4);
+            TarikanLogTelkom.Location = new Point(4, 24);
+            TarikanLogTelkom.Name = "TarikanLogTelkom";
+            TarikanLogTelkom.Padding = new Padding(3);
+            TarikanLogTelkom.Size = new Size(752, 398);
+            TarikanLogTelkom.TabIndex = 3;
+            TarikanLogTelkom.Text = "TARIKAN LOG TELKOM";
+            TarikanLogTelkom.UseVisualStyleBackColor = true;
+            // 
+            // LogTelkomLog
+            // 
+            LogTelkomLog.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            LogTelkomLog.BackColor = SystemColors.InfoText;
+            LogTelkomLog.Font = new Font("Consolas", 9F);
+            LogTelkomLog.ForeColor = Color.Lime;
+            LogTelkomLog.Location = new Point(43, 69);
+            LogTelkomLog.Multiline = true;
+            LogTelkomLog.Name = "LogTelkomLog";
+            LogTelkomLog.Size = new Size(694, 309);
+            LogTelkomLog.TabIndex = 9;
+            // 
+            // btnStopAllLogTelkom
+            // 
+            btnStopAllLogTelkom.Location = new Point(124, 40);
+            btnStopAllLogTelkom.Name = "btnStopAllLogTelkom";
+            btnStopAllLogTelkom.Size = new Size(75, 23);
+            btnStopAllLogTelkom.TabIndex = 7;
+            btnStopAllLogTelkom.Text = "Stop All";
+            btnStopAllLogTelkom.UseVisualStyleBackColor = true;
+            // 
+            // btnStartAllLogTelkom
+            // 
+            btnStartAllLogTelkom.Location = new Point(43, 40);
+            btnStartAllLogTelkom.Name = "btnStartAllLogTelkom";
+            btnStartAllLogTelkom.Size = new Size(75, 23);
+            btnStartAllLogTelkom.TabIndex = 6;
+            btnStartAllLogTelkom.Text = "Start All";
+            btnStartAllLogTelkom.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label4.Location = new Point(264, 16);
+            label4.Name = "label4";
+            label4.Size = new Size(215, 25);
+            label4.TabIndex = 5;
+            label4.Text = "TARIKAN LOG TELKOM";
+            // 
+            // panelStatusTelkomLog
+            // 
+            panelStatusTelkomLog.BackColor = Color.Red;
+            panelStatusTelkomLog.BorderStyle = BorderStyle.FixedSingle;
+            panelStatusTelkomLog.Location = new Point(628, 29);
+            panelStatusTelkomLog.Name = "panelStatusTelkomLog";
+            panelStatusTelkomLog.Size = new Size(109, 37);
+            panelStatusTelkomLog.TabIndex = 11;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -505,6 +577,8 @@
             TarikanCctvTelkom.ResumeLayout(false);
             TarikanCctvTelkom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            TarikanLogTelkom.ResumeLayout(false);
+            TarikanLogTelkom.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -551,6 +625,13 @@
         private DataGridViewTextBoxColumn LogLog;
         private TabPage TarikanCctvTelkom;
         private DataGridView dataGridView3;
+        private Button btnStopAllTelkom;
+        private Button btnStartAllTelkom;
+        private Label label3;
+        private TabPage TarikanLogTelkom;
+        private Button btnStopAllLogTelkom;
+        private Button btnStartAllLogTelkom;
+        private Label label4;
         private DataGridViewTextBoxColumn NoTelkom;
         private DataGridViewTextBoxColumn IdTelkom;
         private DataGridViewTextBoxColumn NopTelkom;
@@ -564,8 +645,8 @@
         private DataGridViewTextBoxColumn StatusTelkom;
         private DataGridViewTextBoxColumn ErrorTelkom;
         private DataGridViewTextBoxColumn LogTelkom;
-        private Button btnStopAllTelkom;
-        private Button btnStartAllTelkom;
-        private Label label3;
+        private TextBox textBox1;
+        public TextBox LogTelkomLog;
+        private Panel panelStatusTelkomLog;
     }
 }
