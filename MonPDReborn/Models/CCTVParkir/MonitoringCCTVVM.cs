@@ -33,8 +33,8 @@ namespace MonPDReborn.Models.CCTVParkir
         {
             public List<MonitoringCCTV> MonitoringCCTVList { get; set; } = new();
             public decimal TotalOp => MonitoringCCTVList.Count;
-            public decimal TotalCCTV => MonitoringCCTVList.Count(x => x.StatusAktif == "TERPASANG");
-            public decimal TotalBelumTerpasang => MonitoringCCTVList.Count(x => x.StatusAktif == "BELUM TERPASANG");
+            public decimal TotalCCTV => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG");
+            public decimal TotalBelumTerpasang => MonitoringCCTVList.Count(x => x.StatusTerpasang == "BELUM TERPASANG");
             //public decimal TotalCCTV => MonitoringCCTVList.Count;
             //public decimal TotalAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "AKTIF");
             //public decimal TotalNonAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "NON AKTIF");
