@@ -252,10 +252,16 @@ namespace MonPDReborn.Models.CCTVParkir
                         var statusTerpasang = tglTerpasang.HasValue ? "TERPASANG" : "BELUM TERPASANG";
 
                         bool isHaveDetail = dets.Any();
+                        bool haveLogs = logs.Any();
 
                         var isAktif = "INACTIVE";
 
-                        if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
+                        if (!haveLogs)
+                        {
+                            // tidak punya log sama sekali → INACTIVE
+                            isAktif = "INACTIVE";
+                        }
+                        else if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
                         {
                             isAktif = "INACTIVE";
                         }
@@ -264,9 +270,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             isAktif = "ACTIVE";
                         }
 
-                        // === tambahkan ini ===
                         DateTime? tglTerakhirAktif = null;
-
                         if (isAktif == "INACTIVE" && lastLog != null)
                         {
                             tglTerakhirAktif = ((dynamic)lastLog).TglTerakhirAktif;
@@ -349,13 +353,17 @@ namespace MonPDReborn.Models.CCTVParkir
                             .OrderByDescending(l => ((dynamic)l).TglTerakhirAktif)
                             .FirstOrDefault();
 
-                        var statusTerpasang = tglTerpasang.HasValue ? "TERPASANG" : "BELUM TERPASANG";
-
                         bool isHaveDetail = dets.Any();
+                        bool haveLogs = logs.Any();
 
                         var isAktif = "INACTIVE";
 
-                        if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
+                        if (!haveLogs)
+                        {
+                            // tidak punya log sama sekali → INACTIVE
+                            isAktif = "INACTIVE";
+                        }
+                        else if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
                         {
                             isAktif = "INACTIVE";
                         }
@@ -364,9 +372,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             isAktif = "ACTIVE";
                         }
 
-                        // === tambahkan ini ===
                         DateTime? tglTerakhirAktif = null;
-
                         if (isAktif == "INACTIVE" && lastLog != null)
                         {
                             tglTerakhirAktif = ((dynamic)lastLog).TglTerakhirAktif;
