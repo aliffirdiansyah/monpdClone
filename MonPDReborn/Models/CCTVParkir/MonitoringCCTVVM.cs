@@ -272,9 +272,11 @@ namespace MonPDReborn.Models.CCTVParkir
                         }
 
                         DateTime? tglTerakhirAktif = null;
+                        string? tglTerakhirAktifString = "";
                         if (isAktif == "INACTIVE" && lastLog != null)
                         {
-                            tglTerakhirAktif = ((dynamic)lastLog).TglTerakhirAktif;
+                            tglTerakhirAktif = (DateTime)lastLog;
+                            tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
                         }
 
                         return new MonitoringCCTV
@@ -376,9 +378,11 @@ namespace MonPDReborn.Models.CCTVParkir
                         }
 
                         DateTime? tglTerakhirAktif = null;
+                        string? tglTerakhirAktifString = "";
                         if (isAktif == "INACTIVE" && lastLog != null)
                         {
-                            tglTerakhirAktif = ((dynamic)lastLog).TglTerakhirAktif;
+                            tglTerakhirAktif = (DateTime)lastLog;
+                            tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
                         }
 
                         return new MonitoringCCTV
@@ -780,6 +784,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public string StatusTerpasang { get; set; } = null!;
             public string StatusAktif { get; set; } = null!;
             public DateTime? TglTerakhirAktif { get; set; } = DateTime.MinValue;
+            public string? TglTerakhirAktifString { get; set; }
         }
         public class MonitoringCCTVDet
         {
