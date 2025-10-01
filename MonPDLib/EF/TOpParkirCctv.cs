@@ -50,7 +50,7 @@ public partial class TOpParkirCctv
     public int JenisKend { get; set; }
 
     [Column("PLAT_NO")]
-    [StringLength(20)]
+    [StringLength(120)]
     [Unicode(false)]
     public string? PlatNo { get; set; }
 
