@@ -602,6 +602,7 @@
             const tahun = cellInfo.data.Tahun;
             const bulan = cellInfo.data.Bulan;
             const jenis = cellInfo.data.Jenis;
+            const lokasi = cellInfo.data.Lokasi;
 
             const namaKolom = cellInfo.column.dataField;
             const kategori = getNamadKategoriFromColumn(namaKolom);
@@ -618,7 +619,7 @@
                 $("#kategoriSpan").text(kategoriLabel);
                 $("#jenisSpan").text(jenisLabel);
 
-                loadDetailTegur(tahun, bulan, jenis, kategori);
+                loadDetailTegur(tahun, bulan, jenis, kategori, lokasi);
             });
 
             const $wrapper = $('<div>')
@@ -653,7 +654,7 @@
                 $("#kategoriSpan").text(kategoriLabel);
                 $("#jenisSpan").text(jenisLabel);
 
-                loadDetailTegur(tahun, bulan, jenis, kategori);
+                loadDetailTegur(tahun, bulan, jenis, kategori, lokasi);
             });
 
             const $wrapper = $('<div>')
@@ -667,8 +668,8 @@
             $(cellElement).append($wrapper);
         }
 
-        function loadDetailTegur(tahun, bulan, jenis, kategori) {
-            const url = `/ReklameSummary/DetailTeguran?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}`;
+        function loadDetailTegur(tahun, bulan, jenis, kategori, lokasi) {
+            const url = `/ReklameSummary/DetailTeguran?tahun=${encodeURIComponent(tahun)}&bulan=${encodeURIComponent(bulan)}&jenis=${encodeURIComponent(jenis)}&kategori=${encodeURIComponent(kategori)}&lokasi=${encodeURIComponent(lokasi)}`;
             window.open(url, '_blank');
         }
 

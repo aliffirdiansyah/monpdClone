@@ -93,7 +93,7 @@
                 {
                     bk.AddFor(m => m.SKPDBlmKB).Caption("SKPD").Format("#,##0").DataField("SKPDBlmKB").CellTemplate(new JS("skpdPermanenJTCellTemplate"));
                     bk.AddFor(m => m.NilaiBlmKB).Caption("NILAI").Format("#,##0");
-                    bk.AddFor(m => m.TegurKB).Caption("TEGURAN").Format("#,##0").DataField("TegurKB").CellTemplate(new JS("BongkarCellTemplate"));
+                    bk.AddFor(m => m.TegurKB).Caption("TEGURAN").Format("#,##0").DataField("TegurKB").CellTemplate(new JS("TegurCellTemplate"));
                     bk.AddFor(m => m.JmlSilangKB).Caption("SILANG").Format("#,##0").DataField("JmlSilangKB").CellTemplate(new JS("SilangCellTemplate"));
                     bk.AddFor(m => m.JmlBongkarKB).Caption("BONGKAR").Format("#,##0").DataField("JmlBongkarKB").CellTemplate(new JS("BongkarCellTemplate"));
                     bk.AddFor(m => m.JmlBantipKB).Caption("BANTIP").Format("#,##0").Visible(false);
