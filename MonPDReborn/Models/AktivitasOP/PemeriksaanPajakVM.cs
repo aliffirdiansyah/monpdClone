@@ -98,6 +98,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         dbMamin.TryGetValue(x.Nop, out var mamin);
                         return new DataDetailPemeriksaan
                         {
+                            pajakId = (int)EnumFactory.EPajak.MakananMinuman,
                             JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                             NOP = x.Nop ?? "-",
                             NamaOP = mamin != null ? (mamin.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
@@ -130,6 +131,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         dbHotel.TryGetValue(x.Nop, out var hotel);
                         return new DataDetailPemeriksaan
                         {
+                            pajakId = (int)EnumFactory.EPajak.JasaPerhotelan,
                             JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                             NOP = x.Nop ?? "-",
                             NamaOP = hotel != null ? (hotel.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
@@ -162,6 +164,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         dbParkir.TryGetValue(x.Nop, out var parkir);
                         return new DataDetailPemeriksaan
                         {
+                            pajakId = (int)EnumFactory.EPajak.JasaParkir,
                             JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                             NOP = x.Nop ?? "-",
                             NamaOP = parkir != null ? (parkir.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
@@ -194,6 +197,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         dbHiburan.TryGetValue(x.Nop, out var hiburan);
                         return new DataDetailPemeriksaan
                         {
+                            pajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                             JenisPajak = ((EnumFactory.EPajak)x.PajakId).GetDescription(),
                             NOP = x.Nop ?? "-",
                             NamaOP = hiburan != null ? (hiburan.NamaOp ?? "-") : "NAMA OP TIDAK DIKETAHUI - " + (x.Ket ?? "-"),
@@ -265,6 +269,7 @@ namespace MonPDReborn.Models.AktivitasOP
         // ======= ENTITY DETAIL ==========
         public class DataDetailPemeriksaan
         {
+            public int pajakId { get; set; }
             public string JenisPajak { get; set; } = null!;
             public string NOP { get; set; } = null!;
             public string FormattedNOP => Utility.GetFormattedNOP(NOP);

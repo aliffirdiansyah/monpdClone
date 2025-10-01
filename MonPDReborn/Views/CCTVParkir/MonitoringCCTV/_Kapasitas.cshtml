@@ -20,7 +20,7 @@
                     <!-- Col 1 -->
                     <div class="col-md-6">
                         <h5 class="text-dark">Nama OP : @Model.NamaOP</h5>
-                        <h5 class="text-dark">No OP : @Model.Nop</h5>
+                        <h5 class="text-primary">No OP : @Model.formattedNop</h5>
                         <h5 class="text-dark">Alamat : @Model.AlamatOP</h5>
                     </div>
 
@@ -81,9 +81,9 @@
                                                     columns.AddFor(m => m.Unknown).Caption("Unknown");
                                                     columns.AddFor(m => m.Omset).Caption("Omset").Format("#,##0");
                                                     columns.AddFor(m => m.EstimasiPajak).Caption("Est. Pajak").Format("#,##0");
-                                                    columns.AddFor(m => m.TahunKemarin).Caption("Tahun Kemarin").Format("#,##0");
-                                                    columns.AddFor(m => m.TahunIni).Caption("Tahun Ini").Format("#,##0");
-                                                    @* columns.AddFor(m => m.Potensi).Caption("Potensi").Format("#,##0"); *@
+                                                    columns.AddFor(m => m.TahunKemarin).Caption("Tahun 2024").Format("#,##0");
+                                                    columns.AddFor(m => m.TahunIni).Caption("Tahun 2025").Format("#,##0");
+                                                    columns.AddFor(m => m.Potensi).Caption("Potensi").Format("#,##0");
                                                 })
                                                 .MasterDetail(md => md
                                                 .Enabled(true)
@@ -141,8 +141,7 @@
                         pager: { visible: false },
                         columns: [
                             { dataField: "TanggalLabel", caption: "Tanggal" },
-                            { dataField: "HariLabel", caption: "Hari",
-                              cssClass: "clickable-cell" }, // kasih style biar kelihatan bisa diklik
+                            { dataField: "HariLabel", caption: "Hari" }, 
                             { dataField: "Motor", caption: "Motor", format: "#,##0" },
                             { dataField: "Mobil", caption: "Mobil", format: "#,##0" },
                             { dataField: "Unknown", caption: "Unknown", format: "#,##0" },
@@ -171,7 +170,7 @@
                         // tambahin event klik cell
                         onCellClick: function (e) {
                             if (e.column.dataField === "HariLabel") {
-                                var tgl = e.data.Tanggal; // pastikan ada property Tanggal di JSON backend
+                                var tgl = e.data.Tanggal; 
 
                                 $.ajax({
                                     url: '/MonitoringCCTV/KapasitasHarianDetail',

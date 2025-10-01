@@ -209,11 +209,11 @@ namespace MonPDReborn.Controllers.Aktivitas
                 return Json(response);
             }
         }
-        public IActionResult DetailTeguran(int tahun, int bulan, int jenis, int kategori)
+        public IActionResult DetailTeguran(int tahun, int bulan, int jenis, int kategori, int lokasi)
         {
             try
             {
-                var model = new Models.AktivitasOP.ReklameSummaryVM.TeguranDetail(tahun, bulan, jenis, kategori);
+                var model = new Models.AktivitasOP.ReklameSummaryVM.TeguranDetail(tahun, bulan, jenis, kategori, lokasi);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
