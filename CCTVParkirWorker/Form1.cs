@@ -1229,8 +1229,8 @@ namespace CCTVParkirWorker
 
                             if (existing != null)
                             {
-                                existing.TglAktif = dateStatusAktif;
-                                existing.TglDown = dateStatusDown;
+                                existing.TglTerakhirAktif = dateStatusAktif;
+                                existing.TglTerakhirDown = dateStatusDown;
                                 existing.Status = lastStatus;
                             }
                             else
@@ -1239,8 +1239,8 @@ namespace CCTVParkirWorker
                                 {
                                     Nop = op.NOP,
                                     CctvId = op.CCTVId,
-                                    TglAktif = dateStatusAktif,
-                                    TglDown = dateStatusDown,
+                                    TglTerakhirAktif = dateStatusAktif,
+                                    TglTerakhirDown = dateStatusDown,
                                     Status = lastStatus
                                 }, token);
                             }
