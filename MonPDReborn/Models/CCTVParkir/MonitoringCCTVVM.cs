@@ -120,6 +120,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public string? PlatNo { get; set; }
             public String Direction { get; set; }
             public string? Log { get; set; }
+            public string? ImageUrl { get; set; }
 
         }
 
@@ -706,6 +707,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.PlatNo = item.PlatNo;
                     res.Direction = ((EnumFactory.CctvParkirDirection)item.Direction).GetDescription();
                     res.Log = item.Log;
+                    res.ImageUrl = item.ImageUrl;
 
 
                     result.Add(res);
