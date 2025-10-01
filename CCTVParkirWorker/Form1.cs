@@ -820,6 +820,22 @@ namespace CCTVParkirWorker
 
             if (dataLog != null)
             {
+                var lastDateScan = context.TOpParkirCctvs
+                    .Where(x => x.Nop == op.NOP && x.CctvId == op.CCTVId)
+                    .Max(q => (DateTime?)q.WaktuMasuk); // pakai nullable DateTime untuk aman
+
+                if (lastDateScan == null) 
+                {
+                    lastDateScan = DateTime.MinValue;
+                }; 
+
+                string lastStatus = dataLog.Status ?? "NON AKTIF";
+                if (lastDateScan > dataLog.TglTerakhirAktif)
+                {
+                    dataLog.TglTerakhirAktif = lastDateScan.Value;
+                    dataLog.Status = "AKTIF";
+                }
+
                 var existing = context.MOpParkirCctvJasnitaLogs.FirstOrDefault(x => x.Nop == op.NOP && x.CctvId == op.CCTVId);
                 if (existing != null)
                 {
@@ -833,6 +849,7 @@ namespace CCTVParkirWorker
                     // Tambah record baru
                     context.MOpParkirCctvJasnitaLogs.Add(dataLog);
                 }
+
             }
 
             UpdateLogLog(row, "Inserting...");
