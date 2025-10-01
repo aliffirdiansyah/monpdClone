@@ -1304,8 +1304,11 @@
                                 dataField: "JmlOpAkhir",
                                 caption: "OP AKHIR",
                                 cellTemplate: function (container, options) {
+                                    let formattedValue = options.value != null
+                                        ? new Intl.NumberFormat('id-ID').format(options.value)
+                                        : "";
                                     $("<a>")
-                                        .text(options.value)
+                                        .text(formattedValue)
                                         .css({
                                             "cursor": "pointer",
                                             "color": "blue",
