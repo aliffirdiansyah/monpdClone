@@ -556,8 +556,16 @@
             columnResizingMode: "nextColumn", // atau "widget" kalau mau semua menyesuaikan
             wordWrapEnabled: false,
             rowAlternationEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: false,
+                formats: ["xlsx", "pdf"],
+                fileName: "Realisasi_25"
+            },
+            onExporting: exportGrid,
+            width: "100%",
             columns: [
-                { dataField: "JenisPajak", caption: "JENIS PAJAK" },
+                { dataField: "JenisPajak", caption: "JENIS PAJAK", fixed: true, fixedPosition: "left" },
                 { dataField: "Target", caption: "TARGET 2025", alignment: "right", customizeText: formatNumber },
                 { dataField: "Jan", caption: "JAN", alignment: "right", customizeText: formatNumber },
                 { dataField: "Feb", caption: "FEB", alignment: "right", customizeText: formatNumber },
@@ -593,8 +601,16 @@
             columnResizingMode: "nextColumn",
             wordWrapEnabled: false,
             rowAlternationEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: false,
+                formats: ["xlsx", "pdf"],
+                fileName: "Realisasi_24"
+            },
+            onExporting: exportGrid,
+            width: "100%",
             columns: [
-                { dataField: "JenisPajak", caption: "JENIS PAJAK" },
+                { dataField: "JenisPajak", caption: "JENIS PAJAK", fixed: true, fixedPosition: "left" },
                 { dataField: "Target", caption: "TARGET 2024", alignment: "right", customizeText: formatNumber },
                 { dataField: "Jan", caption: "JAN", alignment: "right", customizeText: formatNumber },
                 { dataField: "Feb", caption: "FEB", alignment: "right", customizeText: formatNumber },
@@ -661,8 +677,16 @@
             allowColumnResizing: true,
             columnResizingMode: "nextColumn",
             rowAlternationEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: false,
+                formats: ["xlsx", "pdf"],
+                fileName: "Cumulative_25"
+            },
+            onExporting: exportGrid,
+            width: "100%",
             columns: [
-                { dataField: "JenisPajak", caption: "JENIS PAJAK" },
+                { dataField: "JenisPajak", caption: "JENIS PAJAK", fixed: true, fixedPosition: "left" },
                 { dataField: "Target", caption: "TARGET", alignment: "right", customizeText: formatNumber },
                 { dataField: "Jan", caption: "JAN", alignment: "right", customizeText: formatNumber },
                 { dataField: "Feb", caption: "FEB", alignment: "right", customizeText: formatNumber },
@@ -696,8 +720,16 @@
             allowColumnResizing: true,
             columnResizingMode: "nextColumn",
             rowAlternationEnabled: true,
+            export: {
+                enabled: true,
+                allowExportSelectedData: false,
+                formats: ["xlsx", "pdf"],
+                fileName: "Cumulative_24"
+            },
+            onExporting: exportGrid,
+            width: "100%",
             columns: [
-                { dataField: "JenisPajak", caption: "JENIS PAJAK" },
+                { dataField: "JenisPajak", caption: "JENIS PAJAK", fixed: true, fixedPosition: "left" },
                 { dataField: "Target", caption: "TARGET", alignment: "right", customizeText: formatNumber },
                 { dataField: "Jan", caption: "JAN", alignment: "right", customizeText: formatNumber },
                 { dataField: "Feb", caption: "FEB", alignment: "right", customizeText: formatNumber },

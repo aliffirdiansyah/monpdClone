@@ -373,6 +373,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<SetYearJobScan> SetYearJobScans { get; set; }
 
+    public virtual DbSet<SumSeriesBulan> SumSeriesBulans { get; set; }
+
     public virtual DbSet<THimbauanSptpd> THimbauanSptpds { get; set; }
 
     public virtual DbSet<TMutasiPiutang> TMutasiPiutangs { get; set; }
@@ -499,7 +501,7 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-   /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
 
@@ -2201,6 +2203,11 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.IdPajakNavigation).WithOne(p => p.SetYearJobScan)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("SET_YEAR_JOB_SCAN_R01");
+        });
+
+        modelBuilder.Entity<SumSeriesBulan>(entity =>
+        {
+            entity.ToView("SUM_SERIES_BULAN");
         });
 
         modelBuilder.Entity<THimbauanSptpd>(entity =>
