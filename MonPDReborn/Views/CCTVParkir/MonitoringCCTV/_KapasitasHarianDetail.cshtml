@@ -1,24 +1,157 @@
-﻿@model List<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>
+﻿@using System.Text.Json
+@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.KapasitasHarianDetail
 
-<div class="table-responsive">
-    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
-        .ID("gridDetailHarian")
-        .DataSource(Model.OrderBy(x => x.TanggalMasuk).ToList())
-        .ShowBorders(true)
-        .ColumnAutoWidth(true)
-        .Sorting(s => s.Mode(GridSortingMode.None)) 
-        .HeaderFilter(h => h.Visible(true))
-        .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
-        .Paging(p => p.Enabled(false)) 
-        .Pager(p => p.Visible(false))
-        .OnExporting("exportGrid")
-        .OnRowPrepared("applyRowColor") 
-        .Columns(columns => {
-            columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("dd-MM-yyyy HH:mm:ss").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
-            columns.AddFor(m => m.Direction).Caption("Direction").Alignment(HorizontalAlignment.Center);
-            columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
-        })
-    )
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <div id="line_chart_annotations" class="apex-charts" dir="ltr"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
+                .ID("gridDetailHarian")
+                .DataSource(Model.DataMonitoringDetail.OrderBy(x => x.TanggalMasuk).ToList())
+                .ShowBorders(true)
+                .ColumnAutoWidth(true)
+                .Sorting(s => s.Mode(GridSortingMode.None)) 
+                .HeaderFilter(h => h.Visible(true))
+                .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
+                .Paging(p => p.Enabled(false)) 
+                .Pager(p => p.Visible(false))
+                .OnExporting("exportGrid")
+                .OnRowPrepared("applyRowColor") 
+                .Columns(columns => {
+                    columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("dd-MM-yyyy HH:mm:ss").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.Direction).Caption("Direction").Alignment(HorizontalAlignment.Center);
+                    columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
+                })
+            )
+        </div>
+    </div>
 </div>
+
+<script>
+    // === MASTER KENDARAAN ===
+    // var masterKendaraan = [
+    //     { name: "mobil", color: "#038edc" },
+    //     { name: "motor", color: "#51d28c" },
+    //     { name: "truck", color: "#f4c20d" }
+    // ];
+    var masterKendaraan = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.MasterKendaraans)));
+
+    // === DATA KENDARAAN PER WAKTU ===
+    // var kendaraanData = [
+    //     { waktu: "2025-10-02 17:00", jenis: [{ name: "mobil", value: 5 }, { name: "motor", value: 12 }] },
+    //     { waktu: "2025-10-02 17:15", jenis: [{ name: "mobil", value: 0 }, { name: "motor", value: 0 }, { name: "truck", value: 0 }] },
+    //     { waktu: "2025-10-02 17:30", jenis: [{ name: "mobil", value: 9 }, { name: "motor", value: 16 }, { name: "truck", value: 5 }] },
+    //     { waktu: "2025-10-02 17:45", jenis: [{ name: "mobil", value: 8 }, { name: "motor", value: 15 }] },
+    //     { waktu: "2025-10-02 18:00", jenis: [{ name: "mobil", value: 10 }, { name: "motor", value: 18 }] },
+    //     { waktu: "2025-10-02 18:15", jenis: [{ name: "mobil", value: 0 }, { name: "motor", value: 0 }] },
+    //     { waktu: "2025-10-02 18:30", jenis: [{ name: "mobil", value: 9 }, { name: "motor", value: 17 }] },
+    //     { waktu: "2025-10-02 18:45", jenis: [{ name: "mobil", value: 12 }, { name: "motor", value: 19 }] }
+    // ];
+    var kendaraanData = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.KendaraanDatas)));
+
+    // === EVENT STATUS CCTV ===
+    // var cctvEvents = [
+    //     { status: "ON", time: "2025-10-02 17:00" },
+    //     { status: "OFF", time: "2025-10-02 17:10" },
+    //     { status: "ON", time: "2025-10-02 17:25" },
+    //     { status: "OFF", time: "2025-10-02 18:05" },
+    //     { status: "ON", time: "2025-10-02 18:20" }
+    // ];
+    var cctvEvents = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.CctvEvents)));
+
+    // Waktu awal & akhir
+    var startTime = new Date(kendaraanData[0].Waktu).getTime();
+    var endTime = new Date(kendaraanData[kendaraanData.length - 1].Waktu).getTime();
+
+    // === ANNOTATIONS CCTV ===
+    var rangeAnnotations = [];
+    if (cctvEvents.length === 0) {
+        // Jika kosong, langsung buat satu range hijau dari startTime sampai endTime
+        rangeAnnotations.push({
+            x: startTime,
+            x2: endTime,
+            fillColor: '#51d28c', // hijau
+            opacity: 0.15,
+            label: {
+                text: 'CCTV ON',
+                borderColor: '#51d28c',
+                style: { color: '#fff', background: '#51d28c' }
+            }
+        });
+    } else {
+        // Buat annotations seperti biasa
+        for (let i = 0; i < cctvEvents.length; i++) {
+            var curr = cctvEvents[i];
+            var next = cctvEvents[i + 1];
+            var currTime = new Date(curr.Time).getTime();
+            var nextTime = next ? new Date(next.Time).getTime() : endTime;
+
+            rangeAnnotations.push({
+                x: currTime,
+                x2: nextTime,
+                fillColor: curr.Status === "OFF" ? '#f34e4e' : '#51d28c',
+                opacity: 0.15,
+                label: {
+                    text: `CCTV ${curr.Status}`,
+                    borderColor: curr.Status === "OFF" ? '#f34e4e' : '#51d28c',
+                    style: { color: '#fff', background: curr.Status === "OFF" ? '#f34e4e' : '#51d28c' }
+                }
+            });
+        }
+
+        // Jika event pertama tidak dari awal
+        if (new Date(cctvEvents[0].Time).getTime() > startTime) {
+            rangeAnnotations.unshift({
+                x: startTime,
+                x2: new Date(cctvEvents[0].Time).getTime(),
+                fillColor: cctvEvents[0].Status === "OFF" ? '#51d28c' : '#f34e4e',
+                opacity: 0.15,
+                label: {
+                    text: `CCTV ${cctvEvents[0].Status === "OFF" ? "ON" : "OFF"}`,
+                    borderColor: cctvEvents[0].Status === "OFF" ? '#51d28c' : '#f34e4e',
+                    style: { color: '#fff', background: cctvEvents[0].Status === "OFF" ? '#51d28c' : '#f34e4e' }
+                }
+            });
+        }
+    }
+
+    // === GENERATE SERIES DARI MASTER ===
+    var chartSeries = masterKendaraan.map(k => ({
+        name: k.Name.charAt(0).toUpperCase() + k.Name.slice(1),
+        data: kendaraanData.map(d => {
+            var found = d.Jenis.find(j => j.Name === k.Name);
+            return { x: new Date(d.Waktu).getTime(), y: found ? found.Value : 0 };
+        }),
+        color: k.Color
+    }));
+
+    // === KONFIGURASI CHART ===
+    var options = {
+        series: chartSeries,
+        chart: { height: 350, type: 'line', toolbar: { show: true } },
+        stroke: { curve: 'smooth' },
+        xaxis: { type: 'datetime', title: { text: 'Waktu (per 15 menit)' }, labels: { datetimeUTC: false } },
+        yaxis: { title: { text: 'Jumlah Kendaraan' } },
+        annotations: { xaxis: rangeAnnotations },
+        title: { text: 'Monitoring Kendaraan & Status CCTV (Auto Highlight)', align: 'left', style: { fontWeight: 600 } },
+        tooltip: { x: { format: 'HH:mm' } },
+        markers: { size: 4 }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#line_chart_annotations"), options);
+    chart.render();
+</script>

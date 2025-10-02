@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
+using static MonPDLib.General.EnumFactory;
 
 namespace MonPDLib.General
 {
@@ -45,6 +46,14 @@ namespace MonPDLib.General
                 }
             }
             return value.ToString();
+        }
+
+        public static string GetColorVehicle(EJenisKendParkirCCTV jenis)
+        {
+            var type = typeof(EJenisKendParkirCCTV);
+            var memInfo = type.GetMember(jenis.ToString());
+            var attr = memInfo[0].GetCustomAttribute<ColorAttribute>();
+            return attr?.Color ?? "#000000";
         }
 
         public static string FormatRupiah(decimal nominal)

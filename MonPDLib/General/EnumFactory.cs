@@ -4,6 +4,12 @@ namespace MonPDLib.General
 {
     public class EnumFactory
     {
+        [AttributeUsage(AttributeTargets.Field)]
+        public class ColorAttribute : Attribute
+        {
+            public string Color { get; }
+            public ColorAttribute(string color) => Color = color;
+        }
 
         public enum EStatusSurvey
         {
@@ -793,16 +799,16 @@ namespace MonPDLib.General
         }
         public enum EJenisKendParkirCCTV
         {
-            [Description("Unknown")]
+            [Description("Unknown"), Color("#888888")]
             Unknown = 0,
-            [Description("Motor")]
+            [Description("Motor"), Color("#51d28c")]
             Motor = 1,
-            [Description("Mobil")]
+            [Description("Mobil"), Color("#038edc")]
             Mobil = 2,
-            [Description("Truck")]
+            [Description("Truck"), Color("#f4c20d")]
             Truck = 3,
-            [Description("Bus")]
-            Bus = 4,
+            [Description("Bus"), Color("#e91e63")]
+            Bus = 4
         }
         public enum EStatusCCTV
         {
