@@ -88,75 +88,8 @@
         <div class="card">
             <div class="card-body">
                 <div class="row gx-lg-5">
-                    <div class="col-xl-2 col-md-8 mx-auto">
-                        <div class="product-img-slider sticky-side-div">
-                            <div class="swiper product-thumbnail-slider p-2 rounded bg-light">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        @switch (Model.Pajak)
-                                        {
-                                            case EnumFactory.EPajak.MakananMinuman:
-                                                <div class="swiper-slide">
-                                                    <img src="~/icon/restoran.png" class="img-fluid d-block" />
-                                                </div>
-                                                break;
-                                            case EnumFactory.EPajak.JasaPerhotelan:
-                                                <div class="swiper-slide">
-                                                    <img src="~/icon/hotel.png" class="img-fluid d-block" />
-                                                </div>
-                                                break;
-                                            case EnumFactory.EPajak.JasaParkir:
-                                                <div class="swiper-slide">
-                                                    <img src="~/icon/parkir.png" class="img-fluid d-block" />
-                                                </div>
-                                                break;
-                                            case EnumFactory.EPajak.JasaKesenianHiburan:
-                                                <div class="swiper-slide">
-                                                    <img src="~/icon/hiburan.png" class="img-fluid d-block" />
-                                                </div>
-                                                break;
-                                            case EnumFactory.EPajak.TenagaListrik:
-                                                <div class="swiper-slide">
-                                                    <img src="~/icon/listrik.png" class="img-fluid d-block" />
-                                                </div>
-                                                break;
-                                            case EnumFactory.EPajak.AirTanah:
-                                                <div class="swiper-slide">
-                                                    <img src="~/icon/abt.png" class="img-fluid d-block" />
-                                                </div>
-                                                break;
-                                            case EnumFactory.EPajak.PBB:
-                                                <div class="swiper-slide">
-                                                    <img src="~/icon/pbb.png" class="img-fluid d-block" />
-                                                </div>
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="mt-3" id="lokasi">
-                                <h6 class="fw-bold mb-3 d-flex align-items-center">
-                                    <i class="ri-map-pin-line me-2 text-primary fs-5"></i>
-                                    Lokasi Objek Pajak
-                                </h6>
-                                <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-                                    <iframe width="100%"
-                                            height="500"
-                                            style="border:0;"
-                                            allowfullscreen
-                                            loading="lazy"
-                                            referrerpolicy="no-referrer-when-downgrade"
-                                            src="https://www.google.com/maps?q=@(Uri.EscapeDataString((Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " + (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"))&output=embed">
-                                    </iframe>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-10">
+                    <div class="col-xl-12">
                         <div class="mt-xl-0 mt-5">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
@@ -375,40 +308,40 @@
                                                     <center>
                                                         <div class="col-lg-6">
                                                             @(
-                                                                Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
-                                                                .ID("okupansiGrid")
-                                                                .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
-                                                                .KeyExpr("Bulan")
-                                                                .ShowBorders(true)
-                                                                .ShowColumnLines(true)
-                                                                .Paging(p => p.PageSize(12))
-                                                                .Columns(columns =>
-                                                                {
-                                                                    columns.AddFor(m => m.BulanNama).Caption("Bulan");
-                                                                    columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
-                                                                    columns.AddFor(m => m.TahunNow).Caption(tahunNow);
-                                                                })
-                                                                .Summary(s =>
-                                                                {
-                                                                    s.TotalItems(items =>
-                                                                    {
-                                                                        items.AddFor(x => x.BulanNama)
-                                                                    .SummaryType(SummaryType.Sum)
-                                                                    .DisplayFormat("Average");
+                                                                                                                        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
+                                                                                                                        .ID("okupansiGrid")
+                                                                                                                        .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
+                                                                                                                        .KeyExpr("Bulan")
+                                                                                                                        .ShowBorders(true)
+                                                                                                                        .ShowColumnLines(true)
+                                                                                                                        .Paging(p => p.PageSize(12))
+                                                                                                                        .Columns(columns =>
+                                                                                                                        {
+                                                                                                                            columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                                                                                                                            columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
+                                                                                                                            columns.AddFor(m => m.TahunNow).Caption(tahunNow);
+                                                                                                                        })
+                                                                                                                        .Summary(s =>
+                                                                                                                        {
+                                                                                                                            s.TotalItems(items =>
+                                                                                                                            {
+                                                                                                                                items.AddFor(x => x.BulanNama)
+                                                                                                                            .SummaryType(SummaryType.Sum)
+                                                                                                                            .DisplayFormat("Average");
 
-                                                                        items.AddFor(x => x.TahunMines1)
-                                                                    .SummaryType(SummaryType.Avg)
-                                                                    .ValueFormat("#,##0.00")
-                                                                    .DisplayFormat("{0}");
+                                                                                                                                items.AddFor(x => x.TahunMines1)
+                                                                                                                            .SummaryType(SummaryType.Avg)
+                                                                                                                            .ValueFormat("#,##0.00")
+                                                                                                                            .DisplayFormat("{0}");
 
-                                                                        items.AddFor(x => x.TahunNow)
-                                                                    .SummaryType(SummaryType.Avg)
-                                                                    .ValueFormat("#,##0.00")
-                                                                    .DisplayFormat("{0}");
-                                                                    });
+                                                                                                                                items.AddFor(x => x.TahunNow)
+                                                                                                                            .SummaryType(SummaryType.Avg)
+                                                                                                                            .ValueFormat("#,##0.00")
+                                                                                                                            .DisplayFormat("{0}");
+                                                                                                                            });
 
-                                                                })
-                                                                )
+                                                                                                                        })
+                                                                                                                        )
                                                         </div>
                                                     </center>
                                                 </div>
