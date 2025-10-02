@@ -4,7 +4,7 @@
 <div class="row">
 
     <div class="col-lg-4">
-        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+        <div class="card card-animate h-90 shadow-lg rounded-3 neon-left-glow">
             <div class="card-body">
                 <div class="d-flex justify-content-start align-items-center mb-2">
                     <div class="rounded-circle bg-primary-subtle p-2 me-2">
@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <div class="col-lg-4">
+    @* <div class="col-lg-4">
         <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
             <div class="card-body">
                 <div class="d-flex justify-content-start align-items-center mb-2">
@@ -35,11 +35,43 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    </div> *@
 
     <div class="col-lg-4">
         <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <!-- Judul Card -->
+                <h5 class="text-center text-muted mb-1">Total CCTV</h5>
+
+                <!-- Grid 3 Kolom -->
+                <div class="row text-center">
+                    <div class="col-4 border-end">
+                        <h6 class="fw-bold">Jasnita</h6>
+                        <h3 class="fw-bold text-success mb-0">
+                            @Model.TotalCCTVTerpasangJasnita.ToString("n0")
+                        </h3>
+                    </div>
+                    <div class="col-4 border-end">
+                        <h6 class="fw-bold">Telkom</h6>
+                        <h3 class="fw-bold text-primary mb-0">
+                            @Model.TotalCCTVTerpasangTelkom.ToString("n0")
+                        </h3>
+                    </div>
+                    <div class="col-4">
+                        <h6 class="fw-bold">Performa</h6>
+                        <h3 class="fw-bold text-warning mb-0">
+                            @Model.TotalCCTVTerpasangPerforma.ToString("n0")
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-90 shadow-lg rounded-3 neon-left-glow">
             <div class="card-body">
                 <div class="d-flex justify-content-start align-items-center mb-2">
                     <div class="rounded-circle bg-primary-subtle p-2 me-2">
@@ -132,8 +164,8 @@
                 .Caption("Status CCTV")
                 .Alignment(HorizontalAlignment.Center)
                 .CellTemplate(@<text>
-            <% if (data.StatusTerpasang === "BELUM TERPASANG") { %>
-                <span class="badge bg-secondary">BELUM TERPASANG</span>
+            <% if (data.StatusAktif === "UNASSIGNED") { %>
+                <span class="badge bg-info">UNASSIGNED</span>
             <% } else if (data.StatusAktif === "ACTIVE") { %>
                 <span class="badge bg-success">ACTIVE</span>
             <% } else if (data.StatusAktif === "INACTIVE") { %>
