@@ -120,6 +120,16 @@
                                                     <img src="~/icon/listrik.png" class="img-fluid d-block" />
                                                 </div>
                                                 break;
+                                            case EnumFactory.EPajak.AirTanah:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/abt.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.PBB:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/pbb.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
                                             default:
                                                 break;
                                         }
@@ -155,6 +165,18 @@
                                         <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
                                         <div class="vr"></div>
                                         <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex mt-2">
+                                <div class="flex-grow-1">
+                                    <div class="hstack gap-3 flex-wrap">
+                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.JenisPajak</div>
+                                        <div class="vr"></div>
+                                        <div class="text-body fw-medium fs-14 text-decoration-underline" style="cursor: pointer" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                            <i class="ri-external-link-line align-middle me-1"></i> Potensi
+                                        </div>
                                     </div>
                                 </div>
                             </div>
