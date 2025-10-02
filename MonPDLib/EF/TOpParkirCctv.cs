@@ -70,4 +70,7 @@ public partial class TOpParkirCctv
     [StringLength(200)]
     [Unicode(false)]
     public string? ImageUrl { get; set; }
+
+    [Column("VENDOR_ID", TypeName = "NUMBER")]
+    public decimal? VendorId { get; set; }
 }

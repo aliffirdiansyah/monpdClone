@@ -93,12 +93,25 @@
                         <div class="mt-xl-0 mt-5">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
-                                    <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h4>
-                                    <div class="hstack gap-3 flex-wrap">
-                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
-                                        <div class="vr"></div>
-                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
-                                    </div>
+                                    @switch (Model.Pajak)
+                                    {
+                                        case EnumFactory.EPajak.PBB:
+                                            <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaNpwpd</h4>
+                                            <div class="hstack gap-3 flex-wrap">
+                                                <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
+                                                <div class="vr"></div>
+                                                <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
+                                            </div>
+                                            break;
+                                        default:
+                                            <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h4>
+                                            <div class="hstack gap-3 flex-wrap">
+                                                <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
+                                                <div class="vr"></div>
+                                                <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
+                                            </div>
+                                            break;
+                                    }
                                 </div>
                             </div>
 
