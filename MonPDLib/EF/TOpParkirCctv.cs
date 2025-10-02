@@ -72,5 +72,5 @@ public partial class TOpParkirCctv
     public string? ImageUrl { get; set; }
 
     [Column("VENDOR", TypeName = "NUMBER")]
-    public decimal? Vendor { get; set; }
+    public decimal Vendor { get; set; }
 }
