@@ -28,10 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
+            No = new DataGridViewTextBoxColumn();
+            Id = new DataGridViewTextBoxColumn();
+            Nop = new DataGridViewTextBoxColumn();
+            Nama = new DataGridViewTextBoxColumn();
+            Alamat = new DataGridViewTextBoxColumn();
+            Uptb = new DataGridViewTextBoxColumn();
+            CctvId = new DataGridViewTextBoxColumn();
+            AccessPoint = new DataGridViewTextBoxColumn();
+            Mode = new DataGridViewTextBoxColumn();
+            LastConnected = new DataGridViewTextBoxColumn();
+            Action = new DataGridViewButtonColumn();
+            Status = new DataGridViewTextBoxColumn();
+            Error = new DataGridViewTextBoxColumn();
+            Log = new DataGridViewTextBoxColumn();
             btnStartAll = new Button();
             btnStopAll = new Button();
             tabControl1 = new TabControl();
@@ -80,20 +94,6 @@
             btnStopAllLogTelkom = new Button();
             btnStartAllLogTelkom = new Button();
             label4 = new Label();
-            Log = new DataGridViewTextBoxColumn();
-            Error = new DataGridViewTextBoxColumn();
-            Status = new DataGridViewTextBoxColumn();
-            Action = new DataGridViewButtonColumn();
-            LastConnected = new DataGridViewTextBoxColumn();
-            Mode = new DataGridViewTextBoxColumn();
-            AccessPoint = new DataGridViewTextBoxColumn();
-            CctvId = new DataGridViewTextBoxColumn();
-            Uptb = new DataGridViewTextBoxColumn();
-            Alamat = new DataGridViewTextBoxColumn();
-            Nama = new DataGridViewTextBoxColumn();
-            Nop = new DataGridViewTextBoxColumn();
-            Id = new DataGridViewTextBoxColumn();
-            No = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             TarikanCctvJasnita.SuspendLayout();
@@ -114,6 +114,80 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(746, 330);
             dataGridView1.TabIndex = 0;
+            // 
+            // No
+            // 
+            No.HeaderText = "No";
+            No.Name = "No";
+            // 
+            // Id
+            // 
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            // 
+            // Nop
+            // 
+            Nop.HeaderText = "Nop";
+            Nop.Name = "Nop";
+            // 
+            // Nama
+            // 
+            Nama.HeaderText = "Nama";
+            Nama.Name = "Nama";
+            // 
+            // Alamat
+            // 
+            Alamat.HeaderText = "Alamat";
+            Alamat.Name = "Alamat";
+            // 
+            // Uptb
+            // 
+            Uptb.HeaderText = "Uptb";
+            Uptb.Name = "Uptb";
+            // 
+            // CctvId
+            // 
+            CctvId.HeaderText = "Cctv Id";
+            CctvId.Name = "CctvId";
+            // 
+            // AccessPoint
+            // 
+            AccessPoint.HeaderText = "Access Point";
+            AccessPoint.Name = "AccessPoint";
+            // 
+            // Mode
+            // 
+            Mode.HeaderText = "Mode";
+            Mode.Name = "Mode";
+            // 
+            // LastConnected
+            // 
+            LastConnected.HeaderText = "Last Connected";
+            LastConnected.Name = "LastConnected";
+            // 
+            // Action
+            // 
+            Action.HeaderText = "Action";
+            Action.Name = "Action";
+            Action.Resizable = DataGridViewTriState.True;
+            Action.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // Status
+            // 
+            dataGridViewCellStyle1.BackColor = Color.Red;
+            Status.DefaultCellStyle = dataGridViewCellStyle1;
+            Status.HeaderText = "Status";
+            Status.Name = "Status";
+            // 
+            // Error
+            // 
+            Error.HeaderText = "Err Message";
+            Error.Name = "Error";
+            // 
+            // Log
+            // 
+            Log.HeaderText = "Log";
+            Log.Name = "Log";
             // 
             // btnStartAll
             // 
@@ -483,80 +557,6 @@
             label4.Size = new Size(215, 25);
             label4.TabIndex = 5;
             label4.Text = "TARIKAN LOG TELKOM";
-            // 
-            // Log
-            // 
-            Log.HeaderText = "Log";
-            Log.Name = "Log";
-            // 
-            // Error
-            // 
-            Error.HeaderText = "Err Message";
-            Error.Name = "Error";
-            // 
-            // Status
-            // 
-            dataGridViewCellStyle1.BackColor = Color.Red;
-            Status.DefaultCellStyle = dataGridViewCellStyle1;
-            Status.HeaderText = "Status";
-            Status.Name = "Status";
-            // 
-            // Action
-            // 
-            Action.HeaderText = "Action";
-            Action.Name = "Action";
-            Action.Resizable = DataGridViewTriState.True;
-            Action.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // LastConnected
-            // 
-            LastConnected.HeaderText = "Last Connected";
-            LastConnected.Name = "LastConnected";
-            // 
-            // Mode
-            // 
-            Mode.HeaderText = "Mode";
-            Mode.Name = "Mode";
-            // 
-            // AccessPoint
-            // 
-            AccessPoint.HeaderText = "Access Point";
-            AccessPoint.Name = "AccessPoint";
-            // 
-            // CctvId
-            // 
-            CctvId.HeaderText = "Cctv Id";
-            CctvId.Name = "CctvId";
-            // 
-            // Uptb
-            // 
-            Uptb.HeaderText = "Uptb";
-            Uptb.Name = "Uptb";
-            // 
-            // Alamat
-            // 
-            Alamat.HeaderText = "Alamat";
-            Alamat.Name = "Alamat";
-            // 
-            // Nama
-            // 
-            Nama.HeaderText = "Nama";
-            Nama.Name = "Nama";
-            // 
-            // Nop
-            // 
-            Nop.HeaderText = "Nop";
-            Nop.Name = "Nop";
-            // 
-            // Id
-            // 
-            Id.HeaderText = "Id";
-            Id.Name = "Id";
-            // 
-            // No
-            // 
-            No.HeaderText = "No";
-            No.Name = "No";
             // 
             // Form1
             // 

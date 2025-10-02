@@ -3,6 +3,7 @@ using Microsoft.VisualBasic.ApplicationServices;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
+using System.Drawing;
 using System.Net.Http.Headers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -539,7 +540,8 @@ namespace CCTVParkirWorker
                                     JenisKend = (int)GetJenisKendaraan(ar.VehicleClass),
                                     PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "",
                                     Direction = (int)GetDirection(ar.Direction),
-                                    Log = $"ID:{id},DIR:{ar.Direction},CLASS:{ar.VehicleClass ?? "-"},BRAND:{ar.VehicleBrand ?? "-"},MODEL:{ar.VehicleModel ?? "-"}"
+                                    Log = $"ID:{id},DIR:{ar.Direction},CLASS:{ar.VehicleClass ?? "-"},BRAND:{ar.VehicleBrand ?? "-"},MODEL:{ar.VehicleModel ?? "-"}",
+                                    Vendor = (int)(EnumFactory.EVendorParkirCCTV.Jasnita)
                                 };
 
                                 toInsert.Add(insert);
@@ -791,13 +793,19 @@ namespace CCTVParkirWorker
             {
                 var res = new CameraStatusRekap();
 
+                res.Guid = item.Body.Guid;
                 res.AccessPoint = item.Subjects[0];
                 res.Localization = item.Localization.Text;
+                res.StateAsli = item.Body.State;
                 res.State = GetStatusCctv(item.Body.State).GetDescription();
                 res.Tanggal = ParseFlexibleDate(item.Body.Timestamp);
 
                 rekapResult.Add(res);
             }
+
+            UpdateLogLog(row, "Inserting Detail");
+            await InsertToDbCctvLogDetail(op, rekapResult, token);
+            UpdateLogLog(row, "Done Detail");
 
             //do logic here
             var dataLog = rekapResult
@@ -882,7 +890,67 @@ namespace CCTVParkirWorker
             }
             catch (Exception ex)
             {
-                UpdateLog(row, $"Error Insert Db: {ex.Message}");
+                UpdateLogLog(row, $"Error Insert Db: {ex.Message}");
+            }
+            finally
+            {
+                await context.Database.CloseConnectionAsync();
+            }
+        }
+
+        public async Task InsertToDbCctvLogDetail(ParkirView op, List<CameraStatusRekap> dataList, CancellationToken token)
+        {
+            var context = DBClass.GetContext();
+
+            var allIds = dataList
+                .Select(x => x.Guid)
+                .Distinct()
+                .ToList();
+
+            var existingIds = await context.TOpParkirCctvs
+                .Where(x => allIds.Contains(x.Id))
+                .Select(x => x.Id)
+                .ToListAsync(token);
+
+            var existingSet = new HashSet<string>(existingIds);
+
+            var insertData = new List<MOpParkirCctvJasnitaLogD>();
+            foreach (var item in dataList)
+            {
+                bool dataExist = existingSet.Contains(item.Guid);
+                if (!dataExist)
+                {
+                    var insert = new MOpParkirCctvJasnitaLogD
+                    {
+                        Guid = item.Guid,
+                        Nop = op.NOP,
+                        CctvId = op.CCTVId,
+                        TglEvent = item.Tanggal,
+                        Event = item.StateAsli,
+                        IsOn = item.StateAsli.ToUpper() == "IPDS_SIGNAL_RESTORED" ? 1 : 0
+                    };
+
+                    insertData.Add(insert);
+                }
+            }
+
+            try
+            {
+                await context.Database.OpenConnectionAsync(token);
+                if (insertData.Count > 0)
+                {
+                    await context.MOpParkirCctvJasnitaLogDs.AddRangeAsync(insertData, token);
+                    await context.SaveChangesAsync(token);
+                    await context.Database.CloseConnectionAsync();
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
             finally
             {
@@ -1077,7 +1145,8 @@ namespace CCTVParkirWorker
                         WaktuKeluar = ParseFlexibleDate(item.Timestamp),
                         Direction = (int)EnumFactory.CctvParkirDirection.Incoming,
                         Log = "",
-                        ImageUrl = item.Image
+                        ImageUrl = item.Image,
+                        Vendor = (int)(EnumFactory.EVendorParkirCCTV.Telkom)
                     };
 
                     toInsert.Add(insert);

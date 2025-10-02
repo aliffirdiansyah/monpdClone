@@ -8,8 +8,10 @@ namespace CCTVParkirWorker
 {
     public class CameraStatusRekap
     {
+        public string Guid { get; set; }
         public string AccessPoint { get; set; }
         public string Localization { get; set; }
+        public string StateAsli { get; set; }
         public string State { get; set; }
         public DateTime Tanggal { get; set; }
     }
