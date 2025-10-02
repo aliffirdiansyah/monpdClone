@@ -182,27 +182,16 @@
             .Width(200)
             .Alignment(HorizontalAlignment.Center)
             .CellTemplate(@<text>
-                    <div class="d-flex justify-content-center gap-2">
+                <div class="d-flex justify-content-center gap-2">
 
-                        @* <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>','<%- data.VedorId %>')" title="Detail">
-                        <i class="bx bx-archive"></i>
-                        </button> *@
-
-                    <% if (data.Ishasdetail) { %>
+                    <% if (data.StatusTerpasang === "TERPASANG") { %>
                         <button class="btn btn-sm btn-primary" onclick="lihatDetailModal('<%- data.Nop %>','<%- data.VedorId %>')" title="Log">
                             <i class="bx bx-area"></i>
                         </button>
-
-                    <% } %>
-
-                    <% if (data.Ishasdetail) { %>
-
                         <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>','<%- data.VedorId %>')" title="Detail">
                         <i class="bx bx-archive"></i>
                         </button>
-
-                    <%  } %> 
-
+                    <% } %>
                 </div>
             </text>)
             ;
