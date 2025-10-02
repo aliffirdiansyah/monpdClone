@@ -12,17 +12,17 @@
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title text-dark fs-16 mb-0">
-                        @Model.Data.FirstOrDefault().Jenis
+                        @Model.Data.FirstOrDefault()?.Jenis
                     </h4>
                 </div>
             </div>
             <div class="card-body">
                 <div class="flex-grow-1">
                     <h4 class="card-title fs-16 mb-2">
-                        Kategori : @Model.Data.FirstOrDefault().KategoriText
+                        Kategori : @Model.Data.FirstOrDefault()?.KategoriText
                     </h4>
                     <h4 class="card-title fs-16 mb-1">
-                        Jenis : @Model.Data.FirstOrDefault().Jenis
+                        Jenis : @Model.Data.FirstOrDefault()?.Jenis
                     </h4>
                 </div>
                 <div class="table-responsive">
