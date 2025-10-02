@@ -4522,11 +4522,15 @@ namespace MonPDReborn.Models.DataOP
                         break;
 
                     case EnumFactory.EPajak.PBB:
+                        var realisasiPbb = context.DbMonPbbs
+                            .Where(x => x.TahunPajak == tahun && x.Nop == nop)
+                            .Select(g => g.PokokPajak)
+                            .FirstOrDefault();
                         var opPbb = context.DbOpPbbs.FirstOrDefault(x => x.Nop == nop);
                         if (opPbb != null)
                         {
                             ret.IdentitasPajak.WilayahPajak =
-                                (opPbb.Uptb != null ? "UPTB " + opPbb.Uptb.ToString() : ""); 
+                                (opPbb.Uptb != null ? opPbb.Uptb.ToString() : ""); 
                             ret.IdentitasPajak.NpwpdNo = opPbb.WpNpwp ?? "-";
                             ret.IdentitasPajak.NamaNpwpd = opPbb.WpNama ?? "-";
                             ret.IdentitasPajak.NOP = opPbb.Nop;
@@ -4537,6 +4541,8 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opPbb.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opPbb.KategoriId;
+                            ret.IdentitasPajak.RealisasiTahun = realisasiPbb ?? 0;
+                            ret.IdentitasPajak.LuasTanah = opPbb.LuasTanah;
 
                             /*ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
                             {
@@ -5063,6 +5069,7 @@ namespace MonPDReborn.Models.DataOP
             public string NoPerusahaan { get; set; }
             public decimal kategoriID { get; set; }
             public decimal RealisasiTahun { get; set; }
+            public decimal LuasTanah { get; set; }
 
         }
         public class DataPerizinan
