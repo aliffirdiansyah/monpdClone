@@ -134,17 +134,40 @@ namespace MonPDReborn.Controllers.CCTVParkir
             }
         }
 
+        //public IActionResult KapasitasHarianDetail(string nop, int vendorId, DateTime tgl)
+        //{
+        //    try
+        //    {
+        //        var data = Method.GetMonitoringHarianDetail(nop, vendorId, tgl);
+        //        return Json(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Status = StatusEnum.Error;
+        //        response.Message = ex.Message;
+        //        return Json(response);
+        //    }
+        //}
+
         public IActionResult KapasitasHarianDetail(string nop, int vendorId, DateTime tgl)
         {
             try
             {
-                var data = Method.GetMonitoringHarianDetail(nop, vendorId, tgl);
-                return Json(data);
+                var model = Method.GetMonitoringHarianDetail(nop, vendorId, tgl);
+
+                // pastikan URLView dan actionName sesuai convention di BaseController
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
             }
             catch (Exception ex)
             {
                 response.Status = StatusEnum.Error;
-                response.Message = ex.Message;
+                response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
         }

@@ -635,11 +635,12 @@ namespace MonPDReborn.Models.CCTVParkir
                     {
                         // KONDISI 2: Estimasi lebih besar dari Realisasi -> Hitung Selisih dan Persentase
                         decimal selisihNominal = estimasi - realisasiTahunIni;
-                        decimal persentaseRealisasi = (estimasi == 0) ? 0 : (realisasiTahunIni / estimasi) * 100m;
+                        // Persentase -> selisih - estimasi x 100%
+                        decimal persentaseRealisasi = (estimasi == 0) ? 0 : (selisihNominal / estimasi) * 100m;
                         string selisihFormat = selisihNominal.ToString("N0", new CultureInfo("id-ID")); // Format Rupiah tanpa simbol
                         string persenFormat = persentaseRealisasi.ToString("F2", CultureInfo.InvariantCulture); // Format Persen 2 desimal
 
-                        potensiString = $"-Rp {selisihFormat} ({persenFormat}%)";
+                        potensiString = $"Rp {selisihFormat} ({persenFormat}%)";
 
                     }
 

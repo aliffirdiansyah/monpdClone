@@ -1,0 +1,24 @@
+﻿@model List<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
+        .ID("gridDetailHarian")
+        .DataSource(Model.OrderBy(x => x.TanggalMasuk).ToList())
+        .ShowBorders(true)
+        .ColumnAutoWidth(true)
+        .Sorting(s => s.Mode(GridSortingMode.None)) 
+        .HeaderFilter(h => h.Visible(true))
+        .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
+        .Paging(p => p.Enabled(false)) 
+        .Pager(p => p.Visible(false))
+        .OnExporting("exportGrid")
+        .OnRowPrepared("applyRowColor") 
+        .Columns(columns => {
+            columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("dd-MM-yyyy HH:mm:ss").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
+            columns.AddFor(m => m.Direction).Caption("Direction").Alignment(HorizontalAlignment.Center);
+            columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
+        })
+    )
+</div>

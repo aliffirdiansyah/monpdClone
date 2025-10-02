@@ -5,6 +5,23 @@
     ViewData["Title"] = "Jumlah Terparkir";
     Layout = "_Layout";
 }
+
+<style>
+    /* Baris Hijau: IsLog = TRUE dan IsOn = TRUE */
+    .row-green td {
+        color: #198754 !important; /* Warna Hijau */
+        font-weight: 500;
+    }
+
+    /* Baris Merah: IsLog = TRUE dan IsOn = FALSE */
+    .row-red td {
+        color: #dc3545 !important; /* Warna Merah */
+        font-weight: 500;
+    }
+
+    /* Penting: Menggunakan selector 'td' agar warna teks diterapkan pada semua sel di baris tersebut */
+</style>
+
 <div class="row">
 
     <div class="col-lg-12">
@@ -32,7 +49,7 @@
                     </div>
                 </div>
 
-                <!-- Modal untuk Detail Harian -->
+                @* <!-- Modal untuk Detail Harian -->
                 <div class="modal fade" id="modalDetailHarian" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-xl modal-dialog-centered">
                         <div class="modal-content">
@@ -45,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> *@
 
                 <div class="row g-3 align-items-center">
 
@@ -168,49 +185,71 @@
 
 
                         // tambahin event klik cell
+
+                        // onCellClick: function (e) {
+                        //     if (e.column.dataField === "HariLabel") {
+                        //         var tgl = e.data.Tanggal; 
+
+                        //         $.ajax({
+                        //             url: '/MonitoringCCTV/KapasitasHarianDetail',
+                        //             type: 'GET',
+                        //             data: { nop: nop, vendorId: vendorId, tgl: tgl },
+                        //             success: function (detailData) {
+                        //                 $("#gridDetailHarian").dxDataGrid({
+                        //                     dataSource: detailData,
+                        //                     showBorders: true,
+                        //                     columnAutoWidth: true,
+                        //                     paging: { pageSize: 10 },
+                        //                     pager: { showPageSizeSelector: true },
+                        //                     headerFilter: {
+                        //                         visible: true
+                        //                     },
+                        //                     columns: [
+                        //                         { dataField: "TanggalMasuk", caption: "Waktu Masuk", dataType: "datetime", format: "dd-MM-yyyy HH:mm:ss", alignment:"center" },
+                        //                         { dataField: "JenisKend", caption: "Jenis Kendaraan"  , alignment:"center"},
+                        //                         { dataField: "PlatNo", caption: "Plat Nomor" , alignment:"center" },
+                        //                         { dataField: "Direction", caption: "Direction"  , alignment:"center"},
+                        //                         {
+                        //                             caption: "Lampiran",
+                        //                             alignment: "center",
+                        //                             cellTemplate: lampiranCellTemplate ← pakai function di atas
+                        //                         }
+                        //                     ],
+                        //                     export: {
+                        //                         enabled: true,
+                        //                         allowExportSelectedData: false,
+                        //                         formats: ["xlsx", "pdf"]
+                        //                     },
+                        //                     onExporting: exportGrid,
+                        //                 });
+
+                        //                 tampilkan modal
+                        //                 $("#modalDetailHarian").modal("show");
+                        //             },
+                        //             error: function (xhr) {
+                        //                 alert("Gagal load detail: " + xhr.responseText);
+                        //             }
+                        //         });
+                        //     }
+                        // }
                         onCellClick: function (e) {
                             if (e.column.dataField === "HariLabel") {
-                                var tgl = e.data.Tanggal; 
+                                var tgl = e.data.Tanggal;
 
                                 $.ajax({
                                     url: '/MonitoringCCTV/KapasitasHarianDetail',
                                     type: 'GET',
                                     data: { nop: nop, vendorId: vendorId, tgl: tgl },
-                                    success: function (detailData) {
-                                        $("#gridDetailHarian").dxDataGrid({
-                                            dataSource: detailData,
-                                            showBorders: true,
-                                            columnAutoWidth: true,
-                                            paging: { pageSize: 10 },
-                                            pager: { showPageSizeSelector: true },
-                                            headerFilter: {
-                                                visible: true
-                                            },
-                                            columns: [
-                                                { dataField: "TanggalMasuk", caption: "Waktu Masuk", dataType: "datetime", format: "dd-MM-yyyy HH:mm:ss", alignment:"center" },
-                                                { dataField: "CctvId", caption: "CCTV" , alignment:"center" },
-                                                { dataField: "JenisKend", caption: "Jenis Kendaraan"  , alignment:"center"},
-                                                { dataField: "PlatNo", caption: "Plat Nomor" , alignment:"center" },
-                                                { dataField: "Direction", caption: "Direction"  , alignment:"center"},
-                                                {
-                                                    caption: "Lampiran",
-                                                    alignment: "center",
-                                                    cellTemplate: lampiranCellTemplate // ← pakai function di atas
-                                                }
-                                            ],
-                                            export: {
-                                                enabled: true,
-                                                allowExportSelectedData: false,
-                                                formats: ["xlsx", "pdf"]
-                                            },
-                                            onExporting: exportGrid,
-                                        });
+                                    success: function (result) {
+                                        // render partial ke modal
+                                        $("#staticBackdropLargeScrollable .modal-title").html("Detail");
+                                        $("#staticBackdropLargeScrollable .modal-body").html(result);
 
-                                        // tampilkan modal
-                                        $("#modalDetailHarian").modal("show");
+                                        // show modal
+                                        $("#staticBackdropLargeScrollable").modal("show");
                                     },
                                     error: function (xhr) {
-                                        alert("Gagal load detail: " + xhr.responseText);
+                                        $("#gridDetailHarian").html("<div class='text-danger'>Gagal load detail.</div>");
                                     }
                                 });
                             }
@@ -250,103 +289,33 @@
             }
         }
     </script>
-}
 
-
-@* @section Scripts {
     <script>
-        $(document).ready(function () {
-            fnKapasitasParkir();
-        });
+        function applyRowColor(e) {
+            // Hanya proses baris yang berisi data
+            if (e.rowType === "data") {
+                const data = e.data;
+                const $rowElement = $(e.rowElement); // Konversi ke jQuery element
 
-        function fnKapasitasParkir() {
+                // Logika Anda:
+                // 1. Cek jika IsLog = TRUE
+                if (data.IsLog === true) {
 
-            var bulanAwal = $("#bulanAwal").dxDateBox("instance").option("value");
-            var bulanAkhir = $("#bulanAkhir").dxDateBox("instance").option("value");
-
-            if (!bulanAwal || !bulanAkhir) {
-                alert("Harap pilih kedua bulan.");
-                return;
-            }
-
-            var startDate = new Date(bulanAwal.getFullYear(), bulanAwal.getMonth(), 1);
-            var endDate = new Date(bulanAkhir.getFullYear(), bulanAkhir.getMonth() + 1, 0);
-
-            if (startDate > endDate) {
-                alert("Bulan Awal tidak boleh lebih besar dari Bulan Akhir.");
-                return;
-            }
-
-            $("#DataKapasitasParkir").html(
-                '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>'
-            );
-
-            $.ajax({
-                url: '@Url.Action("DataKapasitasParkir")',
-                type: 'GET',
-                data: {
-                    nop: '@(Model.Nop)',
-                    tanggalAwal: startDate.toISOString().split('T')[0], // yyyy-MM-dd
-                    tanggalAkhir: endDate.toISOString().split('T')[0]
-                },
-                beforeSend: function () {
-                    $('#loading2-DataKapasitasParkir').show();
-                    $('#DataKapasitasParkir').hide();
-                },
-                success: function (result) {
-                    $('#loading2-DataKapasitasParkir').hide();
-                    $('#DataKapasitasParkir').html(result).show();
-                },
-                error: function () {
-                    $('#loading2-DataKapasitasParkir').hide();
-                    $('#DataKapasitasParkir').html('<div class="alert alert-danger">❌ Gagal memuat data.</div>').show();
+                    // 1a. Jika IsOn = TRUE -> HIJAU
+                    if (data.IsOn === true) {
+                        $rowElement.addClass('row-green');
+                    }
+                    // 1b. Jika IsOn = FALSE -> MERAH
+                    else if (data.IsOn === false) {
+                        $rowElement.addClass('row-red');
+                    }
                 }
-            });
-        }
-
-        function lihatDetailLog(nop, jenisKend) {
-            var bulanAwal = $("#bulanAwal").dxDateBox("instance").option("value");
-            var bulanAkhir = $("#bulanAkhir").dxDateBox("instance").option("value");
-
-            if (!bulanAwal || !bulanAkhir) {
-                alert("Harap pilih kedua bulan.");
-                return;
+                // 2. Jika IsLog = FALSE -> NORMAL (Hitam)
+                else {
+                    // Hapus kelas warna jika ada, memastikan baris kembali normal
+                    $rowElement.removeClass('row-green row-red');
+                }
             }
-
-            var startDate = new Date(bulanAwal.getFullYear(), bulanAwal.getMonth(), 1);
-            var endDate = new Date(bulanAkhir.getFullYear(), bulanAkhir.getMonth() + 1, 0);
-
-            if (startDate > endDate) {
-                alert("Bulan Awal tidak boleh lebih besar dari Bulan Akhir.");
-                return;
-            }
-
-            // Tampilkan modal
-            $("#staticBackdropLargeScrollable").modal("show");
-
-            // Kosongkan / tampilkan loading spinner saat request
-            $("#staticBackdropLargeScrollable .modal-body").html(`
-                <div class="text-center p-3">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            `);
-
-            // Ambil konten detail via AJAX
-            $.get('/MonitoringCCTV/Log', { nop: nop, jenisKend : jenisKend,tanggalAwal: startDate.toISOString().split('T')[0], // yyyy-MM-dd
-                    tanggalAkhir: endDate.toISOString().split('T')[0]  })
-                .done(function (html) {
-                    $("#staticBackdropLargeScrollable .modal-title").html("Detail Kendaraan");
-                    $("#staticBackdropLargeScrollable .modal-body").html(html);
-                })
-                .fail(function () {
-                    $("#staticBackdropLargeScrollable .modal-body").html(
-                        `<div class="text-danger text-center p-3">
-                            Gagal memuat data detail.
-                        </div>`
-                    );
-                });
         }
     </script>
-} *@
+}
