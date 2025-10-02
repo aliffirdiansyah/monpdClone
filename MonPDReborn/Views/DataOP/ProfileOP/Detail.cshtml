@@ -64,10 +64,18 @@
         display: block;
     }
 
+    #lokasi-nav {
+        display: none;
+    }
+
     /* Sembunyikan jika layar <= 768px */
     @@media (max-width: 768px) {
         #lokasi {
             display: none;
+        }
+
+        #lokasi-nav {
+            display: block;
         }
     }
 </style>
@@ -131,10 +139,7 @@
                                             allowfullscreen
                                             loading="lazy"
                                             referrerpolicy="no-referrer-when-downgrade"
-                                            src="https://www.google.com/maps?q=@(Uri.EscapeDataString(
-                                                (Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " +
-                                                (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"
-                                            ))&output=embed">
+                                            src="https://www.google.com/maps?q=@(Uri.EscapeDataString((Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " + (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"))&output=embed">
                                     </iframe>
                                 </div>
                             </div>
@@ -227,10 +232,31 @@
                                 <nav>
                                     <ul class="nav nav-tabs nav-tabs-custom nav-success" id="nav-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="nav-speci-tab" data-bs-toggle="tab" href="#nav-speci" role="tab" aria-controls="nav-speci" aria-selected="true">Pembayaran</a>
+                                            <a class="nav-link active" id="nav-speci-tab" data-bs-toggle="tab" href="#nav-speci" role="tab" aria-controls="nav-speci" aria-selected="true">
+                                                <i class="ri-wallet-line align-middle me-1"></i>Pembayaran
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-detail" aria-selected="false">Profile</a>
+                                            <a class="nav-link" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-detail" aria-selected="false">
+                                                <i class="ri-shield-user-line align-middle me-1"></i>Profile
+                                            </a>
+                                        </li>
+                                        @switch (Model.Pajak)
+                                        {
+                                            case EnumFactory.EPajak.JasaPerhotelan:
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="nav-okupansi-tab" data-bs-toggle="tab" href="#nav-okupansi" role="tab" aria-controls="nav-okupansi" aria-selected="false">
+                                                        <i class="ri-hotel-bed-line align-middle me-1"></i>Okupansi
+                                                    </a>
+                                                </li>
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        <li class="nav-item" id="lokasi-nav">
+                                            <a class="nav-link" id="nav-lokasi-tab" data-bs-toggle="tab" href="#nav-lokasi" role="tab" aria-controls="nav-lokasi" aria-selected="false">
+                                                <i class="ri-map-pin-user-line align-middle me-1"></i>Lokasi
+                                            </a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -244,16 +270,138 @@
                                         <div id="PembayaranPajak"></div>
                                     </div>
                                     <div class="tab-pane fade" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
-                                        <div>
-                                            <h5 class="font-size-16 mb-3">Tommy Hilfiger Sweatshirt for Men (Pink)</h5>
-                                            <p>Tommy Hilfiger men striped pink sweatshirt. Crafted with cotton. Material composition is 100% organic cotton. This is one of the world’s leading designer lifestyle brands and is internationally recognized for celebrating the essence of classic American cool style, featuring preppy with a twist designs.</p>
-                                            <div>
-                                                <p class="mb-2"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> Machine Wash</p>
-                                                <p class="mb-2"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> Fit Type: Regular</p>
-                                                <p class="mb-2"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> 100% Cotton</p>
-                                                <p class="mb-0"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> Long sleeve</p>
+                                        <div class="card">
+                                            <div class="card-header bg-success bg-opacity-50">
+                                                <h6 class="mb-0 fw-bold">Identitas Objek Pajak</h6>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">NPWPD</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.NpwpdNo</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">Nama</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">
+                                                                @switch (Model.Pajak)
+                                                                {
+                                                                    case EnumFactory.EPajak.PBB:
+                                                                        @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.NamaNpwpd.ToLower())
+                                                                        break;
+                                                                    default:
+                                                                        @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.NamaObjekPajak.ToLower())
+                                                                        break;
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">NOP</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.FormattedNOP</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">Alamat Lengkap</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.AlamatLengkap.ToLower())</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">Wilayah Pajak</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">Surabaya @Model.DataDetail.IdentitasPajak.WilayahPajak</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">Telp</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.Telepon</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">Tanggal Buka</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">Jenis Pajak</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.JenisPajak</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;">Kategori Pajak</th>
+                                                            <th scope="row" style="width: 20px;">:</th>
+                                                            <td class="text-body fw-medium">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.KategoriPajak.ToLower())</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-okupansi" role="tabpanel" aria-labelledby="nav-okupansi-tab">
+                                        <div class="card">
+                                            <div class="card-header d-flex bg-header-color align-items-center">
+                                                <div class="flex-grow-1">
+                                                    <h4 class="card-title fs-16 text-dark mb-0">
+                                                        <i class="bx bx-bar-chart-alt me-2"></i>Okupansi @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <center>
+                                                        <div class="col-lg-6">
+                                                            @(
+                                                                Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
+                                                                .ID("okupansiGrid")
+                                                                .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
+                                                                .KeyExpr("Bulan")
+                                                                .ShowBorders(true)
+                                                                .ShowColumnLines(true)
+                                                                .Paging(p => p.PageSize(12))
+                                                                .Columns(columns =>
+                                                                {
+                                                                    columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                                                                    columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
+                                                                    columns.AddFor(m => m.TahunNow).Caption(tahunNow);
+                                                                })
+                                                                .Summary(s =>
+                                                                {
+                                                                    s.TotalItems(items =>
+                                                                    {
+                                                                        items.AddFor(x => x.BulanNama)
+                                                                    .SummaryType(SummaryType.Sum)
+                                                                    .DisplayFormat("Average");
+
+                                                                        items.AddFor(x => x.TahunMines1)
+                                                                    .SummaryType(SummaryType.Avg)
+                                                                    .ValueFormat("#,##0.00")
+                                                                    .DisplayFormat("{0}");
+
+                                                                        items.AddFor(x => x.TahunNow)
+                                                                    .SummaryType(SummaryType.Avg)
+                                                                    .ValueFormat("#,##0.00")
+                                                                    .DisplayFormat("{0}");
+                                                                    });
+
+                                                                })
+                                                                )
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-lokasi" role="tabpanel" aria-labelledby="nav-lokasi-tab">
+                                        <iframe width="100%"
+                                                height="400"
+                                                style="border:0;"
+                                                allowfullscreen
+                                                loading="lazy"
+                                                referrerpolicy="no-referrer-when-downgrade"
+                                                src="https://www.google.com/maps?q=@(Uri.EscapeDataString((Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " + (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"))&output=embed">
+                                        </iframe>
                                     </div>
                                 </div>
                             </div>

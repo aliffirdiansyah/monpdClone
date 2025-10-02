@@ -4304,6 +4304,10 @@ namespace MonPDReborn.Models.DataOP
                         break;
 
                     case EnumFactory.EPajak.TenagaListrik:
+                        var realisasiPpj = context.DbMonPpjs
+                            .Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
+                            .Sum(x => x.NominalPokokBayar) ?? 0;
+
                         var opListrik = context.DbOpListriks.FirstOrDefault(x => x.Nop == nop);
                         if (opListrik != null)
                         {
@@ -4319,10 +4323,15 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opListrik.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opListrik.KategoriId;
+                            ret.IdentitasPajak.RealisasiTahun = realisasiPpj;
                         }
                         break;
 
                     case EnumFactory.EPajak.JasaPerhotelan:
+                        var realisasiHotel = context.DbMonHotels
+                            .Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
+                            .Sum(x => x.NominalPokokBayar) ?? 0;
+
                         var opHotel = context.DbOpHotels.FirstOrDefault(x => x.Nop == nop);
                         if (opHotel != null)
                         {
@@ -4338,6 +4347,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opHotel.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opHotel.KategoriId;
+                            ret.IdentitasPajak.RealisasiTahun = realisasiHotel;
                             //isi data hotel
                             ret.HotelRow.PendapatanRow = new DetailHotel.Pendapatan
                             {
@@ -4401,6 +4411,9 @@ namespace MonPDReborn.Models.DataOP
                         break;
 
                     case EnumFactory.EPajak.JasaParkir:
+                        var realisasiParkir = context.DbMonParkirs
+                            .Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
+                            .Sum(x => x.NominalPokokBayar) ?? 0;
                         var opParkir = context.DbOpParkirs.FirstOrDefault(x => x.Nop == nop);
                         if (opParkir != null)
                         {
@@ -4416,10 +4429,14 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opParkir.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opParkir.KategoriId;
+                            ret.IdentitasPajak.RealisasiTahun = realisasiParkir;
                         }
                         break;
 
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var realisasiHiburan = context.DbMonHiburans
+                            .Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
+                            .Sum(x => x.NominalPokokBayar) ?? 0;
                         var opHiburan = context.DbOpHiburans.FirstOrDefault(x => x.Nop == nop);
                         if (opHiburan != null)
                         {
@@ -4435,10 +4452,14 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opHiburan.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opHiburan.KategoriId;
+                            ret.IdentitasPajak.RealisasiTahun = realisasiHiburan;
                         }
                         break;
 
                     case EnumFactory.EPajak.AirTanah:
+                        var realisasiAbt = context.DbMonAbts
+                            .Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
+                            .Sum(x => x.NominalPokokBayar) ?? 0;
                         var opAbt = context.DbOpAbts.FirstOrDefault(x => x.Nop == nop);
                         if (opAbt != null)
                         {
@@ -4454,6 +4475,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opAbt.KategoriNama;
                             ret.IdentitasPajak.kategoriID = opAbt.KategoriId;
+                            ret.IdentitasPajak.RealisasiTahun = realisasiAbt;
 
                             ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
                             {
