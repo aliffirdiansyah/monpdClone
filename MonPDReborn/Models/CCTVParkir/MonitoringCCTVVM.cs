@@ -389,13 +389,18 @@ namespace MonPDReborn.Models.CCTVParkir
                             if (tglTerakhirAktif.HasValue)
                                 tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
 
-                        }
+                        }           
 
                         if (g.IsPasang != 1)
                         {
                             isAktif = "UNASSIGNED";
                             statusTerpasang = "BELUM TERPASANG";
+                            /*  PENGECEKAN MENGAKALI , JIKA DI DB ADA TGL TERPASANG, TAPI SEBENARNYA IS PASANG = 0 , KARENA DI DB KOLOM TGL TERPASANG 
+                             *  CONSTRAINT NOT NULL
+                             */
+                            tglTerpasang = null;
                         }
+
 
                         return new MonitoringCCTV
                         {
