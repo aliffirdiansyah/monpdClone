@@ -132,24 +132,47 @@
 
 
                                 <div class="row mt-4">
-                                    <div class="col-lg-3 col-sm-6">
-                                        <div class="p-2 border border-succes rounded">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-sm me-2">
-                                                    <div class="avatar-title rounded bg-transparent text-success fs-24">
-                                                        <i class="ri-exchange-line"></i>
+                                    @switch (Model.Pajak)
+                                    {
+                                        case EnumFactory.EPajak.PBB:
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="p-2 border border-success rounded">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-sm me-2">
+                                                            <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                                <i class="ri-exchange-line"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <p class="text-muted mb-1">Pajak Pokok :</p>
+                                                            <div class="text-body fw-medium fs-14">@Extension.FormatRupiah(Model.DataDetail.IdentitasPajak.RealisasiTahun)</div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="flex-grow-1">
-                                                    <p class="text-muted mb-1">Realisasi Tahun Ini :</p>
-                                                    <div class="text-body fw-medium fs-14">@Extension.FormatRupiah(Model.DataDetail.IdentitasPajak.RealisasiTahun)</div>
+                                            </div>
+                                            break;
+                                        default:
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="p-2 border border-success rounded">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-sm me-2">
+                                                            <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                                <i class="ri-exchange-line"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <p class="text-muted mb-1">Realisasi Tahun Ini :</p>
+                                                            <div class="text-body fw-medium fs-14">@Extension.FormatRupiah(Model.DataDetail.IdentitasPajak.RealisasiTahun)</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                            break;
+                                    }
+                                    
                                     <!-- end col -->
                                     <div class="col-lg-3 col-sm-6">
-                                        <div class="p-2 border border-dashed rounded">
+                                        <div class="p-2 border border-success rounded">
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-sm me-2">
                                                     <div class="avatar-title rounded bg-transparent text-success fs-24">
@@ -165,7 +188,7 @@
                                     </div>
                                     <!-- end col -->
                                     <div class="col-lg-3 col-sm-6">
-                                        <div class="p-2 border border-dashed rounded">
+                                        <div class="p-2 border border-success rounded">
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-sm me-2">
                                                     <div class="avatar-title rounded bg-transparent text-success fs-24">
@@ -180,21 +203,43 @@
                                         </div>
                                     </div>
                                     <!-- end col -->
-                                    <div class="col-lg-3 col-sm-6">
-                                        <div class="p-2 border border-dashed rounded">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-sm me-2">
-                                                    <div class="avatar-title rounded bg-transparent text-success fs-24">
-                                                        <i class="ri-inbox-archive-fill"></i>
+                                    @switch (Model.Pajak)
+                                    {
+                                        case EnumFactory.EPajak.PBB:
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="p-2 border border-success rounded">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-sm me-2">
+                                                            <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                                <i class="ri-community-fill"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <p class="text-muted mb-1">Luas Tanah :</p>
+                                                            <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.LuasTanah m<sup>2</sup></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="flex-grow-1">
-                                                    <p class="text-muted mb-1">Tanggal Buka :</p>
-                                                    <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMMM yyyy", new CultureInfo("id-ID"))</div>
+                                            </div>
+                                            break;
+                                        default:
+                                            <div class="col-lg-3 col-sm-6">
+                                                <div class="p-2 border border-success rounded">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-sm me-2">
+                                                            <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                                <i class="ri-inbox-archive-fill"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <p class="text-muted mb-1">Tanggal Buka :</p>
+                                                            <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMMM yyyy", new CultureInfo("id-ID"))</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                            break;
+                                    }
                                     <!-- end col -->
                                 </div>
                                 <hr />
@@ -290,11 +335,18 @@
                                                             <th scope="row" style="width: 20px;">:</th>
                                                             <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.Telepon</td>
                                                         </tr>
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Tanggal Buka</th>
-                                                            <th scope="row" style="width: 20px;">:</th>
-                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))</td>
-                                                        </tr>
+                                                        @switch (Model.Pajak)
+                                                            {
+                                                                case EnumFactory.EPajak.PBB:
+                                                                    break;
+                                                                default:
+                                                                    <tr>
+                                                                        <th scope="row" style="width: 200px;">Tanggal Buka</th>
+                                                                        <th scope="row" style="width: 20px;">:</th>
+                                                                        <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))</td>
+                                                                    </tr>
+                                                                    break;
+                                                            }
                                                         <tr>
                                                             <th scope="row" style="width: 200px;">Jenis Pajak</th>
                                                             <th scope="row" style="width: 20px;">:</th>
