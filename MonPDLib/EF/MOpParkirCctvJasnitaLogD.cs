@@ -33,6 +33,9 @@ public partial class MOpParkirCctvJasnitaLogD
     [Unicode(false)]
     public string Event { get; set; } = null!;
 
+    [Column("IS_ON", TypeName = "NUMBER")]
+    public decimal IsOn { get; set; }
+
     [ForeignKey("Nop, CctvId")]
     [InverseProperty("MOpParkirCctvJasnitaLogDs")]
     public virtual MOpParkirCctvJasnitaLog MOpParkirCctvJasnitaLog { get; set; } = null!;
