@@ -34,11 +34,12 @@ namespace MonPDReborn.Models.CCTVParkir
             public List<MonitoringCCTV> MonitoringCCTVList { get; set; } = new();
             public decimal TotalOp => MonitoringCCTVList.Count;
             public decimal TotalCCTV => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG");
+
+            public decimal TotalCCTVTerpasangJasnita => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG" && x.VedorId == 1);
+            public decimal TotalCCTVTerpasangTelkom => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG" && x.VedorId == 2);
+            public decimal TotalCCTVTerpasangPerforma => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG" && x.VedorId == 3);
             public decimal TotalBelumTerpasang => MonitoringCCTVList.Count(x => x.StatusTerpasang == "BELUM TERPASANG");
-            //public decimal TotalCCTV => MonitoringCCTVList.Count;
-            //public decimal TotalAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "AKTIF");
-            //public decimal TotalNonAktif => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "NON AKTIF");
-            //public decimal TotalBelumTerpasang => MonitoringCCTVList.Count(c => c.StatusAktif.ToUpper() == "BELUM TERPASANG");
+
             public Show(int uptb)
             {
                 MonitoringCCTVList = Method.GetMonitoringCCTVList(uptb);
@@ -256,6 +257,9 @@ namespace MonPDReborn.Models.CCTVParkir
 
                         var isAktif = "INACTIVE";
 
+                        DateTime? tglTerakhirAktif = null;
+                        string? tglTerakhirAktifString = "";
+
                         if (!haveLogs)
                         {
                             // tidak punya log sama sekali → INACTIVE
@@ -264,6 +268,10 @@ namespace MonPDReborn.Models.CCTVParkir
                         else if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
                         {
                             isAktif = "INACTIVE";
+                            tglTerakhirAktif = (DateTime?)((dynamic)lastLog).TglTerakhirAktif;
+                            if (tglTerakhirAktif.HasValue)
+                                tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
+
                         }
                         else if (isHaveDetail || tglTerpasang.HasValue)
                         {
@@ -271,8 +279,7 @@ namespace MonPDReborn.Models.CCTVParkir
                             isAktif = "ACTIVE";
                         }
 
-                        DateTime? tglTerakhirAktif = null;
-                        string? tglTerakhirAktifString = "";
+                     
 
                         if (isAktif == "INACTIVE" && lastLog != null)
                         {
@@ -283,7 +290,7 @@ namespace MonPDReborn.Models.CCTVParkir
 
                         if (g.IsPasang != 1)
                         {
-                            isAktif = "INACTIVE";
+                            isAktif = "UNASSIGNED";
                             statusTerpasang = "BELUM TERPASANG";
                         }
 
