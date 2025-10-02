@@ -1,0 +1,354 @@
+﻿@using MonPDLib.General
+@using System.Globalization
+@model MonPDReborn.Models.DataOP.ProfileOPVM.Detail
+@{
+    var pembayaran = (MonPDReborn.Models.DataOP.ProfilePembayaranOPVM.Detail)ViewBag.DetailPembayaran;
+}
+
+@{
+    var currentYear = DateTime.Now.Year;
+    var tahunMin1 = (currentYear - 1).ToString();
+    var tahunNow = currentYear.ToString();
+}
+@* <style>
+    /* Background */
+    .header-bg {
+        background: linear-gradient(135deg, #00b894, #00cec9);
+        position: relative;
+    }
+
+/* Center logo */
+.logo-center {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    z-index: 2;
+}
+
+/* Particles */
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    animation: floatParticle 8s infinite ease-in-out;
+}
+
+/* Variasi ukuran, posisi, dan kecepatan */
+.particle:nth-child(1) { width: 20px; height: 20px; top: 10%; left: 15%; animation-duration: 5s; }
+.particle:nth-child(2) { width: 35px; height: 35px; top: 30%; left: 25%; animation-duration: 7s; }
+.particle:nth-child(3) { width: 50px; height: 50px; top: 60%; left: 10%; animation-duration: 6s; }
+.particle:nth-child(4) { width: 25px; height: 25px; top: 70%; left: 40%; animation-duration: 9s; }
+.particle:nth-child(5) { width: 40px; height: 40px; top: 20%; right: 20%; animation-duration: 4s; }
+.particle:nth-child(6) { width: 60px; height: 60px; top: 50%; right: 15%; animation-duration: 10s; }
+.particle:nth-child(7) { width: 30px; height: 30px; bottom: 15%; right: 25%; animation-duration: 6s; }
+.particle:nth-child(8) { width: 20px; height: 20px; bottom: 25%; left: 30%; animation-duration: 8s; }
+.particle:nth-child(9) { width: 70px; height: 70px; top: 35%; left: 50%; animation-duration: 12s; }
+.particle:nth-child(10) { width: 15px; height: 15px; bottom: 10%; right: 10%; animation-duration: 5s; }
+
+/* Animasi scaling */
+@@keyframes floatParticle {
+    0%, 100% { transform: scale(0.8); opacity: 0.6; }
+    50% { transform: scale(1.3); opacity: 1; }
+}
+
+.icon-pajak {
+    font-size: 2rem;   /* samakan dengan ukuran h5 agar seimbang */
+    color: #495057;    /* opsional, biar matching dengan tema teks */
+    line-height: 1;    /* biar rapih sejajar */
+}
+</style>
+ *@
+<style>
+    /* Default tampil */
+    #lokasi {
+        display: block;
+    }
+
+    /* Sembunyikan jika layar <= 768px */
+    @@media (max-width: 768px) {
+        #lokasi {
+            display: none;
+        }
+    }
+</style>
+<input type="hidden" id="DetailNOP" value="@Model.DataDetail.IdentitasPajak.NOP" />
+<input type="hidden" id="DetailJenisPajak" value="@((int)Model.Pajak)" />
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row gx-lg-5">
+                    <div class="col-xl-2 col-md-8 mx-auto">
+                        <div class="product-img-slider sticky-side-div">
+                            <div class="swiper product-thumbnail-slider p-2 rounded bg-light">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        @switch (Model.Pajak)
+                                        {
+                                            case EnumFactory.EPajak.MakananMinuman:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/restoran.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaPerhotelan:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/hotel.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaParkir:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/parkir.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaKesenianHiburan:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/hiburan.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.TenagaListrik:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/listrik.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3" id="lokasi">
+                                <h6 class="fw-bold mb-3 d-flex align-items-center">
+                                    <i class="ri-map-pin-line me-2 text-primary fs-5"></i>
+                                    Lokasi Objek Pajak
+                                </h6>
+                                <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                                    <iframe width="100%"
+                                            height="500"
+                                            style="border:0;"
+                                            allowfullscreen
+                                            loading="lazy"
+                                            referrerpolicy="no-referrer-when-downgrade"
+                                            src="https://www.google.com/maps?q=@(Uri.EscapeDataString(
+                                                (Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " +
+                                                (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"
+                                            ))&output=embed">
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-10">
+                        <div class="mt-xl-0 mt-5">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h4>
+                                    <div class="hstack gap-3 flex-wrap">
+                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
+                                        <div class="vr"></div>
+                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row mt-4">
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-succes rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-exchange-line"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">Realisasi Tahun Ini :</p>
+                                                <div class="text-body fw-medium fs-14">@Extension.FormatRupiah(Model.DataDetail.IdentitasPajak.RealisasiTahun)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-dashed rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-file-copy-2-fill"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">Kategori Pajak :</p>
+                                                <div class="text-body fw-medium fs-14">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.KategoriPajak.ToLower())</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-dashed rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-stack-fill"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">Wilayah Pajak :</p>
+                                                <div class="text-body fw-medium fs-14">Surabaya @Model.DataDetail.IdentitasPajak.WilayahPajak</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-dashed rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-inbox-archive-fill"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">Tanggal Buka :</p>
+                                                <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMMM yyyy", new CultureInfo("id-ID"))</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                            <hr />
+
+                            <div class="product-content mt-2">
+                                <nav>
+                                    <ul class="nav nav-tabs nav-tabs-custom nav-success" id="nav-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="nav-speci-tab" data-bs-toggle="tab" href="#nav-speci" role="tab" aria-controls="nav-speci" aria-selected="true">Pembayaran</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-detail" aria-selected="false">Profile</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <div class="tab-content border border-top-0 p-4" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="nav-speci" role="tabpanel" aria-labelledby="nav-speci-tab">
+                                        <div class="text-center">
+                                            <div id="loading2-PembayaranPajak" class="spinner-border text-primary" style="display: none">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                        <div id="PembayaranPajak"></div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
+                                        <div>
+                                            <h5 class="font-size-16 mb-3">Tommy Hilfiger Sweatshirt for Men (Pink)</h5>
+                                            <p>Tommy Hilfiger men striped pink sweatshirt. Crafted with cotton. Material composition is 100% organic cotton. This is one of the world’s leading designer lifestyle brands and is internationally recognized for celebrating the essence of classic American cool style, featuring preppy with a twist designs.</p>
+                                            <div>
+                                                <p class="mb-2"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> Machine Wash</p>
+                                                <p class="mb-2"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> Fit Type: Regular</p>
+                                                <p class="mb-2"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> 100% Cotton</p>
+                                                <p class="mb-0"><i class="mdi mdi-circle-medium me-1 text-muted align-middle"></i> Long sleeve</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end card body -->
+        </div>
+        <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>
+<!-- end row -->
+@section Scripts {
+    <script>
+        // Fungsi untuk bind event di _Detail dropdown
+        // function attachDetailEvents() {
+        //     $("#tahunKiri").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKiri", tahun);
+        //     });
+
+        //     $("#tahunKanan").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKanan", tahun);
+        //     });
+        // }
+
+                $(document).on("change", "#tahunKiri", function () {
+            fnPembayaranPajak();
+        });
+
+        $(document).on("change", "#tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+        function fnPembayaranPajak() {
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+
+            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
+            const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
+
+            $.ajax({
+                url: '@Url.Action("Detail", "ProfilePembayaranOP")',
+                type: 'GET',
+                data: {
+                    nop: nop,
+                    jenisPajak: jenisPajak,
+                    tahunKiri: tahunKiri,
+                    tahunKanan: tahunKanan
+                },
+                beforeSend: function () {
+                    $('#loading2-PembayaranPajak').show();
+                    $('#PembayaranPajak').hide();
+                },
+                success: function (response) {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html(response);
+                },
+                error: function () {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
+
+        // Bind event ke dropdown
+        $(document).on("change", "#tahunKiri, #tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+        // Panggil sekali saat halaman load
+        $(document).ready(function () {
+            fnPembayaranPajak();
+        });
+
+    </script>
+
+    <script>
+        function openDetailNewTab(nop, pajak, KategoriId) {
+            if (!nop || !pajak || !KategoriId) return;
+
+            const url = `/ProfilePotensiOP/DetailPotensiOP` +
+                `?nop=${encodeURIComponent(nop)}` +
+                `&jenisPajak=${encodeURIComponent(pajak)}` +
+                `&kategori=${encodeURIComponent(KategoriId)}`;
+
+            window.open(url, '_blank');
+        }
+    </script>
+}
+
