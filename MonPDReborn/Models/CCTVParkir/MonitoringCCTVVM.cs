@@ -439,8 +439,8 @@ namespace MonPDReborn.Models.CCTVParkir
                             Nop = l.Nop,
                             Tgl = l.TglTerakhirAktif,
                             TglAktif = l.TglTerakhirAktif,
-                            TglDown = l.TglTerakhirDown.Value,
-                            StatusAktif = l.Status
+                            TglDown = l.TglTerakhirDown.HasValue ? l.TglTerakhirDown.Value : null,
+                            StatusAktif = l.Status ?? ""
                         })
                         .ToList();
                         break;
@@ -452,8 +452,8 @@ namespace MonPDReborn.Models.CCTVParkir
                             Nop = l.Nop,
                             Tgl = l.TglTerakhirAktif,
                             TglAktif = l.TglTerakhirAktif,
-                            TglDown = l.TglTerakhirDown.Value,
-                            StatusAktif = l.Status
+                            TglDown = l.TglTerakhirDown.HasValue ? l.TglTerakhirDown.Value : null,
+                            StatusAktif = l.Status ?? ""
                         })
                         .ToList();
                         break;
@@ -814,30 +814,29 @@ namespace MonPDReborn.Models.CCTVParkir
             public string FormattedNOP => Utility.GetFormattedNOP(Nop);
             public DateTime Tgl { get; set; }
             public DateTime TglAktif { get; set; }
-            public DateTime TglDown { get; set; }
+            public DateTime? TglDown { get; set; }
             public string StatusAktif { get; set; } = null!;
 
-            public int Hari => (TglDown - TglAktif).Days;
-            public int Jam => (TglDown - TglAktif).Hours;
-            public int Menit => (TglDown - TglAktif).Minutes;
+            //public int Hari => (TglDown.Value - TglAktif).Days;
+            //public int Jam => (TglDown.Value - TglAktif).Hours;
+            //public int Menit => (TglDown.Value - TglAktif).Minutes;
+            //public string DownTime
+            //{
+            //    get
+            //    {
+            //        var parts = new List<string>();
 
-            public string DownTime
-            {
-                get
-                {
-                    var parts = new List<string>();
+            //        if (Hari > 0) parts.Add($"{Hari} Hari");
+            //        if (Jam > 0) parts.Add($"{Jam} Jam");
+            //        if (Menit > 0) parts.Add($"{Menit} Menit");
 
-                    if (Hari > 0) parts.Add($"{Hari} Hari");
-                    if (Jam > 0) parts.Add($"{Jam} Jam");
-                    if (Menit > 0) parts.Add($"{Menit} Menit");
+            //        // Kalau semua 0 (misal TglDown == TglAktif)
+            //        if (parts.Count == 0)
+            //            return "0 Menit";
 
-                    // Kalau semua 0 (misal TglDown == TglAktif)
-                    if (parts.Count == 0)
-                        return "0 Menit";
-
-                    return string.Join(" ", parts);
-                }
-            }
+            //        return string.Join(" ", parts);
+            //    }
+            //}
         }
         public class MonitoringCCTVKapasitas
         {
