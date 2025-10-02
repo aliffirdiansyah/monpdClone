@@ -90,6 +90,9 @@ public partial class MvReklameSummary
     [Column("NOMINAL_POKOK_BAYAR", TypeName = "NUMBER")]
     public decimal? NominalPokokBayar { get; set; }
 
+    [Column("TEGURAN", TypeName = "NUMBER")]
+    public decimal? Teguran { get; set; }
+
     [Column("SILANG", TypeName = "NUMBER")]
     public decimal? Silang { get; set; }
 
@@ -207,6 +210,9 @@ public partial class MvReklameSummary
 
     [Column("NOMINAL_POKOK_BAYAR_A", TypeName = "NUMBER")]
     public decimal? NominalPokokBayarA { get; set; }
+
+    [Column("TEGURAN_A", TypeName = "NUMBER")]
+    public decimal? TeguranA { get; set; }
 
     [Column("SILANG_A", TypeName = "NUMBER")]
     public decimal? SilangA { get; set; }
