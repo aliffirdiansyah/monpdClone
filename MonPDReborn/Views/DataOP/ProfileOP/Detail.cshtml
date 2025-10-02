@@ -58,6 +58,19 @@
 }
 </style>
  *@
+<style>
+    /* Default tampil */
+    #lokasi {
+        display: block;
+    }
+
+    /* Sembunyikan jika layar <= 768px */
+    @@media (max-width: 768px) {
+        #lokasi {
+            display: none;
+        }
+    }
+</style>
 <input type="hidden" id="DetailNOP" value="@Model.DataDetail.IdentitasPajak.NOP" />
 <input type="hidden" id="DetailJenisPajak" value="@((int)Model.Pajak)" />
 
@@ -72,14 +85,61 @@
                             <div class="swiper product-thumbnail-slider p-2 rounded bg-light">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                         <img src="~/icon/hotel.png" class="img-fluid d-block" />
+                                        @switch (Model.Pajak)
+                                        {
+                                            case EnumFactory.EPajak.MakananMinuman:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/restoran.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaPerhotelan:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/hotel.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaParkir:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/parkir.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaKesenianHiburan:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/hiburan.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.TenagaListrik:
+                                                <div class="swiper-slide">
+                                                    <img src="~/icon/listrik.png" class="img-fluid d-block" />
+                                                </div>
+                                                break;
+                                            default:
+                                                break;
+                                        }
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <div class="mt-3" id="lokasi">
+                                <h6 class="fw-bold mb-3 d-flex align-items-center">
+                                    <i class="ri-map-pin-line me-2 text-primary fs-5"></i>
+                                    Lokasi Objek Pajak
+                                </h6>
+                                <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                                    <iframe width="100%"
+                                            height="500"
+                                            style="border:0;"
+                                            allowfullscreen
+                                            loading="lazy"
+                                            referrerpolicy="no-referrer-when-downgrade"
+                                            src="https://www.google.com/maps?q=@(Uri.EscapeDataString(
+                                                (Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " +
+                                                (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"
+                                            ))&output=embed">
+                                    </iframe>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- end col -->
 
                     <div class="col-xl-10">
                         <div class="mt-xl-0 mt-5">
@@ -106,7 +166,7 @@
                                             </div>
                                             <div class="flex-grow-1">
                                                 <p class="text-muted mb-1">Realisasi Tahun Ini :</p>
-                                                <h5 class="mb-0">Rp. 140jt</h5>
+                                                <div class="text-body fw-medium fs-14">@Extension.FormatRupiah(Model.DataDetail.IdentitasPajak.RealisasiTahun)</div>
                                             </div>
                                         </div>
                                     </div>
@@ -122,7 +182,7 @@
                                             </div>
                                             <div class="flex-grow-1">
                                                 <p class="text-muted mb-1">Kategori Pajak :</p>
-                                                <h5 class="mb-0">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.KategoriPajak.ToLower())</h5>
+                                                <div class="text-body fw-medium fs-14">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.KategoriPajak.ToLower())</div>
                                             </div>
                                         </div>
                                     </div>
@@ -138,7 +198,7 @@
                                             </div>
                                             <div class="flex-grow-1">
                                                 <p class="text-muted mb-1">Wilayah Pajak :</p>
-                                                <h5 class="mb-0">UPTB @Model.DataDetail.IdentitasPajak.WilayahPajak</h5>
+                                                <div class="text-body fw-medium fs-14">Surabaya @Model.DataDetail.IdentitasPajak.WilayahPajak</div>
                                             </div>
                                         </div>
                                     </div>
@@ -154,7 +214,7 @@
                                             </div>
                                             <div class="flex-grow-1">
                                                 <p class="text-muted mb-1">Tanggal Buka :</p>
-                                                <h5 class="mb-0">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMMM yyyy", new CultureInfo("id-ID"))</h5>
+                                                <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.TanggalBuka.ToString("dd MMMMM yyyy", new CultureInfo("id-ID"))</div>
                                             </div>
                                         </div>
                                     </div>
@@ -162,46 +222,26 @@
                                 <!-- end col -->
                             </div>
                             <hr />
-                            
+
                             <div class="product-content mt-2">
                                 <nav>
                                     <ul class="nav nav-tabs nav-tabs-custom nav-success" id="nav-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="nav-speci-tab" data-bs-toggle="tab" href="#nav-speci" role="tab" aria-controls="nav-speci" aria-selected="true">Specification</a>
+                                            <a class="nav-link active" id="nav-speci-tab" data-bs-toggle="tab" href="#nav-speci" role="tab" aria-controls="nav-speci" aria-selected="true">Pembayaran</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-detail" aria-selected="false">Details</a>
+                                            <a class="nav-link" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-detail" aria-selected="false">Profile</a>
                                         </li>
                                     </ul>
                                 </nav>
                                 <div class="tab-content border border-top-0 p-4" id="nav-tabContent">
                                     <div class="tab-pane fade show active" id="nav-speci" role="tabpanel" aria-labelledby="nav-speci-tab">
-                                        <div class="table-responsive">
-                                            <table class="table mb-0">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row" style="width: 200px;">Category</th>
-                                                        <td>T-Shirt</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Brand</th>
-                                                        <td>Tommy Hilfiger</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Color</th>
-                                                        <td>Blue</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Material</th>
-                                                        <td>Cotton</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Weight</th>
-                                                        <td>140 Gram</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                        <div class="text-center">
+                                            <div id="loading2-PembayaranPajak" class="spinner-border text-primary" style="display: none">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
                                         </div>
+                                        <div id="PembayaranPajak"></div>
                                     </div>
                                     <div class="tab-pane fade" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
                                         <div>
@@ -217,7 +257,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <!-- end col -->
@@ -231,3 +271,84 @@
     <!-- end col -->
 </div>
 <!-- end row -->
+@section Scripts {
+    <script>
+        // Fungsi untuk bind event di _Detail dropdown
+        // function attachDetailEvents() {
+        //     $("#tahunKiri").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKiri", tahun);
+        //     });
+
+        //     $("#tahunKanan").off("change").on("change", function () {
+        //         let tahun = $(this).val();
+        //         loadDetailTabel("#tabelKanan", tahun);
+        //     });
+        // }
+
+                $(document).on("change", "#tahunKiri", function () {
+            fnPembayaranPajak();
+        });
+
+        $(document).on("change", "#tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+        function fnPembayaranPajak() {
+            const nop = $('#DetailNOP').val();
+            const jenisPajak = $('#DetailJenisPajak').val();
+
+            const tahunKiri = $('#tahunKiri').val() || new Date().getFullYear();
+            const tahunKanan = $('#tahunKanan').val() || (tahunKiri - 1); // otomatis tahun kiri - 1
+
+            $.ajax({
+                url: '@Url.Action("Detail", "ProfilePembayaranOP")',
+                type: 'GET',
+                data: {
+                    nop: nop,
+                    jenisPajak: jenisPajak,
+                    tahunKiri: tahunKiri,
+                    tahunKanan: tahunKanan
+                },
+                beforeSend: function () {
+                    $('#loading2-PembayaranPajak').show();
+                    $('#PembayaranPajak').hide();
+                },
+                success: function (response) {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html(response);
+                },
+                error: function () {
+                    $('#loading2-PembayaranPajak').hide();
+                    $('#PembayaranPajak').show().html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
+
+        // Bind event ke dropdown
+        $(document).on("change", "#tahunKiri, #tahunKanan", function () {
+            fnPembayaranPajak();
+        });
+
+        // Panggil sekali saat halaman load
+        $(document).ready(function () {
+            fnPembayaranPajak();
+        });
+
+    </script>
+
+    <script>
+        function openDetailNewTab(nop, pajak, KategoriId) {
+            if (!nop || !pajak || !KategoriId) return;
+
+            const url = `/ProfilePotensiOP/DetailPotensiOP` +
+                `?nop=${encodeURIComponent(nop)}` +
+                `&jenisPajak=${encodeURIComponent(pajak)}` +
+                `&kategori=${encodeURIComponent(KategoriId)}`;
+
+            window.open(url, '_blank');
+        }
+    </script>
+}
+
