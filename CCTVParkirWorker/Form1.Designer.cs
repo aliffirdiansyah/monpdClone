@@ -28,24 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
-            No = new DataGridViewTextBoxColumn();
-            Id = new DataGridViewTextBoxColumn();
-            Nop = new DataGridViewTextBoxColumn();
-            Nama = new DataGridViewTextBoxColumn();
-            Alamat = new DataGridViewTextBoxColumn();
-            Uptb = new DataGridViewTextBoxColumn();
-            CctvId = new DataGridViewTextBoxColumn();
-            AccessPoint = new DataGridViewTextBoxColumn();
-            Mode = new DataGridViewTextBoxColumn();
-            LastConnected = new DataGridViewTextBoxColumn();
-            Action = new DataGridViewButtonColumn();
-            Status = new DataGridViewTextBoxColumn();
-            Error = new DataGridViewTextBoxColumn();
-            Log = new DataGridViewTextBoxColumn();
             btnStartAll = new Button();
             btnStopAll = new Button();
             tabControl1 = new TabControl();
@@ -89,11 +75,25 @@
             btnStartAllTelkom = new Button();
             label3 = new Label();
             TarikanLogTelkom = new TabPage();
+            panelStatusTelkomLog = new Panel();
             LogTelkomLog = new TextBox();
             btnStopAllLogTelkom = new Button();
             btnStartAllLogTelkom = new Button();
             label4 = new Label();
-            panelStatusTelkomLog = new Panel();
+            Log = new DataGridViewTextBoxColumn();
+            Error = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
+            Action = new DataGridViewButtonColumn();
+            LastConnected = new DataGridViewTextBoxColumn();
+            Mode = new DataGridViewTextBoxColumn();
+            AccessPoint = new DataGridViewTextBoxColumn();
+            CctvId = new DataGridViewTextBoxColumn();
+            Uptb = new DataGridViewTextBoxColumn();
+            Alamat = new DataGridViewTextBoxColumn();
+            Nama = new DataGridViewTextBoxColumn();
+            Nop = new DataGridViewTextBoxColumn();
+            Id = new DataGridViewTextBoxColumn();
+            No = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             TarikanCctvJasnita.SuspendLayout();
@@ -114,80 +114,6 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(746, 330);
             dataGridView1.TabIndex = 0;
-            // 
-            // No
-            // 
-            No.HeaderText = "No";
-            No.Name = "No";
-            // 
-            // Id
-            // 
-            Id.HeaderText = "Id";
-            Id.Name = "Id";
-            // 
-            // Nop
-            // 
-            Nop.HeaderText = "Nop";
-            Nop.Name = "Nop";
-            // 
-            // Nama
-            // 
-            Nama.HeaderText = "Nama";
-            Nama.Name = "Nama";
-            // 
-            // Alamat
-            // 
-            Alamat.HeaderText = "Alamat";
-            Alamat.Name = "Alamat";
-            // 
-            // Uptb
-            // 
-            Uptb.HeaderText = "Uptb";
-            Uptb.Name = "Uptb";
-            // 
-            // CctvId
-            // 
-            CctvId.HeaderText = "Cctv Id";
-            CctvId.Name = "CctvId";
-            // 
-            // AccessPoint
-            // 
-            AccessPoint.HeaderText = "Access Point";
-            AccessPoint.Name = "AccessPoint";
-            // 
-            // Mode
-            // 
-            Mode.HeaderText = "Mode";
-            Mode.Name = "Mode";
-            // 
-            // LastConnected
-            // 
-            LastConnected.HeaderText = "Last Connected";
-            LastConnected.Name = "LastConnected";
-            // 
-            // Action
-            // 
-            Action.HeaderText = "Action";
-            Action.Name = "Action";
-            Action.Resizable = DataGridViewTriState.True;
-            Action.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // Status
-            // 
-            dataGridViewCellStyle1.BackColor = Color.Red;
-            Status.DefaultCellStyle = dataGridViewCellStyle1;
-            Status.HeaderText = "Status";
-            Status.Name = "Status";
-            // 
-            // Error
-            // 
-            Error.HeaderText = "Err Message";
-            Error.Name = "Error";
-            // 
-            // Log
-            // 
-            Log.HeaderText = "Log";
-            Log.Name = "Log";
             // 
             // btnStartAll
             // 
@@ -508,6 +434,15 @@
             TarikanLogTelkom.Text = "TARIKAN LOG TELKOM";
             TarikanLogTelkom.UseVisualStyleBackColor = true;
             // 
+            // panelStatusTelkomLog
+            // 
+            panelStatusTelkomLog.BackColor = Color.Red;
+            panelStatusTelkomLog.BorderStyle = BorderStyle.FixedSingle;
+            panelStatusTelkomLog.Location = new Point(628, 29);
+            panelStatusTelkomLog.Name = "panelStatusTelkomLog";
+            panelStatusTelkomLog.Size = new Size(109, 37);
+            panelStatusTelkomLog.TabIndex = 11;
+            // 
             // LogTelkomLog
             // 
             LogTelkomLog.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -517,6 +452,7 @@
             LogTelkomLog.Location = new Point(43, 69);
             LogTelkomLog.Multiline = true;
             LogTelkomLog.Name = "LogTelkomLog";
+            LogTelkomLog.ScrollBars = ScrollBars.Both;
             LogTelkomLog.Size = new Size(694, 309);
             LogTelkomLog.TabIndex = 9;
             // 
@@ -548,14 +484,79 @@
             label4.TabIndex = 5;
             label4.Text = "TARIKAN LOG TELKOM";
             // 
-            // panelStatusTelkomLog
+            // Log
             // 
-            panelStatusTelkomLog.BackColor = Color.Red;
-            panelStatusTelkomLog.BorderStyle = BorderStyle.FixedSingle;
-            panelStatusTelkomLog.Location = new Point(628, 29);
-            panelStatusTelkomLog.Name = "panelStatusTelkomLog";
-            panelStatusTelkomLog.Size = new Size(109, 37);
-            panelStatusTelkomLog.TabIndex = 11;
+            Log.HeaderText = "Log";
+            Log.Name = "Log";
+            // 
+            // Error
+            // 
+            Error.HeaderText = "Err Message";
+            Error.Name = "Error";
+            // 
+            // Status
+            // 
+            dataGridViewCellStyle1.BackColor = Color.Red;
+            Status.DefaultCellStyle = dataGridViewCellStyle1;
+            Status.HeaderText = "Status";
+            Status.Name = "Status";
+            // 
+            // Action
+            // 
+            Action.HeaderText = "Action";
+            Action.Name = "Action";
+            Action.Resizable = DataGridViewTriState.True;
+            Action.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // LastConnected
+            // 
+            LastConnected.HeaderText = "Last Connected";
+            LastConnected.Name = "LastConnected";
+            // 
+            // Mode
+            // 
+            Mode.HeaderText = "Mode";
+            Mode.Name = "Mode";
+            // 
+            // AccessPoint
+            // 
+            AccessPoint.HeaderText = "Access Point";
+            AccessPoint.Name = "AccessPoint";
+            // 
+            // CctvId
+            // 
+            CctvId.HeaderText = "Cctv Id";
+            CctvId.Name = "CctvId";
+            // 
+            // Uptb
+            // 
+            Uptb.HeaderText = "Uptb";
+            Uptb.Name = "Uptb";
+            // 
+            // Alamat
+            // 
+            Alamat.HeaderText = "Alamat";
+            Alamat.Name = "Alamat";
+            // 
+            // Nama
+            // 
+            Nama.HeaderText = "Nama";
+            Nama.Name = "Nama";
+            // 
+            // Nop
+            // 
+            Nop.HeaderText = "Nop";
+            Nop.Name = "Nop";
+            // 
+            // Id
+            // 
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            // 
+            // No
+            // 
+            No.HeaderText = "No";
+            No.Name = "No";
             // 
             // Form1
             // 
@@ -587,20 +588,6 @@
         private DataGridView dataGridView1;
         private Button btnStartAll;
         private Button btnStopAll;
-        private DataGridViewTextBoxColumn No;
-        private DataGridViewTextBoxColumn Id;
-        private DataGridViewTextBoxColumn Nop;
-        private DataGridViewTextBoxColumn Nama;
-        private DataGridViewTextBoxColumn Alamat;
-        private DataGridViewTextBoxColumn Uptb;
-        private DataGridViewTextBoxColumn CctvId;
-        private DataGridViewTextBoxColumn AccessPoint;
-        private DataGridViewTextBoxColumn Mode;
-        private DataGridViewTextBoxColumn LastConnected;
-        private DataGridViewButtonColumn Action;
-        private DataGridViewTextBoxColumn Status;
-        private DataGridViewTextBoxColumn Error;
-        private DataGridViewTextBoxColumn Log;
         private TabControl tabControl1;
         private TabPage TarikanCctvJasnita;
         private TabPage TarikanLogJasnita;
@@ -648,5 +635,19 @@
         private TextBox textBox1;
         public TextBox LogTelkomLog;
         private Panel panelStatusTelkomLog;
+        private DataGridViewTextBoxColumn No;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn Nop;
+        private DataGridViewTextBoxColumn Nama;
+        private DataGridViewTextBoxColumn Alamat;
+        private DataGridViewTextBoxColumn Uptb;
+        private DataGridViewTextBoxColumn CctvId;
+        private DataGridViewTextBoxColumn AccessPoint;
+        private DataGridViewTextBoxColumn Mode;
+        private DataGridViewTextBoxColumn LastConnected;
+        private DataGridViewButtonColumn Action;
+        private DataGridViewTextBoxColumn Status;
+        private DataGridViewTextBoxColumn Error;
+        private DataGridViewTextBoxColumn Log;
     }
 }

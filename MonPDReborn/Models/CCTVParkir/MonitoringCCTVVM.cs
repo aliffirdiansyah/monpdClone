@@ -273,13 +273,15 @@ namespace MonPDReborn.Models.CCTVParkir
 
                         DateTime? tglTerakhirAktif = null;
                         string? tglTerakhirAktifString = "";
+
                         if (isAktif == "INACTIVE" && lastLog != null)
                         {
-                            tglTerakhirAktif = (DateTime)lastLog;
-                            tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
+                            tglTerakhirAktif = (DateTime?)((dynamic)lastLog).TglTerakhirAktif;
+                            if (tglTerakhirAktif.HasValue)
+                                tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
                         }
 
-                        if(g.IsPasang != 1)
+                        if (g.IsPasang != 1)
                         {
                             isAktif = "INACTIVE";
                             statusTerpasang = "BELUM TERPASANG";
@@ -385,10 +387,12 @@ namespace MonPDReborn.Models.CCTVParkir
 
                         DateTime? tglTerakhirAktif = null;
                         string? tglTerakhirAktifString = "";
+
                         if (isAktif == "INACTIVE" && lastLog != null)
                         {
-                            tglTerakhirAktif = (DateTime)lastLog;
-                            tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
+                            tglTerakhirAktif = (DateTime?)((dynamic)lastLog).TglTerakhirAktif;
+                            if (tglTerakhirAktif.HasValue)
+                                tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
                         }
 
                         if (g.IsPasang != 1)
