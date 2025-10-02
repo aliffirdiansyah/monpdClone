@@ -253,46 +253,38 @@ namespace MonPDReborn.Models.CCTVParkir
                         var statusTerpasang = tglTerpasang.HasValue ? "TERPASANG" : "BELUM TERPASANG";
 
                         bool isHaveDetail = dets.Any();
-                        bool haveLogs = logs.Any();
+                        bool ishaveLogs = logs.Any();
 
-                        var isAktif = "INACTIVE";
+                        var isAktif = "ACTIVE";
 
                         DateTime? tglTerakhirAktif = null;
                         string? tglTerakhirAktifString = "";
 
-                        if (!haveLogs)
+                        if (!ishaveLogs)
                         {
                             // tidak punya log sama sekali → INACTIVE
                             isAktif = "INACTIVE";
                         }
-                        else if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
+                        
+                        if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
                         {
                             isAktif = "INACTIVE";
                             tglTerakhirAktif = (DateTime?)((dynamic)lastLog).TglTerakhirAktif;
                             if (tglTerakhirAktif.HasValue)
                                 tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
 
-                        }
-                        else if (isHaveDetail || tglTerpasang.HasValue)
-                        {
-                            // Jika ada detail atau tanggal terpasang → ACTIVE
-                            isAktif = "ACTIVE";
-                        }
-
-                     
-
-                        if (isAktif == "INACTIVE" && lastLog != null)
-                        {
-                            tglTerakhirAktif = (DateTime?)((dynamic)lastLog).TglTerakhirAktif;
-                            if (tglTerakhirAktif.HasValue)
-                                tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
-                        }
+                        }           
 
                         if (g.IsPasang != 1)
                         {
                             isAktif = "UNASSIGNED";
                             statusTerpasang = "BELUM TERPASANG";
+                            /*  PENGECEKAN MENGAKALI , JIKA DI DB ADA TGL TERPASANG, TAPI SEBENARNYA IS PASANG = 0 , KARENA DI DB KOLOM TGL TERPASANG 
+                             *  CONSTRAINT NOT NULL
+                             */
+                            tglTerpasang = null;
                         }
+
 
                         return new MonitoringCCTV
                         {
@@ -306,7 +298,10 @@ namespace MonPDReborn.Models.CCTVParkir
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
                             StatusTerpasang = statusTerpasang,
                             StatusAktif = isAktif,
-                            TglTerakhirAktif = tglTerakhirAktif
+                            Ishasdetail = isHaveDetail,
+                            Ishaslog = ishaveLogs,
+                            TglTerakhirAktif = tglTerakhirAktif,
+                            TglTerakhirAktifString = tglTerakhirAktifString
                         };
                     })
                     .ToList();
@@ -372,39 +367,33 @@ namespace MonPDReborn.Models.CCTVParkir
                             .FirstOrDefault();
 
                         var statusTerpasang = tglTerpasang.HasValue ? "TERPASANG" : "BELUM TERPASANG";
+
                         bool isHaveDetail = dets.Any();
-                        bool haveLogs = logs.Any();
+                        bool ishaveLogs = logs.Any();
 
-                        var isAktif = "INACTIVE";
-
-                        if (!haveLogs)
-                        {
-                            // tidak punya log sama sekali → INACTIVE
-                            isAktif = "INACTIVE";
-                        }
-                        else if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
-                        {
-                            isAktif = "INACTIVE";
-                        }
-                        else if (isHaveDetail || tglTerpasang.HasValue)
-                        {
-                            // Jika ada detail atau tanggal terpasang → ACTIVE
-                            isAktif = "ACTIVE";
-                        }
+                        var isAktif = "ACTIVE";
 
                         DateTime? tglTerakhirAktif = null;
                         string? tglTerakhirAktifString = "";
 
-                        if (isAktif == "INACTIVE" && lastLog != null)
+                        if (!ishaveLogs)
                         {
+                            // tidak punya log sama sekali → INACTIVE
+                            isAktif = "INACTIVE";
+                        }
+                        
+                        if (lastLog != null && ((dynamic)lastLog).Status == "NON AKTIF")
+                        {
+                            isAktif = "INACTIVE";
                             tglTerakhirAktif = (DateTime?)((dynamic)lastLog).TglTerakhirAktif;
                             if (tglTerakhirAktif.HasValue)
                                 tglTerakhirAktifString = tglTerakhirAktif.Value.ToString("dd MMM yyyy HH:mm:ss");
+
                         }
 
                         if (g.IsPasang != 1)
                         {
-                            isAktif = "INACTIVE";
+                            isAktif = "UNASSIGNED";
                             statusTerpasang = "BELUM TERPASANG";
                         }
 
@@ -420,7 +409,10 @@ namespace MonPDReborn.Models.CCTVParkir
                             Vendor = ((EnumFactory.EVendorParkirCCTV)g.Vendor).GetDescription(),
                             StatusTerpasang = statusTerpasang,
                             StatusAktif = isAktif,
-                            TglTerakhirAktif = tglTerakhirAktif
+                            Ishasdetail = isHaveDetail,
+                            Ishaslog = ishaveLogs,
+                            TglTerakhirAktif = tglTerakhirAktif,
+                            TglTerakhirAktifString = tglTerakhirAktifString
                         };
                     })
                     .ToList();
@@ -808,6 +800,8 @@ namespace MonPDReborn.Models.CCTVParkir
             public string StatusAktif { get; set; } = null!;
             public DateTime? TglTerakhirAktif { get; set; } = DateTime.MinValue;
             public string? TglTerakhirAktifString { get; set; }
+            public bool Ishaslog { get; set; }
+            public bool Ishasdetail { get; set; }
         }
         public class MonitoringCCTVDet
         {
