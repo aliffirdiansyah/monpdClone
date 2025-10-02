@@ -4265,9 +4265,14 @@ namespace MonPDReborn.Models.DataOP
             {
                 var context = DBClass.GetContext();
                 var ret = new DataDetailOP();
+                var tahun = DateTime.Now.Year;
                 switch (pajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
+                        var realisasiResto = context.DbMonRestos
+                            .Where(x => x.Nop == nop && x.TahunPajakKetetapan == tahun && x.TglBayarPokok.HasValue)
+                            .Sum(x => x.NominalPokokBayar) ?? 0;
+
                         var opResto = context.DbOpRestos.FirstOrDefault(x => x.Nop == nop);
                         if (opResto != null)
                         {
@@ -4283,6 +4288,7 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opResto.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opResto.KategoriId;
+                            ret.IdentitasPajak.RealisasiTahun = realisasiResto;
                             //isi data resto
                             ret.RestoRow.PendapatanRow = new DetailResto.Pendapatan
                             {
@@ -5034,6 +5040,7 @@ namespace MonPDReborn.Models.DataOP
             public DateTime? TglBerakhir { get; set; }
             public string NoPerusahaan { get; set; }
             public decimal kategoriID { get; set; }
+            public decimal RealisasiTahun { get; set; }
 
         }
         public class DataPerizinan
