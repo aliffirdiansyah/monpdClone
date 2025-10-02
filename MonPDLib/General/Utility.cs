@@ -92,6 +92,27 @@ namespace MonPDLib.General
                 return NOP;
             }
         }
+        public static string GetFormattedNOPPBB(string NOP)
+        {
+            try
+            {
+                // Format NOP PBB : PP.KK.KEC.KEL.BLOK.URUT.JNS
+                var prop = NOP.Substring(0, 2);    // Provinsi
+                var kab = NOP.Substring(2, 2);     // Kabupaten/Kota
+                var kec = NOP.Substring(4, 3);     // Kecamatan
+                var kel = NOP.Substring(7, 3);     // Kelurahan
+                var blok = NOP.Substring(10, 3);   // Blok
+                var urut = NOP.Substring(13, 4);   // Nomor Urut
+                var jns = NOP.Substring(17, 1);    // Jenis OP
+
+                return $"{prop}.{kab}.{kec}.{kel}.{blok}.{urut}.{jns}";
+            }
+            catch
+            {
+                return NOP;
+            }
+        }
+
         public static int GetMaxValueSpecifyColumn<T>(DbContext ctx, Expression<Func<T, bool>>? expression, string propertyNameEntityEf = "Id")
         where T : class
         {

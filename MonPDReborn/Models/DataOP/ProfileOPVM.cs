@@ -5048,8 +5048,8 @@ namespace MonPDReborn.Models.DataOP
             {
                 get
                 {
-                    return (int)EnumPajak == 7 || (int)EnumPajak == 9 || (int)EnumPajak == 12
-                        ? NOP
+                    return (int)EnumPajak == 7 || (int)EnumPajak == 12
+                        ? NOP : (int)EnumPajak == 9 ? Utility.GetFormattedNOPPBB(NOP)
                         : Utility.GetFormattedNOP(NOP);
                 }
             }

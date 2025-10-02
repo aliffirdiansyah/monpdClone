@@ -33,6 +33,9 @@ public partial class MOpParkirCctvJasnitaLog
     [Unicode(false)]
     public string? Status { get; set; }
 
+    [InverseProperty("MOpParkirCctvJasnitaLog")]
+    public virtual ICollection<MOpParkirCctvJasnitaLogD> MOpParkirCctvJasnitaLogDs { get; set; } = new List<MOpParkirCctvJasnitaLogD>();
+
     [ForeignKey("Nop, CctvId")]
     [InverseProperty("MOpParkirCctvJasnitaLog")]
     public virtual MOpParkirCctvJasnitum MOpParkirCctvJasnitum { get; set; } = null!;

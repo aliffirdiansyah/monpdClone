@@ -58,7 +58,7 @@
 }
 </style>
  *@
-<style>
+@* <style>
     /* Default tampil */
     #lokasi {
         display: block;
@@ -78,7 +78,7 @@
             display: block;
         }
     }
-</style>
+</style> *@
 <input type="hidden" id="DetailNOP" value="@Model.DataDetail.IdentitasPajak.NOP" />
 <input type="hidden" id="DetailJenisPajak" value="@((int)Model.Pajak)" />
 
@@ -321,40 +321,40 @@
                                                     <center>
                                                         <div class="col-lg-6">
                                                             @(
-                                                                                                                        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
-                                                                                                                        .ID("okupansiGrid")
-                                                                                                                        .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
-                                                                                                                        .KeyExpr("Bulan")
-                                                                                                                        .ShowBorders(true)
-                                                                                                                        .ShowColumnLines(true)
-                                                                                                                        .Paging(p => p.PageSize(12))
-                                                                                                                        .Columns(columns =>
-                                                                                                                        {
-                                                                                                                            columns.AddFor(m => m.BulanNama).Caption("Bulan");
-                                                                                                                            columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
-                                                                                                                            columns.AddFor(m => m.TahunNow).Caption(tahunNow);
-                                                                                                                        })
-                                                                                                                        .Summary(s =>
-                                                                                                                        {
-                                                                                                                            s.TotalItems(items =>
-                                                                                                                            {
-                                                                                                                                items.AddFor(x => x.BulanNama)
-                                                                                                                            .SummaryType(SummaryType.Sum)
-                                                                                                                            .DisplayFormat("Average");
+                                                                Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
+                                                                .ID("okupansiGrid")
+                                                                .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
+                                                                .KeyExpr("Bulan")
+                                                                .ShowBorders(true)
+                                                                .ShowColumnLines(true)
+                                                                .Paging(p => p.PageSize(12))
+                                                                .Columns(columns =>
+                                                                {
+                                                                    columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                                                                    columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
+                                                                    columns.AddFor(m => m.TahunNow).Caption(tahunNow);
+                                                                })
+                                                                .Summary(s =>
+                                                                {
+                                                                    s.TotalItems(items =>
+                                                                    {
+                                                                        items.AddFor(x => x.BulanNama)
+                                                                    .SummaryType(SummaryType.Sum)
+                                                                    .DisplayFormat("Average");
 
-                                                                                                                                items.AddFor(x => x.TahunMines1)
-                                                                                                                            .SummaryType(SummaryType.Avg)
-                                                                                                                            .ValueFormat("#,##0.00")
-                                                                                                                            .DisplayFormat("{0}");
+                                                                        items.AddFor(x => x.TahunMines1)
+                                                                    .SummaryType(SummaryType.Avg)
+                                                                    .ValueFormat("#,##0.00")
+                                                                    .DisplayFormat("{0}");
 
-                                                                                                                                items.AddFor(x => x.TahunNow)
-                                                                                                                            .SummaryType(SummaryType.Avg)
-                                                                                                                            .ValueFormat("#,##0.00")
-                                                                                                                            .DisplayFormat("{0}");
-                                                                                                                            });
+                                                                        items.AddFor(x => x.TahunNow)
+                                                                    .SummaryType(SummaryType.Avg)
+                                                                    .ValueFormat("#,##0.00")
+                                                                    .DisplayFormat("{0}");
+                                                                    });
 
-                                                                                                                        })
-                                                                                                                        )
+                                                                })
+                                                                )
                                                         </div>
                                                     </center>
                                                 </div>
