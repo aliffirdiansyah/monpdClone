@@ -123,6 +123,9 @@ namespace MonPDReborn.Models.CCTVParkir
             public string? Log { get; set; }
             public string? ImageUrl { get; set; }
 
+            public bool IsLog { get; set; }
+            public bool IsOn { get; set; }
+
         }
 
         public class MonitoringCCTVBulanan
@@ -779,13 +782,33 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.Direction = ((EnumFactory.CctvParkirDirection)item.Direction).GetDescription();
                     res.Log = item.Log;
                     res.ImageUrl = item.ImageUrl;
-
-
+                    res.IsLog = false;
+                    res.IsOn = false;
                     result.Add(res);
                 }
 
+                var dataLogs = context.MOpParkirCctvJasnitaLogDs.Where(x => x.Nop == nop && x.TglEvent.Date == tgl).ToList();
+                foreach (var item in dataLogs)
+                {
+                    var res = new MonitoringCctvHarianDetail();
+                    res.Id = item.Guid;
+                    res.Nop = item.Nop;
+                    res.CctvId = item.CctvId;
+                    res.NamaOp = "-";
+                    res.AlamatOp = "-";
+                    res.WilayahPajak = 0;
+                    res.TanggalMasuk = item.TglEvent;
+                    res.JenisKend = item.Event;
+                    res.PlatNo = "";
+                    res.Direction = "-";
+                    res.Log = "";
+                    res.ImageUrl = null;
+                    res.IsLog = true;
+                    res.IsOn = item.IsOn == 1 ? true : false;
+                    result.Add(res);
+                }
 
-                return result;
+                return result.OrderBy(x => x.TanggalMasuk).ToList();
             }
         }
 
