@@ -144,6 +144,22 @@
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
                                                             <td class="text-body fw-medium">
+                                                                (Harga Rata-rata Room x Rata-rata Room Terjual/Bulan) x Tarif Pajak
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;"></th>
+                                                            <th scope="row" style="width: 20px;">=</th>
+                                                            <td class="text-body fw-medium">
+                                                                (Rp. @Math.Ceiling(Model.HargaRataRataRoomKos).ToString("N0") x @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") Kamar) x Tarif Pajak
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;"></th>
+                                                            <th scope="row" style="width: 20px;">=</th>
+                                                            <td class="text-body fw-medium">
                                                                 Rp. @Model.PotensiOmzetRoomPerBulanKos.ToString("N0") × @Model.TarifPajak.ToString("P0")
                                                             </td>
                                                         </tr>
@@ -187,14 +203,87 @@
                                                             <th scope="row" style="width: 20px;">=</th>
                                                             <td class="text-body fw-medium">(Potensi Omzet Room + Potensi Omzet Banquet) × Tarif Pajak</td>
                                                         </tr>
+                                                       @{
+                                                            var rumus = new List<string>();
+
+                                                            if (Model.RataRataPaxBanquetTerjualPerHari > 0)
+                                                            {
+                                                                rumus.Add("(Harga Rata-rata Banquet/Pax x Rata-rata Pax Terjual/Hari x 8 Hari)");
+                                                            }
+
+                                                            var result = string.Join(" + ", rumus);
+                                                        }
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;"></th>
+                                                            <th scope="row" style="width: 20px;">=</th>
+                                                            <td class="text-body fw-medium">
+                                                                ((Harga Rata-rata Room x Rata-rata Room Terjual/Hari x 30 Hari)@(string.IsNullOrEmpty(result) ? "" : " + " + result)) x Tarif Pajak
+                                                            </td>
+                                                        </tr>
 
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
                                                             <td class="text-body fw-medium">
-                                                                (Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0") + Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")) × @Model.TarifPajak.ToString("P0")
+                                                                (
+                                                                @if (Model.HargaRataRataRoom > 0 && Model.RataRataRoomTerjualPerHari > 0)
+                                                                {
+                                                                    <text>
+                                                                        (Rp. @System.Math.Ceiling(Model.HargaRataRataRoom).ToString("N0")
+                                                                        x @System.Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") Kamar x 30 Hari)
+                                                                    </text>
+                                                                }
+
+                                                                @if (Model.HargaRataRataBanquetPerPax > 0 && Model.RataRataPaxBanquetTerjualPerHari > 0)
+                                                                {
+                                                                    if (Model.HargaRataRataRoom > 0 && Model.RataRataRoomTerjualPerHari > 0)
+                                                                    {
+                                                                        <text> + </text>
+                                                                    }
+                                                                    <text>
+                                                                        (Rp. @System.Math.Ceiling(Model.HargaRataRataBanquetPerPax).ToString("N0")
+                                                                        x @System.Math.Ceiling(Model.RataRataPaxBanquetTerjualPerHari).ToString("N0") Pax x 8 Hari)
+                                                                    </text>
+                                                                }
+                                                                ) x Tarif Pajak
                                                             </td>
                                                         </tr>
+
+
+
+                                                        <tr>
+                                                            <th scope="row" style="width: 200px;"></th>
+                                                            <th scope="row" style="width: 20px;">=</th>
+                                                            <td class="text-body fw-medium">
+                                                                @if (Model.PotensiOmzetBanquetPerBulan > 0)
+                                                                {
+                                                                    <text>(</text>
+                                                                }
+
+                                                                @if (Model.PotensiOmzetRoomPerBulan > 0)
+                                                                {
+                                                                    <text>Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0")</text>
+                                                                }
+
+                                                                @if (Model.PotensiOmzetBanquetPerBulan > 0)
+                                                                {
+                                                                    if (Model.PotensiOmzetRoomPerBulan > 0)
+                                                                    {
+                                                                        <text> + </text>
+                                                                    }
+                                                                    <text>Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")</text>
+                                                                }
+
+                                                                @if (Model.PotensiOmzetBanquetPerBulan > 0)
+                                                                {
+                                                                    <text>)</text>
+                                                                }
+
+                                                                × @Model.TarifPajak.ToString("P0")
+                                                            </td>
+                                                        </tr>
+
+
 
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -256,7 +345,7 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <th scope="row" style="width: 200px;">Perhitungan Rata-rata Room Terjual per Hari</th>
+                                                            <th scope="row" style="width: 200px;">Perhitungan Rata-rata Room Terjual/Bulan</th>
                                                             <th scope="row" style="width: 20px;">=</th>
                                                             <td class="text-body fw-medium">
                                                                 Jumlah Total Room x Okupansi Rate Room
@@ -279,21 +368,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Perhitungan Omzet Kamar per Bulan</th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Math.Ceiling(Model.HargaRataRataRoomKos).ToString("N0") x @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") Kamar
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Model.PotensiOmzetRoomPerBulanKos.ToString("N0")
-                                                            </td>
-                                                        </tr>
+                                                        
                                                     </tbody>
                                                 </table>
                                                    
@@ -347,29 +422,6 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Perhitungan Omzet Kamar per Bulan</th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Harga Rata-rata Room x Rata-rata Room Terjual/Hari x 30 Hari
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Math.Ceiling(Model.HargaRataRataRoom).ToString("N0") x @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") Kamar x 30 Hari
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0")
-                                                            </td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             }
@@ -424,89 +476,10 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Perhitungan Omzet Banquet per Bulan</th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Harga Rata-rata Banquet/Pax x Rata-rata Pax Terjual/Hari x 8 Hari
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Math.Ceiling(Model.HargaRataRataBanquetPerPax).ToString("N0") x @Math.Ceiling(Model.RataRataPaxBanquetTerjualPerHari).ToString("N0") Pax x 8 Hari
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Model.PotensiOmzetBanquetPerBulan.ToString("N0")
-                                                            </td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             }
-                                            <hr />
-                                            @if (Model.HargaRataRataRoomKos > 0)
-                                            {
-                                                <table class="table mb-0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Potensi Omzet/Bulan atas Room</th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">Harga Rata-Rata Room × Rata-Rata Room Terjual/Bulan</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Math.Ceiling(Model.HargaRataRataRoomKos).ToString("N0") × @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") Kamar
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Model.PotensiOmzetRoomPerBulanKos.ToString("N0")
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            }
-                                            else
-                                            {
-                                                <table class="table mb-0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Potensi Omzet/Bulan atas Room</th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">Harga Rata-Rata Room × Rata-Rata Room Terjual/Hari x 30 Hari</td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Math.Ceiling(Model.HargaRataRataRoom).ToString("N0") × @Math.Ceiling(Model.RataRataRoomTerjualPerHari).ToString("N0") Kamar × 30 Hari
-                                                            </td>
-                                                        </tr>
-
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;"></th>
-                                                            <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">
-                                                                Rp. @Model.PotensiOmzetRoomPerBulan.ToString("N0")
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            }
+                                            
                                         </div>
                                     </div>
                                 </div>

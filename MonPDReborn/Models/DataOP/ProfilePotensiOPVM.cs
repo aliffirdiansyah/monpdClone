@@ -2238,6 +2238,8 @@ namespace MonPDReborn.Models.DataOP
                 var ret = new DetailPotensiPPJ
                 {
                     NOP = nop,
+                    NamaWp = pju.NpwpdNama,
+                    Alamat = pju.AlamatOp,
                     Status = pju != null ? "Aktif" : "Tidak Aktif",
                     PeriodeData = $"{now.AddMonths(-6):MMMM} - {now.AddMonths(-1):MMMM yyyy}",
                     PeriodeTerakhir = now.AddMonths(-1).ToString("MMMM yyyy"),
@@ -2837,6 +2839,8 @@ namespace MonPDReborn.Models.DataOP
             public string Status { get; set; } = "Aktif";
             public string PeriodeData { get; set; } = string.Empty; // Contoh: "Januari - Juni 2023"
             public string PeriodeTerakhir { get; set; } = string.Empty; // Contoh: "Juli 2023"
+            public string NamaWp { get; set; } = string.Empty; // Contoh: "Juli 2023"
+            public string Alamat { get; set; } = string.Empty; // Contoh: "Juli 2023"
             public DateTime TanggalPerhitungan { get; set; }
 
             public decimal RataRataNJTL { get; set; }
