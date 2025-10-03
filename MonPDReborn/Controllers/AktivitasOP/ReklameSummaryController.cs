@@ -353,5 +353,42 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
             return Json(response);
         }
+        [HttpPost]
+        public IActionResult HapusData(string noFormulir, string nor, string namaPetugas, int seq)
+        {
+            try
+            {
+                var context = DBClass.GetContext();
+
+                // Ambil data utama (Upaya)
+                var data = context.DbMonReklameUpayas
+                    .FirstOrDefault(x => x.NoFormulir == noFormulir && x.Nor == nor && x.Petugas == namaPetugas);
+
+                if (data != null)
+                {
+                    // Ambil semua dokumen terkait
+                    var doks = context.DbMonReklameUpayaDoks
+                        .Where(d => d.NoformS == noFormulir && d.Nor == nor && d.Seq == seq)
+                        .ToList();
+
+                    if (doks.Any())
+                    {
+                        context.DbMonReklameUpayaDoks.RemoveRange(doks);
+                    }
+
+                    // Hapus data utama
+                    context.DbMonReklameUpayas.Remove(data);
+                    context.SaveChanges();
+
+                    return Json(new { success = true });
+                }
+
+                return Json(new { success = false, message = "Data tidak ditemukan" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 }

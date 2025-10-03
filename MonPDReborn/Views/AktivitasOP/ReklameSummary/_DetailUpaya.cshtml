@@ -172,6 +172,14 @@
                     columns.AddFor(m => m.NamaUpaya).Caption("Upaya");
                     columns.AddFor(m => m.Keterangan).Caption("Keterangan");
                     columns.AddFor(m => m.Petugas).Caption("Petugas");
+                    columns.Add()
+                    .Caption("Action")
+                    .CellTemplate(@<text>
+                        <button class="btn btn-sm btn-danger"
+                                onclick="hapusData('<%- data.NoFormulir %>', '<%- data.NOR %>', '<%- data.Petugas %>', <%- data.Seq %>)">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </text>);
                 })
 
                 )
