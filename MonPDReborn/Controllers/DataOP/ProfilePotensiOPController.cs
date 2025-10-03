@@ -134,11 +134,11 @@ namespace MonPDReborn.Controllers.DataOP
                         var modelMakananMinuman = ProfilePotensiOPVM.Method.GetDataPotensiResto(nop);
                         if (kategori == 4 || kategori == 11)
                         {
-                            return View("~/Views/DataOP/ProfilePotensiOP/DetailCatering.cshtml", modelMakananMinuman);
+                            return View("~/Views/DataOP/ProfilePotensiOP/_DetailCatering.cshtml", modelMakananMinuman);
                         }
                         else
                         {
-                            return View("~/Views/DataOP/ProfilePotensiOP/DetailRestoran.cshtml", modelMakananMinuman);
+                            return View("~/Views/DataOP/ProfilePotensiOP/_DetailRestoran.cshtml", modelMakananMinuman);
                         }
                     case EnumFactory.EPajak.TenagaListrik:
                         var modelTenagaListrik = ProfilePotensiOPVM.Method.GetDataPotensiPPJ(nop);
@@ -146,7 +146,7 @@ namespace MonPDReborn.Controllers.DataOP
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
                         var modelPerhotelan = ProfilePotensiOPVM.Method.GetDataPotensiHotel(nop);
-                        return View("~/Views/DataOP/ProfilePotensiOP/DetailHotel.cshtml", modelPerhotelan);
+                        return View("~/Views/DataOP/ProfilePotensiOP/_DetailHotel.cshtml", modelPerhotelan);
                         break;
                     case EnumFactory.EPajak.JasaParkir:
                         var modelJasaParkir = ProfilePotensiOPVM.Method.GetDataPotensiParkir(nop);
