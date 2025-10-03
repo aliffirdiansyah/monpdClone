@@ -8,18 +8,19 @@
 
 <style>
     /* Baris Hijau: IsLog = TRUE dan IsOn = TRUE */
-    .row-green td {
-        color: #198754 !important; /* Warna Hijau */
+    .dx-datagrid-rowsview .dx-row.row-green td {
+        background-color: #d1e7dd !important;
+        color: #0f5132 !important;
         font-weight: 500;
     }
 
     /* Baris Merah: IsLog = TRUE dan IsOn = FALSE */
-    .row-red td {
-        color: #dc3545 !important; /* Warna Merah */
+    .dx-datagrid-rowsview .dx-row.row-red td {
+        background-color: #f8d7da !important;
+        color: #842029 !important;
         font-weight: 500;
     }
 
-    /* Penting: Menggunakan selector 'td' agar warna teks diterapkan pada semua sel di baris tersebut */
 </style>
 
 <div class="row">
@@ -49,24 +50,7 @@
                     </div>
                 </div>
 
-                @* <!-- Modal untuk Detail Harian -->
-                <div class="modal fade" id="modalDetailHarian" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-xl modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Detail Kapasitas Harian</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div id="gridDetailHarian"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div> *@
-
                 <div class="row g-3 align-items-center">
-
-
                     <div class="table-responsive">
                         @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCCTVBulanan>()
                                                 .ID("KapasitasMonitoringCCTVGrid")
@@ -241,25 +225,19 @@
         function applyRowColor(e) {
             // Hanya proses baris yang berisi data
             if (e.rowType === "data") {
+
                 const data = e.data;
-                const $rowElement = $(e.rowElement); // Konversi ke jQuery element
+                const $rowElement = $(e.rowElement); 
 
-                // Logika Anda:
-                // 1. Cek jika IsLog = TRUE
                 if (data.IsLog === true) {
-
-                    // 1a. Jika IsOn = TRUE -> HIJAU
                     if (data.IsOn === true) {
                         $rowElement.addClass('row-green');
                     }
-                    // 1b. Jika IsOn = FALSE -> MERAH
                     else if (data.IsOn === false) {
                         $rowElement.addClass('row-red');
                     }
                 }
-                // 2. Jika IsLog = FALSE -> NORMAL (Hitam)
                 else {
-                    // Hapus kelas warna jika ada, memastikan baris kembali normal
                     $rowElement.removeClass('row-green row-red');
                 }
             }

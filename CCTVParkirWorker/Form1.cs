@@ -797,6 +797,7 @@ namespace CCTVParkirWorker
                 res.AccessPoint = item.Subjects[0];
                 res.Localization = item.Localization.Text;
                 res.StateAsli = item.Body.State;
+                res.StateEnum = GetStatusCctv(item.Body.State);
                 res.State = GetStatusCctv(item.Body.State).GetDescription();
                 res.Tanggal = ParseFlexibleDate(item.Body.Timestamp);
 
@@ -807,94 +808,78 @@ namespace CCTVParkirWorker
             await InsertToDbCctvLogDetail(op, rekapResult, token);
             UpdateLogLog(row, "Done Detail");
 
-            //do logic here
-            var dataLog = rekapResult
-                .GroupBy(x => new { x.AccessPoint })
-                .Select(g =>
-                {
-                    //nop
-                    string nop = op.NOP;
-
-                    //cctv id
-                    string cctvId = op.CCTVId;
-
-                    // ambil event terakhir (tanggal terbaru)
-                    var lastEvent = g.OrderByDescending(x => x.Tanggal).FirstOrDefault();
-
-                    // ambil waktu terakhir aktif & terakhir nonaktif
-                    var lastAktif = g.Where(x => x.State == "AKTIF")
-                                     .OrderByDescending(x => x.Tanggal)
-                                     .FirstOrDefault();
-
-                    var lastNonAktif = g.Where(x => x.State == "NON AKTIF")
-                                        .OrderByDescending(x => x.Tanggal)
-                                        .FirstOrDefault();
-
-                    // bikin objek hasilnya
-                    return new MOpParkirCctvJasnitaLog
-                    {
-                        Nop = nop, // sesuaikan kalau NOP beda field
-                        CctvId = cctvId,
-                        TglTerakhirAktif = lastAktif?.Tanggal ?? DateTime.MinValue,
-                        TglTerakhirDown = lastNonAktif?.Tanggal ?? DateTime.MinValue,
-                        Status = lastEvent?.State ?? "NON AKTIF"
-                    };
-                })
-                .FirstOrDefault();
-
-            try
+            if(rekapResult.Count > 0)
             {
-                await context.Database.OpenConnectionAsync(token);
+                var dataPalingTerakhir = rekapResult
+                    .OrderByDescending(x => x.Tanggal)
+                    .First();
 
+                DateTime dataTanggalTerakhirAktif = rekapResult
+                    .Where(x => x.StateEnum == EnumFactory.EStatusCCTV.Aktif).OrderByDescending(x => x.Tanggal)
+                    .First().Tanggal;
 
-                UpdateLogLog(row, "Inserting...");
-                if (dataLog != null)
+                DateTime dataTanggalTerakhirNonAktif = rekapResult
+                    .Where(x => x.StateEnum == EnumFactory.EStatusCCTV.NonAktif).OrderByDescending(x => x.Tanggal)
+                    .First().Tanggal;
+
+                var insert = new MOpParkirCctvJasnitaLog();
+                insert.Nop = op.NOP;
+                insert.CctvId = op.CCTVId;
+                insert.TglTerakhirAktif = dataTanggalTerakhirAktif;
+                insert.TglTerakhirDown = dataTanggalTerakhirNonAktif;
+                insert.Status = dataPalingTerakhir.State;
+
+                var checkWaktuMasukTransaksiTerakhir = context.TOpParkirCctvs
+                    .Where(x => x.Nop == op.NOP && x.CctvId == op.CCTVId)
+                    .OrderByDescending(x => x.WaktuMasuk)
+                    .FirstOrDefault();
+
+                if(checkWaktuMasukTransaksiTerakhir != null)
                 {
-                    var lastDateScan = context.TOpParkirCctvs
-                        .Where(x => x.Nop == op.NOP && x.CctvId == op.CCTVId)
-                        .Max(q => (DateTime?)q.WaktuMasuk); // pakai nullable DateTime untuk aman
-
-                    if (lastDateScan == null)
+                    if(checkWaktuMasukTransaksiTerakhir.WaktuMasuk > dataTanggalTerakhirAktif)
                     {
-                        lastDateScan = DateTime.MinValue;
+                        insert.TglTerakhirAktif = checkWaktuMasukTransaksiTerakhir.WaktuMasuk;
+                        insert.Status = EnumFactory.EStatusCCTV.Aktif.GetDescription();
                     }
-
-                    string lastStatus = dataLog.Status ?? "NON AKTIF";
-                    if (lastDateScan > dataLog.TglTerakhirAktif && lastDateScan > dataLog.TglTerakhirDown.Value)
-                    {
-                        dataLog.TglTerakhirAktif = lastDateScan.Value;
-                        dataLog.Status = "AKTIF";
-                    }
-
-                    // ✅ Perhatikan "await" di sini
-                    var existing = await context.MOpParkirCctvJasnitaLogs
-                        .FirstOrDefaultAsync(x => x.Nop == op.NOP && x.CctvId == op.CCTVId, token);
-
-                    if (existing != null)
-                    {
-                        // update record yang sudah ada
-                        existing.TglTerakhirAktif = dataLog.TglTerakhirAktif;
-                        existing.TglTerakhirDown = dataLog.TglTerakhirDown;
-                        existing.Status = dataLog.Status;
-                    }
-                    else
-                    {
-                        // tambah record baru
-                        await context.MOpParkirCctvJasnitaLogs.AddAsync(dataLog, token);
-                    }
-
-                    UpdateLogLog(row, "Saving changes...");
-                    await context.SaveChangesAsync(token);
                 }
-                await context.Database.CloseConnectionAsync();
-            }
-            catch (Exception ex)
-            {
-                UpdateLogLog(row, $"Error Insert Db: {ex.Message}");
-            }
-            finally
-            {
-                await context.Database.CloseConnectionAsync();
+
+                try
+                {
+                    await context.Database.OpenConnectionAsync(token);
+
+                    UpdateLogLog(row, "Inserting...");
+                    if (dataPalingTerakhir != null)
+                    {
+                        // ✅ Perhatikan "await" di sini
+                        var existing = await context.MOpParkirCctvJasnitaLogs
+                            .FirstOrDefaultAsync(x => x.Nop == op.NOP && x.CctvId == op.CCTVId, token);
+
+                        if (existing != null)
+                        {
+                            // update record yang sudah ada
+                            existing.TglTerakhirAktif = insert.TglTerakhirAktif;
+                            existing.TglTerakhirDown = insert.TglTerakhirDown;
+                            existing.Status = insert.Status;
+                        }
+                        else
+                        {
+                            // tambah record baru
+                            await context.MOpParkirCctvJasnitaLogs.AddAsync(insert, token);
+                        }
+
+                        UpdateLogLog(row, "Saving changes...");
+                        await context.SaveChangesAsync(token);
+                    }
+                    await context.Database.CloseConnectionAsync();
+                }
+                catch (Exception ex)
+                {
+                    UpdateLogLog(row, $"Error Insert Db: {ex.Message}");
+                }
+                finally
+                {
+                    await context.Database.CloseConnectionAsync();
+                }
             }
         }
 
