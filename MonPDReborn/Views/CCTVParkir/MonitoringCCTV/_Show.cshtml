@@ -20,23 +20,6 @@
         </div>
     </div>
 
-    @* <div class="col-lg-4">
-        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
-            <div class="card-body">
-                <div class="d-flex justify-content-start align-items-center mb-2">
-                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
-                        <i class=" ri-store-3-line text-primary fs-1"></i>
-                    </div>
-                    <div class="text-start">
-                        <h5 class="text-muted">Total CCTV</h5>
-                        <h2 class="mb-0 fw-bold">@Model.TotalCCTV.ToString("n0")</h2>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> *@
-
     <div class="col-lg-4">
         <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
             <div class="card-body">
@@ -86,41 +69,6 @@
             </div>
         </div>
     </div>
-
-    @* <div class="col-lg-3">
-        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
-            <div class="card-body">
-                <div class="d-flex justify-content-start align-items-center mb-2">
-                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
-                        <i class="ri-hotel-line text-primary fs-1"></i>
-                    </div>
-                    <div class="text-start">
-                        <h5 class="text-muted">CCTV Aktif</h5>
-                        <h2 class="mb-0 fw-bold">@Model.TotalAktif.ToString("n0")</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
-            <div class="card-body">
-                <div class="d-flex justify-content-start align-items-center mb-2">
-                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
-                        <i class="ri-car-line text-primary fs-1"></i>
-                    </div>
-                    <div class="text-start">
-                        <h5 class="text-muted">CCTV Non Aktif</h5>
-                        <h2 class="mb-0 fw-bold">@Model.TotalNonAktif.ToString("n0")</h2>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> *@
-
-
 </div>
 
 <div class="table-responsive">
@@ -190,8 +138,8 @@
                         <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>','<%- data.VedorId %>')" title="Detail">
                         <i class="bx bx-archive"></i>
                         </button>
-                        <a href="@(Url.Action("LiveStreaming"))?nop=<%- data.Nop %>" target="_blank" class="btn btn-sm btn-secondary" title="Live Streaming">
-                        <i class="bx bx-archive"></i>
+                        <a href="@(Url.Action("LiveStreaming"))?nop=<%- data.Nop %>" target="_blank" class="btn btn-sm btn-outline-secondary" title="Live Streaming">
+                        <i class="bx bx-play-circle"></i>
                         </a>
                     <% } %>
                 </div>
@@ -199,6 +147,5 @@
             ;
         })
         )
-
 </div>
 

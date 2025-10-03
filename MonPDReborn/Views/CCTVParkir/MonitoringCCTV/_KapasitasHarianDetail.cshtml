@@ -1,71 +1,175 @@
 ﻿@using System.Text.Json
 @model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.KapasitasHarianDetail
 
+<style>
+    /* Hilangkan padding top modal body supaya card nempel */
+    #staticBackdropLargeScrollable .modal-body {
+        padding-top: 0 !important;
+    }
+    
+    /* Fixed Header khusus untuk Bootstrap modal-dialog-scrollable */
+    .detail-fixed-header {
+        position: sticky;
+        position: -webkit-sticky; /* Safari support */
+        top: 0;
+        z-index: 1000;
+        background: #ffffff;
+        /* margin-top: 1rem;  */
+        padding: 1rem 1rem 0.5 1rem;
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .detail-fixed-header.scrolled {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* Info Card di Header - lebih compact & stylish */
+    .info-header-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        padding: 1.25rem;
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .info-header-card .info-row {
+        display: flex;
+        align-items: baseline;
+        margin-bottom: 0.6rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .info-header-card .info-row:last-child {
+        margin-bottom: 0;
+    }
+    
+    .info-header-card .info-label {
+        min-width: 110px;
+        font-weight: 600;
+        opacity: 0.9;
+        flex-shrink: 0;
+    }
+    
+    .info-header-card .info-value {
+        flex: 1;
+        font-weight: 500;
+    }
+    
+    /* Alternative: Simple white card (uncomment jika prefer simple) */
+    /*
+    .info-header-card {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    .info-header-card .info-label {
+        color: #6c757d;
+    }
+    .info-header-card .info-value {
+        color: #212529;
+    }
+    */
+    
+    /* Content area */
+    .detail-content-area {
+        /* padding: 0 1rem 1rem 1rem; */
+        /* margin: 0 -1rem -1rem -1rem; /* Negate modal-body padding */ */
+    }
+    
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .info-header-card {
+            padding: 1rem;
+        }
+        .info-header-card .info-row {
+            flex-direction: column;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+        .info-header-card .info-label {
+            min-width: auto;
+            margin-bottom: 0.25rem;
+        }
+    }
+</style>
 
-
-<div class="row">
-
-    <div class="col-lg-12">
-        <div class="card shadow-sm mb-3">
-            <div class="card-body">
-                <div class="row mb-2">
-                    <div class="col-sm-3 fw-bold">NOP:</div>
-                    <div class="col-sm-9">@Model.formattedNop</div>
+<!-- FIXED HEADER -->
+<div class="detail-fixed-header mb-2" id="detailFixedHeader">
+    <div class="info-header-card mb-2">
+        <div class="row g-2">
+            <div class="col-md-6">
+                <div class="info-row">
+                    <span class="info-label">NOP:</span>
+                    <span class="info-value">@Model.formattedNop</span>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-sm-3 fw-bold">Nama OP:</div>
-                    <div class="col-sm-9">@Model.NamaOP</div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-row">
+                    <span class="info-label">Nama OP:</span>
+                    <span class="info-value">@Model.NamaOP</span>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-sm-3 fw-bold">Alamat OP:</div>
-                    <div class="col-sm-9">@Model.AlamatOP</div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-row">
+                    <span class="info-label">Alamat OP:</span>
+                    <span class="info-value">@Model.AlamatOP</span>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-sm-3 fw-bold">Vendor:</div>
-                    <div class="col-sm-9">@Model.Vendor</div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-3 fw-bold">Tanggal CCTV:</div>
-                    <div class="col-sm-9">@Model.TanggalCctv</div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-row">
+                    <span class="info-label">Vendor / Tanggal CCTV:</span>
+                    <span class="info-value">@Model.Vendor / @Model.TanggalCctv</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-12">
-        <div class="row">
+    <!-- Chart Section -->
+    <div class="col-lg-12 p-0">
+        <div class="card p-0">
+            <div class="card-body">
+                <div id="line_chart_annotations" class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCROLLABLE CONTENT -->
+<div class="detail-content-area">
+    <div class="row">
+        
+
+        <!-- DataGrid Section -->
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <div id="line_chart_annotations" class="apex-charts" dir="ltr"></div>
+                    <div class="table-responsive">
+                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
+                            .ID("gridDetailHarian")
+                            .DataSource(Model.DataMonitoringDetail.OrderBy(x => x.TanggalMasuk).ToList())
+                            .ShowBorders(true)
+                            .ColumnAutoWidth(true)
+                            .Sorting(s => s.Mode(GridSortingMode.None)) 
+                            .HeaderFilter(h => h.Visible(true))
+                            .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
+                            .Paging(p => p.Enabled(false)) 
+                            .Pager(p => p.Visible(false))
+                            .OnExporting("exportGrid")
+                            .OnRowPrepared("applyRowColor") 
+                            .Columns(columns => {
+                                columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center);
+                                columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
+                                columns.AddFor(m => m.IsLogText).Caption("Event").Alignment(HorizontalAlignment.Center);
+                                columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
+                                columns.AddFor(m => m.Direction).Caption("Direction").Alignment(HorizontalAlignment.Center);
+                                columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
+                            })
+                        )
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-
-    <div class="col-lg-12">
-        <div class="table-responsive">
-            @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
-                .ID("gridDetailHarian")
-                .DataSource(Model.DataMonitoringDetail.OrderBy(x => x.TanggalMasuk).ToList())
-                .ShowBorders(true)
-                .ColumnAutoWidth(true)
-                .Sorting(s => s.Mode(GridSortingMode.None)) 
-                .HeaderFilter(h => h.Visible(true))
-                .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
-                .Paging(p => p.Enabled(false)) 
-                .Pager(p => p.Visible(false))
-                .OnExporting("exportGrid")
-                .OnRowPrepared("applyRowColor") 
-                .Columns(columns => {
-                    columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center);
-                    columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
-                    columns.AddFor(m => m.IsLogText).Caption("Event").Alignment(HorizontalAlignment.Center);
-                    columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
-                    columns.AddFor(m => m.Direction).Caption("Direction").Alignment(HorizontalAlignment.Center);
-                    columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
-                })
-            )
         </div>
     </div>
 </div>
@@ -82,11 +186,10 @@
     // === ANNOTATIONS CCTV ===
     var rangeAnnotations = [];
     if (cctvEvents.length === 0) {
-        // Jika kosong, langsung buat satu range hijau dari startTime sampai endTime
         rangeAnnotations.push({
             x: startTime,
             x2: endTime,
-            fillColor: '#51d28c', // hijau
+            fillColor: '#51d28c',
             opacity: 0.15,
             label: {
                 text: 'CCTV ON',
@@ -95,7 +198,6 @@
             }
         });
     } else {
-        // Buat annotations seperti biasa
         for (let i = 0; i < cctvEvents.length; i++) {
             var curr = cctvEvents[i];
             var next = cctvEvents[i + 1];
@@ -115,7 +217,6 @@
             });
         }
 
-        // Jika event pertama tidak dari awal
         if (new Date(cctvEvents[0].Time).getTime() > startTime) {
             rangeAnnotations.unshift({
                 x: startTime,
@@ -131,7 +232,7 @@
         }
     }
 
-    // === GENERATE SERIES DARI MASTER ===
+    // === GENERATE SERIES ===
     var chartSeries = masterKendaraan.map(k => ({
         name: k.Name.charAt(0).toUpperCase() + k.Name.slice(1),
         data: kendaraanData.map(d => {
@@ -141,7 +242,7 @@
         color: k.Color
     }));
 
-    // === KONFIGURASI CHART ===
+    // === CHART CONFIG ===
     var options = {
         series: chartSeries,
         chart: { height: 350, type: 'line', toolbar: { show: true } },
@@ -156,4 +257,25 @@
 
     var chart = new ApexCharts(document.querySelector("#line_chart_annotations"), options);
     chart.render();
+
+    // === SCROLL EFFECT - Langsung target modal-body ===
+    $(document).ready(function() {
+        // Target langsung modal body dari Bootstrap modal-dialog-scrollable
+        var $modalBody = $('#staticBackdropLargeScrollable .modal-body');
+        
+        $modalBody.on('scroll', function() {
+            var scrollTop = $(this).scrollTop();
+            
+            if (scrollTop > 20) {
+                $('#detailFixedHeader').addClass('scrolled');
+            } else {
+                $('#detailFixedHeader').removeClass('scrolled');
+            }
+        });
+        
+        // Cleanup saat modal ditutup
+        $('#staticBackdropLargeScrollable').on('hidden.bs.modal', function() {
+            $('#detailFixedHeader').removeClass('scrolled');
+        });
+    });
 </script>

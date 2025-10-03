@@ -21,6 +21,17 @@
         font-weight: 500;
     }
 
+    /* --- khusus modal kapasitas --- */
+    #staticBackdropLargeScrollable.no-gap-modal .modal-header {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    #staticBackdropLargeScrollable.no-gap-modal .modal-body {
+        margin-top : 1rem;
+        padding-top: 0 !important;
+    }
+
 </style>
 
 <div class="row">
@@ -177,6 +188,8 @@
                                     success: function (result) {
                                         $("#staticBackdropLargeScrollable .modal-title").html("Detail");
                                         $("#staticBackdropLargeScrollable .modal-body").html(result);
+
+                                        $("#staticBackdropLargeScrollable").addClass("no-gap-modal");
                                         $("#staticBackdropLargeScrollable").modal("show");
                                     },
                                     error: function (xhr) {
