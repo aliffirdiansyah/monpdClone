@@ -117,8 +117,6 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-
-        
         public IActionResult KapasitasHarian(string nop, int vendorId, int tahun, int bulan)
         {
             try
@@ -133,7 +131,6 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-
         //public IActionResult KapasitasHarianDetail(string nop, int vendorId, DateTime tgl)
         //{
         //    try
@@ -148,7 +145,6 @@ namespace MonPDReborn.Controllers.CCTVParkir
         //        return Json(response);
         //    }
         //}
-
         public IActionResult KapasitasHarianDetail(string nop, int vendorId, DateTime tgl)
         {
             try
@@ -171,8 +167,6 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-
-
         public IActionResult DataKapasitasParkir(string nop, DateTime tanggalAwal, DateTime tanggalAkhir)
         {
             var response = new ResponseBase();
@@ -209,6 +203,10 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
+        }
+        public IActionResult LiveStreaming(string nop)
+        {
+            return View($"{URLView}{actionName}");
         }
     }
 }

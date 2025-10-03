@@ -190,6 +190,9 @@
                         <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>','<%- data.VedorId %>')" title="Detail">
                         <i class="bx bx-archive"></i>
                         </button>
+                        <a href="@(Url.Action("LiveStreaming"))?nop=<%- data.Nop %>" target="_blank" class="btn btn-sm btn-secondary" title="Live Streaming">
+                        <i class="bx bx-archive"></i>
+                        </a>
                     <% } %>
                 </div>
             </text>)
