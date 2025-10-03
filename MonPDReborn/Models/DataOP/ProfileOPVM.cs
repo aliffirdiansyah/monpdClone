@@ -4289,6 +4289,9 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.KategoriPajak = opResto.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opResto.KategoriId;
                             ret.IdentitasPajak.RealisasiTahun = realisasiResto;
+                            var wil = context.MWilayahs.Where(x => x.KdKelurahan == opResto.AlamatOpKdLurah && x.KdKecamatan == opResto.AlamatOpKdCamat).FirstOrDefault();
+                            ret.IdentitasPajak.Kelurahan = wil.NmKelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = wil.NmKecamatan ?? "";
                             //isi data resto
                             ret.RestoRow.PendapatanRow = new DetailResto.Pendapatan
                             {
@@ -4324,6 +4327,9 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.KategoriPajak = opListrik.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opListrik.KategoriId;
                             ret.IdentitasPajak.RealisasiTahun = realisasiPpj;
+                            var wil = context.MWilayahs.Where(x => x.KdKelurahan == opListrik.AlamatOpKdLurah && x.KdKecamatan == opListrik.AlamatOpKdCamat).FirstOrDefault();
+                            ret.IdentitasPajak.Kelurahan = wil.NmKelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = wil.NmKecamatan ?? "";
                         }
                         break;
 
@@ -4348,6 +4354,9 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.KategoriPajak = opHotel.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opHotel.KategoriId;
                             ret.IdentitasPajak.RealisasiTahun = realisasiHotel;
+                            var wil = context.MWilayahs.Where(x => x.KdKelurahan == opHotel.AlamatOpKdLurah && x.KdKecamatan == opHotel.AlamatOpKdCamat).FirstOrDefault();
+                            ret.IdentitasPajak.Kelurahan = wil.NmKelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = wil.NmKecamatan ?? "";
                             //isi data hotel
                             ret.HotelRow.PendapatanRow = new DetailHotel.Pendapatan
                             {
@@ -4430,6 +4439,9 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.KategoriPajak = opParkir.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opParkir.KategoriId;
                             ret.IdentitasPajak.RealisasiTahun = realisasiParkir;
+                            var wil = context.MWilayahs.Where(x => x.KdKelurahan == opParkir.AlamatOpKdLurah && x.KdKecamatan == opParkir.AlamatOpKdCamat).FirstOrDefault();
+                            ret.IdentitasPajak.Kelurahan = wil.NmKelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = wil.NmKecamatan ?? "";
                         }
                         break;
 
@@ -4453,6 +4465,9 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.KategoriPajak = opHiburan.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opHiburan.KategoriId;
                             ret.IdentitasPajak.RealisasiTahun = realisasiHiburan;
+                            var wil = context.MWilayahs.Where(x => x.KdKelurahan == opHiburan.AlamatOpKdLurah && x.KdKecamatan == opHiburan.AlamatOpKdCamat).FirstOrDefault();
+                            ret.IdentitasPajak.Kelurahan = wil.NmKelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = wil.NmKecamatan ?? "";
                         }
                         break;
 
@@ -4476,6 +4491,9 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.KategoriPajak = opAbt.KategoriNama;
                             ret.IdentitasPajak.kategoriID = opAbt.KategoriId;
                             ret.IdentitasPajak.RealisasiTahun = realisasiAbt;
+                            var wil = context.MWilayahs.Where(x => x.KdKelurahan == opAbt.AlamatOpKdLurah && x.KdKecamatan == opAbt.AlamatOpKdCamat).FirstOrDefault();
+                            ret.IdentitasPajak.Kelurahan = wil.NmKelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = wil.NmKecamatan ?? "";
 
                             ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
                             {
@@ -4493,7 +4511,7 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.Reklame:
                         var opReklame = context.DbOpReklames.FirstOrDefault(x => x.Nop == nop);
                         if (opReklame != null)
-                            {
+                        {
                             ret.IdentitasPajak.WilayahPajak = "-";
                             ret.IdentitasPajak.NpwpdNo = opReklame.NoWp;
                             ret.IdentitasPajak.NamaNpwpd = opReklame.Nama;
@@ -4507,6 +4525,8 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.JenisPajak = pajak.GetDescription();
                             ret.IdentitasPajak.KategoriPajak = opReklame.KategoriNama;
                             ret.IdentitasPajak.kategoriID = (int)opReklame.KategoriId;
+                            ret.IdentitasPajak.Kelurahan = opReklame.Nmkelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = opReklame.Kecamatan ?? "";
                             //isi data reklame
                             /*ret.ReklameRow.PendapatanRow = new DetailReklame.Pendapatan
                             {
@@ -4530,7 +4550,7 @@ namespace MonPDReborn.Models.DataOP
                         if (opPbb != null)
                         {
                             ret.IdentitasPajak.WilayahPajak =
-                                (opPbb.Uptb != null ? opPbb.Uptb.ToString() : ""); 
+                                (opPbb.Uptb != null ? opPbb.Uptb.ToString() : "");
                             ret.IdentitasPajak.NpwpdNo = opPbb.WpNpwp ?? "-";
                             ret.IdentitasPajak.NamaNpwpd = opPbb.WpNama ?? "-";
                             ret.IdentitasPajak.NOP = opPbb.Nop;
@@ -4543,6 +4563,9 @@ namespace MonPDReborn.Models.DataOP
                             ret.IdentitasPajak.kategoriID = (int)opPbb.KategoriId;
                             ret.IdentitasPajak.RealisasiTahun = realisasiPbb ?? 0;
                             ret.IdentitasPajak.LuasTanah = opPbb.LuasTanah;
+                            var wil = context.MWilayahs.Where(x => x.KdKelurahan == opPbb.AlamatKdLurah && x.KdKecamatan == opPbb.AlamatKdCamat).FirstOrDefault();
+                            ret.IdentitasPajak.Kelurahan = wil.NmKelurahan ?? "";
+                            ret.IdentitasPajak.Kecamatan = wil.NmKecamatan ?? "";
 
                             /*ret.AbtRow.PendapatanRow = new DetailAbt.Pendapatan
                             {
@@ -5048,6 +5071,8 @@ namespace MonPDReborn.Models.DataOP
             public string NamaNpwpd { get; set; }
             public string NamaObjekPajak { get; set; }
             public string AlamatLengkap { get; set; }
+            public string Kelurahan { get; set; }
+            public string Kecamatan { get; set; }
             public string WilayahPajak { get; set; }
             public string NOP { get; set; }
             public string FormattedNOP
