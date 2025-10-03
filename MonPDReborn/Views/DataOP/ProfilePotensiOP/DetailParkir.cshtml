@@ -104,9 +104,73 @@
                                                         <th scope="row" style="width: 200px;"></th>
                                                         <th scope="row" style="width: 20px;">=</th>
                                                         <td class="text-body fw-medium">
-                                                            ((Jumlah Kendaraan Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Kendaraan Terparkir Weekend x Tarif x 8 Hari)) x Tarif Pajak
+                                                            @{
+                                                                var rumus = new List<string>();
+
+                                                                if (Model.KapasitasSepeda > 0)
+                                                                {
+                                                                    rumus.Add("((Jumlah Sepeda Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Sepeda Terparkir Weekend x Tarif x 8 Hari))");
+                                                                }
+                                                                if (Model.KapasitasMotor > 0)
+                                                                {
+                                                                    rumus.Add("((Jumlah Sepeda Motor Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Sepeda Motor Terparkir Weekend x Tarif x 8 Hari))");
+                                                                }
+                                                                if (Model.KapasitasMobil > 0)
+                                                                {
+                                                                    rumus.Add("((Jumlah Mobil Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Mobil Terparkir Weekend x Tarif x 8 Hari))");
+                                                                }
+                                                                if (Model.KapasitasTrukMini > 0)
+                                                                {
+                                                                    rumus.Add("((Jumlah Truk Mini Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Truk Mini Terparkir Weekend x Tarif x 8 Hari))");
+                                                                }
+                                                                if (Model.KapasitasTrukBus > 0)
+                                                                {
+                                                                    rumus.Add("((Jumlah Truk/Bus Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Truk/Bus Terparkir Weekend x Tarif x 8 Hari))");
+                                                                }
+                                                                if (Model.KapasitasTrailer > 0)
+                                                                {
+                                                                    rumus.Add("((Jumlah Trailer Terparkir Weekdays x Tarif x 22 Hari) + (Jumlah Trailer Terparkir Weekend x Tarif x 8 Hari))");
+                                                                }
+
+                                                                var result = string.Join(" + ", rumus);
+                                                            }
+                                                            (@result) x Tarif Pajak
                                                         </td>
                                                     </tr>
+
+                                                    <tr>
+                                                        <th scope="row" style="width: 200px;"></th>
+                                                        <th scope="row" style="width: 20px;">=</th>
+                                                        <td class="text-body fw-medium">
+                                                            @{
+                                                                var rumusHasil = new List<string>();
+
+                                                                var kendaraanList = new[]
+                                                                {
+                                                                    new { Kapasitas = Model.KapasitasSepeda,   Weekdays = Model.JumlahTerparkirSepedaWeekdays,   Weekend = Model.JumlahTerparkirSepedaWeekend,   Tarif = Model.TarifSepeda,   Nama = "Sepeda" },
+                                                                    new { Kapasitas = Model.KapasitasMotor,    Weekdays = Model.JumlahTerparkirMotorWeekdays,    Weekend = Model.JumlahTerparkirMotorWeekend,    Tarif = Model.TarifMotor,    Nama = "Motor" },
+                                                                    new { Kapasitas = Model.KapasitasMobil,    Weekdays = Model.JumlahTerparkirMobilWeekdays,    Weekend = Model.JumlahTerparkirMobilWeekend,    Tarif = Model.TarifMobil,    Nama = "Mobil" },
+                                                                    new { Kapasitas = Model.KapasitasTrukMini, Weekdays = Model.JumlahTerparkirTrukMiniWeekdays, Weekend = Model.JumlahTerparkirTrukMiniWeekend, Tarif = Model.TarifTrukMini, Nama = "Truk Mini" },
+                                                                    new { Kapasitas = Model.KapasitasTrukBus,  Weekdays = Model.JumlahTerparkirTrukBusWeekdays,  Weekend = Model.JumlahTerparkirTrukBusWeekend,  Tarif = Model.TarifTrukBus,  Nama = "Truk/Bus" },
+                                                                    new { Kapasitas = Model.KapasitasTrailer,  Weekdays = Model.JumlahTerparkirTrailerWeekdays,  Weekend = Model.JumlahTerparkirTrailerWeekend,  Tarif = Model.TarifTrailer,  Nama = "Trailer" }
+                                                                };
+
+                                                                foreach (var k in kendaraanList)
+                                                                {
+                                                                    if (k.Kapasitas > 0)
+                                                                    {
+                                                                        rumusHasil.Add(
+                                                                        "((" + k.Weekdays.ToString("N0") + " Unit x Rp. " + k.Tarif.ToString("N0") + " x 22 Hari) + " +
+                                                                        "(" + k.Weekend.ToString("N0") + " Unit x Rp. " + k.Tarif.ToString("N0") + " x 8 Hari))"
+                                                                        );
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            (@Html.Raw(string.Join(" + ", rumusHasil))) x Tarif Pajak
+                                                        </td>
+                                                    </tr>
+
 
                                                     <tr>
                                                         <th scope="row" style="width: 200px;"></th>
@@ -234,7 +298,7 @@
                                                             <td class="text-body fw-medium">@Model.KapasitasTrukBus Unit</td>
                                                         </tr>
                                                         <tr>
-                                                            <th scope="row" style="width: 200px;">Tarif Sepeda</th>
+                                                            <th scope="row" style="width: 200px;">Tarif Truk/Bus</th>
                                                             <th scope="row" style="width: 20px;">:</th>
                                                             <td class="text-body fw-medium">Rp. @Model.TarifTrukBus.ToString("N0")</td>
                                                         </tr>

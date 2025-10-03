@@ -189,7 +189,7 @@
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Rata-rata Terjual Weekdays</th>
                                                         <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">Kapasitas Tenant x Turnover Weekdays</td>
+                                                        <td class="text-body fw-medium">Kapasitas Tenant/Catering x Turnover Weekdays</td>
                                                     </tr>
 
                                                     <tr>
@@ -211,7 +211,7 @@
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Rata-Rata Terjual Weekend</th>
                                                         <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">Jumlah Kursi x Turnover Weekend</td>
+                                                        <td class="text-body fw-medium">Kapasitas Tenant/Catering x Turnover Weekend</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row" style="width: 200px;"></th>
@@ -224,32 +224,6 @@
                                                         <td class="text-body fw-medium">@Model.RataRataTerjualWeekendCatering.ToString("N0") Terjual</td>
                                                     </tr>
 
-                                                    <tr>
-                                                        <th scope="row" style="width: 200px;">Terjual per Bulan</th>
-                                                        <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">
-                                                            (Rata-Rata Bill/Orang x Rata-Rata Terjual Weekdays x 22 Hari)
-                                                            + (Rata-Rata Bill/Orang x Rata-Rata Terjual Weekend x 8 Hari)
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="width: 200px;"></th>
-                                                        <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">
-                                                            (@Model.RataRataTerjualWeekdaysCatering.ToString("N0") Terjual x 22 Hari)
-                                                            + (@Model.RataRataTerjualWeekendCatering.ToString("N0") Terjual x 8 Hari)
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="width: 200px;"></th>
-                                                        <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">@terjualWeekdays.ToString("N0") + @terjualWeekend.ToString("N0")</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="width: 200px;"></th>
-                                                        <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">@terjualBulan.ToString("N0") Terjual</td>
-                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
