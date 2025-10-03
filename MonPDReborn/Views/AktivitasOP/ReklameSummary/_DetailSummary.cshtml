@@ -238,4 +238,51 @@
         }
 
     </script>
+    <script>
+        function hapusData(noFormulir, nor, namaPetugas, seq) {
+            Swal.fire({
+                title: 'Yakin hapus data?',
+                text: "Data yang sudah dihapus tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/ReklameSummary/HapusData',
+                        type: 'POST',
+                        data: { noFormulir: noFormulir, nor: nor, namaPetugas: namaPetugas, seq: seq },
+                        success: function (response) {
+                            if (response.Status === 1) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: response.Message
+                                });
+
+                                $('#formUpaya')[0].reset();
+                                $("#detailUpayaInfoGrid").dxDataGrid("instance").refresh();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: response.Message
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan saat menghapus data.'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
 }

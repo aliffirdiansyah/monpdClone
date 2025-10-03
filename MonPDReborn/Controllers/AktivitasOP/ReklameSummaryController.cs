@@ -353,5 +353,55 @@ namespace MonPDReborn.Controllers.Aktivitas
             }
             return Json(response);
         }
+        [HttpPost]
+        public IActionResult HapusData(string noFormulir, string nor, string namaPetugas, int seq)
+        {
+            try
+            {
+                var context = DBClass.GetContext();
+
+                // Ambil data utama (Upaya)
+                var data = context.DbMonReklameUpayas
+                    .FirstOrDefault(x => x.NoFormulir == noFormulir  && x.Petugas == namaPetugas);
+
+                if (data != null)
+                {
+                    // Ambil semua dokumen terkait
+                    var doks = context.DbMonReklameUpayaDoks
+                        .Where(d => d.NoformS == noFormulir  && d.Seq == seq)
+                        .ToList();
+
+                    if (doks.Any())
+                    {
+                        context.DbMonReklameUpayaDoks.RemoveRange(doks);
+                    }
+
+                    // Hapus data utama
+                    context.DbMonReklameUpayas.Remove(data);
+                    context.SaveChanges();
+
+                    response.Status = StatusEnum.Success;
+                    response.Message = "Data Berhasil Disimpan";
+
+                    return Json(response);
+                }
+
+                response.Status = StatusEnum.Error;
+                response.Message = "Data tidak ditemukan.";
+                return Json(response);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }
