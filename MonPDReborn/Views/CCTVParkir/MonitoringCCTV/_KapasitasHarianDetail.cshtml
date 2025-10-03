@@ -58,8 +58,9 @@
                 .OnExporting("exportGrid")
                 .OnRowPrepared("applyRowColor") 
                 .Columns(columns => {
-                    columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("dd-MM-yyyy HH:mm:ss").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center);
                     columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
+                    columns.AddFor(m => m.IsLogText).Caption("Event").Alignment(HorizontalAlignment.Center);
                     columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
                     columns.AddFor(m => m.Direction).Caption("Direction").Alignment(HorizontalAlignment.Center);
                     columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
@@ -70,35 +71,8 @@
 </div>
 
 <script>
-    // === MASTER KENDARAAN ===
-    // var masterKendaraan = [
-    //     { name: "mobil", color: "#038edc" },
-    //     { name: "motor", color: "#51d28c" },
-    //     { name: "truck", color: "#f4c20d" }
-    // ];
     var masterKendaraan = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.MasterKendaraans)));
-
-    // === DATA KENDARAAN PER WAKTU ===
-    // var kendaraanData = [
-    //     { waktu: "2025-10-02 17:00", jenis: [{ name: "mobil", value: 5 }, { name: "motor", value: 12 }] },
-    //     { waktu: "2025-10-02 17:15", jenis: [{ name: "mobil", value: 0 }, { name: "motor", value: 0 }, { name: "truck", value: 0 }] },
-    //     { waktu: "2025-10-02 17:30", jenis: [{ name: "mobil", value: 9 }, { name: "motor", value: 16 }, { name: "truck", value: 5 }] },
-    //     { waktu: "2025-10-02 17:45", jenis: [{ name: "mobil", value: 8 }, { name: "motor", value: 15 }] },
-    //     { waktu: "2025-10-02 18:00", jenis: [{ name: "mobil", value: 10 }, { name: "motor", value: 18 }] },
-    //     { waktu: "2025-10-02 18:15", jenis: [{ name: "mobil", value: 0 }, { name: "motor", value: 0 }] },
-    //     { waktu: "2025-10-02 18:30", jenis: [{ name: "mobil", value: 9 }, { name: "motor", value: 17 }] },
-    //     { waktu: "2025-10-02 18:45", jenis: [{ name: "mobil", value: 12 }, { name: "motor", value: 19 }] }
-    // ];
     var kendaraanData = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.KendaraanDatas)));
-
-    // === EVENT STATUS CCTV ===
-    // var cctvEvents = [
-    //     { status: "ON", time: "2025-10-02 17:00" },
-    //     { status: "OFF", time: "2025-10-02 17:10" },
-    //     { status: "ON", time: "2025-10-02 17:25" },
-    //     { status: "OFF", time: "2025-10-02 18:05" },
-    //     { status: "ON", time: "2025-10-02 18:20" }
-    // ];
     var cctvEvents = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.CctvEvents)));
 
     // Waktu awal & akhir

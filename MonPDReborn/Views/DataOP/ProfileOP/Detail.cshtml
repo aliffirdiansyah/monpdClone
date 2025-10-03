@@ -94,43 +94,72 @@
 
                         <div class="col-xl-12">
                             <div class="mt-xl-0 mt-5">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex">
                                         @switch (Model.Pajak)
                                         {
-                                            case EnumFactory.EPajak.PBB:
-                                                <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaNpwpd</h4>
-                                                <div class="hstack gap-3 flex-wrap">
-                                                    <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
-                                                    <div class="vr"></div>
-                                                    <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
+                                            case EnumFactory.EPajak.MakananMinuman:
+                                                <div class="me-3">
+                                                    <img src="~/icon/restoran.png" alt="Logo" style="height:56px; width:auto;" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaPerhotelan:
+                                                <div class="me-3">
+                                                    <img src="~/icon/hotel.png" alt="Logo" style="height:56px; width:auto;" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaParkir:
+                                                <div class="me-3">
+                                                    <img src="~/icon/parkir.png" alt="Logo" style="height:56px; width:auto;" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.JasaKesenianHiburan:
+                                                <div class="me-3">
+                                                    <img src="~/icon/hiburan.png" alt="Logo" style="height:56px; width:auto;" />
+                                                </div>
+                                                break;
+                                            case EnumFactory.EPajak.TenagaListrik:
+                                                <div class="me-3">
+                                                    <img src="~/icon/listrik.png" alt="Logo" style="height:56px; width:auto;" />
                                                 </div>
                                                 break;
                                             default:
-                                                <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h4>
-                                                <div class="hstack gap-3 flex-wrap">
-                                                    <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
-                                                    <div class="vr"></div>
-                                                    <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
-                                                </div>
                                                 break;
                                         }
-                                    </div>
-                                </div>
 
-                                <div class="d-flex mt-2">
-                                    <div class="flex-grow-1">
-                                        <div class="hstack gap-3 flex-wrap">
-                                            <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.JenisPajak</div>
-                                            <div class="vr"></div>
-                                            <div class="text-body fw-medium fs-14 text-decoration-underline" style="cursor: pointer" onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
-                                                <i class="ri-external-link-line align-middle me-1"></i> Potensi
+                                        <div class="flex-grow-1">
+                                            @switch (Model.Pajak)
+                                            {
+                                                case EnumFactory.EPajak.PBB:
+                                                    <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaNpwpd</h4>
+                                                    <div class="hstack gap-3 flex-wrap">
+                                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
+                                                        <div class="vr"></div>
+                                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
+                                                    </div>
+                                                    break;
+                                                default:
+                                                    <h4 class="text-primary d-block fs-20 fw-bold">@Model.DataDetail.IdentitasPajak.NamaObjekPajak</h4>
+                                                    <div class="hstack gap-3 flex-wrap">
+                                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.FormattedNOP</div>
+                                                        <div class="vr"></div>
+                                                        <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.AlamatLengkap</div>
+                                                    </div>
+                                                    break;
+                                            }
+                                            <div class="mt-2">
+                                                <div class="hstack gap-3 flex-wrap">
+                                                    <div class="text-body fw-medium fs-14">@Model.DataDetail.IdentitasPajak.JenisPajak</div>
+                                                    <div class="vr"></div>
+                                                    <div class="text-body fw-medium fs-14 text-decoration-underline" style="cursor: pointer"
+                                                         onclick="openDetailNewTab('@Model.DataDetail.IdentitasPajak.NOP', '@((int)Model.Pajak)', '@Model.DataDetail.IdentitasPajak.kategoriID')">
+                                                        <i class="ri-external-link-line align-middle me-1"></i> Potensi
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <div class="row mt-4">
                                     @switch (Model.Pajak)
                                     {
@@ -169,7 +198,7 @@
                                             </div>
                                             break;
                                     }
-                                    
+
                                     <!-- end col -->
                                     <div class="col-lg-3 col-sm-6">
                                         <div class="p-2 border border-success rounded">
@@ -312,30 +341,30 @@
                                                                             @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.NamaObjekPajak.ToLower())
                                                                             break;
                                                                     }
-                                                            </td>
-                                                        </tr>
+                                                                </td>
+                                                            </tr>
 
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">NOP</th>
-                                                            <th scope="row" style="width: 20px;">:</th>
-                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.FormattedNOP</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Alamat Lengkap</th>
-                                                            <th scope="row" style="width: 20px;">:</th>
-                                                            <td class="text-body fw-medium">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.AlamatLengkap.ToLower())</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Wilayah Pajak</th>
-                                                            <th scope="row" style="width: 20px;">:</th>
-                                                            <td class="text-body fw-medium">Surabaya @Model.DataDetail.IdentitasPajak.WilayahPajak</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Telp</th>
-                                                            <th scope="row" style="width: 20px;">:</th>
-                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.Telepon</td>
-                                                        </tr>
-                                                        @switch (Model.Pajak)
+                                                            <tr>
+                                                                <th scope="row" style="width: 200px;">NOP</th>
+                                                                <th scope="row" style="width: 20px;">:</th>
+                                                                <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.FormattedNOP</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" style="width: 200px;">Alamat Lengkap</th>
+                                                                <th scope="row" style="width: 20px;">:</th>
+                                                                <td class="text-body fw-medium">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.AlamatLengkap.ToLower())</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" style="width: 200px;">Wilayah Pajak</th>
+                                                                <th scope="row" style="width: 20px;">:</th>
+                                                                <td class="text-body fw-medium">Surabaya @Model.DataDetail.IdentitasPajak.WilayahPajak</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" style="width: 200px;">Telp</th>
+                                                                <th scope="row" style="width: 20px;">:</th>
+                                                                <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.Telepon</td>
+                                                            </tr>
+                                                            @switch (Model.Pajak)
                                                             {
                                                                 case EnumFactory.EPajak.PBB:
                                                                     break;
@@ -347,87 +376,87 @@
                                                                     </tr>
                                                                     break;
                                                             }
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Jenis Pajak</th>
-                                                            <th scope="row" style="width: 20px;">:</th>
-                                                            <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.JenisPajak</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row" style="width: 200px;">Kategori Pajak</th>
-                                                            <th scope="row" style="width: 20px;">:</th>
-                                                            <td class="text-body fw-medium">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.KategoriPajak.ToLower())</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-okupansi" role="tabpanel" aria-labelledby="nav-okupansi-tab">
-                                        <div class="card">
-                                            <div class="card-header d-flex bg-header-color align-items-center">
-                                                <div class="flex-grow-1">
-                                                    <h4 class="card-title fs-16 text-dark mb-0">
-                                                        <i class="bx bx-bar-chart-alt me-2"></i>Okupansi @Model.DataDetail.IdentitasPajak.NamaObjekPajak
-                                                    </h4>
+                                                            <tr>
+                                                                <th scope="row" style="width: 200px;">Jenis Pajak</th>
+                                                                <th scope="row" style="width: 20px;">:</th>
+                                                                <td class="text-body fw-medium">@Model.DataDetail.IdentitasPajak.JenisPajak</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" style="width: 200px;">Kategori Pajak</th>
+                                                                <th scope="row" style="width: 20px;">:</th>
+                                                                <td class="text-body fw-medium">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(@Model.DataDetail.IdentitasPajak.KategoriPajak.ToLower())</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <center>
-                                                        <div class="col-lg-6">
-                                                            @(
-                                                                Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
-                                                                .ID("okupansiGrid")
-                                                                .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
-                                                                .KeyExpr("Bulan")
-                                                                .ShowBorders(true)
-                                                                .ShowColumnLines(true)
-                                                                .Paging(p => p.PageSize(12))
-                                                                .Columns(columns =>
-                                                                {
-                                                                    columns.AddFor(m => m.BulanNama).Caption("Bulan");
-                                                                    columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
-                                                                    columns.AddFor(m => m.TahunNow).Caption(tahunNow);
-                                                                })
-                                                                .Summary(s =>
-                                                                {
-                                                                    s.TotalItems(items =>
+                                        </div>
+                                        <div class="tab-pane fade" id="nav-okupansi" role="tabpanel" aria-labelledby="nav-okupansi-tab">
+                                            <div class="card">
+                                                <div class="card-header d-flex bg-header-color align-items-center">
+                                                    <div class="flex-grow-1">
+                                                        <h4 class="card-title fs-16 text-dark mb-0">
+                                                            <i class="bx bx-bar-chart-alt me-2"></i>Okupansi @Model.DataDetail.IdentitasPajak.NamaObjekPajak
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <center>
+                                                            <div class="col-lg-6">
+                                                                @(
+                                                                    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.ProfileOPVM.DetailHotel.AccHotel>()
+                                                                    .ID("okupansiGrid")
+                                                                    .DataSource(Model.DataDetail.HotelRow.AccHotelDetailList)
+                                                                    .KeyExpr("Bulan")
+                                                                    .ShowBorders(true)
+                                                                    .ShowColumnLines(true)
+                                                                    .Paging(p => p.PageSize(12))
+                                                                    .Columns(columns =>
                                                                     {
-                                                                        items.AddFor(x => x.BulanNama)
-                                                                    .SummaryType(SummaryType.Sum)
-                                                                    .DisplayFormat("Average");
+                                                                        columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                                                                        columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
+                                                                        columns.AddFor(m => m.TahunNow).Caption(tahunNow);
+                                                                    })
+                                                                    .Summary(s =>
+                                                                    {
+                                                                        s.TotalItems(items =>
+                                                                        {
+                                                                            items.AddFor(x => x.BulanNama)
+                                                                        .SummaryType(SummaryType.Sum)
+                                                                        .DisplayFormat("Average");
 
-                                                                        items.AddFor(x => x.TahunMines1)
-                                                                    .SummaryType(SummaryType.Avg)
-                                                                    .ValueFormat("#,##0.00")
-                                                                    .DisplayFormat("{0}");
+                                                                            items.AddFor(x => x.TahunMines1)
+                                                                        .SummaryType(SummaryType.Avg)
+                                                                        .ValueFormat("#,##0.00")
+                                                                        .DisplayFormat("{0}");
 
-                                                                        items.AddFor(x => x.TahunNow)
-                                                                    .SummaryType(SummaryType.Avg)
-                                                                    .ValueFormat("#,##0.00")
-                                                                    .DisplayFormat("{0}");
-                                                                    });
+                                                                            items.AddFor(x => x.TahunNow)
+                                                                        .SummaryType(SummaryType.Avg)
+                                                                        .ValueFormat("#,##0.00")
+                                                                        .DisplayFormat("{0}");
+                                                                        });
 
-                                                                })
-                                                                )
-                                                        </div>
-                                                    </center>
+                                                                    })
+                                                                    )
+                                                            </div>
+                                                        </center>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-lokasi" role="tabpanel" aria-labelledby="nav-lokasi-tab">
-                                        <iframe width="100%"
-                                                height="400"
-                                                style="border:0;"
-                                                allowfullscreen
-                                                loading="lazy"
-                                                referrerpolicy="no-referrer-when-downgrade"
-                                                src="https://www.google.com/maps?q=@(Uri.EscapeDataString((Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " + (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"))&output=embed">
-                                        </iframe>
+                                        <div class="tab-pane fade" id="nav-lokasi" role="tabpanel" aria-labelledby="nav-lokasi-tab">
+                                            <iframe width="100%"
+                                                    height="400"
+                                                    style="border:0;"
+                                                    allowfullscreen
+                                                    loading="lazy"
+                                                    referrerpolicy="no-referrer-when-downgrade"
+                                                    src="https://www.google.com/maps?q=@(Uri.EscapeDataString((Model.DataDetail.IdentitasPajak.NamaObjekPajak ?? "") + ", " + (Model.DataDetail.IdentitasPajak.AlamatLengkap ?? "") + ", Surabaya"))&output=embed">
+                                            </iframe>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
                             </div>
                         </div>

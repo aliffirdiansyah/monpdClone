@@ -167,7 +167,7 @@ namespace MonPDReborn.Models.CCTVParkir
 
             public bool IsLog { get; set; }
             public bool IsOn { get; set; }
-
+            public string IsLogText { get; set; }
         }
 
         public class MonitoringCCTVBulanan
@@ -864,6 +864,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.Log = item.Log;
                     res.ImageUrl = item.ImageUrl;
                     res.IsLog = false;
+                    res.IsLogText = "Record";
                     res.IsOn = false;
                     result.Add(res);
                 }
@@ -886,6 +887,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.Log = "";
                     res.ImageUrl = null;
                     res.IsLog = true;
+                    res.IsLogText = "Log";
                     res.IsOn = item.IsOn == 1 ? true : false;
                     result.Add(res);
                 }
