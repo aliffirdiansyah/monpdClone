@@ -956,7 +956,8 @@ namespace MonPDReborn.Models.AktivitasOP
                         Petugas = x.Petugas,
                         Lampiran = x.DbMonReklameUpayaDok != null && x.DbMonReklameUpayaDok.Gambar != null
                             ? Convert.ToBase64String(x.DbMonReklameUpayaDok.Gambar)
-                            : null
+                            : null,
+                        Seq = x.Seq
                     })
                     .ToList();
 
@@ -986,7 +987,8 @@ namespace MonPDReborn.Models.AktivitasOP
                             ? $"{reklame.TglMulaiBerlakuA.Value:MMM yyyy} - {reklame.TglAkhirBerlakuA.Value:MMM yyyy}"
                             : (reklame.TglMulaiBerlaku.HasValue && reklame.TglAkhirBerlaku.HasValue
                                 ? $"{reklame.TglMulaiBerlaku.Value:MMM yyyy} - {reklame.TglAkhirBerlaku.Value:MMM yyyy}"
-                                : "-")
+                                : "-"),
+                        
                     },
                     DataUpayaList = dataUpayaList
                 };
@@ -2039,6 +2041,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 public string Keterangan { get; set; } = null!;
                 public string Petugas { get; set; } = null!;
                 public string Lampiran { get; set; }
+                public decimal Seq { get; set; }
             }
             public class InfoReklame
             {

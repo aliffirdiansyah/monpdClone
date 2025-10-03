@@ -362,13 +362,13 @@ namespace MonPDReborn.Controllers.Aktivitas
 
                 // Ambil data utama (Upaya)
                 var data = context.DbMonReklameUpayas
-                    .FirstOrDefault(x => x.NoFormulir == noFormulir && x.Nor == nor && x.Petugas == namaPetugas);
+                    .FirstOrDefault(x => x.NoFormulir == noFormulir  && x.Petugas == namaPetugas);
 
                 if (data != null)
                 {
                     // Ambil semua dokumen terkait
                     var doks = context.DbMonReklameUpayaDoks
-                        .Where(d => d.NoformS == noFormulir && d.Nor == nor && d.Seq == seq)
+                        .Where(d => d.NoformS == noFormulir  && d.Seq == seq)
                         .ToList();
 
                     if (doks.Any())
@@ -380,14 +380,27 @@ namespace MonPDReborn.Controllers.Aktivitas
                     context.DbMonReklameUpayas.Remove(data);
                     context.SaveChanges();
 
-                    return Json(new { success = true });
+                    response.Status = StatusEnum.Success;
+                    response.Message = "Data Berhasil Disimpan";
+
+                    return Json(response);
                 }
 
-                return Json(new { success = false, message = "Data tidak ditemukan" });
+                response.Status = StatusEnum.Error;
+                response.Message = "Data tidak ditemukan.";
+                return Json(response);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = ex.Message });
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
     }
