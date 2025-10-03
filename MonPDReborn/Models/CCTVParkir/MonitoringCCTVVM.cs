@@ -9,6 +9,8 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Globalization;
 using System.Numerics;
 using System.Web.Mvc;
+using static MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM;
+using static MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.ViewModel.KapasitasChart;
 
 namespace MonPDReborn.Models.CCTVParkir
 {
@@ -102,9 +104,48 @@ namespace MonPDReborn.Models.CCTVParkir
         public class KapasitasHarianDetail
         {
             public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
+            public ViewModel.KapasitasChart KapasitasChartDetail { get; set; } = new();
+            public string Nop { get; set; } = "";
+            public string formattedNop { get; set; }
+            public string NamaOP { get; set; }
+            public string AlamatOP { get; set; }
+            public string Vendor { get; set; }
+            public string TanggalPasang { get; set; }
+            public string TanggalCctv { get; set; }
             public KapasitasHarianDetail(string nop, int vendorId, DateTime tanggal)
             {
                 DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, vendorId, tanggal);
+                KapasitasChartDetail = Method.GetKapasitasChart(DataMonitoringDetail, tanggal);
+
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
+                if (query != null)
+                {
+                    Nop = nop;
+                    formattedNop = Utility.GetFormattedNOP(Nop);
+                    NamaOP = query.NamaOp;
+                    AlamatOP = query.AlamatOp;
+                    TanggalCctv = tanggal.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
+
+                    if (query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
+                    {
+                        var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
+                        if (jasnita != null)
+                        {
+                            Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
+                            TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                        }
+                    }
+                    if (query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
+                    {
+                        var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
+                        if (telkom != null)
+                        {
+                            Vendor = (EnumFactory.EVendorParkirCCTV.Telkom).GetDescription();
+                            TanggalPasang = telkom.TglPasang.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
+                        }
+                    }
+                }
             }
         }
 
@@ -117,6 +158,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public string? AlamatOp { get; set; }
             public int? WilayahPajak { get; set; }
             public DateTime TanggalMasuk { get; set; }
+            public EnumFactory.EJenisKendParkirCCTV JenisKendEnum { get; set; }
             public string JenisKend { get; set; }
             public string? PlatNo { get; set; }
             public String Direction { get; set; }
@@ -185,6 +227,43 @@ namespace MonPDReborn.Models.CCTVParkir
             public Log(string nop, int jenisKend, DateTime tanggalAwal, DateTime tanggalAkhir)
             {
                 MonitoringCCTVLogList = Method.GetMonitoringCCTVLog(nop, jenisKend, tanggalAwal, tanggalAkhir);
+            }
+        }
+
+        public class ViewModel
+        {
+            public class KapasitasChart
+            {
+                public List<MasterKendaraan> MasterKendaraans { get; set; } = new();
+                public List<KendaraanJenis> KendaraanJeniss { get; set; } = new();
+                public List<KendaraanData> KendaraanDatas { get; set; } = new();
+                public List<CctvEvent> CctvEvents { get; set; } = new();
+                public class MasterKendaraan
+                {
+                    public string Name { get; set; } = "";   // misal: "mobil", "motor", "truck"
+                    public string Color { get; set; } = "";  // misal: "#038edc"
+                }
+
+                // 2. Detail kendaraan per waktu
+                public class KendaraanJenis
+                {
+                    public string Name { get; set; } = "";   // nama kendaraan
+                    public int Value { get; set; }           // jumlah kendaraan
+                }
+
+                // 3. Data kendaraan per waktu
+                public class KendaraanData
+                {
+                    public string Waktu { get; set; }               // waktu pengukuran (yyyy-MM-dd HH:mm)
+                    public List<KendaraanJenis> Jenis { get; set; } = new List<KendaraanJenis>();
+                }
+
+                // 4. Event CCTV
+                public class CctvEvent
+                {
+                    public string Status { get; set; } = "";     // "ON" atau "OFF"
+                    public string Time { get; set; }           // waktu event (yyyy-MM-dd HH:mm)
+                }
             }
         }
 
@@ -778,6 +857,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.AlamatOp = item.AlamatOp;
                     res.WilayahPajak = item.WilayahPajak;
                     res.TanggalMasuk = item.WaktuMasuk;
+                    res.JenisKendEnum = (EnumFactory.EJenisKendParkirCCTV)item.JenisKend;
                     res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
                     res.PlatNo = item.PlatNo;
                     res.Direction = ((EnumFactory.CctvParkirDirection)item.Direction).GetDescription();
@@ -799,6 +879,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.AlamatOp = "-";
                     res.WilayahPajak = 0;
                     res.TanggalMasuk = item.TglEvent;
+                    res.JenisKendEnum = EnumFactory.EJenisKendParkirCCTV.Unknown;
                     res.JenisKend = item.Event;
                     res.PlatNo = "";
                     res.Direction = "-";
@@ -810,6 +891,102 @@ namespace MonPDReborn.Models.CCTVParkir
                 }
 
                 return result.OrderBy(x => x.TanggalMasuk).ToList();
+            }
+            public static ViewModel.KapasitasChart GetKapasitasChart(List<MonitoringCctvHarianDetail> dataDetail, DateTime tanggal)
+            {
+                var result = new ViewModel.KapasitasChart();
+
+                var kendaraanData = dataDetail.Where(x => x.IsLog == false).AsQueryable();
+                var cctvEventData = dataDetail.Where(x => x.IsLog == true).AsQueryable();
+
+                //CUSTOM
+                var kendaraanMotor = kendaraanData
+                    .Where(x => x.JenisKendEnum == EnumFactory.EJenisKendParkirCCTV.Motor)
+                    .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                    .Select(x => new { x.Key.JenisKendEnum, x.Key.TanggalMasuk })
+                    .ToList();
+                var kendaraanMobil = kendaraanData
+                    .Where(x => new[] { EnumFactory.EJenisKendParkirCCTV.Mobil, EnumFactory.EJenisKendParkirCCTV.Truck }.Contains(x.JenisKendEnum))
+                    .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                    .Select(x => new { JenisKendEnum = EnumFactory.EJenisKendParkirCCTV.Mobil, x.Key.TanggalMasuk })
+                    .ToList();
+
+                var semuaKendaraan = kendaraanMotor
+                    .Concat(kendaraanMobil)
+                    .ToList();
+                //CUSTOM
+
+                //MASTER KENDARAAN
+                result.MasterKendaraans = semuaKendaraan
+                    .GroupBy(x => new { x.JenisKendEnum })
+                    .Select(x => new ViewModel.KapasitasChart.MasterKendaraan
+                    {
+                        Color = Extension.GetColorVehicle(x.Key.JenisKendEnum),
+                        Name = x.Key.JenisKendEnum.GetDescription()
+                    }).ToList();
+
+                //NGISI WAKTU KENDARAAN
+                {
+                    var dataKendaraanTanggal = semuaKendaraan
+                        .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                        .Select(x => new
+                        {
+                            Jenis = x.Key.JenisKendEnum.GetDescription(),
+                            Waktu = x.Key.TanggalMasuk
+                        }).ToList();
+
+                    var timeInterval = GetTimeIntervals(tanggal);
+                    foreach (var start in timeInterval)
+                    {
+                        var end = start.AddMinutes(15);
+
+                        var kendaraanDiInterval = dataKendaraanTanggal
+                            .Where(k => k.Waktu >= start && k.Waktu < end)
+                            .GroupBy(k => k.Jenis)
+                            .Select(g => new KendaraanJenis
+                            {
+                                Name = g.Key,
+                                Value = g.Count()
+                            })
+                            .ToList();
+
+                        result.KendaraanDatas.Add(new KendaraanData()
+                        {
+                            Waktu = start.ToString("yyyy-MM-dd HH:mm"),
+                            Jenis = kendaraanDiInterval
+                        });
+                    }
+                }
+
+                {
+                    foreach (var item in cctvEventData)
+                    {
+                        var res = new ViewModel.KapasitasChart.CctvEvent();
+
+                        res.Status = item.IsOn ? "ON" : "OFF";
+                        res.Time = item.TanggalMasuk.ToString("yyyy-MM-dd HH:mm");
+
+                        result.CctvEvents.Add(res);
+                    }
+                }
+
+
+                return result;
+            }
+
+
+            public static List<DateTime> GetTimeIntervals(DateTime tanggal)
+            {
+                List<DateTime> result = new List<DateTime>();
+                DateTime start = tanggal.Date;
+                DateTime end = tanggal.Date.AddDays(1).AddMinutes(-15);
+
+                for (DateTime current = start; current <= end; current = current.AddMinutes(15))
+                {
+                    result.Add(current);
+                }
+
+                return result;
             }
         }
 

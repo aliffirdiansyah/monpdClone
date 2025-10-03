@@ -153,7 +153,7 @@ namespace MonPDReborn.Controllers.CCTVParkir
         {
             try
             {
-                var model = Method.GetMonitoringHarianDetail(nop, vendorId, tgl);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.KapasitasHarianDetail(nop, vendorId, tgl);
 
                 // pastikan URLView dan actionName sesuai convention di BaseController
                 return PartialView($"{URLView}_{actionName}", model);

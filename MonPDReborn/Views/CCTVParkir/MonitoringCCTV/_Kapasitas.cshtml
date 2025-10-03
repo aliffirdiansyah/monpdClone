@@ -182,70 +182,17 @@
                                 });
                             }
                         },
-
-
-                        // tambahin event klik cell
-
-                        // onCellClick: function (e) {
-                        //     if (e.column.dataField === "HariLabel") {
-                        //         var tgl = e.data.Tanggal; 
-
-                        //         $.ajax({
-                        //             url: '/MonitoringCCTV/KapasitasHarianDetail',
-                        //             type: 'GET',
-                        //             data: { nop: nop, vendorId: vendorId, tgl: tgl },
-                        //             success: function (detailData) {
-                        //                 $("#gridDetailHarian").dxDataGrid({
-                        //                     dataSource: detailData,
-                        //                     showBorders: true,
-                        //                     columnAutoWidth: true,
-                        //                     paging: { pageSize: 10 },
-                        //                     pager: { showPageSizeSelector: true },
-                        //                     headerFilter: {
-                        //                         visible: true
-                        //                     },
-                        //                     columns: [
-                        //                         { dataField: "TanggalMasuk", caption: "Waktu Masuk", dataType: "datetime", format: "dd-MM-yyyy HH:mm:ss", alignment:"center" },
-                        //                         { dataField: "JenisKend", caption: "Jenis Kendaraan"  , alignment:"center"},
-                        //                         { dataField: "PlatNo", caption: "Plat Nomor" , alignment:"center" },
-                        //                         { dataField: "Direction", caption: "Direction"  , alignment:"center"},
-                        //                         {
-                        //                             caption: "Lampiran",
-                        //                             alignment: "center",
-                        //                             cellTemplate: lampiranCellTemplate ← pakai function di atas
-                        //                         }
-                        //                     ],
-                        //                     export: {
-                        //                         enabled: true,
-                        //                         allowExportSelectedData: false,
-                        //                         formats: ["xlsx", "pdf"]
-                        //                     },
-                        //                     onExporting: exportGrid,
-                        //                 });
-
-                        //                 tampilkan modal
-                        //                 $("#modalDetailHarian").modal("show");
-                        //             },
-                        //             error: function (xhr) {
-                        //                 alert("Gagal load detail: " + xhr.responseText);
-                        //             }
-                        //         });
-                        //     }
-                        // }
                         onCellClick: function (e) {
                             if (e.column.dataField === "HariLabel") {
                                 var tgl = e.data.Tanggal;
 
                                 $.ajax({
-                                    url: '/MonitoringCCTV/KapasitasHarianDetail',
+                                    url: '@(Url.Action("KapasitasHarianDetail"))',
                                     type: 'GET',
                                     data: { nop: nop, vendorId: vendorId, tgl: tgl },
                                     success: function (result) {
-                                        // render partial ke modal
                                         $("#staticBackdropLargeScrollable .modal-title").html("Detail");
                                         $("#staticBackdropLargeScrollable .modal-body").html(result);
-
-                                        // show modal
                                         $("#staticBackdropLargeScrollable").modal("show");
                                     },
                                     error: function (xhr) {
