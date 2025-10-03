@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MonPDLib.General;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace CCTVParkirWorker
         public string Localization { get; set; }
         public string StateAsli { get; set; }
         public string State { get; set; }
+        public EnumFactory.EStatusCCTV StateEnum { get; set; }
         public DateTime Tanggal { get; set; }
     }
 }
