@@ -105,10 +105,47 @@ namespace MonPDReborn.Models.CCTVParkir
         {
             public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
             public ViewModel.KapasitasChart KapasitasChartDetail { get; set; } = new();
+            public string Nop { get; set; } = "";
+            public string formattedNop { get; set; }
+            public string NamaOP { get; set; }
+            public string AlamatOP { get; set; }
+            public string Vendor { get; set; }
+            public string TanggalPasang { get; set; }
+            public string TanggalCctv { get; set; }
             public KapasitasHarianDetail(string nop, int vendorId, DateTime tanggal)
             {
                 DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, vendorId, tanggal);
                 KapasitasChartDetail = Method.GetKapasitasChart(DataMonitoringDetail, tanggal);
+
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
+                if (query != null)
+                {
+                    Nop = nop;
+                    formattedNop = Utility.GetFormattedNOP(Nop);
+                    NamaOP = query.NamaOp;
+                    AlamatOP = query.AlamatOp;
+                    TanggalCctv = tanggal.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
+
+                    if (query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
+                    {
+                        var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
+                        if (jasnita != null)
+                        {
+                            Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
+                            TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                        }
+                    }
+                    if (query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
+                    {
+                        var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
+                        if (telkom != null)
+                        {
+                            Vendor = (EnumFactory.EVendorParkirCCTV.Telkom).GetDescription();
+                            TanggalPasang = telkom.TglPasang.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
+                        }
+                    }
+                }
             }
         }
 
@@ -862,23 +899,40 @@ namespace MonPDReborn.Models.CCTVParkir
                 var kendaraanData = dataDetail.Where(x => x.IsLog == false).AsQueryable();
                 var cctvEventData = dataDetail.Where(x => x.IsLog == true).AsQueryable();
 
+                //CUSTOM
+                var kendaraanMotor = kendaraanData
+                    .Where(x => x.JenisKendEnum == EnumFactory.EJenisKendParkirCCTV.Motor)
+                    .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                    .Select(x => new { x.Key.JenisKendEnum, x.Key.TanggalMasuk })
+                    .ToList();
+                var kendaraanMobil = kendaraanData
+                    .Where(x => new[] { EnumFactory.EJenisKendParkirCCTV.Mobil, EnumFactory.EJenisKendParkirCCTV.Truck }.Contains(x.JenisKendEnum))
+                    .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                    .Select(x => new { JenisKendEnum = EnumFactory.EJenisKendParkirCCTV.Mobil, x.Key.TanggalMasuk })
+                    .ToList();
+
+                var semuaKendaraan = kendaraanMotor
+                    .Concat(kendaraanMobil)
+                    .ToList();
+                //CUSTOM
+
                 //MASTER KENDARAAN
-                result.MasterKendaraans = kendaraanData
-                    .GroupBy(x => new { x.JenisKendEnum, x.JenisKend })
+                result.MasterKendaraans = semuaKendaraan
+                    .GroupBy(x => new { x.JenisKendEnum })
                     .Select(x => new ViewModel.KapasitasChart.MasterKendaraan
                     {
                         Color = Extension.GetColorVehicle(x.Key.JenisKendEnum),
-                        Name = x.Key.JenisKend
+                        Name = x.Key.JenisKendEnum.GetDescription()
                     }).ToList();
 
                 //NGISI WAKTU KENDARAAN
                 {
-                    var dataKendaraanTanggal = kendaraanData
-                        .GroupBy(x => new { x.JenisKend, x.TanggalMasuk })
+                    var dataKendaraanTanggal = semuaKendaraan
+                        .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
                         .Select(x => new
                         {
-                            x.Key.JenisKend,
-                            x.Key.TanggalMasuk
+                            Jenis = x.Key.JenisKendEnum.GetDescription(),
+                            Waktu = x.Key.TanggalMasuk
                         }).ToList();
 
                     var timeInterval = GetTimeIntervals(tanggal);
@@ -887,8 +941,8 @@ namespace MonPDReborn.Models.CCTVParkir
                         var end = start.AddMinutes(15);
 
                         var kendaraanDiInterval = dataKendaraanTanggal
-                            .Where(k => k.TanggalMasuk >= start && k.TanggalMasuk < end)
-                            .GroupBy(k => k.JenisKend)
+                            .Where(k => k.Waktu >= start && k.Waktu < end)
+                            .GroupBy(k => k.Jenis)
                             .Select(g => new KendaraanJenis
                             {
                                 Name = g.Key,
