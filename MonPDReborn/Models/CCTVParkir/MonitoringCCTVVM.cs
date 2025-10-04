@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Web.Mvc;
 using static MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM;
 using static MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.ViewModel.KapasitasChart;
+using static System.Net.WebRequestMethods;
 
 namespace MonPDReborn.Models.CCTVParkir
 {
@@ -146,6 +147,73 @@ namespace MonPDReborn.Models.CCTVParkir
                         }
                     }
                 }
+            }
+        }
+
+        public class LiveStreaming
+        {
+            public string Nop { get; set; } = "";
+            public string formattedNop  => Utility.GetFormattedNOP(Nop);
+            public string NamaOP { get; set; } = "";
+            public string AlamatOP { get; set; } = "";
+            public string Vendor { get; set; } = "";
+            public int VendorId { get; set; } = 0;
+            public string TanggalPasang { get; set; } = "";
+            public List<SelectListItem> CctvIdList { get; set; } = new();
+
+            public LiveStreaming(string nop, int vendorId)
+            {
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
+                if (query != null)
+                {
+                    Nop = nop;
+                    VendorId = vendorId;
+                    NamaOP = query.NamaOp;
+                    AlamatOP = query.AlamatOp;
+
+                    if (query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
+                    {
+                        var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
+                        if (jasnita != null)
+                        {
+                            Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
+                            TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                            CctvIdList.Add(new SelectListItem() { Value = jasnita.CctvId, Text = jasnita.CctvId });
+                        }
+                    }
+                    if (query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
+                    {
+                        var telkom = context.MOpParkirCctvTelkoms.FirstOrDefault(x => x.Nop == nop);
+                        if (telkom != null)
+                        {
+                            Vendor = (EnumFactory.EVendorParkirCCTV.Telkom).GetDescription();
+                            TanggalPasang = telkom.TglPasang.ToString(format: "dd MMM yyyy", new CultureInfo("id-ID"));
+                            CctvIdList.Add(new SelectListItem() { Value = telkom.CctvId, Text = telkom.CctvId });
+                        }
+                    }
+                }
+            }
+        }
+
+        public class LiveStreamingVideo
+        {
+            public string MediaMtxSource { get; set; } = "";
+            public LiveStreamingVideo(string nop, int cctvId)
+            {
+                string source = "http://localhost:8889";
+                string formatSource = "whep";
+                nop = nop.Replace(".", "");
+
+                MediaMtxSource = $"{source}/c{nop}_{cctvId}/{formatSource}";
+            }
+        }
+
+        public class LiveStreamingCounting
+        {
+            public LiveStreamingCounting(string nop)
+            {
+                
             }
         }
 

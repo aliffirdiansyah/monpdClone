@@ -204,9 +204,46 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        public IActionResult LiveStreaming(string nop)
+        public IActionResult LiveStreaming(string nop, int vendorId)
         {
-            return View($"{URLView}{actionName}");
+            try
+            {
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreaming(nop, vendorId);
+                return View($"{URLView}{actionName}", model);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
+        public IActionResult LiveStreamingVideo(string nop, int cctvId)
+        {
+            try
+            {
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingVideo(nop, cctvId);
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        public IActionResult LiveStreamingCounting(string nop)
+        {
+            try
+            {
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingCounting(nop);
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+
     }
 }

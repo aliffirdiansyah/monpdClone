@@ -1,0 +1,9 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingVideo
+
+<h2>Live Camera - WebRTC</h2>
+
+<video id="videoRtc" autoplay playsinline controls style="width:80%;border:1px solid #ccc;"></video>
+
+<script>
+    startWebRTC("videoRtc", '@(Model.MediaMtxSource)');
+</script>

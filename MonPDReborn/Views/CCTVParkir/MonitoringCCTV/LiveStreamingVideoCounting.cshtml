@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Live Camera";
+}
+
+<h2>Live Camera - WebRTC</h2>
+
+<video id="video" autoplay playsinline controls style="width:80%;border:1px solid #ccc;"></video>
+
+<script>
+    const url = "http://localhost:8889/cam1/whep";
+    const pc = new RTCPeerConnection({
+        iceServers: [
+            { urls: ["stun:stun.l.google.com:19302"] } // optional
+        ]
+    });
+
+    pc.ontrack = (event) => {
+        console.log("Track received", event.streams);
+        document.getElementById('video').srcObject = event.streams[0];
+    };
+
+    pc.addTransceiver("video", { direction: "recvonly" });
+    pc.addTransceiver("audio", { direction: "recvonly" });
+
+    async function start() {
+        try {
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+
+            const res = await fetch(url, {
+                method: "POST",
+                body: offer.sdp,
+                headers: { "Content-Type": "application/sdp" }
+            });
+
+            const answer = await res.text();
+            await pc.setRemoteDescription({ type: "answer", sdp: answer });
+
+            console.log("Connected to MediaMTX via WebRTC!");
+        } catch (err) {
+            console.error("WebRTC error:", err);
+        }
+    }
+
+    start();
+</script>

@@ -1,46 +1,107 @@
-﻿@{
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreaming
+@{
     ViewBag.Title = "Live Camera";
+
+    string nop = Model.Nop;
+    string cctvId = Model.CctvIdList.FirstOrDefault()?.Value ?? "0";
 }
 
-<h2>Live Camera - WebRTC</h2>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <p>op: @(Model.NamaOP) - @(Model.formattedNop)</p>
+                <p>alamat: @(Model.AlamatOP)</p>
+                <p>vendor: @(Model.Vendor)</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<video id="video" autoplay playsinline controls style="width:80%;border:1px solid #ccc;"></video>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="text-center">
+            <div id="loading2-LiveStreamingVideo" class="spinner-border text-primary" style="display: none">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div id="LiveStreamingVideo" class="mt-3"></div>
+    </div>
 
-<script>
-    const url = "http://localhost:8889/cam1/whep";
-    const pc = new RTCPeerConnection({
-        iceServers: [
-            { urls: ["stun:stun.l.google.com:19302"] } // optional
-        ]
-    });
+    <div class="col-lg-4">
 
-    pc.ontrack = (event) => {
-        console.log("Track received", event.streams);
-        document.getElementById('video').srcObject = event.streams[0];
-    };
+    </div>
+</div>
 
-    pc.addTransceiver("video", { direction: "recvonly" });
-    pc.addTransceiver("audio", { direction: "recvonly" });
+@section Scripts {
+    <script>
 
-    async function start() {
-        try {
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
+        $(document).ready(function () {
+            loadLiveStreamingVideo();
+        });
 
-            const res = await fetch(url, {
-                method: "POST",
-                body: offer.sdp,
-                headers: { "Content-Type": "application/sdp" }
+        function loadLiveStreamingVideo() {
+            $("#loading2-LiveStreamingVideo").show();
+
+            var nop = '@(nop)';
+            var cctvId = '@(cctvId)';
+
+            $.ajax({
+                url: '@(Url.Action("LiveStreamingVideo"))',
+                type: 'GET',
+                data: { nop, cctvId  }, // kalau null berarti semua uptb
+                success: function (result) {
+                    $("#LiveStreamingVideo").html(result);
+                },
+                error: function () {
+                    $("#LiveStreamingVideo").html("<div class='text-danger'>Gagal memuat data.</div>");
+                },
+                complete: function () {
+                    $("#loading2-LiveStreamingVideo").hide();
+                }
+            });
+        }
+    </script>
+
+    <script>
+        async function startWebRTC(videoElementId, sourceUrl) {
+            const videoElement = document.getElementById(videoElementId);
+            if (!videoElement) {
+                console.error(`Element dengan id '${videoElementId}' tidak ditemukan`);
+                return;
+            }
+
+            const pc = new RTCPeerConnection({
+                iceServers: [
+                    { urls: ["stun:stun.l.google.com:19302"] } // optional
+                ]
             });
 
-            const answer = await res.text();
-            await pc.setRemoteDescription({ type: "answer", sdp: answer });
+            pc.ontrack = (event) => {
+                console.log("Track diterima dari:", sourceUrl);
+                videoElement.srcObject = event.streams[0];
+            };
 
-            console.log("Connected to MediaMTX via WebRTC!");
-        } catch (err) {
-            console.error("WebRTC error:", err);
+            pc.addTransceiver("video", { direction: "recvonly" });
+            pc.addTransceiver("audio", { direction: "recvonly" });
+
+            try {
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+
+                const res = await fetch(sourceUrl, {
+                    method: "POST",
+                    body: offer.sdp,
+                    headers: { "Content-Type": "application/sdp" }
+                });
+
+                const answer = await res.text();
+                await pc.setRemoteDescription({ type: "answer", sdp: answer });
+
+                console.log(`✅ WebRTC connected: ${sourceUrl}`);
+            } catch (err) {
+                console.error(`❌ WebRTC error (${sourceUrl}):`, err);
+            }
         }
-    }
-
-    start();
-</script>
+    </script>
+}
