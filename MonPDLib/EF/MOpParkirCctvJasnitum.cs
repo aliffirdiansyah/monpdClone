@@ -49,6 +49,11 @@ public partial class MOpParkirCctvJasnitum
     [Unicode(false)]
     public string CctvId { get; set; } = null!;
 
+    [Column("RTSP")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string? Rtsp { get; set; }
+
     [InverseProperty("MOpParkirCctvJasnitum")]
     public virtual MOpParkirCctvJasnitaLog? MOpParkirCctvJasnitaLog { get; set; }
 

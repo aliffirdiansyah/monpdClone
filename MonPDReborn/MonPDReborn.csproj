@@ -47,4 +47,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MonPDLib\MonPDLib.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\KontrolPBB\" />
+  </ItemGroup>
 </Project>
