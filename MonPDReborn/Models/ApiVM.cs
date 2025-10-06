@@ -23,6 +23,8 @@ namespace MonPDReborn.Models
                 switch (jenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
+                        var queryRestoLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman && x.FkNop == nop).FirstOrDefault();
+
                         var dataRestoNow = context.DbMonRestos.Where(x => x.Nop == nop && x.TahunPajakKetetapan == currentYear && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
@@ -62,6 +64,9 @@ namespace MonPDReborn.Models
                         result.NPWPD = op?.Npwpd ?? "";
                         result.NAMA_WAJIB_PAJAK = op?.NpwpdNama ?? "";
                         result.ALAMAT_WAJIB_PAJAK = op?.NpwpdAlamat ?? "";
+
+                        result.Longitude = queryRestoLocation?.Longitude ?? "-";
+                        result.Latitude = queryRestoLocation?.Latitude ?? "-";
 
                         for (int bln = 1; bln <= 12; bln++)
                         {
@@ -114,6 +119,8 @@ namespace MonPDReborn.Models
                         }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
+                        var queryPpjLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.TenagaListrik && x.FkNop == nop).FirstOrDefault();
+
                         var dataListrikNow = context.DbMonPpjs.Where(x => x.Nop == nop && x.TahunPajakKetetapan == currentYear && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
@@ -151,6 +158,9 @@ namespace MonPDReborn.Models
                         result.NPWPD = opListrik?.Npwpd ?? "";
                         result.NAMA_WAJIB_PAJAK = opListrik?.NpwpdNama ?? "";
                         result.ALAMAT_WAJIB_PAJAK = opListrik?.NpwpdAlamat ?? "";
+
+                        result.Longitude = queryPpjLocation?.Longitude ?? "-";
+                        result.Latitude = queryPpjLocation?.Latitude ?? "-";
 
                         for (int bln = 1; bln <= 12; bln++)
                         {
@@ -198,6 +208,8 @@ namespace MonPDReborn.Models
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
+                        var queryHotelLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan && x.FkNop == nop).FirstOrDefault();
+
                         var dataHotelNow = context.DbMonHotels.Where(x => x.Nop == nop && x.TahunPajakKetetapan == currentYear && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
@@ -235,6 +247,9 @@ namespace MonPDReborn.Models
                         result.NPWPD = opHotel?.Npwpd ?? "";
                         result.NAMA_WAJIB_PAJAK = opHotel?.NpwpdNama ?? "";
                         result.ALAMAT_WAJIB_PAJAK = opHotel?.NpwpdAlamat ?? "";
+
+                        result.Longitude = queryHotelLocation?.Longitude ?? "-";
+                        result.Latitude = queryHotelLocation?.Latitude ?? "-";
 
                         for (int bln = 1; bln <= 12; bln++)
                         {
@@ -282,6 +297,8 @@ namespace MonPDReborn.Models
                         }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
+                        var queryParkirLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaParkir && x.FkNop == nop).FirstOrDefault();
+
                         var dataParkirNow = context.DbMonParkirs.Where(x => x.Nop == nop && x.TahunPajakKetetapan == currentYear && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
@@ -319,6 +336,9 @@ namespace MonPDReborn.Models
                         result.NPWPD = opParkir?.Npwpd ?? "";
                         result.NAMA_WAJIB_PAJAK = opParkir?.NpwpdNama ?? "";
                         result.ALAMAT_WAJIB_PAJAK = opParkir?.NpwpdAlamat ?? "";
+
+                        result.Longitude = queryParkirLocation?.Longitude ?? "-";
+                        result.Latitude = queryParkirLocation?.Latitude ?? "-";
 
                         for (int bln = 1; bln <= 12; bln++)
                         {
@@ -366,6 +386,8 @@ namespace MonPDReborn.Models
                         }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var queryHiburanLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan && x.FkNop == nop).FirstOrDefault();
+
                         var dataHiburanNow = context.DbMonHiburans.Where(x => x.Nop == nop && x.TahunPajakKetetapan == currentYear && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
@@ -403,6 +425,9 @@ namespace MonPDReborn.Models
                         result.NPWPD = opHiburan?.Npwpd ?? "";
                         result.NAMA_WAJIB_PAJAK = opHiburan?.NpwpdNama ?? "";
                         result.ALAMAT_WAJIB_PAJAK = opHiburan?.NpwpdAlamat ?? "";
+
+                        result.Longitude = queryHiburanLocation?.Longitude ?? "-";
+                        result.Latitude = queryHiburanLocation?.Latitude ?? "-";
 
                         for (int bln = 1; bln <= 12; bln++)
                         {
@@ -450,6 +475,8 @@ namespace MonPDReborn.Models
                         }
                         break;
                     case EnumFactory.EPajak.AirTanah:
+                        var queryAbtLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.AirTanah && x.FkNop == nop).FirstOrDefault();
+
                         var dataAbtNow = context.DbMonAbts.Where(x => x.Nop == nop && x.TahunPajakKetetapan == currentYear && x.TglBayarPokok.HasValue)
                             .GroupBy(x => new
                             {
@@ -487,6 +514,9 @@ namespace MonPDReborn.Models
                         result.NPWPD = opAbt?.Npwpd ?? "";
                         result.NAMA_WAJIB_PAJAK = opAbt?.NpwpdNama ?? "";
                         result.ALAMAT_WAJIB_PAJAK = opAbt?.NpwpdAlamat ?? "";
+
+                        result.Longitude = queryAbtLocation?.Longitude ?? "-";
+                        result.Latitude = queryAbtLocation?.Latitude ?? "-";
 
                         for (int bln = 1; bln <= 12; bln++)
                         {
@@ -565,6 +595,9 @@ namespace MonPDReborn.Models
                         result.NPWPD = opPbb?.WpNpwp ?? opPbb.WpKtp ?? "";
                         result.NAMA_WAJIB_PAJAK = opPbb?.WpNama ?? "";
                         result.ALAMAT_WAJIB_PAJAK = opPbb?.AlamatWp ?? "";
+
+                        result.Longitude = "-";
+                        result.Latitude = "-";
 
                         for (int bln = 1; bln <= 12; bln++)
                         {
@@ -657,6 +690,9 @@ namespace MonPDReborn.Models
             public decimal TAHUN_LALU_10 { get; set; } = 0;
             public decimal TAHUN_LALU_11 { get; set; } = 0;
             public decimal TAHUN_LALU_12 { get; set; } = 0;
+
+            public string Longitude { get; set; } = string.Empty;
+            public string Latitude { get; set; } = string.Empty;
         }
     }
 }
