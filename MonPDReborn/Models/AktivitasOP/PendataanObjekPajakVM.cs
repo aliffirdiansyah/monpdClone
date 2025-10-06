@@ -195,7 +195,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         var restoDokNop = context.DbRekamRestorans.Where(x => x.Tanggal.Year == tahun).GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).Distinct().ToList();
                         var restoRealisasiList = context.DbMonRestos
                             .Where(x => restoDokNop.Contains(x.Nop) && x.TglBayarPokok.Value.Year == tahun)
-                            .ToList();
+                            .AsQueryable();
 
                         var restoOpList = context.DbOpRestos
                             .Where(x => restoDokNop.Contains(x.Nop))
@@ -208,7 +208,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             .Select(x =>
                             {
                                 var nop = (x.Key.Nop).Replace(".", "");
-                                var realisasi = restoRealisasiList.FirstOrDefault(r => r.Nop == nop);
+                                var realisasi = restoRealisasiList.Where(r => r.Nop == nop).Average(x=> x.NominalPokokBayar);
                                 var op = restoOpList.FirstOrDefault(x => x.Nop == nop);
                                 return new DataDetailPendataan
                                 {
@@ -220,9 +220,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                     Alamat = op?.AlamatOp ?? "-",
                                     Omzet = x.Max(x => x.OmseBulan),
                                     PajakBulanan = x.Max(x => x.PajakBulan),
-                                    AvgRealisasi = restoRealisasiList
-                                        .Where(r => r.Nop == nop)
-                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                    AvgRealisasi = realisasi ?? 0
                                 };
                             })
                             .ToList();
@@ -233,7 +231,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         var parkirDokNop = context.DbRekamParkirs.Where(x => x.Tanggal.Year == tahun).GroupBy(x => new { Nop = x.Nop }).Select(x => (x.Key.Nop).Replace(".", "")).Distinct().ToList();
                         var parkirRealisasiList = context.DbMonParkirs
                             .Where(x => parkirDokNop.Contains(x.Nop) && x.TglBayarPokok.Value.Year == tahun)
-                            .ToList();
+                            .AsQueryable();
 
                         var parkirOpList = context.DbOpParkirs
                             .Where(x => parkirDokNop.Contains(x.Nop))
@@ -246,7 +244,7 @@ namespace MonPDReborn.Models.AktivitasOP
                             .Select(x =>
                             {
                                 var nop = (x.Key.Nop).Replace(".", "");
-                                var realisasi = parkirRealisasiList.FirstOrDefault(r => r.Nop == nop);
+                                var realisasi = parkirRealisasiList.Where(r => r.Nop == nop).Average(x => x.NominalPokokBayar);
                                 var op = parkirOpList.FirstOrDefault(r => r.Nop == nop);
                                 return new DataDetailPendataan
                                 {
@@ -258,9 +256,7 @@ namespace MonPDReborn.Models.AktivitasOP
                                     Alamat = op?.AlamatOp ?? "-",
                                     Omzet = x.Max(x => x.OmzetBulan),
                                     PajakBulanan = x.Max(x => x.PajakBulan),
-                                    AvgRealisasi = parkirRealisasiList
-                                        .Where(r => r.Nop == nop)
-                                        .Average(r => (decimal?)r.NominalPokokBayar) ?? 0
+                                    AvgRealisasi = realisasi ?? 0
                                 };
                             })
                             .ToList();
