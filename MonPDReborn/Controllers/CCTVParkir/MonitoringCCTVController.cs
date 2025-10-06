@@ -204,11 +204,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        public IActionResult LiveStreaming(string nop, int vendorId)
+        public IActionResult LiveStreaming(string nop)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreaming(nop, vendorId);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreaming(nop);
                 return View($"{URLView}{actionName}", model);
             }
             catch (Exception ex)
@@ -217,7 +217,7 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 throw;
             }
         }
-        public IActionResult LiveStreamingVideo(string nop, int cctvId)
+        public IActionResult LiveStreamingVideo(string nop, string cctvId)
         {
             try
             {
