@@ -1,7 +1,6 @@
 ﻿@using MonPDLib.General
 @model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingVideo
 
-<h2>Live Camera - WebRTC</h2>
 
 @if(Model.VendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
 {
@@ -14,6 +13,7 @@
 
 @if(Model.VendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
 {
+<h2>Live Camera - WebRTC</h2>
     <div class="text-center">
         <video width="640" height="360" controls autoplay muted>
             <source src="@Model.JasnitaSource" type="video/mp4" />
