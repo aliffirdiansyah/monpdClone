@@ -43,6 +43,7 @@
     <PackageReference Include="QRCoder" Version="1.4.2" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
+    <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MonPDLib\MonPDLib.csproj" />

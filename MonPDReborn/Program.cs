@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Localization;
+﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
@@ -19,8 +19,24 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+HttpClientHandler handler = new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+};
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder
+            .AllowAnyOrigin()   // izinkan semua origin
+            .AllowAnyMethod()   // izinkan semua HTTP method (GET, POST, dll)
+            .AllowAnyHeader();  // izinkan semua header
+    });
+});
 
 //koneksi oracle
 var configValue = builder.Configuration.GetSection("Conn:Monpd").Value;
@@ -33,6 +49,30 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });
+
+builder.Services.AddReverseProxy()
+    .LoadFromMemory(
+        routes: new[]
+        {
+            new Yarp.ReverseProxy.Configuration.RouteConfig()
+            {
+                RouteId = "stream",
+                ClusterId = "stream_cluster",
+                Match = new() { Path = "/stream/{**catch-all}" } // route prefix
+            }
+        },
+        clusters: new[]
+        {
+            new Yarp.ReverseProxy.Configuration.ClusterConfig()
+            {
+                ClusterId = "stream_cluster",
+                Destinations = new Dictionary<string, Yarp.ReverseProxy.Configuration.DestinationConfig>
+                {
+                    ["dest1"] = new() { Address = "http://10.0.12.48:8889/" }
+                }
+            }
+        }
+    );
 
 var app = builder.Build();
 
@@ -48,6 +88,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// ✅ Aktifkan CORS sebelum Authorization
+app.UseCors("AllowAll");
+
+// ✅ Tambahkan endpoint proxy
+app.MapReverseProxy();
 
 app.UseAuthorization();
 

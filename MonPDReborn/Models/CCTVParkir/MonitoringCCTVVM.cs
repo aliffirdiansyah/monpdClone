@@ -219,7 +219,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     }
                     if(query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
                     {
-                        string source = "http://localhost:8889";
+                        string source = "https://10.0.12.57:8889";
                         string formatSource = "whep";
                         nop = nop.Replace(".", "");
 
