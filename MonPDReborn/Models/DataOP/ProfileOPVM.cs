@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
@@ -964,15 +965,17 @@ namespace MonPDReborn.Models.DataOP
                         case EnumFactory.EPajak.PBB:
 
                             tutup = 0;
-                            awal = dbOpPbb.Where(x => x.TahunBuku == tahun - 1).Sum(q => q.Jml);
+                            awal = context.DbMonPbbs.Where(x => x.TahunBuku == tahun - 1).Select(x => x.Nop).Distinct().Count();
                             baru = 0;
-                            akhir = dbOpPbb.Where(x => x.TahunBuku == tahun).Sum(q => q.Jml);
+                            akhir = context.DbMonPbbs.Where(x => x.TahunBuku == tahun).Select(x => x.Nop).Distinct().Count();
 
                             break;
 
                         case EnumFactory.EPajak.BPHTB:
-                            akhir = dbOpBphtb.Count(x => x.Tahun == tahun);
-                            awal = dbOpBphtb.Count(x => x.Tahun == tahun - 1);
+                            awal = context.DbMonBphtbs.Count(x => x.Tahun == tahun - 1 && x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun - 1);
+                            tutup = 0;
+                            baru = context.DbMonBphtbs.Count(x => x.Tahun == tahun && x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun);
+                            akhir = awal + baru;
                             break;
 
                         case EnumFactory.EPajak.OpsenPkb:
