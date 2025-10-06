@@ -161,14 +161,14 @@ namespace MonPDReborn.Models.CCTVParkir
             public string TanggalPasang { get; set; } = "";
             public List<SelectListItem> CctvIdList { get; set; } = new();
 
-            public LiveStreaming(string nop, int vendorId)
+            public LiveStreaming(string nop)
             {
                 var context = DBClass.GetContext();
                 var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
                 if (query != null)
                 {
                     Nop = nop;
-                    VendorId = vendorId;
+                    VendorId = query.Vendor;
                     NamaOP = query.NamaOp;
                     AlamatOP = query.AlamatOp;
 
@@ -199,13 +199,36 @@ namespace MonPDReborn.Models.CCTVParkir
         public class LiveStreamingVideo
         {
             public string MediaMtxSource { get; set; } = "";
-            public LiveStreamingVideo(string nop, int cctvId)
+            public string JasnitaSource { get; set; } = "";
+            public int VendorId { get; set; }
+            public LiveStreamingVideo(string nop, string cctvId)
             {
-                string source = "http://localhost:8889";
-                string formatSource = "whep";
-                nop = nop.Replace(".", "");
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
+                if (query != null)
+                {
+                    VendorId = query.Vendor;
 
-                MediaMtxSource = $"{source}/c{nop}_{cctvId}/{formatSource}";
+                    if(query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Jasnita))
+                    {
+                        var jasnita = context.MOpParkirCctvJasnita.Where(x => x.Nop == nop && x.CctvId == cctvId).FirstOrDefault();
+                        if(jasnita != null)
+                        {
+                            JasnitaSource = jasnita.Rtsp ?? "";
+                        }
+                    }
+                    if(query.Vendor == (int)(EnumFactory.EVendorParkirCCTV.Telkom))
+                    {
+                        string source = "http://localhost:8889";
+                        string formatSource = "whep";
+                        nop = nop.Replace(".", "");
+
+                        MediaMtxSource = $"{source}/c{nop}_{cctvId}/{formatSource}";
+                    }
+                }
+
+
+                    
             }
         }
 
