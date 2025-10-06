@@ -46,8 +46,8 @@ namespace MonPDReborn.Models.DataOP
                     var nop = sheet.Cells[row, 1].Text.Replace(".", "");
                     var pajakId = (EnumFactory.EPajak)TryDecimal(sheet.Cells[row, 4].Text);
 
-                    string namaOp = "";
-                    string alamatOp = "";
+                    string namaOp = "-";
+                    string alamatOp = "-";
 
                     switch (pajakId)
                     {
@@ -55,33 +55,33 @@ namespace MonPDReborn.Models.DataOP
                             break;
                         case EnumFactory.EPajak.MakananMinuman:
                             var opResto = context.DbOpRestos.Where(x => x.Nop == nop).FirstOrDefault();
-                            namaOp = opResto.NamaOp;
-                            alamatOp = opResto.AlamatOp;
+                            namaOp = opResto?.NamaOp ?? "-";
+                            alamatOp = opResto?.AlamatOp ?? "-";
                             break;
                         case EnumFactory.EPajak.TenagaListrik:
                             var opListrik = context.DbOpListriks.Where(x => x.Nop == nop).FirstOrDefault();
-                            namaOp = opListrik.NamaOp;
-                            alamatOp = opListrik.AlamatOp;
+                            namaOp = opListrik?.NamaOp ?? "-";
+                            alamatOp = opListrik?.AlamatOp ?? "-";
                             break;
                         case EnumFactory.EPajak.JasaPerhotelan:
                             var opHotel = context.DbOpHotels.Where(x => x.Nop == nop).FirstOrDefault();
-                            namaOp = opHotel.NamaOp;
-                            alamatOp = opHotel.AlamatOp;
+                            namaOp = opHotel?.NamaOp ?? "-";
+                            alamatOp = opHotel?.AlamatOp ?? "-";
                             break;
                         case EnumFactory.EPajak.JasaParkir:
                             var opParkir = context.DbOpParkirs.Where(x => x.Nop == nop).FirstOrDefault();
-                            namaOp = opParkir.NamaOp;
-                            alamatOp = opParkir.AlamatOp;
+                            namaOp = opParkir?.NamaOp ?? "-";
+                            alamatOp = opParkir?.AlamatOp ?? "-";
                             break;
                         case EnumFactory.EPajak.JasaKesenianHiburan:
                             var opHiburan = context.DbOpHiburans.Where(x => x.Nop == nop).FirstOrDefault();
-                            namaOp = opHiburan.NamaOp;
-                            alamatOp = opHiburan.AlamatOp;
+                            namaOp = opHiburan?.NamaOp ?? "-";
+                            alamatOp = opHiburan?.AlamatOp ?? "-";
                             break;
                         case EnumFactory.EPajak.AirTanah:
                             var opAbt = context.DbOpAbts.Where(x => x.Nop == nop).FirstOrDefault();
-                            namaOp = opAbt.NamaOp;
-                            alamatOp = opAbt.AlamatOp;
+                            namaOp = opAbt?.NamaOp ?? "-";
+                            alamatOp = opAbt?.AlamatOp ?? "-";
                             break;
                         case EnumFactory.EPajak.Reklame:
                             break;
@@ -103,7 +103,8 @@ namespace MonPDReborn.Models.DataOP
 
                     if (existingData != null)
                     {
-                        context.DbOpLocations.Remove(existingData);
+                        //context.DbOpLocations.Remove(existingData);
+                        continue;
                     }
 
                     var data = new DbOpLocation
@@ -113,7 +114,7 @@ namespace MonPDReborn.Models.DataOP
                         Alamat = alamatOp,       
                         Latitude = sheet.Cells[row, 2].Text ?? "",     
                         Longitude = sheet.Cells[row, 3].Text ?? "",   
-                        PajakId = TryDecimal(sheet.Cells[row, 4].Text)
+                        PajakId = (decimal)TryDecimal(sheet.Cells[row, 4].Text)
                     };
 
                     context.DbOpLocations.Add(data);

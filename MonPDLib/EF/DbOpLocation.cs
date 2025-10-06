@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Keyless]
+[PrimaryKey("FkNop", "PajakId")]
 [Table("DB_OP_LOCATION")]
 public partial class DbOpLocation
 {
+    [Key]
     [Column("FK_NOP")]
     [StringLength(50)]
     [Unicode(false)]
-    public string? FkNop { get; set; }
+    public string FkNop { get; set; } = null!;
 
     [Column("NAMA")]
     [StringLength(100)]
@@ -35,6 +36,7 @@ public partial class DbOpLocation
     [Unicode(false)]
     public string? Longitude { get; set; }
 
+    [Key]
     [Column("PAJAK_ID", TypeName = "NUMBER(38)")]
-    public decimal? PajakId { get; set; }
+    public decimal PajakId { get; set; }
 }

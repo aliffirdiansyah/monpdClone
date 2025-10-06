@@ -103,6 +103,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonPbbRealisasi> DbMonPbbRealisasis { get; set; }
 
+    public virtual DbSet<DbMonPbbViewRealisasi> DbMonPbbViewRealisasis { get; set; }
+
     public virtual DbSet<DbMonPjOp> DbMonPjOps { get; set; }
 
     public virtual DbSet<DbMonPpj> DbMonPpjs { get; set; }
@@ -997,6 +999,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
         });
 
+        modelBuilder.Entity<DbMonPbbViewRealisasi>(entity =>
+        {
+            entity.ToView("DB_MON_PBB_VIEW_REALISASI");
+
+            entity.Property(e => e.CreateBy).IsFixedLength();
+        });
+
         modelBuilder.Entity<DbMonPjOp>(entity =>
         {
             entity.HasKey(e => new { e.Nip, e.Nop }).HasName("DB_MON_PJ_OP_PK");
@@ -1220,6 +1229,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
             entity.Property(e => e.JumlahKaryawan).HasDefaultValueSql("0                     ");
+        });
+
+        modelBuilder.Entity<DbOpLocation>(entity =>
+        {
+            entity.HasKey(e => new { e.FkNop, e.PajakId }).HasName("DB_OP_LOCATION_PK");
         });
 
         modelBuilder.Entity<DbOpParkir>(entity =>
