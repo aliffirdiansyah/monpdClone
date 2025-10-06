@@ -29,6 +29,11 @@ public partial class MOpParkirCctvTelkom
     [Column("TGL_PASANG", TypeName = "DATE")]
     public DateTime TglPasang { get; set; }
 
+    [Column("RTSP")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string Rtsp { get; set; } = null!;
+
     [InverseProperty("MOpParkirCctvTelkom")]
     public virtual MOpParkirCctvTelkomLog? MOpParkirCctvTelkomLog { get; set; }
 
