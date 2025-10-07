@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
 using Swashbuckle.AspNetCore.Annotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using VendorCctvAPI.Models;
 
@@ -24,8 +26,7 @@ namespace VendorCctvAPI.Controllers
                     return BadRequest(response.ToErrorInfoMessage("Tidak ada data event yang diterima."));
                 }
 
-                int vendorId = Convert.ToInt32(User.Identity?.Name);
-
+                int vendorId = int.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Name) ?? "0");
                 if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
                 {
                     await JasnitaVM.Method.SendJasnitaLogAsync(events);

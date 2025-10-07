@@ -89,36 +89,55 @@ namespace VendorCctvAPI.Models
                         throw new ArgumentException($"Nop '{item.Nop}' tidak ditemukan di database.");
                     }
 
+                    var oldData = context.MOpParkirCctvJasnitaLogs.FirstOrDefault(x => x.Nop == item.Nop && x.CctvId == item.CctvId);
+
+                    DateTime? tanggalTerakhirAktif = item.LastOn?.TglEvent;
+                    DateTime? tanggalTerakhirNonAktif = item.LastOff?.TglEvent;
+
+                    if(!tanggalTerakhirAktif.HasValue && !tanggalTerakhirNonAktif.HasValue)
+                    {
+                        throw new ArgumentException($"Nop '{item.Nop}' aktif dan non aktif harus ada");
+                    }
+
                     string status = "NON AKTIF";
 
-                    if (item.LastOn != null && item.LastOff != null)
+                    if (!tanggalTerakhirAktif.HasValue && !tanggalTerakhirNonAktif.HasValue)
                     {
-                        status = item.LastOn.TglEvent > item.LastOff.TglEvent ? "AKTIF" : "NON AKTIF";
+                        throw new ArgumentException($"Nop '{item.Nop}' aktif dan non aktif harus ada");
                     }
-                    else if (item.LastOn != null)
+                    else if (!tanggalTerakhirAktif.HasValue)
+                    {
+                        status = "NON AKTIF";
+                    }
+                    else if (!tanggalTerakhirNonAktif.HasValue)
                     {
                         status = "AKTIF";
                     }
-
-                    var oldData = await context.MOpParkirCctvJasnitaLogs
-                        .FirstOrDefaultAsync(x => x.Nop == item.Nop && x.CctvId == item.CctvId);
-
-                    if (oldData != null)
+                    else
                     {
-                        oldData.TglTerakhirAktif = item.LastOn?.TglEvent ?? DateTime.Now;
-                        oldData.TglTerakhirDown = item.LastOff?.TglEvent ?? DateTime.Now;
+                        // Ambil yang terbaru
+                        status = (tanggalTerakhirAktif.Value > tanggalTerakhirNonAktif.Value) ? "AKTIF" : "NON AKTIF";
+                    }
+
+
+                    if(oldData != null)
+                    {
+                        oldData.TglTerakhirAktif = tanggalTerakhirAktif ?? oldData.TglTerakhirAktif;
+                        oldData.TglTerakhirDown = tanggalTerakhirNonAktif ?? oldData.TglTerakhirDown;
                         oldData.Status = status;
                     }
                     else
                     {
-                        await context.MOpParkirCctvJasnitaLogs.AddAsync(new MOpParkirCctvJasnitaLog
-                        {
-                            Nop = item.Nop,
-                            CctvId = item.CctvId,
-                            TglTerakhirAktif = item.LastOn?.TglEvent ?? DateTime.Now,
-                            TglTerakhirDown = item.LastOff?.TglEvent ?? DateTime.Now,
-                            Status = status
-                        });
+                        var insert = new MOpParkirCctvJasnitaLog();
+
+                        insert.Nop = item.Nop;
+                        insert.CctvId = item.CctvId;
+                        insert.TglTerakhirAktif = tanggalTerakhirAktif ?? DateTime.Now.Date;
+                        insert.TglTerakhirDown = tanggalTerakhirNonAktif ?? DateTime.Now.Date;
+                        insert.Status = status;
+
+
+                        await context.MOpParkirCctvJasnitaLogs.AddAsync(insert);
                     }
                 }
 
