@@ -152,23 +152,30 @@
                                                     </tr>
 
                                                     @{
-                                                        var turnover = Model.TurnoverWeekdaysNonCatering;
-                                                        var formattedTurnover = turnover % 1 == 0
-                                                        ? turnover.ToString("N0")
-                                                        : turnover.ToString("N2");
+                                                        var turnoverWeekdays = Model.TurnoverWeekdaysNonCatering;
+                                                        var formatWeekdays = turnoverWeekdays % 1 == 0
+                                                        ? turnoverWeekdays.ToString("N0")
+                                                        : turnoverWeekdays.ToString("N2");
                                                     }
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Turnover Weekdays</th>
                                                         <th scope="row" style="width: 20px;">:</th>
                                                         <td class="text-body fw-medium">
-                                                            @formattedTurnover Kali
+                                                            @formatWeekdays Kali
                                                         </td>
                                                     </tr>
+
+                                                    @{
+                                                        var turnoverWeekend = Model.TurnoverWeekendNonCatering;
+                                                        var formatWeekend = turnoverWeekend % 1 == 0
+                                                        ? turnoverWeekend.ToString("N0")
+                                                        : turnoverWeekend.ToString("N2");
+                                                    }
 
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Turnover Weekend</th>
                                                         <th scope="row" style="width: 20px;">:</th>
-                                                        <td class="text-body fw-medium">@Model.TurnoverWeekendNonCatering.ToString("N2") Kali</td>
+                                                        <td class="text-body fw-medium">@turnoverWeekend Kali</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Jumlah Kursi</th>

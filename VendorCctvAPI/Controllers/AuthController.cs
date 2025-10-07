@@ -19,17 +19,29 @@ namespace VendorCctvAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] TokenVM.ViewModel.LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] AuthVM.ViewModel.LoginRequest request)
         {
             var response = new ResponseBase();
 
-            if (request.Username == "admin" && request.Password == "1234")
+            try
             {
-                var tokenResult = TokenVM.Method.GenerateJwtToken(request.Username, _config);
+                var user = await AuthVM.Method.LoginAsync(request.Username, request.Password);
+                if (user == null)
+                {
+                    return Unauthorized(response.ToErrorInfoMessage("Username atau password salah."));
+                }
+
+                var tokenResult = AuthVM.Method.GenerateJwtToken(user, _config);
                 return Ok(response.ToSuccessInfoMessage("Login berhasil", tokenResult));
             }
-
-            return Unauthorized(response.ToErrorInfoMessage("Username atau password salah."));
+            catch (ArgumentException ex)
+            {
+                return Ok(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return Ok(response.ToInternalServerError(ex.Message));
+            }
         }
     }
 }

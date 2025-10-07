@@ -1,13 +1,17 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MonPDLib;
+using MonPDLib.EF;
+using MonPDLib.General;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
-using static VendorCctvAPI.Models.TokenVM.ViewModel;
+using static VendorCctvAPI.Models.AuthVM.ViewModel;
 
 namespace VendorCctvAPI.Models
 {
-    public class TokenVM
+    public class AuthVM
     {
         public class ViewModel
         {
@@ -19,7 +23,7 @@ namespace VendorCctvAPI.Models
 
             public class JwtTokenResult
             {
-                public string Username { get; set; } = string.Empty;
+                public string Name { get; set; } = string.Empty;
                 public string Token { get; set; } = string.Empty;
                 public DateTime IssuedAt { get; set; }
                 public DateTime ExpiresAt { get; set; }
@@ -28,7 +32,17 @@ namespace VendorCctvAPI.Models
 
         public class Method
         {
-            public static JwtTokenResult GenerateJwtToken(string username, IConfiguration config)
+            public static async Task<UserApiVendorCctv?> LoginAsync(string username, string password)
+            {
+                await using var context = DBClass.GetContext();
+                username = username.Trim().ToUpper();
+
+                var user = await context.UserApiVendorCctvs.FirstOrDefaultAsync(x => x.Username.Trim().ToUpper() == username && x.Pass == password);
+
+                return user;
+            }
+
+            public static JwtTokenResult GenerateJwtToken(UserApiVendorCctv user, IConfiguration config)
             {
                 var jwtSettings = config.GetSection("Jwt");
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? ""));
@@ -37,9 +51,19 @@ namespace VendorCctvAPI.Models
                 var issuedAt = DateTime.Now;
                 var expiresAt = issuedAt.AddHours(3);
 
+                int vendorId = 0;
+                if (user.Name?.ToUpper() == "JASNITA")
+                {
+                    vendorId = (int)EnumFactory.EVendorParkirCCTV.Jasnita;
+                }
+                else if (user.Name?.ToUpper() == "TELKOM")
+                {
+                    vendorId = (int)EnumFactory.EVendorParkirCCTV.Telkom;
+                }
+
                 var claims = new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, username),
+                    new Claim(JwtRegisteredClaimNames.Name, vendorId.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
@@ -56,7 +80,7 @@ namespace VendorCctvAPI.Models
 
                 return new JwtTokenResult
                 {
-                    Username = username,
+                    Name = user.Name ?? "",
                     Token = tokenString,
                     IssuedAt = issuedAt,
                     ExpiresAt = expiresAt
