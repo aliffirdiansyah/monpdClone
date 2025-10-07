@@ -117,11 +117,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        public IActionResult KapasitasHarian(string nop, int vendorId, int tahun, int bulan)
+        public IActionResult KapasitasHarian(string nop, int tahun, int bulan)
         {
             try
             {
-                var data = Method.GetMonitoringCCTVHarian(nop, vendorId, tahun, bulan);
+                var data = Method.GetMonitoringCCTVHarian(nop, tahun, bulan);
                 return Json(data);
             }
             catch (Exception ex)
@@ -131,20 +131,7 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        //public IActionResult KapasitasHarianDetail(string nop, int vendorId, DateTime tgl)
-        //{
-        //    try
-        //    {
-        //        var data = Method.GetMonitoringHarianDetail(nop, vendorId, tgl);
-        //        return Json(data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.Status = StatusEnum.Error;
-        //        response.Message = ex.Message;
-        //        return Json(response);
-        //    }
-        //}
+
         public IActionResult KapasitasHarianDetail(string nop, int vendorId, DateTime tgl)
         {
             try
@@ -204,11 +191,11 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Json(response);
             }
         }
-        public IActionResult LiveStreaming(string nop)
+        public IActionResult LiveStreaming(string nop, int vendorId, DateTime tgl)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreaming(nop);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreaming(nop, vendorId, tgl);
                 return View($"{URLView}{actionName}", model);
             }
             catch (Exception ex)
@@ -217,6 +204,9 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 throw;
             }
         }
+
+        //endpoint untuk berpindah camera diview livestreaming...
+
         public IActionResult LiveStreamingVideo(string nop, string cctvId)
         {
             try
@@ -230,20 +220,20 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 throw;
             }
         }
-        public IActionResult LiveStreamingCounting(string nop)
+        public IActionResult LiveStreamingVideoCounting(string nop , DateTime tgl)
         {
             try
             {
-                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingCounting(nop);
-                return PartialView($"{URLView}{actionName}", model);
+                var model = new Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingCounting(nop , tgl);
+                //return PartialView($"{URLView}{actionName}", model);
+                return PartialView("../CCTVParkir/MonitoringCCTV/LiveStreamingVideoCounting", model);
+
             }
             catch (Exception ex)
             {
 
-                throw;
+                return Content($"<div class='text-danger p-3 text-center'>Terjadi error: {ex.Message}</div>", "text/html");
             }
         }
-
-
     }
 }

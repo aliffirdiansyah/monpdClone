@@ -90,7 +90,7 @@
                                                     columns.AddFor(m => m.NamaBulan).Caption("Bulan");
                                                     columns.AddFor(m => m.Motor).Caption("Motor");
                                                     columns.AddFor(m => m.Mobil).Caption("Mobil");
-                                                    columns.AddFor(m => m.Unknown).Caption("Unknown");
+                                                    @* columns.AddFor(m => m.Unknown).Caption("Unknown"); *@
                                                     columns.AddFor(m => m.Omset).Caption("Omset").Format("#,##0");
                                                     columns.AddFor(m => m.EstimasiPajak).Caption("Est. Pajak").Format("#,##0");
                                                     columns.AddFor(m => m.TahunKemarin).Caption("Tahun 2024").Format("#,##0");
@@ -156,7 +156,7 @@
                             { dataField: "HariLabel", caption: "Hari" }, 
                             { dataField: "Motor", caption: "Motor", format: "#,##0" },
                             { dataField: "Mobil", caption: "Mobil", format: "#,##0" },
-                            { dataField: "Unknown", caption: "Unknown", format: "#,##0" },
+                            // { dataField: "Unknown", caption: "Unknown", format: "#,##0" },
                             { dataField: "Omset", caption: "Omset", format: "#,##0" },
                             { dataField: "EstimasiPajak", caption: "Est. Pajak", format: "#,##0" }
                         ],

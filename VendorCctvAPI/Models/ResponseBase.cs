@@ -1,8 +1,8 @@
-﻿namespace MonPDReborn.Lib.General
+﻿namespace VendorCctvAPI.Models
 {
     public class ResponseBase
     {
-        public StatusEnum Status { get; set; }
+        public bool Status { get; set; }
         public string Message { get; set; } = string.Empty;
         public object? Data { get; set; }
 
@@ -18,78 +18,78 @@
 
         public ResponseBase ToDataSaved(object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Success,
+            Status = true,
             Message = DataSavedMessage,
             Data = data
         };
 
         public ResponseBase ToDataUpdated(object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Success,
+            Status = true,
             Message = DataUpdatedMessage,
             Data = data
         };
 
         public ResponseBase ToDataDeleted(object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Success,
+            Status = true,
             Message = DataDeletedMessage,
             Data = data
         };
 
         public ResponseBase ToDataSaveFailed(string m = "", object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Error,
+            Status = false,
             Message = $"{DataSaveFailedMessage} {m}".Trim(),
             Data = data
         };
 
         public ResponseBase ToDataUpdateFailed(string m = "", object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Error,
+            Status = false,
             Message = $"{DataUpdateFailedMessage} {m}".Trim(),
             Data = data
         };
 
         public ResponseBase ToDataDeleteFailed(string m = "", object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Error,
+            Status = false,
             Message = $"{DataDeleteFailedMessage} {m}".Trim(),
             Data = data
         };
 
         public ResponseBase ToInternalServerError(string m = "", object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Error,
+            Status = false,
             Message = $"{InternalServerErrorMessage} {m}".Trim(),
             Data = data
         };
 
         public ResponseBase ToDataFound(object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Success,
+            Status = true,
             Message = DataFoundMessage,
             Data = data
         };
 
         public ResponseBase ToDataNotFound(object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Error,
+            Status = false,
             Message = DataNotFoundMessage,
             Data = data
         };
 
         public ResponseBase ToSuccessInfoMessage(string m = "", object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Success,
-            Message = $"Info. {m}".Trim(),
+            Status = true,
+            Message = $"{m}".Trim(),
             Data = data
         };
 
         public ResponseBase ToErrorInfoMessage(string m = "", object? data = null) => new ResponseBase
         {
-            Status = StatusEnum.Error,
-            Message = $"Info. {m}".Trim(),
+            Status = false,
+            Message = $"{m}".Trim(),
             Data = data
         };
 
