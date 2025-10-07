@@ -882,7 +882,6 @@ namespace CCTVParkirWorker
                 }
             }
         }
-
         public async Task InsertToDbCctvLogDetail(ParkirView op, List<CameraStatusRekap> dataList, CancellationToken token)
         {
             var context = DBClass.GetContext();
@@ -1298,10 +1297,8 @@ namespace CCTVParkirWorker
                                 }, token);
                             }
 
-                            if (processed % 10 == 0)
-                            {
-                                UpdateLogTelkomLog($"🧾 Diproses {processed}/{results.Count} CCTV...");
-                            }
+                            // log setiap proses, tanpa batasan kelipatan 10
+                            UpdateLogTelkomLog($"🧾 Diproses {processed}/{results.Count} CCTV...");
                         }
                         catch (Exception exInner)
                         {
