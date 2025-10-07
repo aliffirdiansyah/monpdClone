@@ -15,6 +15,12 @@ public partial class ModelContext : DbContext
     {
     }
 
+    public virtual DbSet<CobaKetetapan> CobaKetetapans { get; set; }
+
+    public virtual DbSet<CobaOp> CobaOps { get; set; }
+
+    public virtual DbSet<CobaRealisasi> CobaRealisasis { get; set; }
+
     public virtual DbSet<DataAirTanah> DataAirTanahs { get; set; }
 
     public virtual DbSet<DataPbb> DataPbbs { get; set; }
@@ -451,6 +457,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<UserApiBapendum> UserApiBapenda { get; set; }
 
+    public virtual DbSet<UserApiVendorCctv> UserApiVendorCctvs { get; set; }
+
     public virtual DbSet<VwDataOpAbt> VwDataOpAbts { get; set; }
 
     public virtual DbSet<VwDataOpHiburan> VwDataOpHiburans { get; set; }
@@ -516,6 +524,30 @@ public partial class ModelContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("MONPD");
+
+        modelBuilder.Entity<CobaKetetapan>(entity =>
+        {
+            entity.ToView("COBA_KETETAPAN");
+
+            entity.Property(e => e.Nop).IsFixedLength();
+        });
+
+        modelBuilder.Entity<CobaOp>(entity =>
+        {
+            entity.ToView("COBA_OP");
+
+            entity.Property(e => e.Katagori).IsFixedLength();
+            entity.Property(e => e.Kecamatan).IsFixedLength();
+            entity.Property(e => e.Kelurahan).IsFixedLength();
+            entity.Property(e => e.Nop).IsFixedLength();
+        });
+
+        modelBuilder.Entity<CobaRealisasi>(entity =>
+        {
+            entity.ToView("COBA_REALISASI");
+
+            entity.Property(e => e.Nop).IsFixedLength();
+        });
 
         modelBuilder.Entity<DataAirTanah>(entity =>
         {
@@ -2393,6 +2425,12 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<UserApiBapendum>(entity =>
         {
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<UserApiVendorCctv>(entity =>
+        {
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate ");
         });
 
         modelBuilder.Entity<VwDataOpAbt>(entity =>
