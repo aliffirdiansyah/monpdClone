@@ -691,8 +691,8 @@ namespace MonPDReborn.Models
             public decimal TAHUN_LALU_11 { get; set; } = 0;
             public decimal TAHUN_LALU_12 { get; set; } = 0;
 
-            public string Longitude { get; set; } = string.Empty;
             public string Latitude { get; set; } = string.Empty;
+            public string Longitude { get; set; } = string.Empty;
         }
     }
 }

@@ -892,17 +892,19 @@ namespace CCTVParkirWorker
                 .Distinct()
                 .ToList();
 
-            var existingIds = await context.TOpParkirCctvs
-                .Where(x => allIds.Contains(x.Id))
-                .Select(x => x.Id)
+            var existingKeys = await context.MOpParkirCctvJasnitaLogDs
+                .Where(x => allIds.Contains(x.Guid) && x.Nop == op.NOP)
+                .Select(x => new { x.Guid, x.Nop })
                 .ToListAsync(token);
 
-            var existingSet = new HashSet<string>(existingIds);
+            var existingSet = new HashSet<(string Guid, string Nop)>(
+                existingKeys.Select(k => (k.Guid, k.Nop))
+            );
 
             var insertData = new List<MOpParkirCctvJasnitaLogD>();
             foreach (var item in dataList)
             {
-                bool dataExist = existingSet.Contains(item.Guid);
+                bool dataExist = existingSet.Contains((item.Guid, op.NOP));
                 if (!dataExist)
                 {
                     var insert = new MOpParkirCctvJasnitaLogD
@@ -922,20 +924,17 @@ namespace CCTVParkirWorker
             try
             {
                 await context.Database.OpenConnectionAsync(token);
+
                 if (insertData.Count > 0)
                 {
                     await context.MOpParkirCctvJasnitaLogDs.AddRangeAsync(insertData, token);
                     await context.SaveChangesAsync(token);
-                    await context.Database.CloseConnectionAsync();
-                }
-                else
-                {
-
                 }
             }
             catch (Exception ex)
             {
-
+                // log error
+                Console.WriteLine($"Insert error: {ex.Message}");
             }
             finally
             {
