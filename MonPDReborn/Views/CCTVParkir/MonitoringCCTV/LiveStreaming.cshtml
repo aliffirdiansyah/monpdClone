@@ -64,11 +64,14 @@
 
         <div class="col-lg-8 col-md-12">
             <div class="p-2">
-                <!-- Nama OP -->
-                <h3 class="text-white mb-1">@Model.NamaOP</h3>
-
-                <!-- NOP -->
-                <p class="text-white-75 fw-bold mb-2">@Model.formattedNop</p>
+                
+                <a href="/ProfileOP/Detail?nop=@Model.Nop&pajak=4" style="cursor: pointer">
+                    <!-- Nama OP -->
+                    <h3 class="text-white mb-1">@Model.NamaOP</h3>
+                
+                    <!-- NOP -->
+                    <p class="text-white-75 fw-bold mb-2">@Model.formattedNop</p>
+                </a>
 
                 <!-- Info bar -->
                 <div class="hstack text-white-50 gap-3 flex-wrap">
@@ -90,6 +93,22 @@
                         Vendor:
                         <span class="text-white-75">@Model.Vendor</span>
                     </div>
+                </div>
+
+                <!-- Tarif parkir -->
+                <div class="mt-2">
+                    <i class="ri-money-dollar-circle-line me-1 text-white fs-16 align-middle"></i>
+                    <span class="text-white-75">
+                        Tarif parkir: <b>Roda dua Rp 2.000</b> &nbsp;|&nbsp; <b>Roda empat Rp 4.000</b>
+                    </span>
+                </div>
+
+                <!-- Tanggal pasang -->
+                <div class="mt-2">
+                    <i class="ri-calendar-check-line me-1 text-white fs-16 align-middle"></i>
+                    <span class="text-white-75">
+                        Tanggal pasang: <b>@Model.TanggalPasang</b>
+                    </span>
                 </div>
             </div>
         </div>
@@ -179,53 +198,6 @@
                                 </div>
                             </div>
 
-
-                            <div class="card flex-fill">
-                                <div class="card-body">
-                                    <h5 class="card-title mb-3">Info Detail</h5>
-                                    <div class="table-responsive">
-                                        <table class="table table-borderless mb-0">
-                                            <tbody>
-                                                <tr>
-                                                    <th class="ps-0" scope="row">Objek Pajak :</th>
-                                                    <td class="text-muted">@Model.NamaOP - @Model.formattedNop</td>
-                                                </tr>
-                                                <tr>
-                                                    <th class="ps-0" scope="row">Alamat :</th>
-                                                    <td class="text-muted">@Model.AlamatOP</td>
-                                                </tr>
-                                                <tr>
-                                                    <th class="ps-0" scope="row">Uptb :</th>
-                                                    <td class="text-muted">@Model.WilayahUPTB</td>
-                                                </tr>
-                                                <tr>
-                                                    <th class="ps-0" scope="row">Tanggal Buka :</th>
-                                                    <td class="text-muted">
-                                                        @Model.TanggalPasang
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th class="ps-0" scope="row" style="vertical-align: top;">Tarif</th>
-                                                    <td colspan="2">
-                                                        <table class="table table-sm mb-0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="text-muted">Roda Dua</td>
-                                                                    <td class="text-muted text-end">2000</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="text-muted">Roda Empat</td>
-                                                                    <td class="text-muted text-end">4000</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="col-xxl-5 d-flex">
@@ -251,7 +223,7 @@
                                                 <div class="table-responsive">
                                                     @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
                                                         .ID("gridLiveStreamingAktivitas")
-                                                        .DataSource(Model.DataMonitoringDetail.OrderBy(x => x.TanggalMasuk).ToList())
+                                                        .DataSource(Model.DataMonitoringDetail.OrderByDescending(x => x.TanggalMasuk).ToList())
                                                         .ShowBorders(true)
                                                         .ColumnAutoWidth(true)
                                                         .Sorting(s => s.Mode(GridSortingMode.None)) 

@@ -42,13 +42,16 @@
 
         <div class="row text-center">
             <div class="col-md-4 mb-3">
-                <div class="p-3 border rounded bg-light">
-                    <h6 class="text-muted mb-1">
-                        <i class="ri-line-chart-line text-info me-1"></i>Estimasi Pajak
-                    </h6>
-                    <h4 class="fw-bold text-success mb-0">Rp @Model.AnalysisResult.EstimasiPajak.ToString("N0")</h4>
-                </div>
+                <a href="/MonitoringCCTV/Kapasitas?nop=@Model.Nop&vendorId=@Model.VendorId" style="cursor: pointer">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-muted mb-1">
+                            <i class="ri-line-chart-line text-info me-1"></i>Estimasi Pajak
+                        </h6>
+                        <h4 class="fw-bold text-success mb-0">Rp @Model.AnalysisResult.EstimasiPajak.ToString("N0")</h4>
+                    </div>
+                </a>
             </div>
+          
             <div class="col-md-4 mb-3">
                 <div class="p-3 border rounded bg-light">
                     <h6 class="text-muted mb-1">
@@ -57,6 +60,7 @@
                     <h4 class="fw-bold text-secondary mb-0">Rp @Model.AnalysisResult.TahunKemarin.ToString("N0")</h4>
                 </div>
             </div>
+
             <div class="col-md-4 mb-3">
                 <div class="p-3 border rounded bg-light">
                     <h6 class="text-muted mb-1">

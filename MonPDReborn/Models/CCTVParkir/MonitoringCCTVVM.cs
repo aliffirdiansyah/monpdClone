@@ -1,4 +1,5 @@
 ﻿using DevExpress.CodeParser;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
@@ -243,7 +244,9 @@ namespace MonPDReborn.Models.CCTVParkir
         }
 
         public class LiveStreamingCounting 
-        { 
+        {
+            public string Nop { get; set; }
+            public int VendorId { get; set; }
             public LiveStreamingAnalysis AnalysisResult { get; set; } = new();
             public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
             public ViewModel.KapasitasChart KapasitasChartDetail { get; set; } = new();
@@ -252,6 +255,14 @@ namespace MonPDReborn.Models.CCTVParkir
                 DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, tgl);
                 AnalysisResult = Method.GetLiveStreamingAnalysis(nop , tgl);
                 KapasitasChartDetail = Method.GetKapasitasChart(DataMonitoringDetail, tgl);
+
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
+                if (query != null)
+                {
+                    Nop = nop;
+                    VendorId = query.Vendor;
+                }
             }
         }
 
@@ -1135,22 +1146,50 @@ namespace MonPDReborn.Models.CCTVParkir
                                     // Kemudian, jumlahkan properti JumlahKendaraanTerparkir dari hasil filter di atas
                                     .Sum(q => q.JumlahKendaraanTerparkir);
                 var unknown = kendaraanParkirHarian.Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Unknown).Sum(q => q.JumlahKendaraanTerparkir);
+               
 
-                var waktuTersibuk = kendaraanParkirBulanan.OrderByDescending(x => x.JumlahKendaraanTerparkir).FirstOrDefault()?.Hari ?? 0;
 
-                var ratarataMobil = kendaraanParkirBulanan
-                    .Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Mobil)
-                    .DefaultIfEmpty()
-                    .Average(x => x == null ? 0 : x.JumlahKendaraanTerparkir);
+                // 📌 Cari jam tersibuk di hari 'tgl'
+                var waktuTersibuk = context.TOpParkirCctvs
+                    .Where(x => x.Nop == nop
+                        && x.Direction == (int)EnumFactory.CctvParkirDirection.Incoming
+                        && x.WaktuMasuk.Date == tgl.Date)
+                    .GroupBy(x => x.WaktuMasuk.Hour)
+                    .Select(g => new
+                    {
+                        Jam = g.Key,
+                        Jumlah = g.Count()
+                    })
+                    .OrderByDescending(x => x.Jumlah)
+                    .FirstOrDefault()?.Jam ?? -1;
 
-                var ratarataMotor = kendaraanParkirBulanan
-                    .Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Motor)
-                    .DefaultIfEmpty()
-                    .Average(x => x == null ? 0 : x.JumlahKendaraanTerparkir);
+                var lastUpdate = kendaraanParkirLastUpdate?.WaktuMasuk;
 
-                var lastUpdate = kendaraanParkirLastUpdate != null
+                int totalJamBerlalu = 0;
+
+                if (lastUpdate.HasValue)
+                {
+                    totalJamBerlalu = lastUpdate.Value.Hour + 1;
+                }
+                else
+                {
+                    totalJamBerlalu = DateTime.Now.Hour + 1;
+                    if (totalJamBerlalu == 0) totalJamBerlalu = 1;
+                }
+
+                if (totalJamBerlalu == 0)
+                {
+                    totalJamBerlalu = 1;
+                }
+
+                var ratarataMobil = (double)mobildantruck / totalJamBerlalu;
+
+                var ratarataMotor = (double)motor / totalJamBerlalu;
+
+                int menitSejakUpdate = kendaraanParkirLastUpdate != null
                     ? (int)(DateTime.Now - kendaraanParkirLastUpdate.WaktuMasuk).TotalMinutes
                     : 0;
+
 
                 var estimasiPajak = 0m;
                 var tahunKemarinTotal = parkirTahunKemarin.Sum(x => x.NominalPokokBayar) ?? 0;
@@ -1290,7 +1329,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public int WaktuTersibuk { get; set; }
             public int RatarataMobil { get; set; }
             public int RatarataMotor { get; set; }
-            public int LastUpdate { get; set; }
+            public DateTime? LastUpdate { get; set; }
         }
     }
 }
