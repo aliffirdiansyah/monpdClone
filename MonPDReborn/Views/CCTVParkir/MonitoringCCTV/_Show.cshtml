@@ -135,11 +135,16 @@
                         <button class="btn btn-sm btn-primary" onclick="lihatDetailModal('<%- data.Nop %>','<%- data.VedorId %>')" title="Log">
                             <i class="bx bx-area"></i>
                         </button>
+
                         <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>','<%- data.VedorId %>')" title="Detail">
                         <i class="bx bx-archive"></i>
                         </button>
-                        <a href="@(Url.Action("LiveStreaming"))?nop=<%- data.Nop %>" target="_blank" class="btn btn-sm btn-outline-secondary" title="Live Streaming">
-                        <i class="bx bx-play-circle"></i>
+
+                        <a href="javascript:void(0)"
+                           onclick="openLiveStreaming('<%- data.Nop %>', '<%- data.VedorId %>')"
+                           class="btn btn-sm btn-outline-secondary"
+                           title="Live Streaming">
+                           <i class="bx bx-play-circle"></i>
                         </a>
                     <% } %>
                 </div>
@@ -148,4 +153,18 @@
         })
         )
 </div>
+
+<script>
+function openLiveStreaming(nop, vendorId) {
+    const now = new Date();
+
+    // Format tanggal dengan jam diset ke 00:00:00 agar cocok dengan query backend
+    const local = now.getFullYear() + "-" +
+        String(now.getMonth() + 1).padStart(2, '0') + "-" +
+        String(now.getDate()).padStart(2, '0') + "T00:00:00";
+
+    const url = `/MonitoringCCTV/LiveStreaming?nop=${nop}&vendorId=${vendorId}&tgl=${encodeURIComponent(local)}`;
+    window.open(url, "_blank");
+}
+</script>
 
