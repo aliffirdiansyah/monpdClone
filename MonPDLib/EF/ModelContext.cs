@@ -105,6 +105,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonPbbViewRealisasi> DbMonPbbViewRealisasis { get; set; }
 
+    public virtual DbSet<DbMonPbbViewRealisasi2> DbMonPbbViewRealisasi2s { get; set; }
+
     public virtual DbSet<DbMonPjOp> DbMonPjOps { get; set; }
 
     public virtual DbSet<DbMonPpj> DbMonPpjs { get; set; }
@@ -376,6 +378,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<SetLastRun> SetLastRuns { get; set; }
 
     public virtual DbSet<SetYearJobScan> SetYearJobScans { get; set; }
+
+    public virtual DbSet<Setting> Settings { get; set; }
 
     public virtual DbSet<SumSeriesBulan> SumSeriesBulans { get; set; }
 
@@ -1004,6 +1008,11 @@ public partial class ModelContext : DbContext
             entity.ToView("DB_MON_PBB_VIEW_REALISASI");
 
             entity.Property(e => e.CreateBy).IsFixedLength();
+        });
+
+        modelBuilder.Entity<DbMonPbbViewRealisasi2>(entity =>
+        {
+            entity.ToView("DB_MON_PBB_VIEW_REALISASI2");
         });
 
         modelBuilder.Entity<DbMonPjOp>(entity =>
@@ -2228,6 +2237,11 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.IdPajakNavigation).WithOne(p => p.SetYearJobScan)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("SET_YEAR_JOB_SCAN_R01");
+        });
+
+        modelBuilder.Entity<Setting>(entity =>
+        {
+            entity.HasKey(e => e.Properti).HasName("SYS_C0034419");
         });
 
         modelBuilder.Entity<SumSeriesBulan>(entity =>

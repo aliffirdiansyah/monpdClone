@@ -1,0 +1,74 @@
+﻿@using static MonPDReborn.Models.KontrolPBB.StrategicViewVM.ViewModels
+@model MonPDReborn.Models.KontrolPBB.StrategicViewVM.ShowTunggakan
+
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<CapaianTunggakan>()
+        .ID("capaianTunggakanViewGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.TahunPajak).Caption("Tahun Pajak");
+            columns.AddFor(m => m.JmlObjek).Caption("Jumlah Objek").Format("#,##0");
+            columns.AddFor(m => m.Tunggakan).Caption("Tunggakan").Format("#,##0");
+            columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
+            columns.AddFor(m => m.Gap).Caption("Gap").Format("#,##0");
+            columns.AddFor(m => m.Pencapaian).Caption("%").Format("#,##0");
+            columns.AddFor(m => m.Prediksi).Caption("Prediksi s.d Des").Format("#,##0");
+
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.TahunPajak)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("Total");
+
+                items.AddFor(m => m.JmlObjek)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Tunggakan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Realisasi)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Gap)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Pencapaian)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Prediksi)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            });
+        })
+        )
+
+</div>

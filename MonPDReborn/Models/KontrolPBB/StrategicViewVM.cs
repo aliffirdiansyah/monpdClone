@@ -13,7 +13,7 @@ namespace MonPDReborn.Models.KontrolPBB
         }
         public class ShowCapaian
         {
-            public static List<ViewModels.CapaianKomprehensif> Data { get; set; } = new();
+            public List<ViewModels.CapaianKomprehensif> Data { get; set; } = new();
             public ShowCapaian()
             {
                 Data = Methods.GetCapaianKomprehensif();
@@ -21,7 +21,7 @@ namespace MonPDReborn.Models.KontrolPBB
         }
         public class ShowKategori
         {
-            public static List<ViewModels.KategoriOP> Data { get; set; } = new();
+            public List<ViewModels.KategoriOP> Data { get; set; } = new();
             public ShowKategori()
             {
                 Data = Methods.GetKategoriOP();
@@ -29,7 +29,7 @@ namespace MonPDReborn.Models.KontrolPBB
         }
         public class ShowTunggakan
         {
-            public static List<ViewModels.CapaianTunggakan> Data { get; set; } = new();
+            public List<ViewModels.CapaianTunggakan> Data { get; set; } = new();
             public ShowTunggakan()
             {
                 Data = Methods.GetCapaianTunggakan();
