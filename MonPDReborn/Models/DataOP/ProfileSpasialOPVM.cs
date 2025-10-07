@@ -115,8 +115,8 @@ namespace MonPDReborn.Models.DataOP
                 var result = new List<MAPViewModel>();
 
                 var context = DBClass.GetContext();
+                var tahun = DateTime.Now.Year;
 
-                
                 var queryHotelLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).ToList();
                 foreach (var item in queryHotelLocation)
                 {
@@ -135,8 +135,12 @@ namespace MonPDReborn.Models.DataOP
 
                     result.Add(res);
                 }
+                var nopList = context.DbOpRestos
+                    .Where(x => x.TahunBuku == tahun && x.PajakNama != "MAMIN" && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun))
+                    .Select(x => x.Nop)
+                    .ToList();
 
-                var queryRestoLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).ToList();
+                var queryRestoLocation = context.DbOpLocations.Where(x => x.PajakId == (int)EnumFactory.EPajak.MakananMinuman && nopList.Contains(x.FkNop)).ToList();
                 foreach (var item in queryRestoLocation)
                 {
                     var op = context.DbOpRestos.FirstOrDefault(x => x.Nop == item.FkNop);
