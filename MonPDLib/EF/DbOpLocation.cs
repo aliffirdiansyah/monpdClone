@@ -17,12 +17,12 @@ public partial class DbOpLocation
     public string FkNop { get; set; } = null!;
 
     [Column("NAMA")]
-    [StringLength(100)]
+    [StringLength(500)]
     [Unicode(false)]
     public string? Nama { get; set; }
 
     [Column("ALAMAT")]
-    [StringLength(255)]
+    [StringLength(350)]
     [Unicode(false)]
     public string? Alamat { get; set; }
 

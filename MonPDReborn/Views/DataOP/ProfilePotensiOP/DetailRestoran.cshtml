@@ -151,11 +151,17 @@
                                                         <td class="text-body fw-medium">Rp. @Math.Ceiling(Model.RataRataBillPerOrang).ToString("N0")</td>
                                                     </tr>
 
+                                                    @{
+                                                        var turnover = Model.TurnoverWeekdaysNonCatering;
+                                                        var formattedTurnover = turnover % 1 == 0
+                                                        ? turnover.ToString("N0")
+                                                        : turnover.ToString("N2");
+                                                    }
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Turnover Weekdays</th>
                                                         <th scope="row" style="width: 20px;">:</th>
                                                         <td class="text-body fw-medium">
-                                                            @Model.TurnoverWeekdaysNonCatering.ToString("N2") Kali
+                                                            @formattedTurnover Kali
                                                         </td>
                                                     </tr>
 
