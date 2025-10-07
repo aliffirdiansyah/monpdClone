@@ -279,16 +279,30 @@
                                                         <td class="text-body fw-medium">@Model.Kapasitas @sattt</td>
                                                     </tr>
 
+                                                    @{
+                                                        var turnoverWeekdays = Model.TurnoverWeekdays;
+                                                        var formatedWeekdays = turnoverWeekdays % 1 == 0
+                                                        ? turnoverWeekdays.ToString("N0")
+                                                        : turnoverWeekdays.ToString("N2");
+                                                    }
+
                                                     <tr>
                                                         <th scope="row" style="width: 250px;">Turnover Hari Kerja</th>
                                                         <th scope="row" style="width: 20px;">:</th>
-                                                        <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") Kali</td>
+                                                        <td class="text-body fw-medium">@formatedWeekdays Kali</td>
                                                     </tr>
+
+                                                    @{
+                                                        var turnoverWeekend = Model.TurnoverWeekend;
+                                                        var formatedWeekend = turnoverWeekend % 1 == 0
+                                                        ? turnoverWeekend.ToString("N0")
+                                                        : turnoverWeekend.ToString("N2");
+                                                    }
 
                                                     <tr>
                                                         <th scope="row" style="width: 250px;">Turnover Akhir Pekan</th>
                                                         <th scope="row" style="width: 20px;">:</th>
-                                                        <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") Kali</td>
+                                                        <td class="text-body fw-medium">@formatedWeekend Kali</td>
                                                     </tr>
 
                                                 </tbody>
@@ -305,7 +319,7 @@
                                                     <tr>
                                                         <th scope="row" style="width: 250px;"></th>
                                                         <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">@Model.Kapasitas @sattt x @Model.TurnoverWeekdays.ToString("N2")</td>
+                                                        <td class="text-body fw-medium">@Model.Kapasitas @sattt x @formatedWeekdays Kali</td>
                                                     </tr>
 
                                                     <tr>
@@ -323,7 +337,7 @@
                                                     <tr>
                                                         <th scope="row" style="width: 250px;"></th>
                                                         <th scope="row" style="width: 20px;">=</th>
-                                                        <td class="text-body fw-medium">@Model.Kapasitas @sattt x @Model.TurnoverWeekend.ToString("N2")</td>
+                                                        <td class="text-body fw-medium">@Model.Kapasitas @sattt x @formatedWeekend Kali</td>
                                                     </tr>
 
                                                     <tr>

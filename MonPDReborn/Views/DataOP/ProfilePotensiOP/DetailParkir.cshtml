@@ -207,15 +207,31 @@
                                         <div class="tab-pane fade" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
                                             <table class="table mb-0">
                                                 <tbody>
+
+                                                    @{
+                                                        var turnoverWeekdays = Model.TurnoverWeekdays;
+                                                        var formatedWeekdays = turnoverWeekdays % 1 == 0
+                                                        ? turnoverWeekdays.ToString("N0")
+                                                        : turnoverWeekdays.ToString("N2");
+                                                    }
+
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Turnover Hari Kerja</th>
                                                         <th scope="row" style="width: 20px;">:</th>
-                                                        <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") Kali</td>
+                                                        <td class="text-body fw-medium">@formatedWeekdays Kali</td>
                                                     </tr>
+
+                                                    @{
+                                                        var turnoverWeekend = Model.TurnoverWeekend;
+                                                        var formatedWeekend = turnoverWeekend % 1 == 0
+                                                        ? turnoverWeekend.ToString("N0")
+                                                        : turnoverWeekend.ToString("N2");
+                                                    }
+
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Turnover Akhir Pekan</th>
                                                         <th scope="row" style="width: 20px;">:</th>
-                                                        <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") Kali</td>
+                                                        <td class="text-body fw-medium">@formatedWeekend Kali</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -335,7 +351,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekdays x @Model.KapasitasSepeda.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -350,7 +366,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasSepeda.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekend x @Model.KapasitasSepeda.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -372,7 +388,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMotor.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekdays x @Model.KapasitasMotor.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -387,7 +403,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMotor.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekend x @Model.KapasitasMotor.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -409,7 +425,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasMobil.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekdays x @Model.KapasitasMobil.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -424,7 +440,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasMobil.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekend x @Model.KapasitasMobil.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -446,7 +462,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekdays x @Model.KapasitasTrukMini.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -461,7 +477,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukMini.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekend x @Model.KapasitasTrukMini.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -483,7 +499,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekdays x @Model.KapasitasTrukBus.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -498,7 +514,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrukBus.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekend x @Model.KapasitasTrukBus.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -520,7 +536,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekdays.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekdays x @Model.KapasitasTrailer.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
@@ -535,7 +551,7 @@
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>
                                                             <th scope="row" style="width: 20px;">=</th>
-                                                            <td class="text-body fw-medium">@Model.TurnoverWeekend.ToString("N2") x @Model.KapasitasTrailer.ToString("N0") Unit</td>
+                                                            <td class="text-body fw-medium">@formatedWeekend x @Model.KapasitasTrailer.ToString("N0") Unit</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row" style="width: 200px;"></th>

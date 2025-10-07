@@ -1,0 +1,110 @@
+﻿@model MonPDReborn.Models.KontrolPBB.AnalitikViewVM.Index
+
+@{
+    ViewData["Title"] = "Analitik View";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Kontrol Wilayah
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#uptb-satu" role="tab">
+                            UPTB 1
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-dua" role="tab">
+                            UPTB 2
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-tiga" role="tab">
+                            UPTB 3
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-empat" role="tab">
+                            UPTB 4
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-lima" role="tab">
+                            UPTB 5
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content text-muted">
+
+                    <div class="tab-pane active" id="capaian" role="tabpanel">
+                        <div class="row">
+
+                            <div class="col-lg-6">
+                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
+                                    <div class="card-body">
+                                        <h4 class="fs-16 fw-semibold text-dark">
+                                            Kec. Gubeng
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
+                                    <div class="card-body">
+                                        <h4 class="fs-16 fw-semibold text-dark">
+                                            Kec. Sukolilo
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
+                                    <div class="card-body">
+                                        <h4 class="fs-16 fw-semibold text-dark">
+                                            Kec. Tambaksari
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
+                                    <div class="card-body">
+                                        <h4 class="fs-16 fw-semibold text-dark">
+                                            Kec. Genteng
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="op-kategori" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-ShowKategori" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <div id="ShowKategori"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

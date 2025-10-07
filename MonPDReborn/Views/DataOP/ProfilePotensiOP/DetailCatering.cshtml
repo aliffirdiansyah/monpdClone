@@ -153,18 +153,32 @@
                                                         <td class="text-body fw-medium">Rp. @Model.RataRataBillPerOrang.ToString("N0")</td>
                                                     </tr>
 
+                                                    @{
+                                                        var turnoverWeekdays = Model.TurnoverWeekdaysCatering;
+                                                        var formatedWeekdays = turnoverWeekdays % 1 == 0
+                                                        ? turnoverWeekdays.ToString("N0")
+                                                        : turnoverWeekdays.ToString("N2");
+                                                    }
+
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Turnover Weekdays</th>
                                                         <th scope="row" style="width: 20px;">:</th>
                                                         <td class="text-body fw-medium">
-                                                            @Model.TurnoverWeekdaysCatering.ToString("N2") Kali
+                                                            @formatedWeekdays Kali
                                                         </td>
                                                     </tr>
+
+                                                    @{
+                                                        var turnoverWeekend = Model.TurnoverWeekendCatering;
+                                                        var formatedWeekend = turnoverWeekend % 1 == 0
+                                                        ? turnoverWeekend.ToString("N0")
+                                                        : turnoverWeekend.ToString("N2");
+                                                    }
 
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Turnover Weekend</th>
                                                         <th scope="row" style="width: 20px;">:</th>
-                                                        <td class="text-body fw-medium">@Model.TurnoverWeekendCatering.ToString("N2") Kali</td>
+                                                        <td class="text-body fw-medium">@formatedWeekend Kali</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row" style="width: 200px;">Kapasitas Tenant/Catering</th>
