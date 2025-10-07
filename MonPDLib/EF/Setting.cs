@@ -15,6 +15,7 @@ public partial class Setting
     [Unicode(false)]
     public string Properti { get; set; } = null!;
 
-    [Column("VALUE", TypeName = "CLOB")]
-    public string? Value { get; set; }
+    [Column("VALUE")]
+    [Unicode(false)]
+    public string Value { get; set; } = null!;
 }

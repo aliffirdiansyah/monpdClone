@@ -2241,7 +2241,7 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<Setting>(entity =>
         {
-            entity.HasKey(e => e.Properti).HasName("SYS_C0034418");
+            entity.HasKey(e => e.Properti).HasName("SYS_C0034419");
         });
 
         modelBuilder.Entity<SumSeriesBulan>(entity =>
