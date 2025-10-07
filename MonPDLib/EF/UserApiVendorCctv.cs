@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Keyless]
 [Table("USER_API_VENDOR_CCTV")]
 public partial class UserApiVendorCctv
 {
+    [Key]
     [Column("USERNAME")]
     [StringLength(50)]
     [Unicode(false)]

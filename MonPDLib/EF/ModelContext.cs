@@ -2429,6 +2429,8 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<UserApiVendorCctv>(entity =>
         {
+            entity.HasKey(e => e.Username).HasName("USER_API_VENDOR_CCTV_PK");
+
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate ");
         });
