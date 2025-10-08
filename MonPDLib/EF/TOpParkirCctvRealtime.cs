@@ -36,7 +36,7 @@ public partial class TOpParkirCctvRealtime
     [Column("PLAT_NO")]
     [StringLength(20)]
     [Unicode(false)]
-    public string PlatNo { get; set; } = null!;
+    public string? PlatNo { get; set; }
 
     [Column("WAKTU_MASUK", TypeName = "DATE")]
     public DateTime WaktuMasuk { get; set; }
@@ -44,5 +44,5 @@ public partial class TOpParkirCctvRealtime
     [Column("IMAGE_URL")]
     [StringLength(200)]
     [Unicode(false)]
-    public string ImageUrl { get; set; } = null!;
+    public string? ImageUrl { get; set; }
 }
