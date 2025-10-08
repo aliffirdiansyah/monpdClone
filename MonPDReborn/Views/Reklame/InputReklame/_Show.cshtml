@@ -89,12 +89,12 @@
                     <div class="col-lg-7">
                         <label asp-for="SelectedUpaya" class="form-label">Jenis Upaya</label>
                         @(Html.DevExtreme().SelectBoxFor(m => m.SelectedUpaya)
-                                                .ID("cbUpaya")
-                                                .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
-                                                .OnValueChanged("fnReloadTindakan")
-                                                .DisplayExpr("Text")
-                                                .ValueExpr("Value")
-                                                .SearchEnabled(true))
+                            .ID("cbUpaya")
+                            .DataSource(d => d.Mvc().LoadAction("GetUpaya").Key("filter"))
+                            .OnValueChanged("fnReloadTindakan")
+                            .DisplayExpr("Text")
+                            .ValueExpr("Value")
+                            .SearchEnabled(true))
                     </div>
 
                     <div class="col-lg-7">
