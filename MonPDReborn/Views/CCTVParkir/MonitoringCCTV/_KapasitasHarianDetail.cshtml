@@ -15,7 +15,7 @@
         z-index: 1000;
         background: #ffffff;
         /* margin-top: 1rem;  */
-        padding: 1rem 1rem 0.5 1rem;
+        padding: 1rem 1rem 0.5rem 1rem;
         transition: box-shadow 0.3s ease;
     }
     
@@ -31,102 +31,84 @@
         color: white;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
-    
+
     .info-header-card .info-row {
-        display: flex;
-        align-items: baseline;
-        margin-bottom: 0.6rem;
+        /* Kembalikan ke default/blok agar text-align berfungsi */
+        /* Hapus display: flex yang kaku */
+        margin-bottom: 0.6rem; 
         font-size: 0.9rem;
         line-height: 1.4;
     }
-    
+
     .info-header-card .info-row:last-child {
         margin-bottom: 0;
     }
     
     .info-header-card .info-label {
-        min-width: 110px;
         font-weight: 600;
         opacity: 0.9;
-        flex-shrink: 0;
+        /* Hapus min-width */
     }
-    
-    .info-header-card .info-value {
-        flex: 1;
-        font-weight: 500;
+
+    .info-header-card .info-row-right {
+        text-align: right; /* untuk desktop */
     }
-    
-    /* Alternative: Simple white card (uncomment jika prefer simple) */
-    /*
+    /* Responsive adjustments */
+
+    @@media (max-width: 768px) {
     .info-header-card {
-        background: white;
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
         padding: 1rem;
     }
+
+    .info-header-card .info-row {
+        display: flex;
+        flex-direction: row; /* label & value dalam 1 baris */
+        justify-content: flex-start; /* rata kiri */
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem; /* jarak antar baris */
+    }
+
     .info-header-card .info-label {
-        color: #6c757d;
+        font-weight: 600;
+        margin-right: 0.5rem; /* jarak setelah titik : */
+        min-width: 120px; /* sesuaikan supaya semua label punya lebar sama */
     }
+
     .info-header-card .info-value {
-        color: #212529;
-    }
-    */
-    
-    /* Content area */
-    .detail-content-area {
-        /* padding: 0 1rem 1rem 1rem; */
-        /* margin: 0 -1rem -1rem -1rem; /* Negate modal-body padding */ */
-    }
-    
-    /* Responsive adjustments */
-    @@media (max-width: 768px) {
-        .info-header-card {
-            padding: 1rem;
-        }
-        .info-header-card .info-row {
-            flex-direction: column;
-            font-size: 0.85rem;
-            margin-bottom: 0.75rem;
-        }
-        .info-header-card .info-label {
-            min-width: auto;
-            margin-bottom: 0.25rem;
-        }
+        font-weight: 400;
+        overflow-wrap: anywhere; /* biar value panjang tidak pecah layout */
     }
 </style>
 
 <!-- FIXED HEADER -->
 <div class="detail-fixed-header mb-2" id="detailFixedHeader">
     <div class="info-header-card mb-2">
-        <div class="row g-2">
-            <div class="col-md-6">
+        <div class="row"> 
+            
+            <div class="col-md-6 d-flex flex-column align-items-md-start">
                 <div class="info-row">
-                    <span class="info-label">NOP:</span>
-                    <span class="info-value">@Model.formattedNop</span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-row">
-                    <span class="info-label">Nama OP:</span>
+                    <span class="info-label">Nama OP :</span>
                     <span class="info-value">@Model.NamaOP</span>
                 </div>
-            </div>
-            <div class="col-md-6">
                 <div class="info-row">
-                    <span class="info-label">Alamat OP:</span>
+                    <span class="info-label">Alamat OP :</span>
                     <span class="info-value">@Model.AlamatOP</span>
                 </div>
             </div>
-            <div class="col-md-6">
+
+            <div class="col-md-6 d-flex flex-column align-items-md-end">
                 <div class="info-row">
-                    <span class="info-label">Vendor / Tanggal CCTV:</span>
+                    <span class="info-label">NOP :</span>
+                    <span class="info-value">@Model.formattedNop</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Vendor / Tanggal CCTV :</span>
                     <span class="info-value">@Model.Vendor / @Model.TanggalCctv</span>
                 </div>
             </div>
+            
         </div>
     </div>
-
-    
 </div>
 
 <!-- SCROLLABLE CONTENT -->
@@ -137,12 +119,12 @@
         <div class="col-lg-12 p-0">
             <div class="card p-0">
                 <div class="card-body">
+                    <h5 class="dxrd-text-align-left">Monitoring Kendaraan & Status CCTV (Auto Highlight)</h5>
                     <div id="line_chart_annotations" class="apex-charts" dir="ltr"></div>
                 </div>
             </div>
         </div>
         
-
         <!-- DataGrid Section -->
         <div class="col-lg-12">
             <div class="card">
@@ -247,12 +229,12 @@
     // === CHART CONFIG ===
     var options = {
         series: chartSeries,
-        chart: { height: 350, type: 'line', toolbar: { show: true } },
+        chart: { height: 350, type: 'line', toolbar: { show: true , offsetX: -5,offsetY: 35, } },
         stroke: { curve: 'smooth' },
         xaxis: { type: 'datetime', title: { text: 'Akumulasi (per 15 menit)' }, labels: { datetimeUTC: false } },
         yaxis: { title: { text: 'Jumlah Kendaraan' } },
         annotations: { xaxis: rangeAnnotations },
-        title: { text: 'Monitoring Kendaraan & Status CCTV (Auto Highlight)', align: 'left', style: { fontWeight: 600 } },
+        // title: { text: 'Monitoring Kendaraan & Status CCTV (Auto Highlight)',  align: 'left', style: { fontWeight: 400 } },
         tooltip: { x: { format: 'HH:mm' } },
         markers: { size: 0 }
     };
