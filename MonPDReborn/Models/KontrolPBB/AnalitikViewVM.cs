@@ -53,6 +53,16 @@ namespace MonPDReborn.Models.KontrolPBB
                 public decimal Capaian { get; set; }
             }
         }
+        public class uptbView
+        {
+            public string Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
+        public class kecamatanView
+        {
+            public string Value { get; set; }
+            public string Text { get; set; } = null!;
+        }
         public class Methods
         {
             public static List<ViewModels.DetailWilayah> GetDetailWilayah(int wilayah, int kec)

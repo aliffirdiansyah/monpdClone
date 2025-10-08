@@ -7,10 +7,42 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [Keyless]
-public partial class CobaOp
+public partial class CobaGabung
 {
-    [Column("WILAYAH", TypeName = "NUMBER")]
-    public decimal? Wilayah { get; set; }
+    [Column("NOP")]
+    [StringLength(18)]
+    [Unicode(false)]
+    public string? Nop { get; set; }
+
+    [Column("TAHUN_PAJAK", TypeName = "NUMBER")]
+    public decimal? TahunPajak { get; set; }
+
+    [Column("KETETAPAN", TypeName = "NUMBER")]
+    public decimal? Ketetapan { get; set; }
+
+    [Column("TAHUN_BUKU", TypeName = "NUMBER")]
+    public decimal? TahunBuku { get; set; }
+
+    [Column("TANGGAL_BAYAR", TypeName = "DATE")]
+    public DateTime? TanggalBayar { get; set; }
+
+    [Column("REALISASI", TypeName = "NUMBER")]
+    public decimal? Realisasi { get; set; }
+
+    [Column("STATUS_LUNAS")]
+    [StringLength(11)]
+    [Unicode(false)]
+    public string? StatusLunas { get; set; }
+
+    [Column("KATAGORI")]
+    [StringLength(18)]
+    [Unicode(false)]
+    public string? Katagori { get; set; }
+
+    [Column("WILAYAH")]
+    [StringLength(68)]
+    [Unicode(false)]
+    public string? Wilayah { get; set; }
 
     [Column("KECAMATAN")]
     [StringLength(9)]
@@ -22,15 +54,10 @@ public partial class CobaOp
     [Unicode(false)]
     public string? Kelurahan { get; set; }
 
-    [Column("NOP")]
-    [StringLength(18)]
+    [Column("NPWPD")]
+    [StringLength(13)]
     [Unicode(false)]
-    public string? Nop { get; set; }
-
-    [Column("KATAGORI")]
-    [StringLength(18)]
-    [Unicode(false)]
-    public string? Katagori { get; set; }
+    public string? Npwpd { get; set; }
 
     [Column("NAMA_WP")]
     [StringLength(12)]
@@ -47,11 +74,6 @@ public partial class CobaOp
     [Unicode(false)]
     public string? AlamatOp { get; set; }
 
-    [Column("NPWPD")]
-    [StringLength(13)]
-    [Unicode(false)]
-    public string? Npwpd { get; set; }
-
     [Column("L_BUMI", TypeName = "NUMBER")]
     public decimal? LBumi { get; set; }
 
@@ -63,7 +85,4 @@ public partial class CobaOp
 
     [Column("L_BANGUNAN_BERSAMA", TypeName = "NUMBER")]
     public decimal? LBangunanBersama { get; set; }
-
-    [Column("STATUS", TypeName = "NUMBER")]
-    public decimal? Status { get; set; }
 }

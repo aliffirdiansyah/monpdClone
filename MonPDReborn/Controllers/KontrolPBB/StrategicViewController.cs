@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
 using MonPDLib.General;
-using MonPDReborn.Controllers.EvaluasiTarget;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 
@@ -114,5 +115,6 @@ namespace MonPDReborn.Controllers.KontrolPBB
                 return Json(response);
             }
         }
+        
     }
 }

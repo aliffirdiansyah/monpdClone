@@ -7,278 +7,232 @@
 
 <div class="row">
 
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title text-dark fs-16 mb-1">
-                        Kontrol Wilayah
+                        Analitik View
                     </h4>
                 </div>
             </div>
             <div class="card-body">
-                <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#uptb-satu" role="tab">
-                            UPTB 1
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-dua" role="tab">
-                            UPTB 2
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-tiga" role="tab">
-                            UPTB 3
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-empat" role="tab">
-                            UPTB 4
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#uptb-lima" role="tab">
-                            UPTB 5
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content text-muted">
-
-                    <div class="tab-pane active" id="uptb-satu" role="tabpanel">
-                        <div class="row">
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Gubeng
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Sukolilo
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Tambaksari
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Genteng
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        @(Html.DevExtreme().SelectBox()
+                                                .ID("uptbSelect")
+                                                .DataSource(d => d.Mvc().Controller("AnalitikView").LoadAction("GetUptb"))
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih UPTB")
+                                                .OnValueChanged("onUptbChanged")
+                                                )
                     </div>
 
-                    <div class="tab-pane" id="uptb-dua" role="tabpanel">
-                        <div class="row">
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Wonokromo
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Tegalsari
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Sawahan
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Simokerto
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="col-md-3">
+                        @(Html.DevExtreme().SelectBox()
+                                                .ID("kecSelect")
+                                                .DataSource(d => d.Mvc().Controller("AnalitikView").LoadAction("GetKec").LoadParams(new { uptb = "" }))
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih Kecamatan")
+                                                .OnValueChanged("onKecChanged")
+                                                )
                     </div>
 
-                    <div class="tab-pane" id="uptb-tiga" role="tabpanel">
-                        <div class="row">
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Kenjeran
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Bulak
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Krembangan
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Semampir
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="col-md-3">
+                        @(Html.DevExtreme().Button()
+                                                .ID("btnTerapkan")
+                                                .Text("Terapkan")
+                                                .Type(ButtonType.Success)
+                                                .Icon("check")
+                                                .OnClick("onTerapkanClick")
+                                                )
                     </div>
-
-                    <div class="tab-pane" id="uptb-empat" role="tabpanel">
-                        <div class="row">
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Dukuh Pakis
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Gayungan
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Jambangan
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Wonocolo
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="tab-pane" id="uptb-lima" role="tabpanel">
-                        <div class="row">
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Rungkut
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Tenggilis
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Gunung Anyar
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card border border-1 border-dark card-animate" style="cursor:pointer">
-                                    <div class="card-body">
-                                        <h4 class="fs-16 fw-semibold text-dark">
-                                            Kec. Mulyorejo
-                                        </h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Detail Wilayah
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="loading2-ShowWilayah" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="ShowWilayah">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Segmentasi Wajib Pajak
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="loading2-ShowSegmentasi" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="ShowSegmentasi">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+@section Scripts{
+        <script>
+            function onUptbChanged(e) {
+                let kecSelect = $("#kecSelect").dxSelectBox("instance");
+                kecSelect.option("dataSource", DevExpress.data.AspNet.createStore({
+                    key: "Value",
+                    loadUrl: "/AnalitikView/GetKec",
+                    loadParams: { uptb: e.value }
+                }));
+                kecSelect.reset();
+
+                let kelSelect = $("#kelSelect").dxSelectBox("instance");
+                kelSelect.reset();
+            }
+
+            function onKecChanged(e) {
+                let kelSelect = $("#kelSelect").dxSelectBox("instance");
+                kelSelect.option("dataSource", DevExpress.data.AspNet.createStore({
+                    key: "Value",
+                    loadUrl: "/AnalitikView/GetKel",
+                    loadParams: { kecamatan: e.value }
+                }));
+                kelSelect.reset();
+            }
+
+            function onTerapkanClick(e) {
+                let uptb = $("#uptbSelect").dxSelectBox("instance").option("value");
+                let kec = $("#kecSelect").dxSelectBox("instance").option("value");
+
+                if (!uptb || !kec || !kel) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Verifikasi Data',
+                        text: '⚠ Harap pilih semua data sebelum menerapkan.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                $.ajax({
+                     url: '/AnalitikView/RekapPerWilayah',
+                     method: 'GET',
+                     data: {
+                         uptb: uptb, kec: kec
+                     },
+                     beforeSend: function () {
+                      $('#loading2-ShowWilayah').show();
+                      $('#ShowWilayah').hide();
+                       },
+                       success: function (response) {
+                             if (response.Status === undefined) {
+                                 $('#loading2-ShowWilayah').hide();
+                                 $('#ShowWilayah').show();
+                                 $('#ShowWilayah').html(response);
+                             }
+                             else {
+                                 swal.fire({
+                                     icon: 'warning',
+                                     title: '<b style="color:orange">Peringatan</b>',
+                                     text: response.Message
+                                 })
+                             }
+                       },
+                       error: function (xhr, status, error) {
+                          $('#loading2-ShowWilayah').hide();
+                          $('#ShowWilayah').hide();
+                          $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                       }
+                 });
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+                fnShowWilayah();
+            fnShowSegmentasi();
+            });
+            function fnShowWilayah() {
+                $.ajax({
+                    url: '@(Url.Action("ShowWilayah"))',
+                    type: 'GET',
+                    beforeSend: function () {
+                        $('#loading2-ShowWilayah').show();
+                        $('#ShowWilayah').hide();
+                    },
+                    success: function (response) {
+                        if (response.Status === undefined) {
+                            $('#loading2-ShowWilayah').hide();
+                            $('#ShowWilayah').show();
+                            $('#ShowWilayah').html(response);
+                        }
+                        else {
+                            swal.fire({
+                                icon: 'warning',
+                                title: '<b style="color:orange">Peringatan</b>',
+                                text: response.Message
+                            })
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#loading2-ShowWilayah').hide();
+                        $('#ShowWilayah').hide();
+                        $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    }
+                });
+            }
+            function fnShowSegmentasi() {
+                $.ajax({
+                    url: '@(Url.Action("ShowSegmentasi"))',
+                    type: 'GET',
+                    beforeSend: function () {
+                        $('#loading2-ShowSegmentasi').show();
+                        $('#ShowSegmentasi').hide();
+                    },
+                    success: function (response) {
+                        if (response.Status === undefined) {
+                            $('#loading2-ShowSegmentasi').hide();
+                            $('#ShowSegmentasi').show();
+                            $('#ShowSegmentasi').html(response);
+                        }
+                        else {
+                            swal.fire({
+                                icon: 'warning',
+                                title: '<b style="color:orange">Peringatan</b>',
+                                text: response.Message
+                            })
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#loading2-ShowSegmentasi').hide();
+                        $('#ShowSegmentasi').hide();
+                        $('#ShowSegmentasi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    }
+                });
+        }
+        </script>
+}
