@@ -15,6 +15,8 @@ public partial class ModelContext : DbContext
     {
     }
 
+    public virtual DbSet<CobaGabung> CobaGabungs { get; set; }
+
     public virtual DbSet<CobaKetetapan> CobaKetetapans { get; set; }
 
     public virtual DbSet<CobaOp> CobaOps { get; set; }
@@ -215,7 +217,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<MAbtKelompokHdum> MAbtKelompokHda { get; set; }
 
+    public virtual DbSet<MBidang> MBidangs { get; set; }
+
     public virtual DbSet<MFasilita> MFasilitas { get; set; }
+
+    public virtual DbSet<MJabatan> MJabatans { get; set; }
 
     public virtual DbSet<MJenisKendaraan> MJenisKendaraans { get; set; }
 
@@ -399,6 +405,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TOpParkirCctv> TOpParkirCctvs { get; set; }
 
+    public virtual DbSet<TOpParkirCctvRealtime> TOpParkirCctvRealtimes { get; set; }
+
     public virtual DbSet<TOpParkirLocation> TOpParkirLocations { get; set; }
 
     public virtual DbSet<TOpPpjLocation> TOpPpjLocations { get; set; }
@@ -525,6 +533,14 @@ public partial class ModelContext : DbContext
     {
         modelBuilder.HasDefaultSchema("MONPD");
 
+        modelBuilder.Entity<CobaGabung>(entity =>
+        {
+            entity.ToView("COBA_GABUNG");
+
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.Npwpd).IsFixedLength();
+        });
+
         modelBuilder.Entity<CobaKetetapan>(entity =>
         {
             entity.ToView("COBA_KETETAPAN");
@@ -536,10 +552,8 @@ public partial class ModelContext : DbContext
         {
             entity.ToView("COBA_OP");
 
-            entity.Property(e => e.Katagori).IsFixedLength();
-            entity.Property(e => e.Kecamatan).IsFixedLength();
-            entity.Property(e => e.Kelurahan).IsFixedLength();
             entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.Npwpd).IsFixedLength();
         });
 
         modelBuilder.Entity<CobaRealisasi>(entity =>
@@ -1419,9 +1433,30 @@ public partial class ModelContext : DbContext
                 .HasConstraintName("FK_ABT_KELOMPOK");
         });
 
+        modelBuilder.Entity<MBidang>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("M_BIDANG_PK");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Aktif).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.Cabang).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
         modelBuilder.Entity<MFasilita>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("M_FASILITAS_PK");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Aktif).HasDefaultValueSql("1                     ");
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'          ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<MJabatan>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("M_JABATAN_PK");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Aktif).HasDefaultValueSql("1                     ");
@@ -2298,6 +2333,11 @@ public partial class ModelContext : DbContext
         {
             entity.Property(e => e.Direction).HasDefaultValueSql("0 ");
             entity.Property(e => e.JenisKend).HasDefaultValueSql("0 ");
+        });
+
+        modelBuilder.Entity<TOpParkirCctvRealtime>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_T_OP_CCTV_REALTIME");
         });
 
         modelBuilder.Entity<TPemeriksaan>(entity =>

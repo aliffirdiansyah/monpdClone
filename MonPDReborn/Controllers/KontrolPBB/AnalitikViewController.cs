@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using static MonPDReborn.Models.KontrolPBB.AnalitikViewVM;
 
 namespace MonPDReborn.Controllers.KontrolPBB
 {
@@ -56,7 +59,7 @@ namespace MonPDReborn.Controllers.KontrolPBB
             try
             {
                 var model = new Models.KontrolPBB.AnalitikViewVM.ShowWilayah(wilayah, kec);
-                return PartialView($"{URLView}{actionName}", model);
+                return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
             {
@@ -76,7 +79,7 @@ namespace MonPDReborn.Controllers.KontrolPBB
             try
             {
                 var model = new Models.KontrolPBB.AnalitikViewVM.ShowSegmentasi(wilayah, kec);
-                return PartialView($"{URLView}{actionName}", model);
+                return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
             {
@@ -91,6 +94,46 @@ namespace MonPDReborn.Controllers.KontrolPBB
                 return Json(response);
             }
         }
+        [HttpGet]
+        public async Task<object> GetUptb(DataSourceLoadOptions loadOptions)
+        {
+            var context = DBClass.GetContext();
 
+            var dataList = context.MWilayahs
+                .Where(x => !string.IsNullOrEmpty(x.Uptd))
+                .GroupBy(x => x.Uptd)
+                .Select(g => new uptbView
+                {
+                    Value = g.Key,
+                    Text = "UPTB " + g.Key
+                })
+                .OrderBy(x => x.Text)
+                .ToList();
+
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
+
+        [HttpGet]
+        public async Task<object> GetKec(DataSourceLoadOptions loadOptions, string uptb)
+        {
+            var context = DBClass.GetContext();
+
+            var dataList = new List<kecamatanView>();
+
+            if (!string.IsNullOrEmpty(uptb))
+            {
+                dataList = context.MWilayahs
+                    .Where(x => x.Uptd == uptb && !string.IsNullOrEmpty(x.KdKecamatan))
+                    .GroupBy(x => new { x.KdKecamatan, x.NmKecamatan })
+                    .Select(g => new kecamatanView
+                    {
+                        Value = g.Key.KdKecamatan,
+                        Text = g.Key.NmKecamatan
+                    })
+                    .ToList();
+            }
+
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
+        }
     }
 }

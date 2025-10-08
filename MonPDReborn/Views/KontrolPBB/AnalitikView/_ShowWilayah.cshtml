@@ -1,0 +1,49 @@
+﻿@using static MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ViewModels
+@model MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ShowWilayah
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<DetailWilayah>()
+                .ID("wilayahViewGrid")
+                .DataSource(Model.Data)
+                .ShowBorders(true)
+                .ShowColumnLines(true)
+                .RowAlternationEnabled(true)
+                .ShowRowLines(true)
+                .ShowColumnHeaders(true)
+                .ColumnAutoWidth(true)
+                .Paging(p => p.PageSize(10))
+                .Pager(p => p
+                .ShowPageSizeSelector(true)
+                .AllowedPageSizes(new[] { 5, 10, 20 })
+                .ShowInfo(true)
+                )
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.NOP).Caption("NOP");
+                    columns.AddFor(m => m.NamaWP).Caption("Nama WP");
+                    columns.AddFor(m => m.Penetapan).Caption("Penetapan").Format("#,##0");
+                    columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
+                    columns.AddFor(m => m.Pencapaian).Caption("Pencapaian").Format("#,##0");
+                    columns.AddFor(m => m.Status).Caption("Status").Format("#,##0");
+                })
+                .Summary(summary =>
+                {
+                    summary.TotalItems(items =>
+                    {
+                        items.AddFor(m => m.NOP)
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("Total");
+                        items.AddFor(m => m.Penetapan)
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}");
+                        items.AddFor(m => m.Realisasi)
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("{0}");
+                    });
+                    })
+    )
+</div>
+

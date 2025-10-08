@@ -1,0 +1,52 @@
+﻿@using static MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ViewModels
+@model MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ShowSegmentasi
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<Segmentasi>()
+        .ID("wilayahViewGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.KategoriWP).Caption("Kategori WP");
+            columns.AddFor(m => m.JmlObjek).Caption("Jumlah WP").Format("#,##0");
+            columns.AddFor(m => m.Target).Caption("Target").Format("#,##0");
+            columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
+            columns.AddFor(m => m.Pencapaian).Caption("Pencapaian").Format("#,##0");
+            columns.AddFor(m => m.Kontribusi).Caption("Kontribusi").Format("#,##0");
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.KategoriWP)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+                items.AddFor(m => m.JmlObjek)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Target)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Realisasi)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            });
+        })
+        )
+</div>
