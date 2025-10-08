@@ -5,38 +5,38 @@
 
 
 <div class="card-body">
-    <h5 class="card-title mb-4">
+    <h5 class="card-title mb-3">
         <i class="ri-video-line me-2 text-primary"></i>Analysis Result
     </h5>
 
 
     <div class="row text-center mb-4">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <div class="p-3 border rounded">
                 <i class="ri-car-line fs-2 text-primary mb-2"></i>
                 <h6 class="text-muted mb-1">Mobil Masuk</h6>
                 <h3 class="fw-bold text-primary">@Model.AnalysisResult.Mobil</h3>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <div class="p-3 border rounded">
                 <i class="ri-motorbike-line fs-2 text-success mb-2"></i>
                 <h6 class="text-muted mb-1">Motor Masuk</h6>
                 <h3 class="fw-bold text-success">@Model.AnalysisResult.Motor</h3>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
+        @* <div class="col-md-4 mb-3">
             <div class="p-3 border rounded">
                 <i class="ri-question-line fs-2 text-warning mb-2"></i>
                 <h6 class="text-muted mb-1">Unknown</h6>
                 <h3 class="fw-bold text-warning">@Model.AnalysisResult.Unknown</h3>
             </div>
-        </div>
+        </div> *@
     </div>
 
 
     <div class="border-top mt-4 pt-3">
-        <h5 class="fw-bold mb-3">
+        <h5 class="card-title mb-3">
             <i class="ri-coins-line me-2 text-success"></i>Data Pajak
         </h5>
 
@@ -45,7 +45,10 @@
                 <a href="/MonitoringCCTV/Kapasitas?nop=@Model.Nop&vendorId=@Model.VendorId" style="cursor: pointer">
                     <div class="p-3 border rounded bg-light">
                         <h6 class="text-muted mb-1">
-                            <i class="ri-line-chart-line text-info me-1"></i>Estimasi Pajak
+                            <i class="ri-line-chart-line text-info me-1"></i>Estimasi Pajak 
+                        </h6>
+                        <h6 class="text-muted mb-1">
+                            Bulan @Model.AnalysisResult.bulanIni
                         </h6>
                         <h4 class="fw-bold text-success mb-0">Rp @Model.AnalysisResult.EstimasiPajak.ToString("N0")</h4>
                     </div>
@@ -57,6 +60,9 @@
                     <h6 class="text-muted mb-1">
                         <i class="ri-calendar-2-line text-secondary me-1"></i>Realisasi 2024
                     </h6>
+                    <h6 class="text-muted mb-1">
+                        Bulan @Model.AnalysisResult.bulanIni
+                    </h6>
                     <h4 class="fw-bold text-secondary mb-0">Rp @Model.AnalysisResult.TahunKemarin.ToString("N0")</h4>
                 </div>
             </div>
@@ -65,6 +71,9 @@
                 <div class="p-3 border rounded bg-light">
                     <h6 class="text-muted mb-1">
                         <i class="ri-calendar-check-line text-primary me-1"></i>Realisasi 2025
+                    </h6>
+                    <h6 class="text-muted mb-1">
+                        Bulan @Model.AnalysisResult.bulanLalu
                     </h6>
                     <h4 class="fw-bold text-primary mb-0">Rp @Model.AnalysisResult.TahunIni.ToString("N0")</h4>
                 </div>
@@ -75,6 +84,7 @@
         <div class="col-lg-12 p-0">
             <div class="card p-0">
                 <div class="card-body">
+                    <h5 class="dxrd-text-align-left">Monitoring Kendaraan & Status CCTV (Auto Highlight)</h5>
                     <div id="line_chart_annotations" class="apex-charts" dir="ltr"></div>
                 </div>
             </div>
@@ -86,9 +96,9 @@
             <i class="ri-line-chart-line me-2 text-info"></i>Detail Tambahan
         </h6>
         <ul class="list-unstyled mb-0">
-            <li><i class="ri-bar-chart-line me-2 text-secondary"></i>Waktu tersibuk: <strong>@Model.AnalysisResult.WaktuTersibuk</strong></li>
+            <li><i class="ri-bar-chart-line me-2 text-secondary"></i>Waktu tersibuk: <strong>@Model.AnalysisResult.WaktuTersibukLabel</strong></li>
             <li><i class="ri-roadster-line me-2 text-primary"></i>Rata-rata mobil per jam: <strong>@Model.AnalysisResult.RatarataMobil</strong></li>
-            <li><i class="ri-run-line me-2 text-success"></i>Rata-rata motor per jam: <strong>@Model.AnalysisResult.RatarataMotor</strong></li>
+            <li><i class="ri-motorbike-line me-2 text-success"></i>Rata-rata motor per jam: <strong>@Model.AnalysisResult.RatarataMotor</strong></li>
             <li><i class="ri-time-line me-2 text-muted"></i>Data terakhir diperbarui: <strong>@Model.AnalysisResult.LastUpdate</strong></li>
         </ul>
     </div>
@@ -166,12 +176,12 @@
     // === CHART CONFIG ===
     var options = {
         series: chartSeries,
-        chart: { height: 350, type: 'line', toolbar: { show: true } },
+        chart: { height: 350, type: 'line', toolbar: { show: true , offsetX: -5,offsetY: 55, } },
         stroke: { curve: 'smooth' },
         xaxis: { type: 'datetime', title: { text: 'Akumulasi (per 15 menit)' }, labels: { datetimeUTC: false } },
         yaxis: { title: { text: 'Jumlah Kendaraan' } },
-        annotations: { xaxis: rangeAnnotations },
-        title: { text: 'Monitoring Kendaraan & Status CCTV (Auto Highlight)', align: 'left', style: { fontWeight: 600 } },
+        // annotations: { xaxis: rangeAnnotations },
+        // title: { text: 'Monitoring Kendaraan & Status CCTV (Auto Highlight)',  align: 'left', style: { fontWeight: 400 } },
         tooltip: { x: { format: 'HH:mm' } },
         markers: { size: 0 }
     };
