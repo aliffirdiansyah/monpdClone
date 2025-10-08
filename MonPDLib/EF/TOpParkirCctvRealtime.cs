@@ -21,8 +21,9 @@ public partial class TOpParkirCctvRealtime
     public string Nop { get; set; } = null!;
 
     [Column("CCTV_ID")]
-    [Precision(10)]
-    public int CctvId { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string CctvId { get; set; } = null!;
 
     [Column("VENDOR_ID")]
     [Precision(10)]
