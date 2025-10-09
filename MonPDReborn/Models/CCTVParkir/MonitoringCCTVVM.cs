@@ -816,7 +816,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     decimal estimasiPajakUnknown = omsetUnknown * 0.1m;
 
                     /* Omsettotal itu motor, mobil dan unknown */
-                    decimal omset = (omsetMotor + omsetMobil + omsetUnknown);
+                    decimal omset = (omsetMotor + omsetMobil );
 
                     /* Pajak unknown diexclude */
 
@@ -938,7 +938,8 @@ namespace MonPDReborn.Models.CCTVParkir
                     decimal estimasiPajakMobil = omsetMobil * 0.1m;
                     decimal estimasiPajakUnknown = omsetUnknown * 0.1m;
 
-                    decimal omset = (omsetMotor + omsetMobil + omsetUnknown);
+                    /* omset uknown di exclude */
+                    decimal omset = (omsetMotor + omsetMobil);
                     decimal estimasi = (estimasiPajakMotor + estimasiPajakMobil + estimasiPajakUnknown);
 
                     decimal realisasiTahunKemarin = parkirTahunKemarin
