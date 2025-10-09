@@ -1,0 +1,147 @@
+﻿@model MonPDReborn.Models.KontrolPBB.PencarianPBBVM.Index
+
+@{
+    ViewData["Title"] = "Pencarian PBB";
+    Layout = "_Layout";
+}
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <a class="btn btn-title-box w-100">
+                <h4 class="mt-sm-2">PENCARIAN PBB</h4>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form id="formPencarian" method="get" asp-action="Show" onsubmit="return false;">
+            <div class="row mb-3 align-items-center">
+                <div class="col-lg-9">
+                    @(Html.DevExtreme().TextBoxFor(x => x.Keyword)
+                        .Placeholder("Cari berdasarkan NOP , Nama OP atau Alamat OP")
+                        .Width("100%")
+                        )
+                </div>
+                <div class="col-lg-3 text-end">
+                    <button type="button" class="btn btn-sm btn-primary btn-label waves-effect waves-light rounded-pill" onclick="fnShow()">
+                        <i class="ri-search-eye-line label-icon align-middle rounded-pill fs-16 me-2"></i> Cari
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="text-center">
+    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div id="card-Show" class="card" style="display:none">
+    <div class="card-header d-flex bg-header-color align-items-center">
+        <div class="flex-grow-1">
+            <h4 class="card-title text-dark fs-16 mb-0">
+                Hasil Pencarian Objek Pajak
+            </h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="Show"></div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @if (!string.IsNullOrEmpty(Model.Keyword))
+    {
+        <script>
+            $(document).ready(function () {
+                fnShow();
+            });
+        </script>
+    }
+    <script>
+        function fnShow() {
+            var formData = $("#formPencarian").serialize();
+
+            $.ajax({
+                url: '@Url.Action("Show")',
+                type: 'GET',
+                data: formData,
+                beforeSend: function () {
+                    $("#card-Show").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    if(response.Status === undefined){
+                        $("#card-Show").show();
+                        $("#Show").html(response);
+                    } else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+        function onDetailClick(e) {
+            e.event.preventDefault();
+
+            const rowData = e.row?.data;
+
+            if (!rowData) {
+                DevExpress.ui.notify("Data tidak ditemukan", "error", 2000);
+                return;
+            }
+
+            const nop = rowData.NOP; // <-- Perbaikan di sini
+
+            if (!nop) {
+                DevExpress.ui.notify("NOP tidak valid", "warning", 2000);
+                return;
+            }
+
+            const $modal = $("#staticBackdropLargeScrollable");
+            $modal.find(".modal-title").text(`Detail PBB`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+            $modal.modal("show");
+
+            $.ajax({
+                url: '/PencarianPBB/Detail',
+                type: 'GET',
+                data: {
+                    nop: nop
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
+
+    </script>
+}
