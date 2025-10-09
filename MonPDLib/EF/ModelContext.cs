@@ -1578,6 +1578,11 @@ public partial class ModelContext : DbContext
                 .HasConstraintName("M_OP_PARKIR_CCTV_LOG_FK");
         });
 
+        modelBuilder.Entity<MOpParkirCctvTelkomLogD>(entity =>
+        {
+            entity.HasKey(e => e.Guid).HasName("PK_TELKOM_LOG_D");
+        });
+
         modelBuilder.Entity<MPajak>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("M_PAJAK_PK");

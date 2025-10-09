@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[Keyless]
 [Table("M_OP_PARKIR_CCTV_TELKOM_LOG_D")]
 public partial class MOpParkirCctvTelkomLogD
 {
+    [Key]
     [Column("GUID")]
     [StringLength(250)]
     [Unicode(false)]
