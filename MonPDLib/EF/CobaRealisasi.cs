@@ -22,4 +22,9 @@ public partial class CobaRealisasi
 
     [Column("TANGGAL_BAYAR", TypeName = "DATE")]
     public DateTime? TanggalBayar { get; set; }
+
+    [Column("BAYAR")]
+    [StringLength(6)]
+    [Unicode(false)]
+    public string? Bayar { get; set; }
 }

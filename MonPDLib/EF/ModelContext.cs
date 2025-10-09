@@ -21,7 +21,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<CobaOp> CobaOps { get; set; }
 
+    public virtual DbSet<CobaPage1> CobaPage1s { get; set; }
+
+    public virtual DbSet<CobaPetuga> CobaPetugas { get; set; }
+
     public virtual DbSet<CobaRealisasi> CobaRealisasis { get; set; }
+
+    public virtual DbSet<CobaTarget> CobaTargets { get; set; }
 
     public virtual DbSet<DataAirTanah> DataAirTanahs { get; set; }
 
@@ -240,6 +246,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MOpParkirCctvTelkom> MOpParkirCctvTelkoms { get; set; }
 
     public virtual DbSet<MOpParkirCctvTelkomLog> MOpParkirCctvTelkomLogs { get; set; }
+
+    public virtual DbSet<MOpParkirCctvTelkomLogD> MOpParkirCctvTelkomLogDs { get; set; }
 
     public virtual DbSet<MPajak> MPajaks { get; set; }
 
@@ -537,6 +545,7 @@ public partial class ModelContext : DbContext
         {
             entity.ToView("COBA_GABUNG");
 
+            entity.Property(e => e.Kontak).IsFixedLength();
             entity.Property(e => e.Nop).IsFixedLength();
             entity.Property(e => e.Npwpd).IsFixedLength();
         });
@@ -552,8 +561,21 @@ public partial class ModelContext : DbContext
         {
             entity.ToView("COBA_OP");
 
+            entity.Property(e => e.Kontak).IsFixedLength();
             entity.Property(e => e.Nop).IsFixedLength();
             entity.Property(e => e.Npwpd).IsFixedLength();
+        });
+
+        modelBuilder.Entity<CobaPage1>(entity =>
+        {
+            entity.ToView("COBA_PAGE1");
+        });
+
+        modelBuilder.Entity<CobaPetuga>(entity =>
+        {
+            entity.ToView("COBA_PETUGAS");
+
+            entity.Property(e => e.Nop).IsFixedLength();
         });
 
         modelBuilder.Entity<CobaRealisasi>(entity =>
@@ -561,6 +583,11 @@ public partial class ModelContext : DbContext
             entity.ToView("COBA_REALISASI");
 
             entity.Property(e => e.Nop).IsFixedLength();
+        });
+
+        modelBuilder.Entity<CobaTarget>(entity =>
+        {
+            entity.ToView("COBA_TARGET");
         });
 
         modelBuilder.Entity<DataAirTanah>(entity =>

@@ -37,6 +37,11 @@ public partial class CobaOp
     [Unicode(false)]
     public string? NamaWp { get; set; }
 
+    [Column("KONTAK")]
+    [StringLength(9)]
+    [Unicode(false)]
+    public string? Kontak { get; set; }
+
     [Column("ALAMAT_WP")]
     [StringLength(72)]
     [Unicode(false)]
