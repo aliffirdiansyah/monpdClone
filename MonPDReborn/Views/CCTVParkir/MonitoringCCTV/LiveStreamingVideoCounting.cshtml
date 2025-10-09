@@ -25,6 +25,7 @@
                 <h3 class="fw-bold text-success">@Model.AnalysisResult.Motor</h3>
             </div>
         </div>
+        <!-- ### JANGAN DIHAPUS ###-->
         @* <div class="col-md-4 mb-3">
             <div class="p-3 border rounded">
                 <i class="ri-question-line fs-2 text-warning mb-2"></i>
@@ -41,7 +42,7 @@
         </h5>
 
         <div class="row text-center">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3" title="Cek Detail Estimasi">
                 <a href="/MonitoringCCTV/Kapasitas?nop=@Model.Nop&vendorId=@Model.VendorId" style="cursor: pointer">
                     <div class="p-3 border rounded bg-light">
                         <h6 class="text-muted mb-1">
@@ -209,4 +210,5 @@
             $('#detailFixedHeader').removeClass('scrolled');
         });
     });
+
 </script>
