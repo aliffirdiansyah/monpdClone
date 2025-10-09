@@ -319,21 +319,27 @@ namespace CctvRealtimeWs
                                 if (ar == null)
                                     continue;
 
-                                DateTime waktuMasuk = ParseFlexibleDate(ar.TimeBegin);
-                                var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
+                                var direction = GetDirection(ar.Direction);
 
-                                var res = new TOpParkirCctvRealtime();
+                                if(direction == EnumFactory.CctvParkirDirection.Incoming)
+                                {
+                                    DateTime waktuMasuk = ParseFlexibleDate(ar.TimeBegin);
+                                    var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
 
-                                res.Id = id.ToString();
-                                res.Nop = op.Nop;
-                                res.CctvId = op.CctvId ?? "";
-                                res.VendorId = (int)op.Vendor;
-                                res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
-                                res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
-                                res.WaktuMasuk = waktuMasuk;
-                                res.ImageUrl = "";
+                                    var res = new TOpParkirCctvRealtime();
 
-                                result.Add(res);
+                                    res.Id = id.ToString();
+                                    res.Nop = op.Nop;
+                                    res.CctvId = op.CctvId ?? "";
+                                    res.VendorId = (int)op.Vendor;
+                                    res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
+                                    res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
+                                    res.WaktuMasuk = waktuMasuk;
+                                    res.ImageUrl = "";
+
+                                    result.Add(res);
+                                }
+
                             }
                         }
                         seq++;

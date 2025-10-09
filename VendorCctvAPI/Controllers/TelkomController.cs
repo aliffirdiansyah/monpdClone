@@ -12,10 +12,10 @@ namespace VendorCctvAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class JasnitaController : ControllerBase
+    public class TelkomController : Controller
     {
         [HttpPost("send-cctv-status")]
-        public async Task<IActionResult> SendCctvStatus([FromBody] List<JasnitaVM.ViewModel.JasnitaEvent> events)
+        public async Task<IActionResult> SendCctvStatus([FromBody] List<TelkomVM.ViewModel.TelkomEvent> events)
         {
             var response = new ResponseBase();
 
@@ -27,9 +27,9 @@ namespace VendorCctvAPI.Controllers
                 }
 
                 int vendorId = int.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Name) ?? "0");
-                if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
                 {
-                    await JasnitaVM.Method.SendJasnitaLogAsync(events);
+                    await TelkomVM.Method.SendTelkomLogAsync(events);
                 }
                 else
                 {
