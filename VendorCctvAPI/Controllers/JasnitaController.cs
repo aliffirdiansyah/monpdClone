@@ -44,7 +44,7 @@ namespace VendorCctvAPI.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(response.ToInternalServerError(ex.Message));
+                return Ok(response.ToInternalServerError());
             }
         }
     }
