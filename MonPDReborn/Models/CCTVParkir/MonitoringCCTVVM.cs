@@ -971,7 +971,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 var result = new List<MonitoringCctvHarianDetail>();
                 var context = DBClass.GetContext();
 
-                var data = context.TOpParkirCctvs.Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming)).ToList();
+                var data = context.TOpParkirCctvs.Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming) && x.JenisKend != 0).ToList();
 
                 foreach (var item in data)
                 {
