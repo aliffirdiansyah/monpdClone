@@ -817,7 +817,10 @@ namespace MonPDReborn.Models.CCTVParkir
 
                     /* Omsettotal itu motor, mobil dan unknown */
                     decimal omset = (omsetMotor + omsetMobil + omsetUnknown);
-                    decimal estimasi = (estimasiPajakMotor + estimasiPajakMobil + estimasiPajakUnknown);
+
+                    /* Pajak unknown diexclude */
+
+                    decimal estimasi = (estimasiPajakMotor + estimasiPajakMobil);
 
                     decimal realisasiTahunKemarin = parkirTahunKemarin.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
                     decimal realisasiTahunIni = parkirTahunSekarang.Where(x => x.TglBayarPokok.Value.Month == bln).Sum(q => q.NominalPokokBayar) ?? 0;
@@ -1103,6 +1106,8 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 int tahunKemarin = DateTime.Now.Year - 1;
                 int tahunIni = DateTime.Now.Year;
+                int bulanIniNilai = DateTime.Now.Month;
+                int bulanLaluNilai = DateTime.Now.Month- 1;
                 string bulanIni = DateTime.Now.ToString("MMMM", new CultureInfo("id-ID"));
                 string bulanLalu = DateTime.Now.AddMonths(-1).ToString("MMMM", new CultureInfo("id-ID"));
 
@@ -1111,11 +1116,11 @@ namespace MonPDReborn.Models.CCTVParkir
                     .FirstOrDefault();
 
                 var parkirTahunKemarin = context.DbMonParkirs
-                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunKemarin)
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunKemarin && x.TglBayarPokok.Value.Month == bulanIniNilai)
                     .ToList();
 
                 var parkirTahunSekarang = context.DbMonParkirs
-                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunIni)
+                    .Where(x => x.Nop == nop && x.TglBayarPokok.HasValue && x.TglBayarPokok.Value.Year == tahunIni && x.TglBayarPokok.Value.Month == bulanLaluNilai)
                     .ToList();
 
                 // 📌 Ubah pakai tgl.Date, bukan DateTime.Now.Date
@@ -1236,7 +1241,8 @@ namespace MonPDReborn.Models.CCTVParkir
                 var omsetMotor = 2000 * motorBulanan;
                 var omsetMobil = 4000 * (mobilBulanan + truckBulanan);
                 var omsetUnknown = 2000 * unknownBulanan;
-                var omsetTotal = omsetMotor + omsetMobil + omsetUnknown;
+                //** exclude uknown dari perhitungan pajak **//
+                var omsetTotal = omsetMotor + omsetMobil;
 
                 estimasiPajak = omsetTotal * 0.1m;
 
