@@ -62,7 +62,50 @@
         height: 100px !important; /* lebar scrollbar horizontal */
     }
 
+    /* ===================================== */
+    /* Animasi Update Data (Highlight) */
+    /* ===================================== */
+    @@keyframes highlightPulse {
+        0% { 
+            background-color: #fff3cd; 
+            transform: scale(1);
+        }
+        50% { 
+            background-color: #ffe69c; 
+            transform: scale(1.05);
+        }
+        100% { 
+            background-color: transparent; 
+            transform: scale(1);
+        }
+    }
 
+    .data-updated {
+        animation: highlightPulse 0.8s ease-in-out;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    /* Opsional: Highlight untuk angka naik (hijau) atau turun (merah) */
+    .data-updated.increase {
+        animation: highlightIncrease 0.8s ease-in-out;
+    }
+
+    .data-updated.decrease {
+        animation: highlightDecrease 0.8s ease-in-out;
+    }
+
+    @@keyframes highlightIncrease {
+        0% { background-color: #d1e7dd; transform: scale(1); }
+        50% { background-color: #a3cfbb; transform: scale(1.05); }
+        100% { background-color: transparent; transform: scale(1); }
+    }
+
+    @@keyframes highlightDecrease {
+        0% { background-color: #f8d7da; transform: scale(1); }
+        50% { background-color: #f1aeb5; transform: scale(1.05); }
+        100% { background-color: transparent; transform: scale(1); }
+    }
 </style>
 
 <div class="profile-foreground position-relative mx-n4 mt-n4">
@@ -175,9 +218,9 @@
                                     <div class="card">
                                         <div class="card-body p-0">
                                             <div style="height: 360px;">
-                                                @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
+                                                @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingAktivitasHarian>()
                                                     .ID("gridLiveStreamingAktivitas")
-                                                    .DataSource(Model.DataMonitoringDetail.OrderByDescending(x => x.TanggalMasuk).ToList())
+                                                    .DataSource(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList())
                                                     .ShowBorders(true)
                                                     .ColumnAutoWidth(true)
                                                     .Sorting(s => s.Mode(GridSortingMode.None))
@@ -204,7 +247,7 @@
 
                         <!-- bagian counting-->
                         <div  class="col-xxl-5 d-flex">
-                            <div id="mobileCardCounting" class="card flex-fill">
+                            <div class="card flex-fill">
                                 <!-- Bagian Counting -->
                                 <div id="LiveStreamingCounting" class="card-body"></div>
                             </div>
@@ -219,9 +262,9 @@
                             <div class="card">
                                 <div class="card-body p-0">
                                     <div style="height: 320px;">
-                                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.MonitoringCctvHarianDetail>()
+                                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingAktivitasHarian>()
                                             .ID("gridLiveStreamingAktivitasMobile")
-                                            .DataSource(Model.DataMonitoringDetail.OrderByDescending(x => x.TanggalMasuk).ToList())
+                                            .DataSource(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList())
                                             .ShowBorders(true)
                                             .ColumnAutoWidth(true)
                                             .Sorting(s => s.Mode(GridSortingMode.None))
@@ -255,12 +298,6 @@
 
 @section Scripts {
     <script>
-
-        $(document).ready(function () {
-            loadLiveStreamingVideo();
-            loadLiveStreamingCounting();
-        });
-
         function loadLiveStreamingVideo() {
             $("#loading2-LiveStreamingVideo").show();
 
@@ -297,16 +334,17 @@
             $.ajax({
                 url: '@(Url.Action("LiveStreamingVideoCounting"))',
                 type: 'GET',
-                data: { nop:nop, tgl:local }, // gaya existing tetap sama
+                data: { nop:nop, tgl:local }, 
                 success: function (result) {
+
                     $("#LiveStreamingCounting").html(result);
+
                 },
                 error: function () {
                     $("#LiveStreamingCounting").html("<div class='text-danger p-3 text-center'>Gagal memuat data analisis.</div>");
                 }
             });
         }
-
     </script>
 
     <script>
@@ -424,8 +462,182 @@
         }
     </script>
 
+    <script>
+        function startCctvSse() {
+            const now = new Date();
+            const nop = '@Model.Nop';
+            const tgl = now.toISOString().split('T')[0] + "T00:00:00";
 
+            const evtSource = new EventSource(`/MonitoringCCTV/GetCctvEvents?nop=${nop}&tgl=${tgl}`);
+            let updateCount = 0;
 
+            evtSource.onmessage = function (e) {
+                console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
+                try {
+                    const data = JSON.parse(e.data);
 
+                    // 🔹 Update Analysis Summary (dengan animasi)
+                    if (data.AnalysisResult) {
+                        updateAnalysisUI(data.AnalysisResult);
+                    }
 
+                    // 🔹 Update DataGrid (Desktop & Mobile)
+                    // if (data.AktivitasHarianList && data.AktivitasHarianList.length > 0) {
+                    //     updateDataGrids(data.AktivitasHarianList);
+                    // }
+                    // 💡 PERUBAHAN: Gunakan NewActivityEntries sebagai delta
+                    if (data.NewActivityEntries && data.NewActivityEntries.length > 0) {
+                        // Panggil fungsi updateDataGrids dengan data delta (1-2 entri baru)
+                        updateDataGrids(data.NewActivityEntries); 
+                    }
+
+                    if (window.updateChart && data.KapasitasChartDetail) {
+                        window.updateChart(data);
+                    }
+
+                    // updateChart(data.KapasitasChartDetail);
+                } catch (err) {
+                    console.error("❌ Error parsing SSE data:", err);
+                }
+            };
+
+            evtSource.onerror = function (err) {
+                console.warn("⚠️ SSE connection lost. Retrying in 5s...", err);
+                evtSource.close();
+                setTimeout(startCctvSse, 5000);
+            };
+
+            evtSource.onopen = function() {
+                console.log("✅ SSE connection established");
+            };
+        }
+
+        // 📊 Update DataGrid dengan Smart Refresh
+        // KODE FINAL DAN LENGKAP UNTUK updateDataGrids (Menggabungkan Delta dan Casing Fix)
+        function updateDataGrids(newEntries) { // <-- PERHATIKAN: Parameter harus 'newEntries'
+    
+            // Helper untuk mengonversi camelCase ke PascalCase
+            const toPascalCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+            const normalizeData = (data) => {
+                const normalizedItem = {};
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        // Konversi key ke PascalCase (misal: 'tanggalMasuk' -> 'TanggalMasuk')
+                        const pascalKey = toPascalCase(key);
+                        normalizedItem[pascalKey] = data[key];
+                    }
+                }
+                return normalizedItem;
+            };
+    
+            // --- Update Desktop Grid ---
+            const gridDesktop = $("#gridLiveStreamingAktivitas").dxDataGrid("instance");
+            if (gridDesktop) {
+                const store = gridDesktop.getDataSource().store();
+
+                gridDesktop.beginUpdate();
+
+                // 1. Normalisasi dan Sisipkan Data Delta
+                newEntries.forEach(item => {
+                    const itemPascal = normalizeData(item);
+                    store.insert(itemPascal, 0); // Menyisipkan di posisi 0 (paling atas)
+                });
+
+                gridDesktop.refresh(); // refresh() lebih ringan dari reload()
+                gridDesktop.endUpdate();
+            }
+
+            // --- Update Mobile Grid ---
+            const gridMobile = $("#gridLiveStreamingAktivitasMobile").dxDataGrid("instance");
+            if (gridMobile) {
+                const store = gridMobile.getDataSource().store();
+
+                gridMobile.beginUpdate();
+        
+                newEntries.forEach(item => {
+                    const itemPascal = normalizeData(item);
+                    store.insert(itemPascal, 0);
+                });
+
+                gridMobile.refresh();
+                gridMobile.endUpdate();
+            }
+        }
+
+        // 💰 Update Analysis UI dengan Smooth Animation
+        function updateAnalysisUI(analysis) {
+    
+            // Helper untuk mengambil nilai dari objek, mengatasi PascalCase ATAU camelCase
+            function getValue(key) {
+                // 1. Coba ambil PascalCase (misal: analysis.Mobil)
+                if (analysis[key] !== undefined) return analysis[key]; 
+        
+                // 2. Coba ambil camelCase (misal: analysis.mobil)
+                const camelCaseKey = key.charAt(0).toLowerCase() + key.slice(1);
+                if (analysis[camelCaseKey] !== undefined) return analysis[camelCaseKey];
+
+                return undefined; // Nilai tidak ditemukan
+            }
+    
+            // Helper untuk animasi angka (diberi key properti sebagai parameter kedua)
+            function animateValue(elementId, key, isRupiah = false) { 
+                const newValue = getValue(key); // Ambil nilai yang fleksibel casing
+        
+                const el = $(`#${elementId}`);
+                if (!el.length || newValue === undefined) return; 
+
+                // Proses nilai
+                const targetValue = parseInt(newValue) || 0;
+        
+                // Cek jika nilai tidak berubah (hindari animasi yang tidak perlu)
+                if (el.text().replace(/[^\d]/g, '') === targetValue.toLocaleString("id-ID").replace(/[^\d]/g, '')) return;
+
+                // Tentukan apakah nilainya Naik atau Turun (opsional, untuk class .increase/.decrease)
+                const currentText = el.text().replace(/[^\d]/g, '');
+                const currentValue = parseInt(currentText) || 0;
+                const changeClass = targetValue > currentValue ? 'increase' : 'decrease';
+
+                // Tambahkan highlight animation
+                el.addClass('data-updated').addClass(changeClass);
+                setTimeout(() => {
+                    el.removeClass('data-updated').removeClass('increase').removeClass('decrease');
+                }, 1000);
+
+                // Update nilai
+                if (isRupiah) {
+                    el.text("Rp " + targetValue.toLocaleString("id-ID"));
+                } else {
+                    el.text(targetValue.toLocaleString("id-ID"));
+                }
+            }
+
+            // --- Panggilan Update Card ---
+    
+            // Gunakan nama properti PascalCase sebagai 'key' (misal: "Mobil")
+            animateValue("mobilMasuk", "Mobil"); 
+            animateValue("motorMasuk", "Motor");
+            animateValue("estimasiPajak", "EstimasiPajak", true);
+            animateValue("tahunKemarin", "TahunKemarin", true);
+            animateValue("tahunIni", "TahunIni", true);
+
+            // Update last update (tanpa animasi)
+            const lastUpdateValue = getValue("LastUpdate");
+            const formattedUpdate = lastUpdateValue 
+                ? lastUpdateValue.replace("T", " ").substring(0, 19)
+                : "-";
+            $("#lastUpdate").text(formattedUpdate);
+        }
+
+        // 🚀 Initialize saat document ready
+        $(document).ready(function () {
+            loadLiveStreamingVideo();
+            loadLiveStreamingCounting();
+    
+            // Delay start SSE agar partial view selesai load dulu
+            setTimeout(() => {
+                startCctvSse();
+            }, 1000);
+        });
+    </script>
 }

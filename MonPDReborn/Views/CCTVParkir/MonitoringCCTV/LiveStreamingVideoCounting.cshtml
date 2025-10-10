@@ -15,14 +15,14 @@
             <div class="p-3 border rounded">
                 <i class="ri-car-line fs-2 text-primary mb-2"></i>
                 <h6 class="text-muted mb-1">Mobil Masuk</h6>
-                <h3 class="fw-bold text-primary">@Model.AnalysisResult.Mobil</h3>
+                <h3 id="mobilMasuk" class="fw-bold text-primary">@Model.AnalysisResult.Mobil</h3>
             </div>
         </div>
         <div class="col-md-6 mb-3">
             <div class="p-3 border rounded">
                 <i class="ri-motorbike-line fs-2 text-success mb-2"></i>
                 <h6 class="text-muted mb-1">Motor Masuk</h6>
-                <h3 class="fw-bold text-success">@Model.AnalysisResult.Motor</h3>
+                <h3 id="motorMasuk" class="fw-bold text-success">@Model.AnalysisResult.Motor</h3>
             </div>
         </div>
         <!-- ### JANGAN DIHAPUS ###-->
@@ -100,72 +100,95 @@
             <li><i class="ri-bar-chart-line me-2 text-secondary"></i>Waktu tersibuk: <strong>@Model.AnalysisResult.WaktuTersibukLabel</strong></li>
             <li><i class="ri-roadster-line me-2 text-primary"></i>Rata-rata mobil per jam: <strong>@Model.AnalysisResult.RatarataMobil</strong></li>
             <li><i class="ri-motorbike-line me-2 text-success"></i>Rata-rata motor per jam: <strong>@Model.AnalysisResult.RatarataMotor</strong></li>
-            <li><i class="ri-time-line me-2 text-muted"></i>Data terakhir diperbarui: <strong>@Model.AnalysisResult.LastUpdate</strong></li>
+            <li><i class="ri-time-line me-2 text-muted"></i>Data terakhir diperbarui: <strong id="lastUpdate">@Model.AnalysisResult.LastUpdate</strong></li>
         </ul>
     </div>
 </div>
 
 
 <script>
-    var masterKendaraan = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.MasterKendaraans)));
+
+    // 1. Deklarasi Variabel Global untuk Akses oleh updateChart
+    // Menggunakan window. untuk memastikan variabel dapat diakses secara global
+    window.masterKendaraan = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.MasterKendaraans)));
+
+    // Variabel lokal untuk inisialisasi awal (tidak perlu diubah ke window, karena hanya dipakai di inisialisasi)
     var kendaraanData = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.KendaraanDatas)));
     var cctvEvents = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.CctvEvents)));
 
-    // Waktu awal & akhir
-    var startTime = new Date(kendaraanData[0].Waktu).getTime();
-    var endTime = new Date(kendaraanData[kendaraanData.length - 1].Waktu).getTime();
+    // Waktu awal & akhir (juga lokal untuk inisialisasi)
+    var startTime = kendaraanData.length > 0 ? new Date(kendaraanData[0].Waktu).getTime() : Date.now();
+    var endTime = kendaraanData.length > 0 ? new Date(kendaraanData[kendaraanData.length - 1].Waktu).getTime() : Date.now();
 
-    // === ANNOTATIONS CCTV ===
-    var rangeAnnotations = [];
-    if (cctvEvents.length === 0) {
-        rangeAnnotations.push({
-            x: startTime,
-            x2: endTime,
-            fillColor: '#51d28c',
-            opacity: 0.15,
-            label: {
-                text: 'CCTV ON',
-                borderColor: '#51d28c',
-                style: { color: '#fff', background: '#51d28c' }
+    // ----------------------------------------------------
+    // HELPER FUNCTION: Menghasilkan Anotasi Chart (dapat di-re-use)
+    // ----------------------------------------------------
+    function generateChartAnnotations(events, dataPoints, startTs, endTs) {
+        if (!dataPoints || dataPoints.length === 0) {
+            // Jika tidak ada data kendaraan, atur rentang ke default CCTV ON
+            return [{
+                x: startTs || Date.now() - 3600000,
+                x2: endTs || Date.now(),
+                fillColor: '#51d28c', opacity: 0.15,
+                label: { text: 'CCTV ON', borderColor: '#51d28c', style: { color: '#fff', background: '#51d28c' } }
+            }];
+        }
+
+        const annotations = [];
+        const finalEndTime = endTs || new Date(dataPoints[dataPoints.length - 1].Waktu).getTime();
+
+        if (events.length === 0) {
+            // Kasus: Tidak ada log event, asumsikan ON sepanjang data tersedia
+            annotations.push({
+                x: startTs, x2: finalEndTime, fillColor: '#51d28c', opacity: 0.15,
+                label: { text: 'CCTV ON', borderColor: '#51d28c', style: { color: '#fff', background: '#51d28c' } }
+            });
+        } else {
+            for (let i = 0; i < events.length; i++) {
+                var curr = events[i];
+                var next = events[i + 1];
+                var currTime = new Date(curr.Time || curr.time).getTime();
+                var nextTime = next ? new Date(next.Time || next.time).getTime() : finalEndTime;
+
+                annotations.push({
+                    x: currTime, x2: nextTime,
+                    fillColor: curr.Status === "OFF" ? '#f34e4e' : '#51d28c',
+                    opacity: 0.15,
+                    label: {
+                        text: `CCTV ${curr.Status}`,
+                        borderColor: curr.Status === "OFF" ? '#f34e4e' : '#51d28c',
+                        style: { color: '#fff', background: curr.Status === "OFF" ? '#f34e4e' : '#51d28c' }
+                    }
+                });
             }
-        });
-    } else {
-        for (let i = 0; i < cctvEvents.length; i++) {
-            var curr = cctvEvents[i];
-            var next = cctvEvents[i + 1];
-            var currTime = new Date(curr.Time).getTime();
-            var nextTime = next ? new Date(next.Time).getTime() : endTime;
 
-            rangeAnnotations.push({
-                x: currTime,
-                x2: nextTime,
-                fillColor: curr.Status === "OFF" ? '#f34e4e' : '#51d28c',
-                opacity: 0.15,
-                label: {
-                    text: `CCTV ${curr.Status}`,
-                    borderColor: curr.Status === "OFF" ? '#f34e4e' : '#51d28c',
-                    style: { color: '#fff', background: curr.Status === "OFF" ? '#f34e4e' : '#51d28c' }
-                }
-            });
+            // Menangani celah dari startTime ke event pertama
+            if (new Date(events[0].Time || events[0].time).getTime() > startTs) {
+                annotations.unshift({
+                    x: startTs,
+                    x2: new Date(events[0].Time || events[0].time).getTime(),
+                    fillColor: events[0].Status === "OFF" ? '#51d28c' : '#f34e4e',
+                    opacity: 0.15,
+                    label: {
+                        text: `CCTV ${events[0].Status === "OFF" ? "ON" : "OFF"}`,
+                        borderColor: events[0].Status === "OFF" ? '#51d28c' : '#f34e4e',
+                        style: { color: '#fff', background: events[0].Status === "OFF" ? '#51d28c' : '#f34e4e' }
+                    }
+                });
+            }
         }
-
-        if (new Date(cctvEvents[0].Time).getTime() > startTime) {
-            rangeAnnotations.unshift({
-                x: startTime,
-                x2: new Date(cctvEvents[0].Time).getTime(),
-                fillColor: cctvEvents[0].Status === "OFF" ? '#51d28c' : '#f34e4e',
-                opacity: 0.15,
-                label: {
-                    text: `CCTV ${cctvEvents[0].Status === "OFF" ? "ON" : "OFF"}`,
-                    borderColor: cctvEvents[0].Status === "OFF" ? '#51d28c' : '#f34e4e',
-                    style: { color: '#fff', background: cctvEvents[0].Status === "OFF" ? '#51d28c' : '#f34e4e' }
-                }
-            });
-        }
+        return annotations;
     }
 
-    // === GENERATE SERIES ===
-    var chartSeries = masterKendaraan.map(k => ({
+    // ----------------------------------------------------
+    // INIIALISASI AWAL CHART
+    // ----------------------------------------------------
+
+    // Generate Annotations awal
+    var rangeAnnotations = generateChartAnnotations(cctvEvents, kendaraanData, startTime, endTime);
+
+    // Generate Series awal
+    var chartSeries = window.masterKendaraan.map(k => ({
         name: k.Name.charAt(0).toUpperCase() + k.Name.slice(1),
         data: kendaraanData.map(d => {
             var found = d.Jenis.find(j => j.Name === k.Name);
@@ -174,22 +197,116 @@
         color: k.Color
     }));
 
-    // === CHART CONFIG ===
+    // Chart Config
     var options = {
         series: chartSeries,
         chart: { height: 350, type: 'line', toolbar: { show: true , offsetX: -5,offsetY: 55, } },
         stroke: { curve: 'smooth' },
         xaxis: { type: 'datetime', title: { text: 'Akumulasi (per 15 menit)' }, labels: { datetimeUTC: false } },
         yaxis: { title: { text: 'Jumlah Kendaraan' } },
-        // annotations: { xaxis: rangeAnnotations },
-        // title: { text: 'Monitoring Kendaraan & Status CCTV (Auto Highlight)',  align: 'left', style: { fontWeight: 400 } },
+        annotations: { xaxis: rangeAnnotations },
         tooltip: { x: { format: 'HH:mm' } },
         markers: { size: 0 }
     };
 
-    var chart = new ApexCharts(document.querySelector("#line_chart_annotations"), options);
-    chart.render();
+    // Inisialisasi Instance Chart Global
+    window.chartInstance = new ApexCharts(document.querySelector("#line_chart_annotations"), options);
+    window.chartInstance.render();
 
+    // ----------------------------------------------------
+    // FUNGSI GLOBAL UPDATE DARI SSE (HANYA FOKUS KE CHART)
+    // ----------------------------------------------------
+
+    window.updateChart = function (newData) {
+        if (!newData) {
+            console.warn("⚠️ newData kosong, tidak bisa update chart");
+            return;
+        }
+
+        // ❌ HILANGKAN SEMUA LOGIKA PEMBARUAN CARD DI SINI
+        // Karena sudah ditangani oleh updateAnalysisUI di parent view
+
+        // 🔹 Pastikan semua elemen penting ada
+        // Ambil properti utama, fokus pada casing yang dikirim oleh Controller (camelCase)
+        const detail = newData.kapasitasChartDetail || newData.KapasitasChartDetail; // Pastikan salah satu didapat
+
+        // Ambil array data, fokus pada casing yang dikirim oleh Controller (camelCase)
+        const dataKendaraan = detail?.kendaraanDatas || detail?.KendaraanDatas;
+
+        // 🔹 Validasi yang Diperbaiki
+        if (!detail || !dataKendaraan || !window.masterKendaraan || !window.chartInstance) {
+            console.warn("⚠️ Struktur data chart tidak lengkap atau chartInstance belum siap");
+            console.log({
+                detailAda: !!detail,
+                dataKendaraanAda: !!dataKendaraan,
+                masterKendaraan: !!window.masterKendaraan,
+                chartInstance: !!window.chartInstance
+            });
+            return;
+        }
+
+        // 🔹 Normalisasi data Kendaraan Datas (mengantisipasi casing JSON)
+        const kendaraanDatas = (detail.KendaraanDatas || detail.kendaraanDatas).map(d => ({
+            waktu: d.Waktu || d.waktu,
+            jenis: (d.Jenis || d.jenis || []).map(j => ({
+                name: j.Name || j.name,
+                value: j.Value ?? j.value ?? 0
+            }))
+        }));
+
+        // 🔹 Update data series (Mapping ulang data berdasarkan masterKendaraan)
+        const updatedSeries = window.masterKendaraan.map(k => {
+            const seriesName = (k.Name || k.name || "Unknown").charAt(0).toUpperCase() + (k.Name || k.name || "").slice(1);
+            const seriesColor = k.Color || k.color || undefined;
+            const seriesData = kendaraanDatas.map(d => {
+                const found = d.jenis.find(j => j.name === (k.Name || k.name));
+                return { x: new Date(d.waktu).getTime(), y: found ? found.value : 0 };
+            });
+
+            return {
+                name: seriesName,
+                data: seriesData,
+                color: seriesColor
+            };
+        });
+
+        // 🔹 Perbarui Anotasi (CCTV Status)
+        const newCctvEvents = detail.CctvEvents || detail.cctvEvents || [];
+        const latestTime = kendaraanDatas[kendaraanDatas.length - 1].waktu;
+        const latestTs = new Date(latestTime).getTime();
+        const firstTime = kendaraanDatas[0].waktu;
+        const firstTs = new Date(firstTime).getTime();
+
+        const updatedRangeAnnotations = generateChartAnnotations(
+            newCctvEvents,
+            kendaraanDatas,
+            firstTs,
+            latestTs
+        );
+
+        // 🔹 Panggil API update chart ApexCharts
+        try {
+            // Update Series
+            window.chartInstance.updateSeries(updatedSeries);
+
+            // Update Options (hanya Anotasi yang berubah)
+            window.chartInstance.updateOptions({
+                annotations: {
+                    xaxis: updatedRangeAnnotations
+                }
+            }, false, true); // (options, redrawPaths = false, animate = true)
+
+            console.log("📈 Chart & Annotations Updated:", new Date().toLocaleTimeString());
+        } catch (err) {
+            console.error("❌ Gagal update chart:", err);
+        }
+    };
+
+</script>
+
+
+
+<script>
     // === SCROLL EFFECT - Langsung target modal-body ===
     $(document).ready(function() {
         // Target langsung modal body dari Bootstrap modal-dialog-scrollable

@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
@@ -38,7 +39,6 @@ namespace MonPDReborn.Models.CCTVParkir
             public List<MonitoringCCTV> MonitoringCCTVList { get; set; } = new();
             public decimal TotalOp => MonitoringCCTVList.Count;
             public decimal TotalCCTV => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG");
-
             public decimal TotalCCTVTerpasangJasnita => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG" && x.VedorId == 1);
             public decimal TotalCCTVTerpasangTelkom => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG" && x.VedorId == 2);
             public decimal TotalCCTVTerpasangPerforma => MonitoringCCTVList.Count(x => x.StatusTerpasang == "TERPASANG" && x.VedorId == 3);
@@ -160,18 +160,12 @@ namespace MonPDReborn.Models.CCTVParkir
             public string Vendor { get; set; } = "";
             public int VendorId { get; set; } = 0;
             public string TanggalPasang { get; set; } = "";
-
             public string WilayahUPTB { get; set; }
-            
             public List<SelectListItem> CctvIdList { get; set; } = new();
-            //class list camera.
-
-            //class list aktivitas seperti di detail
-            public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
+            public List<LiveStreamingAktivitasHarian> AktivitasHarianList { get; set; } = new();
             public LiveStreaming(string nop, int vendorId, DateTime tanggal)
             {
-                DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, tanggal);
-                
+                AktivitasHarianList = Method.GetAktivitasHarian(nop, tanggal);
 
                 var context = DBClass.GetContext();
                 var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
@@ -249,84 +243,22 @@ namespace MonPDReborn.Models.CCTVParkir
             public int VendorId { get; set; }
             public string BulanText { get; set; }
             public LiveStreamingAnalysis AnalysisResult { get; set; } = new();
-            public List<MonitoringCctvHarianDetail> DataMonitoringDetail { get; set; } = new();
+            public List<LiveStreamingAktivitasHarian> AktivitasHarianList { get; set; } = new();
             public ViewModel.KapasitasChart KapasitasChartDetail { get; set; } = new();
             public LiveStreamingCounting(string nop , DateTime tgl)
             {
-                DataMonitoringDetail = Method.GetMonitoringHarianDetail(nop, tgl);
-                AnalysisResult = Method.GetLiveStreamingAnalysis(nop , tgl);
-                KapasitasChartDetail = Method.GetKapasitasChart(DataMonitoringDetail, tgl);
 
-                var context = DBClass.GetContext();
-                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
-                if (query != null)
-                {
-                    Nop = nop;
-                    VendorId = query.Vendor;
-                }
+                AnalysisResult = Method.GetLiveStreamingAnalysis(nop , tgl);
+
+                AktivitasHarianList = Method.GetAktivitasHarian(nop, tgl);
+
+                KapasitasChartDetail = Method.GetKapasitasChart(AktivitasHarianList, tgl);
+
+                VendorId = AktivitasHarianList.FirstOrDefault()?.VendorId ?? 0;
+
+                Nop = AktivitasHarianList.FirstOrDefault()?.Nop ?? "" ;
             }
         }
-
-        public class MonitoringCctvHarianDetail
-        {
-            public string Id { get; set; } = null!;
-            public string Nop { get; set; } = null!;
-            public string CctvId { get; set; } = null!;
-            public string? NamaOp { get; set; }
-            public string? AlamatOp { get; set; }
-            public int? WilayahPajak { get; set; }
-            public DateTime TanggalMasuk { get; set; }
-            public EnumFactory.EJenisKendParkirCCTV JenisKendEnum { get; set; }
-            public string JenisKend { get; set; }
-            public string? PlatNo { get; set; }
-            public String Direction { get; set; }
-            public string? Log { get; set; }
-            public string? ImageUrl { get; set; }
-            public bool IsLog { get; set; }
-            public bool IsOn { get; set; }
-            public string IsLogText { get; set; }
-        }
-
-        public class MonitoringCCTVBulanan
-        {
-            public string Nop { get; set; } = null!;
-            public int Tahun { get; set; }
-            public int Bulan { get; set; }
-
-            // Untuk tampilan
-            public string NamaBulan { get; set; }
-            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
-
-            // Agregat per bulan
-            public int Motor { get; set; }
-            public int Mobil { get; set; }
-            public int Unknown { get; set; }
-            public decimal Omset { get; set; }
-            public decimal EstimasiPajak { get; set; }
-            public decimal TahunKemarin { get; set; }
-            public decimal TahunIni { get; set; }
-            public string Potensi { get; set; }
-        }
-        public class MonitoringCCTVHarian
-        {
-            public string Nop { get; set; } = null!;
-            public DateTime Tanggal { get; set; }
-            public string TanggalLabel => Tanggal.ToString("dd");        // 01, 02, 03 ...
-            public string HariLabel => Tanggal.ToString("dddd", new System.Globalization.CultureInfo("id-ID"));            // Senin, Selasa ...
-
-            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
-
-            // Agregat per bulan
-            public int Motor { get; set; }
-            public int Mobil { get; set; }
-            public int Unknown { get; set; }
-            public decimal Omset { get; set; }
-            public decimal EstimasiPajak { get; set; }
-            public decimal TahunKemarin { get; set; }
-            public decimal TahunIni { get; set; }
-            public decimal Potensi { get; set; }
-        }
-
 
         public class DataKapasitasParkir
         {
@@ -971,7 +903,8 @@ namespace MonPDReborn.Models.CCTVParkir
                 var result = new List<MonitoringCctvHarianDetail>();
                 var context = DBClass.GetContext();
 
-                var data = context.TOpParkirCctvs.Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming) && x.JenisKend != 0).ToList();
+                var data = context.TOpParkirCctvs
+                    .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming) && x.JenisKend != 0).ToList();
 
                 foreach (var item in data)
                 {
@@ -1017,7 +950,6 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.IsOn = item.IsOn == 1 ? true : false;
                     result.Add(res);
                 }
-
                 return result.OrderBy(x => x.TanggalMasuk).ToList();
             }
             public static ViewModel.KapasitasChart GetKapasitasChart(List<MonitoringCctvHarianDetail> dataDetail, DateTime tanggal)
@@ -1097,10 +1029,88 @@ namespace MonPDReborn.Models.CCTVParkir
                         result.CctvEvents.Add(res);
                     }
                 }
-
-
                 return result;
             }
+            public static ViewModel.KapasitasChart GetKapasitasChart(List<LiveStreamingAktivitasHarian> dataDetail, DateTime tanggal)
+            {
+                var result = new ViewModel.KapasitasChart();
+
+                var kendaraanData = dataDetail.Where(x => x.IsLog == false).AsQueryable();
+                var cctvEventData = dataDetail.Where(x => x.IsLog == true).AsQueryable();
+
+                //CUSTOM
+                var kendaraanMotor = kendaraanData
+                    .Where(x => x.JenisKendEnum == EnumFactory.EJenisKendParkirCCTV.Motor)
+                    .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                    .Select(x => new { x.Key.JenisKendEnum, x.Key.TanggalMasuk })
+                    .ToList();
+                var kendaraanMobil = kendaraanData
+                    .Where(x => new[] { EnumFactory.EJenisKendParkirCCTV.Mobil, EnumFactory.EJenisKendParkirCCTV.Truck }.Contains(x.JenisKendEnum))
+                    .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                    .Select(x => new { JenisKendEnum = EnumFactory.EJenisKendParkirCCTV.Mobil, x.Key.TanggalMasuk })
+                    .ToList();
+
+                var semuaKendaraan = kendaraanMotor
+                    .Concat(kendaraanMobil)
+                    .ToList();
+                //CUSTOM
+
+                //MASTER KENDARAAN
+                result.MasterKendaraans = semuaKendaraan
+                    .GroupBy(x => new { x.JenisKendEnum })
+                    .Select(x => new ViewModel.KapasitasChart.MasterKendaraan
+                    {
+                        Color = Extension.GetColorVehicle(x.Key.JenisKendEnum),
+                        Name = x.Key.JenisKendEnum.GetDescription()
+                    }).ToList();
+
+                //NGISI WAKTU KENDARAAN
+                {
+                    var dataKendaraanTanggal = semuaKendaraan
+                        .GroupBy(x => new { x.JenisKendEnum, x.TanggalMasuk })
+                        .Select(x => new
+                        {
+                            Jenis = x.Key.JenisKendEnum.GetDescription(),
+                            Waktu = x.Key.TanggalMasuk
+                        }).ToList();
+
+                    var timeInterval = GetTimeIntervals(tanggal);
+                    foreach (var start in timeInterval)
+                    {
+                        var end = start.AddMinutes(15);
+
+                        var kendaraanDiInterval = dataKendaraanTanggal
+                            .Where(k => k.Waktu >= start && k.Waktu < end)
+                            .GroupBy(k => k.Jenis)
+                            .Select(g => new KendaraanJenis
+                            {
+                                Name = g.Key,
+                                Value = g.Count()
+                            })
+                            .ToList();
+
+                        result.KendaraanDatas.Add(new KendaraanData()
+                        {
+                            Waktu = start.ToString("yyyy-MM-dd HH:mm"),
+                            Jenis = kendaraanDiInterval
+                        });
+                    }
+                }
+
+                {
+                    foreach (var item in cctvEventData)
+                    {
+                        var res = new ViewModel.KapasitasChart.CctvEvent();
+
+                        res.Status = item.IsOn ? "ON" : "OFF";
+                        res.Time = item.TanggalMasuk.ToString("yyyy-MM-dd HH:mm");
+
+                        result.CctvEvents.Add(res);
+                    }
+                }
+                return result;
+            }
+            #region LiveStreamingPage
             public static LiveStreamingAnalysis GetLiveStreamingAnalysis(string nop , DateTime tgl)
             {
                 var context = DBClass.GetContext();
@@ -1125,9 +1135,8 @@ namespace MonPDReborn.Models.CCTVParkir
                     .ToList();
 
                 // 📌 Ubah pakai tgl.Date, bukan DateTime.Now.Date
-                var kendaraanParkirHarian = context.TOpParkirCctvs
-                    .Where(x => x.WaktuMasuk.Date == tgl.Date && x.Nop == nop &&
-                                x.Direction == (int)EnumFactory.CctvParkirDirection.Incoming)
+                var kendaraanParkirHarian = context.TOpParkirCctvRealtimes
+                    .Where(x => x.WaktuMasuk.Date == tgl.Date && x.Nop == nop )
                     .GroupBy(x => x.JenisKend)
                     .Select(g => new
                     {
@@ -1137,9 +1146,9 @@ namespace MonPDReborn.Models.CCTVParkir
                     .ToList();
 
                 // 📌 Bulanan tetap berdasarkan bulan dari tgl
-                var kendaraanParkirBulanan = context.TOpParkirCctvs
+                var kendaraanParkirBulanan = context.TOpParkirCctvRealtimes
                     .Where(x => x.WaktuMasuk.Year == tgl.Year && x.WaktuMasuk.Month == tgl.Month &&
-                                x.Nop == nop && x.Direction == (int)EnumFactory.CctvParkirDirection.Incoming)
+                                x.Nop == nop )
                     .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Day })
                     .Select(g => new
                     {
@@ -1149,8 +1158,8 @@ namespace MonPDReborn.Models.CCTVParkir
                     })
                     .ToList();
 
-                var kendaraanParkirLastUpdate = context.TOpParkirCctvs
-                    .Where(x => x.Nop == nop && x.Direction == (int)EnumFactory.CctvParkirDirection.Incoming)
+                var kendaraanParkirLastUpdate = context.TOpParkirCctvRealtimes
+                    .Where(x => x.Nop == nop)
                     .OrderByDescending(x => x.WaktuMasuk)
                     .FirstOrDefault();
 
@@ -1165,9 +1174,8 @@ namespace MonPDReborn.Models.CCTVParkir
 
 
                 /* ####### INFORMASI DETAIL TAMBAHAN ###### */
-                var waktuTersibuk = context.TOpParkirCctvs
+                var waktuTersibuk = context.TOpParkirCctvRealtimes
                     .Where(x => x.Nop == nop
-                        && x.Direction == (int)EnumFactory.CctvParkirDirection.Incoming
                         && x.WaktuMasuk.Date == tgl.Date)
                     .GroupBy(x => x.WaktuMasuk.Hour)
                     .Select(g => new
@@ -1265,6 +1273,170 @@ namespace MonPDReborn.Models.CCTVParkir
                     bulanLalu = bulanLalu,
                 };
             }
+            public static List<LiveStreamingAktivitasHarian> GetAktivitasHarian(string nop, DateTime tgl)
+            {
+                var result = new List<LiveStreamingAktivitasHarian>();
+                var context = DBClass.GetContext();
+
+                var data = context.TOpParkirCctvRealtimes
+                    .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.JenisKend != 0).ToList();
+
+                foreach (var item in data)
+                {
+                    var res = new LiveStreamingAktivitasHarian();
+                    res.Id = item.Id;
+                    res.Nop = item.Nop;
+                    res.CctvId = item.CctvId;
+                    res.TanggalMasuk = item.WaktuMasuk;
+                    res.JenisKendEnum = (EnumFactory.EJenisKendParkirCCTV)item.JenisKend;
+                    res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
+                    res.PlatNo = item.PlatNo;
+                    res.ImageUrl = item.ImageUrl;
+                    res.IsLog = false;
+                    res.IsLogText = "Record";
+                    res.IsOn = false;
+                    res.VendorId = item.VendorId;
+                    result.Add(res);
+                }
+
+                int vendorId = data.FirstOrDefault()?.VendorId ?? 0;
+                if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                {
+                    var dataLogs = context.MOpParkirCctvJasnitaLogDs.Where(x => x.Nop == nop && x.TglEvent.Date == tgl).ToList();
+                    foreach (var item in dataLogs)
+                    {
+                        var res = new LiveStreamingAktivitasHarian();
+                        res.Id = item.Guid;
+                        res.Nop = item.Nop;
+                        res.CctvId = item.CctvId;
+                        res.TanggalMasuk = item.TglEvent;
+                        res.JenisKendEnum = EnumFactory.EJenisKendParkirCCTV.Unknown;
+                        res.JenisKend = item.Event;
+                        res.PlatNo = "";
+                        res.ImageUrl = null;
+                        res.IsLog = true;
+                        res.IsLogText = "Log";
+                        res.IsOn = item.IsOn == 1 ? true : false;
+                        result.Add(res);
+                    }
+                }
+                else if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
+                {
+                    var dataLogs = context.MOpParkirCctvTelkomLogDs.Where(x => x.Nop == nop && x.TglEvent.Date == tgl).ToList();
+                    foreach (var item in dataLogs)
+                    {
+                        var res = new LiveStreamingAktivitasHarian();
+                        res.Id = item.Guid;
+                        res.Nop = item.Nop;
+                        res.CctvId = item.CctvId;
+                        res.TanggalMasuk = item.TglEvent;
+                        res.JenisKendEnum = EnumFactory.EJenisKendParkirCCTV.Unknown;
+                        res.JenisKend = item.Event;
+                        res.PlatNo = "";
+                        res.ImageUrl = null;
+                        res.IsLog = true;
+                        res.IsLogText = "Log";
+                        res.IsOn = item.IsOn == 1 ? true : false;
+                        result.Add(res);
+                    }
+                }
+
+                return result.OrderBy(x => x.TanggalMasuk).ToList();
+            }
+
+            // Di dalam class MonitoringCCTVVM.Method
+
+            // 💡 Method baru untuk mengambil entri sejak waktu tertentu
+            public static List<LiveStreamingAktivitasHarian> GetNewActivityEntries(string nop, DateTime lastSentTime)
+            {
+                var result = new List<LiveStreamingAktivitasHarian>();
+                var context = DBClass.GetContext();
+
+                // Waktu minimal yang harus diambil (misal 5 detik sebelum waktu terakhir dikirim, untuk redundansi)
+                var startTime = lastSentTime.AddSeconds(-5);
+
+                // ===================================================
+                // A. Ambil data Realtime (TOpParkirCctvRealtimes)
+                // ===================================================
+                var newRealtimeData = context.TOpParkirCctvRealtimes
+                    .Where(x => x.Nop == nop
+                             && x.WaktuMasuk >= startTime
+                             && x.JenisKend != 0)
+                    .ToList();
+
+                foreach (var item in newRealtimeData)
+                {
+                    var res = new LiveStreamingAktivitasHarian
+                    {
+                        Id = item.Id,
+                        Nop = item.Nop,
+                        CctvId = item.CctvId,
+                        TanggalMasuk = item.WaktuMasuk,
+                        JenisKendEnum = (EnumFactory.EJenisKendParkirCCTV)item.JenisKend,
+                        JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription(),
+                        PlatNo = item.PlatNo,
+                        ImageUrl = item.ImageUrl,
+                        IsLog = false,
+                        IsLogText = "Record",
+                        IsOn = false,
+                        VendorId = item.VendorId
+                    };
+                    result.Add(res);
+                }
+
+                int vendorId = newRealtimeData.FirstOrDefault()?.VendorId ?? 0;
+
+                // ===================================================
+                // B. Ambil data Logs (Hanya log baru)
+                // ===================================================
+
+                if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                {
+                    var newLogs = context.MOpParkirCctvJasnitaLogDs
+                        .Where(x => x.Nop == nop && x.TglEvent >= startTime) // Filter berdasarkan waktu
+                        .ToList();
+
+                    foreach (var item in newLogs)
+                    {
+                        var res = new LiveStreamingAktivitasHarian
+                        {
+                            Id = item.Guid,
+                            Nop = item.Nop,
+                            // ... (properti lain seperti di GetAktivitasHarian)
+                            TanggalMasuk = item.TglEvent, // Gunakan TglEvent untuk filter waktu
+                            IsLog = true,
+                            IsOn = item.IsOn == 1,
+                            VendorId = vendorId // Tambahkan VendorId
+                        };
+                        result.Add(res);
+                    }
+                }
+                else if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
+                {
+                    var newLogs = context.MOpParkirCctvTelkomLogDs
+                        .Where(x => x.Nop == nop && x.TglEvent >= startTime) // Filter berdasarkan waktu
+                        .ToList();
+
+                    foreach (var item in newLogs)
+                    {
+                        var res = new LiveStreamingAktivitasHarian
+                        {
+                            Id = item.Guid,
+                            Nop = item.Nop,
+                            // ... (properti lain seperti di GetAktivitasHarian)
+                            TanggalMasuk = item.TglEvent, // Gunakan TglEvent untuk filter waktu
+                            IsLog = true,
+                            IsOn = item.IsOn == 1,
+                            VendorId = vendorId // Tambahkan VendorId
+                        };
+                        result.Add(res);
+                    }
+                }
+
+                // Sort by time, data baru masuk di akhir
+                return result.OrderBy(x => x.TanggalMasuk).ToList();
+            }
+            #endregion
             public static List<DateTime> GetTimeIntervals(DateTime tanggal)
             {
                 List<DateTime> result = new List<DateTime>();
@@ -1278,6 +1450,7 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
+
         }
 
 
@@ -1335,7 +1508,6 @@ namespace MonPDReborn.Models.CCTVParkir
             public int Hari => LamaTerparkir.Days;
             public int Jam => LamaTerparkir.Hours;
             public int Menit => LamaTerparkir.Minutes;
-
             public string Terparkir
             {
                 get
@@ -1352,7 +1524,6 @@ namespace MonPDReborn.Models.CCTVParkir
                     return string.Join(" ", parts);
                 }
             }
-
             public bool MasihTerparkir => WaktuOut == null;
         }
 
@@ -1375,5 +1546,83 @@ namespace MonPDReborn.Models.CCTVParkir
             public int RatarataMotor { get; set; }
             public DateTime? LastUpdate { get; set; }
         }
+
+        public class LiveStreamingAktivitasHarian
+        {
+            public string Id { get; set; } = null!;
+            public string CctvId { get; set; } = null!;
+            public int VendorId { get; set; }
+            public string Nop { get; set; } = null!;
+            public int JmlhMotor { get; set; }
+            public int JmlhMobil { get; set; }
+            public string? Log { get; set; }
+            public string? ImageUrl { get; set; }
+            public bool IsLog { get; set; }
+            public bool IsOn { get; set; }
+            public string IsLogText { get; set; }
+            public DateTime TanggalMasuk { get; set; }
+            public EnumFactory.EJenisKendParkirCCTV JenisKendEnum { get; set; }
+            public string JenisKend { get; set; }
+            public string? PlatNo { get; set; }
+        }
+
+        public class MonitoringCctvHarianDetail
+        {
+            public string Id { get; set; } = null!;
+            public string Nop { get; set; } = null!;
+            public string CctvId { get; set; } = null!;
+            public string? NamaOp { get; set; }
+            public string? AlamatOp { get; set; }
+            public int? WilayahPajak { get; set; }
+            public DateTime TanggalMasuk { get; set; }
+            public EnumFactory.EJenisKendParkirCCTV JenisKendEnum { get; set; }
+            public string JenisKend { get; set; }
+            public string? PlatNo { get; set; }
+            public String Direction { get; set; }
+            public string? Log { get; set; }
+            public string? ImageUrl { get; set; }
+            public bool IsLog { get; set; }
+            public bool IsOn { get; set; }
+            public string IsLogText { get; set; }
+        }
+
+        public class MonitoringCCTVBulanan
+        {
+            public string Nop { get; set; } = null!;
+            public int Tahun { get; set; }
+            public int Bulan { get; set; }
+
+            // Untuk tampilan
+            public string NamaBulan { get; set; }
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+
+            // Agregat per bulan
+            public int Motor { get; set; }
+            public int Mobil { get; set; }
+            public int Unknown { get; set; }
+            public decimal Omset { get; set; }
+            public decimal EstimasiPajak { get; set; }
+            public decimal TahunKemarin { get; set; }
+            public decimal TahunIni { get; set; }
+            public string Potensi { get; set; }
+        }
+        public class MonitoringCCTVHarian
+        {
+            public string Nop { get; set; } = null!;
+            public DateTime Tanggal { get; set; }
+            public string TanggalLabel => Tanggal.ToString("dd");        // 01, 02, 03 ...
+            public string HariLabel => Tanggal.ToString("dddd", new System.Globalization.CultureInfo("id-ID"));            // Senin, Selasa ...
+            public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+            // Agregat per bulan
+            public int Motor { get; set; }
+            public int Mobil { get; set; }
+            public int Unknown { get; set; }
+            public decimal Omset { get; set; }
+            public decimal EstimasiPajak { get; set; }
+            public decimal TahunKemarin { get; set; }
+            public decimal TahunIni { get; set; }
+            public decimal Potensi { get; set; }
+        }
+
     }
 }

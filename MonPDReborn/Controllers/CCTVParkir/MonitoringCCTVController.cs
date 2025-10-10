@@ -2,8 +2,11 @@
 using MonPDLib.General;
 using MonPDReborn.Controllers.Aktivitas;
 using MonPDReborn.Lib.General;
-using static MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM;
+using MonPDReborn.Models.CCTVParkir;
+using System.Text;
+using System.Text.Json;
 using static MonPDReborn.Lib.General.ResponseBase;
+using static MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM;
 
 namespace MonPDReborn.Controllers.CCTVParkir
 {
@@ -204,9 +207,6 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 throw;
             }
         }
-
-        //endpoint untuk berpindah camera diview livestreaming...
-
         public IActionResult LiveStreamingVideo(string nop, string cctvId)
         {
             try
@@ -235,5 +235,85 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 return Content($"<div class='text-danger p-3 text-center'>Terjadi error: {ex.Message}</div>", "text/html");
             }
         }
+
+        [HttpGet]
+        public async Task GetCctvEvents(CancellationToken cancellationToken, string nop, DateTime tgl)
+        {
+            Response.Headers.Add("Content-Type", "text/event-stream");
+            Response.Headers.Add("Cache-Control", "no-cache");
+            Response.Headers.Add("Connection", "keep-alive");
+            Response.Headers.Add("X-Accel-Buffering", "no");
+
+            DateTime lastActivityCheckTime = DateTime.Now.AddMinutes(-5);
+            try
+            {
+                await Response.Body.FlushAsync(cancellationToken);
+
+                await SendSseAsync(new { status = "connected", timestamp = DateTime.Now }, cancellationToken);
+
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        // 1. Dapatkan data baru (Hanya Analysis dan Delta Aktivitas)
+                        var analysis = MonitoringCCTVVM.Method.GetLiveStreamingAnalysis(nop, tgl);
+
+                        // 💡 PANGGIL METHOD BARU UNTUK DELTA DATA
+                        // Kita gunakan waktu saat ini sebagai acuan pemanggilan berikutnya
+                        var newActivityEntries = MonitoringCCTVVM.Method.GetNewActivityEntries(nop, lastActivityCheckTime);
+
+                        // 💡 PENTING: Perbarui waktu pemeriksaan terakhir
+                        lastActivityCheckTime = DateTime.Now;
+
+                        // 2. Dapatkan data Chart (Jika Anda ingin Chart juga Delta, kita bahas di Langkah 2)
+                        // KARENA CHART JUGA MEMBUTUHKAN SELURUH RIWAYAT data aktivitas harian untuk plot 96 titik,
+                        // kita harus memisahkan pengambilan data CHART dari data DataGrid.
+                        // UNTUK SEMENTARA, kita akan tetap mengirim data chart secara lengkap (Langkah 1A).
+                        var aktivitasListFull = MonitoringCCTVVM.Method.GetAktivitasHarian(nop, tgl); // Data penuh untuk Chart
+                        var kapasitasChart = MonitoringCCTVVM.Method.GetKapasitasChart(aktivitasListFull, tgl);
+
+
+                        var payload = new
+                        {
+                            AnalysisResult = analysis,
+                            // 💡 KIRIM DATA DELTA untuk DataGrid (Gantikan AktivitasHarianList yang berat)
+                            NewActivityEntries = newActivityEntries,
+                            KapasitasChartDetail = kapasitasChart, // TETAP DIKIRIM LENGKAP SEMENTARA
+                            Timestamp = DateTime.Now
+                        };
+
+                        await SendSseAsync(payload, cancellationToken);
+                        await Task.Delay(2000, cancellationToken);
+                    
+                    }
+                    catch (Exception ex) // ← ERROR DI LOOP TIDAK BREAK KONEKSI
+                    {
+                        _logger.LogWarning(ex, "Error fetching data for NOP {Nop}", nop);
+                        await SendSseAsync(new { status = "error", message = "Data fetch error" }, cancellationToken);
+                        await Task.Delay(5000, cancellationToken); // ← RETRY LEBIH LAMA
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("SSE connection closed for NOP {Nop}", nop); // ← INFO, BUKAN ERROR
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fatal error in GetCctvEvents for NOP {Nop}", nop);
+            }
+        }
+
+        private async Task SendSseAsync(object data, CancellationToken ct)
+        {
+            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase // ← TAMBAHAN
+            });
+
+            await Response.WriteAsync($"data: {json}\n\n", Encoding.UTF8, ct);
+            await Response.Body.FlushAsync(ct);
+        }
+
     }
 }
