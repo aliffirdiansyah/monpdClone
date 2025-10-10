@@ -1,0 +1,110 @@
+﻿@using static MonPDReborn.Models.KontrolPBB.PencarianPBBVM.ViewModels
+@model MonPDReborn.Models.KontrolPBB.PencarianPBBVM.Detail
+
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-column">
+                    <h4 class="text-primary d-block fs-20 fw-bold">@Model.Data.NOP</h4>
+                    <div class="hstack gap-3 flex-wrap">
+                        <div class="text-body fw-medium fs-14">@Model.Data.WPData.NamaWP</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header bg-header-color">
+                <h4 class="card-title text-dark fs-16 mb-0">Data Objek Pajak</h4>
+            </div>
+            <div class="card-body">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr><th>Luas Tanah</th><td>:</td><td>@Model.Data.OPData.LTanah m<sup>2</sup></td></tr>
+                        <tr><th>Luas Bangunan</th><td>:</td><td>@Model.Data.OPData.LBangunan m<sup>2</sup></td></tr>
+                        <tr><th>Kategori</th><td>:</td><td>@Model.Data.OPData.Jenis</td></tr>
+                        <tr><th>Lokasi</th><td>:</td><td>@Model.Data.OPData.Lokasi</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header bg-header-color">
+                <h4 class="card-title text-dark fs-16 mb-0">Data Wajib Pajak</h4>
+            </div>
+            <div class="card-body">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr><th>Nama</th><td>:</td><td>@Model.Data.WPData.NamaWP</td></tr>
+                        <tr><th>Kontak</th><td>:</td><td>@Model.Data.WPData.TelpWP</td></tr>
+                        <tr><th>Alamat</th><td>:</td><td>@Model.Data.WPData.AlamatWP</td></tr>
+                        <tr><th>Status</th><td>:</td><td>@Model.Data.WPData.Status</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 mt-3">
+        <div class="card">
+            <div class="card-header bg-header-color">
+                <h4 class="card-title text-dark fs-16 mb-0">Riwayat Pembayaran</h4>
+            </div>
+            <div class="card-body">
+                @(
+                    Html.DevExtreme().DataGrid<DataPBB.Riwayat>()
+                        .ID("gridRiwayatPBB")
+                        .DataSource(Model.Data.DataRiwayat)
+                        .KeyExpr("TahunPajak")
+                        .ShowBorders(true)
+                        .ShowColumnHeaders(true)
+                        .ShowColumnLines(true)
+                        .ShowRowLines(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                            .FilterRow(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                        .Paging(p => p.PageSize(10))
+                        .Pager(p => p
+                            .ShowPageSizeSelector(true)
+                            .AllowedPageSizes(new[] { 10, 20, 50 })
+                            .ShowInfo(true)
+                        )
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                        .OnExporting("exportGrid")
+                        .Columns(columns => {
+                            columns.AddFor(m => m.TahunPajak).Caption("Tahun Pajak").Alignment(HorizontalAlignment.Center);
+                            columns.AddFor(m => m.Jumlah).Caption("Jumlah").Format("#,##0");
+                            columns.AddFor(m => m.Status).Caption("Status");
+                        })
+                        .Summary(s =>
+                        {
+                            s.TotalItems(items =>
+                            {
+                                items.AddFor(m => m.TahunPajak)
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("Total");
+
+                                items.AddFor(m => m.Jumlah)
+                                    .SummaryType(SummaryType.Sum)
+                                    .ValueFormat("#,##0")
+                                    .DisplayFormat("{0}");
+                            });
+                    })
+                )
+            </div>
+        </div>
+    </div>
+
+</div>

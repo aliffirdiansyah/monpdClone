@@ -117,6 +117,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonPbbRealisasi> DbMonPbbRealisasis { get; set; }
 
+    public virtual DbSet<DbMonPbbSummary> DbMonPbbSummaries { get; set; }
+
     public virtual DbSet<DbMonPbbViewRealisasi> DbMonPbbViewRealisasis { get; set; }
 
     public virtual DbSet<DbMonPbbViewRealisasi2> DbMonPbbViewRealisasi2s { get; set; }
@@ -1074,6 +1076,15 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsBy).HasDefaultValueSql("'JOB'                 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE               ");
+        });
+
+        modelBuilder.Entity<DbMonPbbSummary>(entity =>
+        {
+            entity.ToView("DB_MON_PBB_SUMMARY");
+
+            entity.Property(e => e.Kontak).IsFixedLength();
+            entity.Property(e => e.Nop).IsFixedLength();
+            entity.Property(e => e.Npwpd).IsFixedLength();
         });
 
         modelBuilder.Entity<DbMonPbbViewRealisasi>(entity =>

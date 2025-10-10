@@ -34,7 +34,7 @@ public partial class TOpParkirCctvRealtime
     public int JenisKend { get; set; }
 
     [Column("PLAT_NO")]
-    [StringLength(20)]
+    [StringLength(50)]
     [Unicode(false)]
     public string? PlatNo { get; set; }
 
