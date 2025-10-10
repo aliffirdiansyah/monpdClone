@@ -219,10 +219,11 @@
                                             <div style="height: 360px;">
                                                 @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingAktivitasHarian>()
                                                     .ID("gridLiveStreamingAktivitas")
-                                                    .DataSource(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList())
+                                                    .KeyExpr("Id")
+                                                    @* .DataSource(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList()) *@ // pakai function JS
                                                     .ShowBorders(true)
                                                     .ColumnAutoWidth(true)
-                                                    .Sorting(s => s.Mode(GridSortingMode.None))
+                                                    .Sorting(s => s.Mode(GridSortingMode.Multiple))
                                                     .HeaderFilter(h => h.Visible(true))
                                                     .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
                                                     .Height("100%") 
@@ -231,7 +232,15 @@
                                                     .OnExporting("exportGrid")
                                                     .OnRowPrepared("applyRowColor")
                                                     .Columns(columns => {
-                                                        columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center).SortOrder(SortOrder.Desc).SortIndex(0);  ;
+                                                        columns.AddFor(m => m.Id) 
+                                                        .Visible(false) // Sembunyikan kolom ID
+                                                        .SortOrder(SortOrder.Desc) // SECONDARY SORT (Untuk membedakan timestamp yang sama)
+                                                        .SortIndex(1);
+                                                        columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk")
+                                                            .DataType(GridColumnDataType.DateTime).Format("HH:mm:ss")
+                                                            .Alignment(HorizontalAlignment.Center)
+                                                            .SortOrder(SortOrder.Desc)
+                                                            .SortIndex(0);
                                                         columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
                                                         columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
                                                         columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
@@ -263,10 +272,10 @@
                                     <div style="height: 320px;">
                                         @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingAktivitasHarian>()
                                             .ID("gridLiveStreamingAktivitasMobile")
-                                            .DataSource(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList())
+                                            .KeyExpr("Id")
                                             .ShowBorders(true)
                                             .ColumnAutoWidth(true)
-                                            .Sorting(s => s.Mode(GridSortingMode.None))
+                                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
                                             .HeaderFilter(h => h.Visible(true))
                                             .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
                                             .Height("100%") 
@@ -275,12 +284,24 @@
                                             .OnExporting("exportGrid")
                                             .OnRowPrepared("applyRowColor")
                                             .Columns(columns => {
-                                                columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center);
+                    
+                                                // ✅ TAMBAHKAN KOLOM ID (Secondary Sort - Tersembunyi)
+                                                columns.AddFor(m => m.Id)
+                                                    .Visible(false) 
+                                                    .SortOrder(SortOrder.Desc) 
+                                                    .SortIndex(1); // Index 1: Kriteria Sekunder
+                    
+                                                // Waktu Masuk (Primary Sort)
+                                                columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk")
+                                                    .DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center)
+                                                    .SortOrder(SortOrder.Desc) 
+                                                    .SortIndex(0); 
+                        
                                                 columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
                                                 columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
                                                 columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
                                             })
-                                            )
+                                        )
                                     </div>
                                 </div>
                             </div>
@@ -485,10 +506,10 @@
                     var deltaData = data.newActivityEntries || data.NewActivityEntries;
 
                       // 💡 DEBUG LOG 2: Cek Status Array DataGrid Delta
-                    // console.log(`[SSE DEBUG] Delta Status: ${deltaData ? 'Ditemukan, Panjang: ' + deltaData.length : 'TIDAK DITEMUKAN atau null'}`);
+                    console.log(`[SSE DEBUG] Delta Status: ${deltaData ? 'Ditemukan, Panjang: ' + deltaData.length : 'TIDAK DITEMUKAN atau null'}`);
 
                     if (deltaData && deltaData.length > 0) {
-            
+                        
                         // Re-aktifkan penundaan untuk DataGrid
                         setTimeout(function() {
                             updateDataGrids(deltaData);
@@ -633,10 +654,28 @@
             $("#lastUpdate").text(formattedUpdate);
         }
 
+        function initializeGridDataSource() {
+            // 💡 Ambil data Awal dari Model C# (sudah diurutkan oleh C#)
+            var initialData = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList())));
+    
+            const gridDesktop = $("#gridLiveStreamingAktivitas").dxDataGrid("instance");
+            const gridMobile = $("#gridLiveStreamingAktivitasMobile").dxDataGrid("instance");
+
+            if (gridDesktop && initialData.length > 0) {
+                // Set DataSource menggunakan format array standar JavaScript
+                gridDesktop.option("dataSource", initialData);
+            }
+    
+            if (gridMobile && initialData.length > 0) {
+                gridMobile.option("dataSource", initialData);
+            }
+        }
+
         // 🚀 Initialize saat document ready
         $(document).ready(function () {
             loadLiveStreamingVideo();
             loadLiveStreamingCounting();
+            initializeGridDataSource(); 
     
             // Delay start SSE agar partial view selesai load dulu
             setTimeout(() => {
