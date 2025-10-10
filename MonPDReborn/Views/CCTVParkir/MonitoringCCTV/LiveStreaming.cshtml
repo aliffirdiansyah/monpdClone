@@ -231,7 +231,7 @@
                                                     .OnExporting("exportGrid")
                                                     .OnRowPrepared("applyRowColor")
                                                     .Columns(columns => {
-                                                        columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center);
+                                                        columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk").DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center).SortOrder(SortOrder.Desc).SortIndex(0);  ;
                                                         columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
                                                         columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
                                                         columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
@@ -471,19 +471,28 @@
             let updateCount = 0;
 
             evtSource.onmessage = function (e) {
-                // console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
+                console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
                 try {
 
                     const data = JSON.parse(e.data);
-
+          
                     // 💡 PERUBAHAN KRITIS 1: Panggil properti 'analysisResult' (camelCase)
                     if (data.analysisResult) { 
+                        console.log(`[SSE DEBUG] Analysis Mobil: ${data.analysisResult.mobil}, Motor: ${data.analysisResult.motor}`);
                         updateAnalysisUI(data.analysisResult); 
                     }
 
-                    // 💡 PERUBAHAN KRITIS 2: Panggil properti 'newActivityEntries' (camelCase)
-                    if (data.newActivityEntries && data.newActivityEntries.length > 0) {
-                        updateDataGrids(data.newActivityEntries); 
+                    var deltaData = data.newActivityEntries || data.NewActivityEntries;
+
+                      // 💡 DEBUG LOG 2: Cek Status Array DataGrid Delta
+                    // console.log(`[SSE DEBUG] Delta Status: ${deltaData ? 'Ditemukan, Panjang: ' + deltaData.length : 'TIDAK DITEMUKAN atau null'}`);
+
+                    if (deltaData && deltaData.length > 0) {
+            
+                        // Re-aktifkan penundaan untuk DataGrid
+                        setTimeout(function() {
+                            updateDataGrids(deltaData);
+                        }, 50); 
                     }
 
                     // 💡 PERUBAHAN KRITIS 3: Panggil properti 'kapasitasChartDetail' (camelCase)
@@ -508,9 +517,8 @@
             };
         }
 
-        // 📊 Update DataGrid dengan Smart Refresh
         // KODE FINAL DAN LENGKAP UNTUK updateDataGrids (Menggabungkan Delta dan Casing Fix)
-        function updateDataGrids(newEntries) { // <-- PERHATIKAN: Parameter harus 'newEntries'
+        function updateDataGrids(newEntries) { 
     
             // Helper untuk mengonversi camelCase ke PascalCase
             const toPascalCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
