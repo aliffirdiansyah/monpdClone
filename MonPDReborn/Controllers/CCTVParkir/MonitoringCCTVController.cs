@@ -272,7 +272,6 @@ namespace MonPDReborn.Controllers.CCTVParkir
                         var aktivitasListFull = MonitoringCCTVVM.Method.GetAktivitasHarian(nop, tgl); // Data penuh untuk Chart
                         var kapasitasChart = MonitoringCCTVVM.Method.GetKapasitasChart(aktivitasListFull, tgl);
 
-
                         var payload = new
                         {
                             AnalysisResult = analysis,

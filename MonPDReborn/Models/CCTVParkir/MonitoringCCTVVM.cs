@@ -1344,9 +1344,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 return result.OrderBy(x => x.TanggalMasuk).ToList();
             }
 
-            // Di dalam class MonitoringCCTVVM.Method
-
-            // 💡 Method baru untuk mengambil entri sejak waktu tertentu
+            // Membuat GetAktivitasHarian lebih ringan untuk realtime data
             public static List<LiveStreamingAktivitasHarian> GetNewActivityEntries(string nop, DateTime lastSentTime)
             {
                 var result = new List<LiveStreamingAktivitasHarian>();
@@ -1452,7 +1450,6 @@ namespace MonPDReborn.Models.CCTVParkir
             }
 
         }
-
 
         public class MonitoringCCTV
         {

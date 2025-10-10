@@ -168,7 +168,6 @@
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-lg-12">
         <div>
@@ -472,27 +471,24 @@
             let updateCount = 0;
 
             evtSource.onmessage = function (e) {
-                console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
+                // console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
                 try {
+
                     const data = JSON.parse(e.data);
 
-                    // 🔹 Update Analysis Summary (dengan animasi)
-                    if (data.AnalysisResult) {
-                        updateAnalysisUI(data.AnalysisResult);
+                    // 💡 PERUBAHAN KRITIS 1: Panggil properti 'analysisResult' (camelCase)
+                    if (data.analysisResult) { 
+                        updateAnalysisUI(data.analysisResult); 
                     }
 
-                    // 🔹 Update DataGrid (Desktop & Mobile)
-                    // if (data.AktivitasHarianList && data.AktivitasHarianList.length > 0) {
-                    //     updateDataGrids(data.AktivitasHarianList);
-                    // }
-                    // 💡 PERUBAHAN: Gunakan NewActivityEntries sebagai delta
-                    if (data.NewActivityEntries && data.NewActivityEntries.length > 0) {
-                        // Panggil fungsi updateDataGrids dengan data delta (1-2 entri baru)
-                        updateDataGrids(data.NewActivityEntries); 
+                    // 💡 PERUBAHAN KRITIS 2: Panggil properti 'newActivityEntries' (camelCase)
+                    if (data.newActivityEntries && data.newActivityEntries.length > 0) {
+                        updateDataGrids(data.newActivityEntries); 
                     }
 
-                    if (window.updateChart && data.KapasitasChartDetail) {
-                        window.updateChart(data);
+                    // 💡 PERUBAHAN KRITIS 3: Panggil properti 'kapasitasChartDetail' (camelCase)
+                    if (window.updateChart && data.kapasitasChartDetail) {
+                         window.updateChart(data);
                     }
 
                     // updateChart(data.KapasitasChartDetail);

@@ -107,7 +107,6 @@
 
 
 <script>
-
     // 1. Deklarasi Variabel Global untuk Akses oleh updateChart
     // Menggunakan window. untuk memastikan variabel dapat diakses secara global
     window.masterKendaraan = @(Html.Raw(JsonSerializer.Serialize(Model.KapasitasChartDetail.MasterKendaraans)));
@@ -296,18 +295,13 @@
                 }
             }, false, true); // (options, redrawPaths = false, animate = true)
 
-            console.log("📈 Chart & Annotations Updated:", new Date().toLocaleTimeString());
+            // console.log("📈 Chart & Annotations Updated:", new Date().toLocaleTimeString());
         } catch (err) {
             console.error("❌ Gagal update chart:", err);
         }
     };
 
-</script>
-
-
-
-<script>
-    // === SCROLL EFFECT - Langsung target modal-body ===
+     // === SCROLL EFFECT - Langsung target modal-body ===
     $(document).ready(function() {
         // Target langsung modal body dari Bootstrap modal-dialog-scrollable
         var $modalBody = $('#staticBackdropLargeScrollable .modal-body');
