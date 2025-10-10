@@ -415,8 +415,8 @@
                                                                     .Columns(columns =>
                                                                     {
                                                                         columns.AddFor(m => m.BulanNama).Caption("Bulan");
-                                                                        columns.AddFor(m => m.TahunMines1).Caption(tahunMin1);
-                                                                        columns.AddFor(m => m.TahunNow).Caption(tahunNow);
+                                                                        columns.AddFor(m => m.TahunMines1).Caption(tahunMin1).Format("#,##0.00");
+                                                                        columns.AddFor(m => m.TahunNow).Caption(tahunNow).Format("#,##0.00");
                                                                     })
                                                                     .Summary(s =>
                                                                     {
