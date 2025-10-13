@@ -31,6 +31,9 @@ namespace MonPDLib.Lib
         public decimal SkorPandang { get; private set; }
         public decimal SkorKetinggian { get; private set; }
         public decimal TotalSkor { get; private set; }
+        public decimal HasilNssLokasi { get; private set; }
+        public decimal HasilNssPandang { get; private set; }
+        public decimal HasilNssKetinggian { get; private set; }
         public decimal TotalNilaiStrategis { get; private set; }
         public decimal TotalNjopStrategis { get; private set; }
         public decimal PenambahanKetinggian { get; private set; }
@@ -163,6 +166,7 @@ namespace MonPDLib.Lib
             decimal skorLokasi = 0m;
             decimal skorPandang = 0m;
             decimal skorTinggi = 0m;
+            decimal totalskor = 0m;
 
             var def = _context.MNilaiStrategisDefs
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
@@ -175,6 +179,7 @@ namespace MonPDLib.Lib
                 skorLokasi = def.Lokasi;
                 skorPandang = def.Spandang;
                 skorTinggi = def.Ketinggian;
+                totalskor = skorLokasi + skorPandang + skorTinggi;
 
                 skorLokasiBobot = def.Lokasi * lokasi.Bobot;
                 skorPandangBobot = def.Spandang * pandang.Bobot;
@@ -184,6 +189,7 @@ namespace MonPDLib.Lib
             skorLokasi = lokasi.Skor;
             skorPandang = pandang.Skor;
             skorTinggi = tinggiData.Skor;
+            totalskor = skorLokasi + skorPandang + skorTinggi;
 
             skorLokasiBobot = lokasi.Skor * lokasi.Bobot;
             skorPandangBobot = pandang.Skor * pandang.Bobot;
@@ -239,6 +245,9 @@ namespace MonPDLib.Lib
                 SkorPandang = skorPandang,
                 SkorKetinggian = skorTinggi,
                 TotalSkor = totalStrategis,
+                HasilNssLokasi = skorLokasiBobot,
+                HasilNssPandang = skorPandangBobot,
+                HasilNssKetinggian = skorTinggiBobot,
                 TotalNilaiStrategis = totalNilaiStrategis,
                 TotalNjopStrategis = totalNjopStrategis,
                 PenambahanKetinggian = penambahanKetinggian,

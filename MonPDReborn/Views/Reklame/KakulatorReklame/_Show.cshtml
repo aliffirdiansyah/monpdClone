@@ -2,15 +2,35 @@
 @model MonPDReborn.Models.Reklame.KakulatorReklameVM.Show
 
 @{
-    Layout =  null;
+    Layout = null;
 }
 
 <style>
-    body { font-family: "Courier New", monospace; font-size: 14px; }
-    .table td, .table th { vertical-align: middle; padding: 4px 8px; }
-    .judul { text-align: center; font-weight: bold; text-transform: uppercase; }
-    .section-title { font-weight: bold; border-bottom: 2px solid black; margin-top: 1rem; }
-    .right { text-align: right; }
+    body {
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 4px 8px;
+    }
+
+    .judul {
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .section-title {
+        font-weight: bold;
+        border-bottom: 2px solid black;
+        margin-top: 1rem;
+    }
+
+    .right {
+        text-align: right;
+    }
 </style>
 
 <div class="container p-4">
@@ -25,47 +45,59 @@
     </div>
 
     <!-- DATA OBYEK PAJAK -->
-    <div class="section-title">DATA OBYEK PAJAK</div>
+    <div class="section-title text-center">DATA OBJEK PAJAK</div>
     <table class="table table-bordered border-dark mb-3">
         <tbody>
-            <tr><td width="25%">Jenis</td><td colspan="3">@Model.Output.JenisReklame</td></tr>
             <tr>
-                <td>Panjang</td><td>@Model.Output.Panjang</td>
-                <td>Sisi</td><td>1</td>
+                <td class="right" width="25%">Jenis</td>
+                <td class="left" colspan="3">@Model.Output.JenisReklame.GetDescription()</td>
             </tr>
             <tr>
-                <td>Luas</td>
+                <td class="right">Panjang</td>
+                <td>@Model.Output.Panjang</td>
+                <td>Sisi</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td class="right">Luas</td>
                 <td>@Model.Output.Panjang × @Model.Output.Lebar = @Model.KalkullatorReklameRow.Luas</td>
-                <td>Letak Reklame</td><td>@Model.Output.LetakReklame.GetDescription()</td>
+                <td>Letak Reklame</td>
+                <td>@Model.Output.LetakReklame.GetDescription()</td>
             </tr>
             <tr>
-                <td>Ketinggian</td><td>@Model.Output.Tinggi</td>
-                <td>Status Lokasi</td><td>@Model.KalkullatorReklameRow.Kawasan.GetDescription()</td>
+                <td class="right">Ketinggian</td>
+                <td>@Model.Output.Tinggi</td>
+                <td>Status Lokasi</td>
+                <td>@Model.KalkullatorReklameRow.Kawasan.GetDescription()</td>
             </tr>
             <tr>
-                <td>Sudut Pandang</td><td>@Model.Output.SudutPandang</td>
-                <td>Kelas Jalan</td><td>@Model.KalkullatorReklameRow.KelasJalan</td>
+                <td class="right">Sudut Pandang</td>
+                <td>@Model.Output.SudutPandang</td>
+                <td>Kelas Jalan</td>
+                <td>@Model.KalkullatorReklameRow.KelasJalan</td>
             </tr>
             <tr>
-                <td>Jenis Produk</td><td>@Model.Output.JenisProduk.GetDescription()</td>
-                <td></td><td></td>
+                <td class="right">Jenis Produk</td>
+                <td>@Model.Output.JenisProduk.GetDescription()</td>
+                <td></td>
+                <td></td>
             </tr>
         </tbody>
     </table>
 
     <!-- PERHITUNGAN -->
-    <div class="section-title">PERHITUNGAN</div>
+    <div class="section-title text-center">PERHITUNGAN</div>
     <table class="table table-bordered border-dark">
         <tbody>
             <tr class="table-secondary"><td colspan="4" class="fw-bold">NJOP</td></tr>
             <tr>
-                <td>Luas</td>
+                <td class="right">Luas</td>
                 <td class="right">@Model.KalkullatorReklameRow.Luas</td>
                 <td class="right">× @Model.KalkullatorReklameRow.NsrLuas.ToString("N0")</td>
                 <td class="right">Rp. @Model.KalkullatorReklameRow.NjopLuas</td>
             </tr>
             <tr>
-                <td>Ketinggian</td>
+                <td class="right">Ketinggian</td>
                 <td class="right">@Model.Output.Tinggi</td>
                 <td class="right">× @Model.KalkullatorReklameRow.NsrKetinggian.ToString("N0")</td>
                 <td class="right">Rp. @Model.KalkullatorReklameRow.NjopKetinggian.ToString("N0")</td>
@@ -75,42 +107,102 @@
                 <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNjop.ToString("N0")</td>
             </tr>
 
-            <tr class="table-secondary"><td colspan="4" class="fw-bold">NILAI STRATEGIS</td></tr>
-            <tr><td>Skor Lokasi</td><td class="right">@Model.KalkullatorReklameRow.SkorLokasi.ToString("N2") × @Model.KalkullatorReklameRow.BobotLokasiNilai.ToString("P2")</td><td></td><td class="right">@Model.KalkullatorReklameRow.SkorLokasi.ToString("N0")</td></tr>
-            <tr><td>Skor S. Pandang</td><td class="right">@Model.KalkullatorReklameRow.SkorPandang.ToString("N2") × @Model.KalkullatorReklameRow.BobotPandangNilai.ToString("P2")</td><td></td><td class="right">@Model.KalkullatorReklameRow.SkorPandang.ToString("N0")</td></tr>
-            <tr><td>Skor Ketinggian</td><td class="right">@Model.KalkullatorReklameRow.SkorKetinggian.ToString("N2") × @Model.KalkullatorReklameRow.BobotKetinggianNilai.ToString("P2")</td><td></td><td class="right">@Model.KalkullatorReklameRow.SkorKetinggian.ToString("N0")</td></tr>
-            <tr><td colspan="3" class="fw-bold right">BOBOT TOTAL</td><td class="right fw-bold">@Model.KalkullatorReklameRow.TotalSkor.ToString("N0")</td></tr>
+            <tr class="table-secondary">
+                <td colspan="4" class="fw-bold">NILAI STRATEGIS</td>
+            </tr>
 
-            <tr><td colspan="3" class="right">TOTAL NILAI STRATEGIS</td><td class="right">Rp. @Model.KalkullatorReklameRow.TotalNjopStrategis.ToString("N0")</td></tr>
-            <tr><td colspan="3" class="right">TOTAL NJOP + N. STRATEGIS</td><td class="right">Rp. @Model.KalkullatorReklameRow.TotalNjopStrategis.ToString("N0")</td></tr>
-            <tr><td colspan="3" class="right">Penambahan Ketinggian</td><td class="right">Rp. @Model.KalkullatorReklameRow.PenambahanKetinggian.ToString("N0")</td></tr>
+            <tr>
+                <td class="right">Skor Lokasi</td>
+                <td colspan="2" class="text-end">
+                    @Model.KalkullatorReklameRow.SkorLokasi.ToString("N2") × @Model.KalkullatorReklameRow.BobotLokasiNilai.ToString("P2")
+                </td>
+                <td class="text-end">
+                    @Model.KalkullatorReklameRow.HasilNssLokasi.ToString("N2")
+                </td>
+            </tr>
+
+            <tr>
+                <td class="right">Skor S. Pandang</td>
+                <td colspan="2" class="text-end">
+                    @Model.KalkullatorReklameRow.SkorPandang.ToString("N2") × @Model.KalkullatorReklameRow.BobotPandangNilai.ToString("P2")
+                </td>
+                <td class="text-end">
+                    @Model.KalkullatorReklameRow.HasilNssPandang.ToString("N2")
+                </td>
+            </tr>
+
+            <tr>
+                <td class="right">Skor Ketinggian</td>
+                <td colspan="2" class="text-end">
+                    @Model.KalkullatorReklameRow.SkorKetinggian.ToString("N2") × @Model.KalkullatorReklameRow.BobotKetinggianNilai.ToString("P2")
+                </td>
+                <td class="text-end">
+                    @Model.KalkullatorReklameRow.HasilNssKetinggian.ToString("N2")
+                </td>
+            </tr>
+
+            <tr>
+                <td class="right">BOBOT TOTAL</td>
+                <td colspan="2" class="text-end">
+                    @Model.KalkullatorReklameRow.TotalSkor.ToString("N2") × @Model.KalkullatorReklameRow.Nss.ToString("N0")
+                </td>
+                <td class="text-end">
+                    @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N2")
+                </td>
+            </tr>
+
+            <tr>
+                <td class="right">TOTAL NILAI STRATEGIS</td>
+                <td colspan="2" class="text-end">
+                    @Model.KalkullatorReklameRow.TotalNjop.ToString("N0") + @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
+                </td>
+                <td class="text-end">
+                    @Model.KalkullatorReklameRow.TotalNjopStrategis.ToString("N2")
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" class="fw-bold text-end">Total NJOP + Nilai Strategis</td>
+                <td class="fw-bold text-end">
+                    Rp. @Model.KalkullatorReklameRow.TotalNjopStrategis.ToString("N0")
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" class="fw-bold text-end">Penambahan Ketinggian</td>
+                <td class="fw-bold text-end">
+                    Rp. @Model.KalkullatorReklameRow.PenambahanKetinggian.ToString("N0")
+                </td>
+            </tr>
+
 
             <tr class="table-secondary"><td colspan="4" class="fw-bold">POKOK PAJAK</td></tr>
             <tr>
-                <td colspan="3" class="right">@Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N2") × 25%</td>
+                <td class="right">Pokok Pajak</td>
+                <td colspan="2" class="right">@Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N2") × 25%</td>
                 <td class="right">Rp. @Model.KalkullatorReklameRow.PokokPajak.ToString("N0")</td>
             </tr>
             <tr>
-                <td>Produk Rokok</td>
+                <td class ="right">Produk Rokok</td>
                 <td colspan="2"></td>
                 <td class="right">Rp. @Model.KalkullatorReklameRow.ProdukRokok.ToString("N0")</td>
             </tr>
             <tr>
-                <td colspan="3" class="fw-bold right">TOTAL NILAI SEWA</td>
+                <td colspan="3" class="fw-bold right">Total Nilai Sewa Reklame</td>
                 <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
             </tr>
 
             <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr>
             <tr>
-                <td>@Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000</td>
-                <td colspan="2"></td>
+                <td class="right">Jaminan Bongkar</td>
+                <td colspan="2" class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000</td>
                 <td class="right">Rp. @Model.KalkullatorReklameRow.JaminanBongkar.ToString("N0")</td>
             </tr>
         </tbody>
     </table>
 
     <p class="mt-4">Keterangan : ...........................................................................................................</p>
-@* 
+    @* 
     <div class="text-end mt-5">
         Surabaya, @DateTime.Now.ToString("dd - MM - yyyy")<br /><br />
         <b>Agung Pambudi, SE</b><br />
