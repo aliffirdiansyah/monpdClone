@@ -141,7 +141,7 @@ namespace MonPDLib.Lib
             {
                 tinggiData = _context.MNilaiStrategisTinggis
                     .Where(x => input.Tinggi >= x.MinKetinggian
-                             && x.MinKetinggian > 0
+                             && x.MinKetinggian >= 0
                              && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
                              && x.TglAwalBerlaku <= today
                              && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))

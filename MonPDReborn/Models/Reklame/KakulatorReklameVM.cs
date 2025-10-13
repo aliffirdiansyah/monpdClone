@@ -16,6 +16,7 @@ namespace MonPDReborn.Models.Reklame
             public List<SelectListItem> JenisReklameList { get; set; } = new();
             public List<SelectListItem> LetakReklameList { get; set; } = new();
             public List<SelectListItem> ProdukList { get; set; } = new();
+            public List<SelectListItem> JalanList { get; set; } = new();
             public Index()
             {
                 var context = DBClass.GetReklameContext();
@@ -40,6 +41,13 @@ namespace MonPDReborn.Models.Reklame
                         Value = ((int)x).ToString(),
                         Text = x.GetDescription()
                     }).ToList();
+                JalanList = context.MJalans
+                    .Select(q => new SelectListItem
+                    {
+                        Value = q.IdJalan.ToString(),
+                        Text = q.NamaJalan
+                    })
+                    .ToList();
             }
         }
 

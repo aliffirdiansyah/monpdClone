@@ -4,3 +4,197 @@
     ViewData["Title"] = "Kakulator Reklame";
     Layout = "_Layout";
 }
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Kalkulator Reklame
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mt-3 ms-0">
+
+                    <div class="col-lg-1">
+                        @(Html.DevExtreme().NumberBox()
+                                                .ID("Panjang")
+                                                .Placeholder("Panjang (m)")
+                                                .ShowClearButton(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-control mb-3"))
+                    </div>
+
+                    <div class="col-lg-1">
+                        @(Html.DevExtreme().NumberBox()
+                                                .ID("Lebar")
+                                                .Placeholder("Lebar (m)")
+                                                .ShowClearButton(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-control mb-3"))
+                    </div>
+
+                    <div class="col-lg-1">
+                        @(Html.DevExtreme().NumberBox()
+                                                .ID("Tinggi")
+                                                .Placeholder("Tinggi (m)")
+                                                .ShowClearButton(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-control mb-3"))
+                    </div>
+
+                    <div class="col-lg-1">
+                        @(Html.DevExtreme().NumberBox()
+                                                .ID("SudutPandang")
+                                                .Placeholder("Sudut (°)")
+                                                .ShowClearButton(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-control mb-3"))
+                    </div>
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBox()
+                                                .ID("IdJalan")
+                                                .DataSource(Model.JalanList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih Nama Jalan")
+                                                .SearchEnabled(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3"))
+                    </div>
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBox()
+                                                .ID("JenisReklame")
+                                                .DataSource(Model.JenisReklameList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih Jenis Reklame")
+                                                .SearchEnabled(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3"))
+                    </div>
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBox()
+                                                .ID("LetakReklame")
+                                                .DataSource(Model.LetakReklameList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih Letak Reklame")
+                                                .SearchEnabled(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3"))
+                    </div>
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBox()
+                                                .ID("produkList")
+                                                .DataSource(Model.ProdukList)
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .Placeholder("Pilih Produk")
+                                                .SearchEnabled(true)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select mb-3"))
+                    </div>
+                    <div class="col-lg-2 d-flex align-items-center">
+                        <button type="button" class="btn btn-success w-100" id="btnFilter">
+                            <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Hasil Perhitungan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="loading2-Show" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="Show">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        function loadShowData() {
+            let jenisReklame = $("#JenisReklame").dxSelectBox("instance").option("value");
+            let letakReklame = $("#LetakReklame").dxSelectBox("instance").option("value");
+            let produk = $("#produkList").dxSelectBox("instance").option("value");
+            let idJalan = $("#IdJalan").dxSelectBox("instance")?.option("value");
+            let panjang = $("#Panjang").dxNumberBox("instance")?.option("value");
+            let lebar = $("#Lebar").dxNumberBox("instance")?.option("value");
+            let tinggi = $("#Tinggi").dxNumberBox("instance")?.option("value");
+            let sudutPandang = $("#SudutPandang").dxNumberBox("instance")?.option("value");
+
+            if (!jenisReklame || !letakReklame || !produk) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi Data',
+                    text: '⚠ Harap pilih semua filter utama sebelum menerapkan.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("Show", "KakulatorReklame")',
+                type: "GET",
+                data: {
+                    jenisReklame: jenisReklame,
+                    letakReklame: letakReklame,
+                    produk: produk,
+                    idJalan: idJalan,
+                    panjang: panjang,
+                    lebar: lebar,
+                    tinggi: tinggi,
+                    sudutPandang: sudutPandang
+                },
+                beforeSend: function () {
+                    $("#Show").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    $("#Show").html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: 'Gagal memuat data show.'
+                    });
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                    $("#Show").show();
+                }
+            });
+        }
+
+        $(".btn-success").on("click", loadShowData);
+    </script>
+
+
+}
