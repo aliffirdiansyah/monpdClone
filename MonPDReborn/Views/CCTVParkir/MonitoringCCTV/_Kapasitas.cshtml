@@ -48,9 +48,16 @@
                 <div class="row text-left g-3 mt-1">
                     <!-- Col 1 -->
                     <div class="col-md-6">
-                        <h5 class="text-dark">Nama OP : @Model.NamaOP</h5>
-                        <h5 class="text-primary">No OP : @Model.formattedNop</h5>
-                        <h5 class="text-dark">Alamat : @Model.AlamatOP</h5>
+                        <h5 class="text-dark">@Model.NamaOP</h5>
+                        <h5 class="text-primary">
+                            <a href="/ProfileOP/Detail?nop=@Model.Nop&pajak=4"
+                                target="_blank"
+                                rel="noreferrer"
+                                style="cursor: pointer; text-decoration: none;">
+                                    @Model.formattedNop
+                            </a>
+                        </h5>
+                        <h5 class="text-dark">@Model.AlamatOP</h5>
                     </div>
 
                     <!-- Col 2 -->
@@ -128,6 +135,7 @@
                 .appendTo($wrapper);
 
             var $gridContainer = $("<div>").appendTo($wrapper);
+            $gridContainer.html('<div style="text-align: center; padding: 20px;"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat Data...</p></div>');
 
             // load data via ajax
             $.ajax({
@@ -135,6 +143,7 @@
                 type: 'GET',
                 data: { nop: nop, vendorId: vendorId, tahun: tahun, bulan: bulan },
                 success: function (data) {
+                    $gridContainer.empty();
                     $gridContainer.dxDataGrid({
                         dataSource: data,
                         showBorders: true,
@@ -201,6 +210,7 @@
                     });
                 },
                 error: function (xhr) {
+                    $wrapper.empty();
                     $wrapper.append($("<div style='color:red'>")
                         .text("Error load data harian: " + xhr.responseText));
                 }

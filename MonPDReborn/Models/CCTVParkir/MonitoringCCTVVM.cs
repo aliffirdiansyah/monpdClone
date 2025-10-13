@@ -1146,9 +1146,9 @@ namespace MonPDReborn.Models.CCTVParkir
                     .ToList();
 
                 // 📌 Bulanan tetap berdasarkan bulan dari tgl
-                var kendaraanParkirBulanan = context.TOpParkirCctvRealtimes
+                var kendaraanParkirBulanan = context.TOpParkirCctvs
                     .Where(x => x.WaktuMasuk.Year == tgl.Year && x.WaktuMasuk.Month == tgl.Month &&
-                                x.Nop == nop )
+                                x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming))
                     .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Day })
                     .Select(g => new
                     {
