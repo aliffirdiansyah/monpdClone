@@ -93,8 +93,8 @@ namespace MonPDLib.Lib
             }
 
             // 4️⃣ Hitung NJOP dasar (luas + tinggi)
-            decimal njopLuas = luas * (nsrLuas.NilaiSewa ?? 0);
-            decimal njopKetinggian = input.Tinggi * (nsrTinggi.NilaiKetinggian ?? 0);
+            decimal njopLuas = luas * (nsrLuas.NilaiSewa);
+            decimal njopKetinggian = input.Tinggi * (nsrTinggi.NilaiKetinggian);
             decimal totalNjop = njopLuas + njopKetinggian;
 
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
@@ -163,7 +163,7 @@ namespace MonPDLib.Lib
             totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
 
             // 7️⃣ Total Nilai Strategis (dikalikan NSS)
-            decimal totalNilaiStrategis = totalStrategis * (nss.NilaiSatuan ?? 0);
+            decimal totalNilaiStrategis = totalStrategis * (nss.NilaiSatuan);
             decimal totalNjopStrategis = totalNjop + totalNilaiStrategis;
 
             // 8️⃣ Tambahan tinggi (jika > 15m, tiap 15m = +20%)
