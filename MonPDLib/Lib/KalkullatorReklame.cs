@@ -20,7 +20,7 @@ namespace MonPDLib.Lib
             public int SudutPandang { get; set; }
             public EnumFactory.KategoriReklame JenisReklame { get; set; }
             public int MasaPajak { get; set; }
-            public string JenisProduk { get; set; } = string.Empty;
+            public EnumFactory.ProdukReklame JenisProduk { get; set; }
             public EnumFactory.LetakReklame LetakReklame { get; set; }
         }
 
@@ -41,13 +41,13 @@ namespace MonPDLib.Lib
 
         private static ReklameContext _context = DBClass.GetReklameContext();
 
-        public static async Task<KalkullatorReklame> HitungNilaiSewaAsync(ReklameInput input)
+        public static KalkullatorReklame HitungNilaiSewaReklame(ReklameInput input)
         {
             decimal luas = input.Panjang * input.Lebar;
             DateTime today = DateTime.Today;
 
             // 1️⃣ Ambil NSR Luas (cek tanggal berlaku)
-            var nsrLuas = await _context.MNsrLuas
+            var nsrLuas = _context.MNsrLuas
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                          && x.MasaPajak == input.MasaPajak
                          && luas >= x.MinLuas
@@ -55,25 +55,25 @@ namespace MonPDLib.Lib
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (nsrLuas == null)
                 throw new Exception("NSR Luas tidak ditemukan atau tidak berlaku.");
 
             // 2️⃣ Ambil NSR Tinggi
-            var nsrTinggi = await _context.MNsrTinggis
+            var nsrTinggi = _context.MNsrTinggis
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                          && x.MasaPajak == input.MasaPajak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (nsrTinggi == null)
                 throw new Exception("NSR Tinggi tidak ditemukan atau tidak berlaku.");
 
             // 3️⃣ Ambil nilai satuan strategis (NSS)
-            var nss = await _context.MNilaiSatuanStrategis
+            var nss = _context.MNilaiSatuanStrategis
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                          && x.MasaPajak == input.MasaPajak
                          && luas >= x.MinLuas
@@ -81,7 +81,7 @@ namespace MonPDLib.Lib
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (nss == null)
                 throw new Exception("Nilai Satuan Strategis tidak ditemukan atau tidak berlaku.");
@@ -98,39 +98,39 @@ namespace MonPDLib.Lib
             decimal totalNjop = njopLuas + njopKetinggian;
 
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
-            var lokasi = await _context.MNilaiStrategisLokasis
+            var lokasi = _context.MNilaiStrategisLokasis
                 .Where(x => x.KelasJalan == input.KelasJalan
                          && x.IsDlmRuang == letak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            var pandang = await _context.MNilaiStrategisSpandangs
+            var pandang = _context.MNilaiStrategisSpandangs
                 .Where(x => x.SudutPandang == input.SudutPandang
                          && x.IsDlmRuang == letak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            var tinggiData = await _context.MNilaiStrategisTinggis
+            var tinggiData = _context.MNilaiStrategisTinggis
                 .Where(x => input.Tinggi >= x.MinKetinggian
                             && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
                             && x.TglAwalBerlaku <= today
                             && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
             if (letak == 0)
             {
-                tinggiData = await _context.MNilaiStrategisTinggis
+                tinggiData = _context.MNilaiStrategisTinggis
                     .Where(x => input.Tinggi >= x.MinKetinggian
                              && x.MinKetinggian > 0
                              && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
                              && x.TglAwalBerlaku <= today
                              && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                     .OrderByDescending(x => x.TglAwalBerlaku)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefault();
                 if (tinggiData == null)
                     throw new Exception("Nilai strategis tinggi tidak ditemukan atau tidak berlaku.");
             }
@@ -191,7 +191,7 @@ namespace MonPDLib.Lib
 
             // 🔟 Tambahan 25% jika produk rokok
             decimal produkRokok = 0;
-            if (!string.IsNullOrEmpty(input.JenisProduk) && input.JenisProduk.Trim().ToUpper() == "ROKOK")
+            if (input.JenisProduk == EnumFactory.ProdukReklame.Rokok)
             {
                 produkRokok = pokokPajak * 0.25m;
             }
