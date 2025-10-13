@@ -18,9 +18,12 @@ namespace MonPDLib.Lib
             public decimal Lebar { get; set; }
             public decimal Tinggi { get; set; }
             public int SudutPandang { get; set; }
-            public EnumFactory.KategoriReklame JenisReklame { get; set; }
-            public EnumFactory.ProdukReklame JenisProduk { get; set; }
-            public EnumFactory.LetakReklame LetakReklame { get; set; }
+            public int IdJenisReklame { get; set; }
+            public int IdJenisProduk { get; set; }
+            public int IdLetakReklame { get; set; }
+            public EnumFactory.KategoriReklame JenisReklame => (EnumFactory.KategoriReklame)IdJenisReklame;
+            public EnumFactory.ProdukReklame JenisProduk => (EnumFactory.ProdukReklame)IdJenisProduk;
+            public EnumFactory.LetakReklame LetakReklame => (EnumFactory.LetakReklame)IdLetakReklame;
         }
 
         public decimal Luas { get; private set; }
@@ -36,7 +39,9 @@ namespace MonPDLib.Lib
         public decimal HasilNssKetinggian { get; private set; }
         public decimal TotalNilaiStrategis { get; private set; }
         public decimal TotalNjopStrategis { get; private set; }
+        public decimal PersenTambahKetinggian { get; private set; }
         public decimal PenambahanKetinggian { get; private set; }
+        public decimal TotalAfterKetinggian { get; private set; }
         public decimal PokokPajak { get; private set; }
         public decimal ProdukRokok { get; private set; }
         public decimal TotalNilaiSewa { get; private set; }
@@ -66,7 +71,7 @@ namespace MonPDLib.Lib
                 .FirstOrDefault();
 
             if (jalan == null)
-                throw new Exception("Data jalan tidak ditemukan.");
+                throw new ArgumentException("Data jalan tidak ditemukan.");
 
             // 1️⃣ Ambil NSR Luas (cek tanggal berlaku)
             var nsrLuas = _context.MNsrLuas
@@ -79,7 +84,7 @@ namespace MonPDLib.Lib
                 .FirstOrDefault();
 
             if (nsrLuas == null)
-                throw new Exception("NSR Luas tidak ditemukan atau tidak berlaku.");
+                throw new ArgumentException("NSR Luas tidak ditemukan atau tidak berlaku.");
 
             // 2️⃣ Ambil NSR Tinggi
             var nsrTinggi = _context.MNsrTinggis
@@ -90,7 +95,7 @@ namespace MonPDLib.Lib
                 .FirstOrDefault();
 
             if (nsrTinggi == null)
-                throw new Exception("NSR Tinggi tidak ditemukan atau tidak berlaku.");
+                throw new ArgumentException("NSR Tinggi tidak ditemukan atau tidak berlaku.");
 
             // 3️⃣ Ambil nilai satuan strategis (NSS)
             var nss = _context.MNilaiSatuanStrategis
@@ -103,7 +108,7 @@ namespace MonPDLib.Lib
                 .FirstOrDefault();
 
             if (nss == null)
-                throw new Exception("Nilai Satuan Strategis tidak ditemukan atau tidak berlaku.");
+                throw new ArgumentException("Nilai Satuan Strategis tidak ditemukan atau tidak berlaku.");
 
             int letak = 1; // Default indoor
             if (input.LetakReklame == EnumFactory.LetakReklame.Outdoor)
@@ -151,11 +156,11 @@ namespace MonPDLib.Lib
                     .OrderByDescending(x => x.TglAwalBerlaku)
                     .FirstOrDefault();
                 if (tinggiData == null)
-                    throw new Exception("Nilai strategis tinggi tidak ditemukan atau tidak berlaku.");
+                    throw new ArgumentException("Nilai strategis tinggi tidak ditemukan atau tidak berlaku.");
             }
 
             if (lokasi == null || pandang == null || tinggiData == null)
-                throw new Exception("Nilai strategis lokasi / sudut pandang / tinggi tidak ditemukan atau tidak berlaku.");
+                throw new ArgumentException("Nilai strategis lokasi / sudut pandang / tinggi tidak ditemukan atau tidak berlaku.");
 
             // 6️⃣ Hitung nilai strategis (skor * bobot)
             decimal skorLokasiBobot = 0m;
@@ -201,6 +206,7 @@ namespace MonPDLib.Lib
             decimal totalNjopStrategis = totalNjop + totalNilaiStrategis;
 
             // 8️⃣ Tambahan tinggi (jika > 15m, tiap 15m = +20%)
+            decimal tambahanPersen = 0.20m;
             decimal penambahanKetinggian = 0;
             if (input.Tinggi > 15)
             {
@@ -208,7 +214,7 @@ namespace MonPDLib.Lib
                 int kelipatan = (int)(input.Tinggi / 15);
 
                 // Setiap kelipatan menambah 20%
-                decimal tambahanPersen = 0.20m * kelipatan;
+                tambahanPersen = tambahanPersen * kelipatan;
 
                 if (tambahanPersen == 0)
                 {
@@ -250,7 +256,9 @@ namespace MonPDLib.Lib
                 HasilNssKetinggian = skorTinggiBobot,
                 TotalNilaiStrategis = totalNilaiStrategis,
                 TotalNjopStrategis = totalNjopStrategis,
+                PersenTambahKetinggian = tambahanPersen,
                 PenambahanKetinggian = penambahanKetinggian,
+                TotalAfterKetinggian = totalSetelahKetinggian,
                 PokokPajak = pokokPajak,
                 ProdukRokok = produkRokok,
                 TotalNilaiSewa = totalNilaiSewa,
