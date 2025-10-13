@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [Keyless]
-public partial class DbOpAccHotel
+public partial class MvDbOpAccHotel
 {
     [Column("NOP")]
     [StringLength(100)]
@@ -22,4 +22,7 @@ public partial class DbOpAccHotel
 
     [Column("TAHUN_INI", TypeName = "NUMBER")]
     public decimal? TahunIni { get; set; }
+
+    [Column("TAHUN_INI_SAMPAI_SYSDATE", TypeName = "NUMBER")]
+    public decimal? TahunIniSampaiSysdate { get; set; }
 }

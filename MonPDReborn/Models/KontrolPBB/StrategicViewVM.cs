@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
 namespace MonPDReborn.Models.KontrolPBB
 {
@@ -43,9 +45,11 @@ namespace MonPDReborn.Models.KontrolPBB
                 public decimal JmlObjek { get; set; }
                 public decimal TargetNow { get; set; }
                 public decimal RealisasiNow { get; set; }
-                public decimal Gap => TargetNow - RealisasiNow;
-                public decimal PencapaianNow => TargetNow == 0 ? 0 : (RealisasiNow / TargetNow) * 100;
+                public decimal Selisih { get; set; }
+                public decimal Pencapaian { get; set; }
                 public decimal Prediksi { get; set; }
+                public decimal PersenPrediksi { get; set; }
+                public decimal PersenTarget { get; set; }
             }
             public class KategoriOP
             {
@@ -72,57 +76,46 @@ namespace MonPDReborn.Models.KontrolPBB
         {
             public static List<ViewModels.CapaianKomprehensif> GetCapaianKomprehensif()
             {
-                var list = new List<ViewModels.CapaianKomprehensif>
-                {
-                    new ViewModels.CapaianKomprehensif
+                var context = DBClass.GetContext();
+                var ret = new List<ViewModels.CapaianKomprehensif>();
+
+                ret = context.DbMonPbbSumpages
+                    .Select(x => new ViewModels.CapaianKomprehensif
                     {
-                        Komponen = "Penetapan Tahun Ini",
-                        JmlObjek = 150000,
-                        TargetNow = 12000000000,
-                        RealisasiNow = 11500000000,
-                        Prediksi = 12500000000
-                    },
-                    new ViewModels.CapaianKomprehensif
-                    {
-                        Komponen = "Rencana Penagihan Tunggakan",
-                        JmlObjek = 5000,
-                        TargetNow = 3000000000,
-                        RealisasiNow = 2800000000,
-                        Prediksi = 3200000000
-                    },
-                };
-                return list;
+                        Komponen = x.Komponen ?? "-",
+                        JmlObjek = x.JumlahObjek ?? 0,
+                        TargetNow = x.TargetTahunan ?? 0,
+                        RealisasiNow = x.TotalRealisasi ?? 0,
+                        Prediksi = x.Prediksi ?? 0,
+                        Selisih = x.Selisih ?? 0,
+                        Pencapaian = x.CapaianPersen ?? 0,
+                        PersenPrediksi = x.PersenPrediksi ?? 0,
+                        PersenTarget = x.PersenTarget ?? 0
+
+                    })
+                    .ToList();
+
+                return ret;
             }
             public static List<ViewModels.KategoriOP> GetKategoriOP()
             {
-                var list = new List<ViewModels.KategoriOP>
-                {
-                    new ViewModels.KategoriOP
+                var context = DBClass.GetContext();
+                var ret = new List<ViewModels.KategoriOP>();
+
+                var tahun = DateTime.Now.Year;
+
+                ret = context.DbMonPbbSummaries
+                    .Where(x => x.TahunPajak == tahun)
+                    .GroupBy(x => x.Katagori)
+                    .Select(g => new ViewModels.KategoriOP
                     {
-                        Kategori = "Tanah Kosong",
-                        JmlObjek = 80000,
-                        Penetapan = 6000000000,
-                        Realisasi = 5800000000,
-                        Prediksi = 6200000000
-                    },
-                    new ViewModels.KategoriOP
-                    {
-                        Kategori = "Tanah + Bangunan",
-                        JmlObjek = 40000,
-                        Penetapan = 4000000000,
-                        Realisasi = 3500000000,
-                        Prediksi = 4200000000
-                    },
-                    new ViewModels.KategoriOP
-                    {
-                        Kategori = "Bangunan",
-                        JmlObjek = 30000,
-                        Penetapan = 3000000000,
-                        Realisasi = 2700000000,
-                        Prediksi = 3100000000
-                    }
-                };
-                return list;
+                        Kategori = g.Key,
+                        JmlObjek = g.Count(), 
+                        Penetapan = g.Sum(x => x.Ketetapan) ?? 0, 
+                        Realisasi = g.Sum(x => x.Realisasi) ?? 0
+                    })
+                    .ToList();
+                return ret;
             }
             public static List<ViewModels.CapaianTunggakan> GetCapaianTunggakan()
             {

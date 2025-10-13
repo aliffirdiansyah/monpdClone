@@ -23,10 +23,12 @@
             columns.AddFor(m => m.Komponen).Caption("Komponen");
             columns.AddFor(m => m.JmlObjek).Caption("Jumlah Objek").Format("#,##0");
             columns.AddFor(m => m.TargetNow).Caption("Target Tahun Ini").Format("#,##0");
+            columns.AddFor(m => m.PersenTarget).Caption("Persen Target").Format("#,#0%");
             columns.AddFor(m => m.RealisasiNow).Caption("Realisasi Tahun Ini").Format("#,##0");
-            columns.AddFor(m => m.Gap).Caption("Gap").Format("#,##0");
-            columns.AddFor(m => m.PencapaianNow).Caption("%").Format("#,##0");
+            columns.AddFor(m => m.Selisih).Caption("Selisih").Format("#,##0");
+            columns.AddFor(m => m.Pencapaian).Caption("%").Format("#,#0%");
             columns.AddFor(m => m.Prediksi).Caption("Prediksi s.d Des").Format("#,##0");
+            columns.AddFor(m => m.PersenPrediksi).Caption("Capaian Prediksi").Format("#,#0%");
 
         })
         .Summary(summary =>
@@ -48,24 +50,34 @@
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
+                items.AddFor(m => m.PersenTarget)
+            .SummaryType(SummaryType.Avg)
+            .ValueFormat("#,#0%")
+            .DisplayFormat("{0}");
+
                 items.AddFor(m => m.RealisasiNow)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.Gap)
+                items.AddFor(m => m.Selisih)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
             .DisplayFormat("{0}");
 
-                items.AddFor(m => m.PencapaianNow)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
+                items.AddFor(m => m.Pencapaian)
+            .SummaryType(SummaryType.Avg)
+            .ValueFormat("#,#0%")
             .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Prediksi)
             .SummaryType(SummaryType.Sum)
             .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+                items.AddFor(m => m.PersenPrediksi)
+            .SummaryType(SummaryType.Avg)
+            .ValueFormat("#,#0%")
             .DisplayFormat("{0}");
             });
         })
