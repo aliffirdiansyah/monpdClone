@@ -620,6 +620,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "MonitoringCCTVUPTB" ? "active" : "")"
+                           href="@Url.Action("Index", "MonitoringCCTVUPTB")" role="button">
+                            <i class="bx bx-cctv me-1 align-middle"></i><span data-key="t-monitoringCctv">Monitoring CCTV Parkir</span>
+                        </a>
+                    </li>
+
                     @* Sidebar Objek Pajak *@
                     <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
 

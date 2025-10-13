@@ -1,0 +1,269 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.Kapasitas
+
+
+@{
+    ViewData["Title"] = "Jumlah Terparkir";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Baris Hijau: IsLog = TRUE dan IsOn = TRUE */
+    .dx-datagrid-rowsview .dx-row.row-green td {
+        background-color: #d1e7dd !important;
+        color: #0f5132 !important;
+        font-weight: 500;
+    }
+
+    /* Baris Merah: IsLog = TRUE dan IsOn = FALSE */
+    .dx-datagrid-rowsview .dx-row.row-red td {
+        background-color: #f8d7da !important;
+        color: #842029 !important;
+        font-weight: 500;
+    }
+
+    /* --- khusus modal kapasitas --- */
+    #staticBackdropLargeScrollable.no-gap-modal .modal-header {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    #staticBackdropLargeScrollable.no-gap-modal .modal-body {
+        margin-top : 1rem;
+        padding-top: 0 !important;
+    }
+
+</style>
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center bg-header-color">
+                <h4 class="card-title text-dark mb-0">Monitoring CCTV Parkir - @ViewData["NamaUPTB"] </h4>
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row text-left g-3 mt-1">
+                    <!-- Col 1 -->
+                    <div class="col-md-6">
+                        <h5 class="text-dark">@Model.NamaOP</h5>
+                        <h5 class="text-primary">
+                            <a href="/ProfileOP/Detail?nop=@Model.Nop&pajak=4"
+                                target="_blank"
+                                rel="noreferrer"
+                                style="cursor: pointer; text-decoration: none;">
+                                    @Model.formattedNop
+                            </a>
+                        </h5>
+                        <h5 class="text-dark">@Model.AlamatOP</h5>
+                    </div>
+
+                    <!-- Col 2 -->
+                    <div class="col-md-6">
+                        <h5 class="text-dark">Vendor : @Model.Vendor</h5>
+                        <h5 class="text-dark">Tanggal Pasang : @Model.TanggalPasang</h5>
+
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center">
+                    <div class="table-responsive">
+                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.MonitoringCCTVBulanan>()
+                                                .ID("KapasitasMonitoringCCTVGrid")
+                                                .DataSource(Model.RekapBulanan)
+                                                .ShowBorders(true)
+                                                .ShowColumnHeaders(true)
+                                                .ShowColumnLines(true)
+                                                .ShowRowLines(true)
+                                                .AllowColumnResizing(true)
+                                                .RowAlternationEnabled(true)
+                                                .ColumnAutoWidth(true)
+                                                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+                                                .FilterRow(f => f.Visible(true))
+                                                .HeaderFilter(h => h.Visible(true))
+                                                .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                                                .Paging(p => p.PageSize(12))
+                                                .Pager(p => p
+                                                .ShowPageSizeSelector(true)
+                                                .AllowedPageSizes(new[] { 10, 20, 50 })
+                                                .ShowInfo(true)
+                                                )
+                                                .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                                                .OnExporting("exportGrid")
+                                                .Columns(columns =>
+                                                {
+                                                    columns.AddFor(m => m.NamaBulan).Caption("Bulan");
+                                                    columns.AddFor(m => m.Motor).Caption("Motor");
+                                                    columns.AddFor(m => m.Mobil).Caption("Mobil");
+                                                    @* columns.AddFor(m => m.Unknown).Caption("Unknown"); *@
+                                                    columns.AddFor(m => m.Omset).Caption("Omset").Format("#,##0");
+                                                    columns.AddFor(m => m.EstimasiPajak).Caption("Est. Pajak").Format("#,##0");
+                                                    columns.AddFor(m => m.TahunKemarin).Caption("Tahun 2024").Format("#,##0");
+                                                    columns.AddFor(m => m.TahunIni).Caption("Tahun 2025").Format("#,##0");
+                                                    columns.AddFor(m => m.Potensi).Caption("Potensi").Format("#,##0");
+                                                })
+                                                .MasterDetail(md => md
+                                                .Enabled(true)
+                                                .Template(new JS("ShowKapasitasHarian"))
+                                                )
+                                                )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        function ShowKapasitasHarian(container, options) {
+            var row = options.data;
+
+            // param dari row bulanan
+            var nop = row.Nop;          // pastikan property ini ada di VM bulanan
+            var vendorId = row.VendorId; // sama, harus ada di VM
+            var tahun = row.Tahun;       // ambil tahun dari VM bulanan
+            var bulan = row.Bulan;       // ambil bulan dari VM bulanan (1-12)
+
+            var $wrapper = $("<div>").appendTo(container);
+            $("<p>")
+                .text("Detail Harian")
+                .css({ "font-weight": "bold", "margin-bottom": "5px" })
+                .appendTo($wrapper);
+
+            var $gridContainer = $("<div>").appendTo($wrapper);
+            $gridContainer.html('<div style="text-align: center; padding: 20px;"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Memuat Data...</p></div>');
+
+            // load data via ajax
+            $.ajax({
+                url: '/MonitoringCCTV/KapasitasHarian',
+                type: 'GET',
+                data: { nop: nop, vendorId: vendorId, tahun: tahun, bulan: bulan },
+                success: function (data) {
+                    $gridContainer.empty();
+                    $gridContainer.dxDataGrid({
+                        dataSource: data,
+                        showBorders: true,
+                        showColumnHeaders: true,
+                        showColumnLines: true,
+                        showRowLines: true,
+                        allowColumnResizing: true,
+                        allowColumnReordering: true,
+                        columnAutoWidth: true,
+                        sorting: { mode: "multiple" },
+                        headerFilter: {
+                            visible: true
+                        },
+                        headerFilter: { visible: true },
+                        paging: { pageSize: 31 },
+                        pager: { visible: false },
+                        columns: [
+                            { dataField: "TanggalLabel", caption: "Tanggal" },
+                            { dataField: "HariLabel", caption: "Hari" }, 
+                            { dataField: "Motor", caption: "Motor", format: "#,##0" },
+                            { dataField: "Mobil", caption: "Mobil", format: "#,##0" },
+                            // { dataField: "Unknown", caption: "Unknown", format: "#,##0" },
+                            { dataField: "Omset", caption: "Omset", format: "#,##0" },
+                            { dataField: "EstimasiPajak", caption: "Est. Pajak", format: "#,##0" }
+                        ],
+                        export: {
+                            enabled: true,
+                            allowExportSelectedData: false,
+                            formats: ["xlsx", "pdf"]
+                        },
+                        onExporting: exportGrid,
+                        width: "100%",
+
+                        onCellPrepared: function(e) {
+                            if (e.rowType === "data" && e.column.dataField === "HariLabel") {
+                                e.cellElement.css({
+                                    "cursor": "pointer",
+                                    "color": "blue",
+                                    "text-decoration": "underline"
+                                });
+                            }
+                        },
+                        onCellClick: function (e) {
+                            if (e.column.dataField === "HariLabel") {
+                                var tgl = e.data.Tanggal;
+
+                                $.ajax({
+                                    url: '@(Url.Action("KapasitasHarianDetail"))',
+                                    type: 'GET',
+                                    data: { nop: nop, vendorId: vendorId, tgl: tgl },
+                                    success: function (result) {
+                                        $("#staticBackdropLargeScrollable .modal-title").html("Detail");
+                                        $("#staticBackdropLargeScrollable .modal-body").html(result);
+
+                                        $("#staticBackdropLargeScrollable").addClass("no-gap-modal");
+                                        $("#staticBackdropLargeScrollable").modal("show");
+                                    },
+                                    error: function (xhr) {
+                                        $("#gridDetailHarian").html("<div class='text-danger'>Gagal load detail.</div>");
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    $wrapper.empty();
+                    $wrapper.append($("<div style='color:red'>")
+                        .text("Error load data harian: " + xhr.responseText));
+                }
+            });
+        }
+
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var imageUrl = cellInfo.data.ImageUrl || cellInfo.value;
+
+            if (imageUrl && imageUrl.length > 10) {
+                $('<a>')
+                    .attr('href', imageUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', imageUrl)
+                            .addClass('img-thumbnail')
+                            .css({
+                                height: '50px',
+                                width: 'auto',
+                                cursor: 'zoom-in',
+                                borderRadius: '6px',
+                                objectFit: 'cover'
+                            })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
+        }
+    </script>
+
+    <script>
+        function applyRowColor(e) {
+            // Hanya proses baris yang berisi data
+            if (e.rowType === "data") {
+
+                const data = e.data;
+                const $rowElement = $(e.rowElement); 
+
+                if (data.IsLog === true) {
+                    if (data.IsOn === true) {
+                        $rowElement.addClass('row-green');
+                    }
+                    else if (data.IsOn === false) {
+                        $rowElement.addClass('row-red');
+                    }
+                }
+                else {
+                    $rowElement.removeClass('row-green row-red');
+                }
+            }
+        }
+    </script>
+}

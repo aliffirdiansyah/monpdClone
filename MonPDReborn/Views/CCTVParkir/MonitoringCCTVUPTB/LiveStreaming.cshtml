@@ -1,0 +1,686 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.LiveStreaming
+
+
+@{
+    ViewBag.Title = "Live Camera";
+
+    string nop = Model.Nop;
+    string cctvId = Model.CctvIdList.FirstOrDefault()?.Value ?? "0";
+}
+
+<style>
+
+    .profile-wid-bg::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        opacity: 0.8;
+        background-image: linear-gradient(to left, #299cdb 25%,#0ab39c);
+    }
+
+    .profile-wid-bg .profile-wid-img {
+        width: 100%;
+        height: 100%;
+        -o-object-fit: cover;
+        object-fit:  cover;
+    }
+    /* Baris Hijau: IsLog = TRUE dan IsOn = TRUE */
+    .dx-datagrid-rowsview .dx-row.row-green td {
+        background-color: #d1e7dd !important;
+        color: #0f5132 !important;
+        font-weight: 500;
+    }
+
+    /* Baris Merah: IsLog = TRUE dan IsOn = FALSE */
+    .dx-datagrid-rowsview .dx-row.row-red td {
+        background-color: #f8d7da !important;
+        color: #842029 !important;
+        font-weight: 500;
+    }
+
+    /* --- khusus modal kapasitas --- */
+    #staticBackdropLargeScrollable.no-gap-modal .modal-header {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    #staticBackdropLargeScrollable.no-gap-modal .modal-body {
+        margin-top : 1rem;
+        padding-top: 0 !important;
+    }
+
+    #gridLiveStreamingAktivitas .dx-scrollable-scroll-content {
+        background-color: #36BA98; /* warna handle scrollbar */
+        border-radius: 3px;
+    }
+
+    #gridLiveStreamingAktivitas .dx-scrollable-scroll {
+        width: 12px !important; /* lebar scrollbar vertikal */
+        height: 100px !important; /* lebar scrollbar horizontal */
+    }
+
+    /* ===================================== */
+    /* Animasi Update Data (Highlight) */
+    /* ===================================== */
+    @@keyframes highlightPulse {
+        0% { 
+            background-color: #fff3cd; 
+            transform: scale(1);
+        }
+        50% { 
+            background-color: #ffe69c; 
+            transform: scale(1.05);
+        }
+        100% { 
+            background-color: transparent; 
+            transform: scale(1);
+        }
+    }
+
+    .data-updated {
+        animation: highlightPulse 0.8s ease-in-out;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    /* Opsional: Highlight untuk angka naik (hijau) atau turun (merah) */
+    .data-updated.increase {
+        animation: highlightIncrease 0.8s ease-in-out;
+    }
+
+    .data-updated.decrease {
+        animation: highlightDecrease 0.8s ease-in-out;
+    }
+
+    @@keyframes highlightIncrease {
+        0% { background-color: #d1e7dd; transform: scale(1); }
+        50% { background-color: #a3cfbb; transform: scale(1.05); }
+        100% { background-color: transparent; transform: scale(1); }
+    }
+
+    @@keyframes highlightDecrease {
+        0% { background-color: #f8d7da; transform: scale(1); }
+        50% { background-color: #f1aeb5; transform: scale(1.05); }
+        100% { background-color: transparent; transform: scale(1); }
+    }
+</style>
+
+<div class="profile-foreground position-relative mx-n4 mt-n4">
+    <div class="profile-wid-bg">
+        <img src="~/assets/images/image-cover.jpeg" alt="" class="profile-wid-img" />
+    </div>
+</div>
+
+<!-- ===================== -->
+<!-- A. Header Profil OP -->
+<!-- ===================== -->
+<div  id="mobileCardProfile" class="pt-4 mb-4 mb-lg-3 pb-lg-4">
+    <div class="row g-4  justify-content-between">
+
+        <div class="col-lg-8 col-md-12 align-items-center">
+            <div class="p-2">
+                
+                <a href="/ProfileOP/Detail?nop=@Model.Nop&pajak=4" target="_blank" rel="noreferrer" style="cursor: pointer">
+                    <h3 class="text-white mb-1">@Model.NamaOP</h3>
+                    <p class="text-white-75 fw-bold mb-2">@Model.formattedNop</p>
+                </a>
+
+                <div class="hstack text-white-50 gap-3 flex-wrap">
+                    <div>
+                        <i class="ri-map-pin-user-line me-1 text-white-75 fs-16 align-middle"></i>
+                        <span class="text-white-75">@Model.AlamatOP</span>
+                    </div>
+                    <div>
+                        <i class="ri-building-line me-1 text-white-75 fs-16 align-middle"></i>
+                        <span class="text-white-75">@Model.WilayahUPTB</span>
+                    </div>
+                    <div>
+                        <i class="ri-user-3-line me-1 text-white-75 fs-16 align-middle "></i>
+                        Vendor:
+                        <span class="text-white-75">@Model.Vendor</span>
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <i class="ri-money-dollar-circle-line me-1 text-white fs-16 align-middle"></i>
+                    <span class="text-white-75">
+                        Tarif parkir: <b>Roda dua Rp 2.000</b> &nbsp;|&nbsp; <b>Roda empat Rp 4.000</b>
+                    </span>
+                </div>
+
+                <div class="mt-2">
+                    <i class="ri-calendar-check-line me-1 text-white fs-16 align-middle"></i>
+                    <span class="text-white-75">
+                        Tanggal pasang: <b>@Model.TanggalPasang</b>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-auto col-md-12 text-lg-end">
+            <div class="p-2 mt-">
+                <h4 id="currentTime" class="text-white mb-0 fw-semibold"></h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div>
+            <!-- ===================== -->
+            <!-- B. Navigasi Tab -->
+            <!-- ===================== -->
+            <div class="d-flex">
+                <ul class="nav nav-pills animation-nav profile-nav gap-2 gap-lg-3 flex-grow-1"
+                    role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link fs-14 active" data-bs-toggle="tab" href="#overview-tab"
+                           role="tab">
+                            <i class="ri-airplay-fill d-inline-block d-md-none"></i> <span class="d-none d-md-inline-block">Overview</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ===================== -->
+            <!-- C. Konten Overview -->
+            <!-- ===================== -->
+            <div class="tab-content pt-4 text-muted">
+                <div class="tab-pane active" id="overview-tab" role="tabpanel">
+                    <div class="row align-items-stretch">
+                        <div class="col-xxl-7 d-flex flex-column">
+                            <div class="card flex-fill">
+
+                                <!-- Bagian Video -->
+                                <div id="mobileCardLiveVideo" class="card-body text-center">    
+                                    <div class="ratio ratio-16x9" style="margin: 0 auto;">
+                                        <div class="text-center">
+                                            <div id="loading2-LiveStreamingVideo" class="spinner-border text-primary" style="display: none">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                        <div id="LiveStreamingVideo" class="mt-0"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Bagian Aktivitas Hari ini -->
+                                <div id="mobileCardAktivitasHarianDekstop" class="card-body d-none d-lg-block">
+                                    <div class="card-header align-items-center d-flex">
+                                        <i class="ri-calendar-event-line text-primary mb-0 me-2"></i>
+                                        <h5 class="card-title mb-0 me-2">Aktivitas Hari Ini</h5>
+                                    </div>
+                                    <!-- DataGrid Section -->
+                                    <div class="card">
+                                        <div class="card-body p-0">
+                                            <div style="height: 360px;">
+                                                @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.LiveStreamingAktivitasHarian>()
+                                                    .ID("gridLiveStreamingAktivitas")
+                                                    .KeyExpr("Id")
+                                                    @* .DataSource(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList()) *@ // pakai function JS
+                                                    .ShowBorders(true)
+                                                    .ColumnAutoWidth(true)
+                                                    .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                                                    .HeaderFilter(h => h.Visible(true))
+                                                    .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
+                                                    .Height("100%") 
+                                                    .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+                                                    .Pager(p => p.Visible(false))
+                                                    .OnExporting("exportGrid")
+                                                    .OnRowPrepared("applyRowColor")
+                                                    .Columns(columns => {
+                                                        columns.AddFor(m => m.Id) 
+                                                        .Visible(false) // Sembunyikan kolom ID
+                                                        .SortOrder(SortOrder.Desc) // SECONDARY SORT (Untuk membedakan timestamp yang sama)
+                                                        .SortIndex(1);
+                                                        columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk")
+                                                            .DataType(GridColumnDataType.DateTime).Format("HH:mm:ss")
+                                                            .Alignment(HorizontalAlignment.Center)
+                                                            .SortOrder(SortOrder.Desc)
+                                                            .SortIndex(0);
+                                                        columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
+                                                        columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
+                                                        columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
+                                                    })
+                                                    )
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- bagian counting-->
+                        <div  class="col-xxl-5 d-flex">
+                            <div class="card flex-fill">
+                                <!-- Bagian Counting -->
+                                <div id="LiveStreamingCounting" class="card-body"></div>
+                            </div>
+                        </div>
+
+                        <div id="mobileCardAktivitasHarianMobile" class="card-body d-lg-none">
+                            <div class="card-header align-items-center d-flex">
+                                <i class="ri-calendar-event-line text-primary mb-0 me-2"></i>
+                                <h5 class="card-title mb-0 me-2">Aktivitas Hari Ini</h5>
+                            </div>
+                            <!-- DataGrid Section -->
+                            <div class="card">
+                                <div class="card-body p-0">
+                                    <div style="height: 320px;">
+                                        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.LiveStreamingAktivitasHarian>()
+                                            .ID("gridLiveStreamingAktivitasMobile")
+                                            .KeyExpr("Id")
+                                            .ShowBorders(true)
+                                            .ColumnAutoWidth(true)
+                                            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+                                            .HeaderFilter(h => h.Visible(true))
+                                            .Export(e => e.Enabled(true).Formats(new[] { "xlsx", "pdf" }))
+                                            .Height("100%") 
+                                            .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+                                            .Pager(p => p.Visible(false))
+                                            .OnExporting("exportGrid")
+                                            .OnRowPrepared("applyRowColor")
+                                            .Columns(columns => {
+                    
+                                                // ✅ TAMBAHKAN KOLOM ID (Secondary Sort - Tersembunyi)
+                                                columns.AddFor(m => m.Id)
+                                                    .Visible(false) 
+                                                    .SortOrder(SortOrder.Desc) 
+                                                    .SortIndex(1); // Index 1: Kriteria Sekunder
+                    
+                                                // Waktu Masuk (Primary Sort)
+                                                columns.AddFor(m => m.TanggalMasuk).Caption("Waktu Masuk")
+                                                    .DataType(GridColumnDataType.DateTime).Format("HH:mm:ss").Alignment(HorizontalAlignment.Center)
+                                                    .SortOrder(SortOrder.Desc) 
+                                                    .SortIndex(0); 
+                        
+                                                columns.AddFor(m => m.JenisKend).Caption("Jenis Kendaraan").Alignment(HorizontalAlignment.Center);
+                                                columns.AddFor(m => m.PlatNo).Caption("Plat Nomor").Alignment(HorizontalAlignment.Center);
+                                                columns.Add().Caption("Lampiran").Alignment(HorizontalAlignment.Center).CellTemplate(new JS("lampiranCellTemplate"));
+                                            })
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function loadLiveStreamingVideo() {
+            $("#loading2-LiveStreamingVideo").show();
+
+            var nop = '@(nop)';
+            var cctvId = '@(cctvId)';
+
+            $.ajax({
+                url: '@(Url.Action("LiveStreamingVideo"))',
+                type: 'GET',
+                data: { nop, cctvId  }, // kalau null berarti semua uptb
+                success: function (result) {
+                    $("#LiveStreamingVideo").html(result);
+                },
+                error: function () {
+                    $("#LiveStreamingVideo").html("<div class='text-danger'>Gagal memuat data.</div>");
+                },
+                complete: function () {
+                    $("#loading2-LiveStreamingVideo").hide();
+                }
+            });
+        }
+
+        function loadLiveStreamingCounting() {
+            var nop = '@(nop)';
+            const now = new Date();
+
+            const local = now.getFullYear() + "-" +
+                String(now.getMonth() + 1).padStart(2, '0') + "-" +
+                String(now.getDate()).padStart(2, '0') + "T00:00:00";
+
+
+            $("#LiveStreamingCounting").show();
+
+            $.ajax({
+                url: '@(Url.Action("LiveStreamingVideoCounting"))',
+                type: 'GET',
+                data: { nop:nop, tgl:local }, 
+                success: function (result) {
+
+                    $("#LiveStreamingCounting").html(result);
+
+                },
+                error: function () {
+                    $("#LiveStreamingCounting").html("<div class='text-danger p-3 text-center'>Gagal memuat data analisis.</div>");
+                }
+            });
+        }
+    </script>
+
+    <script>
+        async function startWebRTC(videoElementId, sourceUrl) {
+            const videoElement = document.getElementById(videoElementId);
+            if (!videoElement) {
+                console.error(`Element dengan id '${videoElementId}' tidak ditemukan`);
+                return;
+            }
+
+            const pc = new RTCPeerConnection({
+                iceServers: [
+                    { urls: ["stun:stun.l.google.com:19302"] } // optional
+                ]
+            });
+
+            pc.ontrack = (event) => {
+                console.log("Track diterima dari:", sourceUrl);
+                videoElement.srcObject = event.streams[0];
+            };
+
+            pc.addTransceiver("video", { direction: "recvonly" });
+            pc.addTransceiver("audio", { direction: "recvonly" });
+
+            try {
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+
+                const res = await fetch(sourceUrl, {
+                    method: "POST",
+                    body: offer.sdp,
+                    headers: { "Content-Type": "application/sdp" }
+                });
+
+                const answer = await res.text();
+                await pc.setRemoteDescription({ type: "answer", sdp: answer });
+
+                console.log(`✅ WebRTC connected: ${sourceUrl}`);
+            } catch (err) {
+                console.error(`❌ WebRTC error (${sourceUrl}):`, err);
+            }
+        }
+    </script>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+
+            const hh = now.getHours().toString().padStart(2, '0');
+            const mm = now.getMinutes().toString().padStart(2, '0');
+            const ss = now.getSeconds().toString().padStart(2, '0');
+
+            const formattedTime = `${hh}:${mm}:${ss}`;
+            const formattedDate = now.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+
+            const formatted = `${formattedTime} | ${formattedDate}`;
+            document.getElementById('currentTime').textContent = formatted;
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+
+
+    <script>
+        function lampiranCellTemplate(cellElement, cellInfo) {
+            var imageUrl = cellInfo.data.ImageUrl || cellInfo.value;
+
+            if (imageUrl && imageUrl.length > 10) {
+                $('<a>')
+                    .attr('href', imageUrl)
+                    .attr('data-lightbox', 'lampiran')
+                    .attr('data-title', 'Lampiran')
+                    .append(
+                        $('<img>')
+                            .attr('src', imageUrl)
+                            .addClass('img-thumbnail')
+                            .css({
+                                height: '50px',
+                                width: 'auto',
+                                cursor: 'zoom-in',
+                                borderRadius: '6px',
+                                objectFit: 'cover'
+                            })
+                    )
+                    .appendTo(cellElement);
+            } else {
+                $(cellElement).text('-');
+            }
+        }
+
+        function applyRowColor(e) {
+            // Hanya proses baris yang berisi data
+            if (e.rowType === "data") {
+
+                const data = e.data;
+                const $rowElement = $(e.rowElement); 
+
+                if (data.IsLog === true) {
+                    if (data.IsOn === true) {
+                        $rowElement.addClass('row-green');
+                    }
+                    else if (data.IsOn === false) {
+                        $rowElement.addClass('row-red');
+                    }
+                }
+                else {
+                    $rowElement.removeClass('row-green row-red');
+                }
+            }
+        }
+    </script>
+
+    <script>
+        function startCctvSse() {
+            const now = new Date();
+            const nop = '@Model.Nop';
+            const tgl = now.toISOString().split('T')[0] + "T00:00:00";
+
+            const evtSource = new EventSource(`/MonitoringCCTVUPTB/GetCctvEvents?nop=${nop}&tgl=${tgl}`);
+            let updateCount = 0;
+
+            evtSource.onmessage = function (e) {
+                // console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
+                try {
+
+                    const data = JSON.parse(e.data);
+          
+                    // 💡 PERUBAHAN KRITIS 1: Panggil properti 'analysisResult' (camelCase)
+                    if (data.analysisResult) { 
+                        // console.log(`[SSE DEBUG] Analysis Mobil: ${data.analysisResult.mobil}, Motor: ${data.analysisResult.motor}`);
+                        updateAnalysisUI(data.analysisResult); 
+                    }
+
+                    var deltaData = data.newActivityEntries || data.NewActivityEntries;
+
+                      // 💡 DEBUG LOG 2: Cek Status Array DataGrid Delta
+                    // console.log(`[SSE DEBUG] Delta Status: ${deltaData ? 'Ditemukan, Panjang: ' + deltaData.length : 'TIDAK DITEMUKAN atau null'}`);
+
+                    if (deltaData && deltaData.length > 0) {
+                        
+                        // Re-aktifkan penundaan untuk DataGrid
+                        setTimeout(function() {
+                            updateDataGrids(deltaData);
+                        }, 50); 
+                    }
+
+                    // 💡 PERUBAHAN KRITIS 3: Panggil properti 'kapasitasChartDetail' (camelCase)
+                    if (window.updateChart && data.kapasitasChartDetail) {
+                         window.updateChart(data);
+                    }
+
+                    // updateChart(data.KapasitasChartDetail);
+                } catch (err) {
+                    console.error("❌ Error parsing SSE data:", err);
+                }
+            };
+
+            evtSource.onerror = function (err) {
+                console.warn("⚠️ SSE connection lost. Retrying in 5s...", err);
+                evtSource.close();
+                setTimeout(startCctvSse, 5000);
+            };
+
+            evtSource.onopen = function() {
+                console.log("✅ SSE connection established");
+            };
+        }
+
+        // KODE FINAL DAN LENGKAP UNTUK updateDataGrids (Menggabungkan Delta dan Casing Fix)
+        function updateDataGrids(newEntries) { 
+    
+            // Helper untuk mengonversi camelCase ke PascalCase
+            const toPascalCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+            const normalizeData = (data) => {
+                const normalizedItem = {};
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        // Konversi key ke PascalCase (misal: 'tanggalMasuk' -> 'TanggalMasuk')
+                        const pascalKey = toPascalCase(key);
+                        normalizedItem[pascalKey] = data[key];
+                    }
+                }
+                return normalizedItem;
+            };
+    
+            // --- Update Desktop Grid ---
+            const gridDesktop = $("#gridLiveStreamingAktivitas").dxDataGrid("instance");
+            if (gridDesktop) {
+                const store = gridDesktop.getDataSource().store();
+
+                gridDesktop.beginUpdate();
+
+                // 1. Normalisasi dan Sisipkan Data Delta
+                newEntries.forEach(item => {
+                    const itemPascal = normalizeData(item);
+                    store.insert(itemPascal, 0); // Menyisipkan di posisi 0 (paling atas)
+                });
+
+                gridDesktop.refresh(); // refresh() lebih ringan dari reload()
+                gridDesktop.endUpdate();
+            }
+
+            // --- Update Mobile Grid ---
+            const gridMobile = $("#gridLiveStreamingAktivitasMobile").dxDataGrid("instance");
+            if (gridMobile) {
+                const store = gridMobile.getDataSource().store();
+
+                gridMobile.beginUpdate();
+        
+                newEntries.forEach(item => {
+                    const itemPascal = normalizeData(item);
+                    store.insert(itemPascal, 0);
+                });
+
+                gridMobile.refresh();
+                gridMobile.endUpdate();
+            }
+        }
+
+        // 💰 Update Analysis UI dengan Smooth Animation
+        function updateAnalysisUI(analysis) {
+    
+            // Helper untuk mengambil nilai dari objek, mengatasi PascalCase ATAU camelCase
+            function getValue(key) {
+                // 1. Coba ambil PascalCase (misal: analysis.Mobil)
+                if (analysis[key] !== undefined) return analysis[key]; 
+        
+                // 2. Coba ambil camelCase (misal: analysis.mobil)
+                const camelCaseKey = key.charAt(0).toLowerCase() + key.slice(1);
+                if (analysis[camelCaseKey] !== undefined) return analysis[camelCaseKey];
+
+                return undefined; // Nilai tidak ditemukan
+            }
+    
+            // Helper untuk animasi angka (diberi key properti sebagai parameter kedua)
+            function animateValue(elementId, key, isRupiah = false) { 
+                const newValue = getValue(key); // Ambil nilai yang fleksibel casing
+        
+                const el = $(`#${elementId}`);
+                if (!el.length || newValue === undefined) return; 
+
+                // Proses nilai
+                const targetValue = parseInt(newValue) || 0;
+        
+                // Cek jika nilai tidak berubah (hindari animasi yang tidak perlu)
+                if (el.text().replace(/[^\d]/g, '') === targetValue.toLocaleString("id-ID").replace(/[^\d]/g, '')) return;
+
+                // Tentukan apakah nilainya Naik atau Turun (opsional, untuk class .increase/.decrease)
+                const currentText = el.text().replace(/[^\d]/g, '');
+                const currentValue = parseInt(currentText) || 0;
+                const changeClass = targetValue > currentValue ? 'increase' : 'decrease';
+
+                // Tambahkan highlight animation
+                el.addClass('data-updated').addClass(changeClass);
+                setTimeout(() => {
+                    el.removeClass('data-updated').removeClass('increase').removeClass('decrease');
+                }, 1000);
+
+                // Update nilai
+                if (isRupiah) {
+                    el.text("Rp " + targetValue.toLocaleString("id-ID"));
+                } else {
+                    el.text(targetValue.toLocaleString("id-ID"));
+                }
+            }
+
+            // --- Panggilan Update Card ---
+    
+            // Gunakan nama properti PascalCase sebagai 'key' (misal: "Mobil")
+            animateValue("mobilMasuk", "Mobil"); 
+            animateValue("motorMasuk", "Motor");
+            animateValue("estimasiPajak", "EstimasiPajak", true);
+            animateValue("tahunKemarin", "TahunKemarin", true);
+            animateValue("tahunIni", "TahunIni", true);
+
+            // Update last update (tanpa animasi)
+            const lastUpdateValue = getValue("LastUpdate");
+            const formattedUpdate = lastUpdateValue 
+                ? lastUpdateValue.replace("T", " ").substring(0, 19)
+                : "-";
+            $("#lastUpdate").text(formattedUpdate);
+        }
+
+        function initializeGridDataSource() {
+            // 💡 Ambil data Awal dari Model C# (sudah diurutkan oleh C#)
+            var initialData = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.AktivitasHarianList.OrderByDescending(x => x.TanggalMasuk).ToList())));
+    
+            const gridDesktop = $("#gridLiveStreamingAktivitas").dxDataGrid("instance");
+            const gridMobile = $("#gridLiveStreamingAktivitasMobile").dxDataGrid("instance");
+
+            if (gridDesktop && initialData.length > 0) {
+                // Set DataSource menggunakan format array standar JavaScript
+                gridDesktop.option("dataSource", initialData);
+            }
+    
+            if (gridMobile && initialData.length > 0) {
+                gridMobile.option("dataSource", initialData);
+            }
+        }
+
+        // 🚀 Initialize saat document ready
+        $(document).ready(function () {
+            loadLiveStreamingVideo();
+            loadLiveStreamingCounting();
+            initializeGridDataSource(); 
+    
+            // Delay start SSE agar partial view selesai load dulu
+            setTimeout(() => {
+                startCctvSse();
+            }, 1000);
+        });
+    </script>
+}

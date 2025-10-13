@@ -1,0 +1,134 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.Index
+
+@{
+    ViewData["Title"] = "Monitoring CCTV Parkir";
+    Layout = "_Layout";
+}
+<style>
+    .neon-left-glow {
+        border-left: 6px solid #00FFFF;
+        box-shadow: -5px 0 5px #00FFFF, -10px 0 10px #00FFFF, -20px 0 20px #00FFFF, -30px 0 30px #0ff, -40px 0 40px #0ff;
+        color: #00FFFF;
+    }
+
+</style>
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center bg-header-color">
+                <h4 class="card-title text-dark mb-0">Rekap Vendor Monitoring Parkir - @ViewData["NamaUPTB"] </h4>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // load pertama kali (tanpa filter uptb = semua)
+            loadShow();
+
+            // klik tombol Terapkan
+            // $("#btnTerapkan").on("click", function () {
+            //     var selected = $("#SelectedUPTB").dxSelectBox("instance").option("value");
+            //     loadShow(selected);
+            // });
+        });
+
+        function loadShow(selectedUptb = null) {
+            $("#loading2-Show").show();
+
+            $.ajax({
+                url: '/MonitoringCCTVUPTB/Show',
+                type: 'GET',
+                data: { uptb: selectedUptb },
+                // kalau null berarti semua uptb
+                success: function (result) {
+                    $("#Show").html(result);
+                },
+                error: function () {
+                    $("#Show").html("<div class='text-danger'>Gagal memuat data.</div>");
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function lihatDetailModal(nop, vendorId) {
+            // Tampilkan modal
+            $("#staticBackdropLargeScrollable").modal("show");
+
+            // Kosongkan / tampilkan loading spinner saat request
+            $("#staticBackdropLargeScrollable .modal-body").html(`
+                <div class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+
+            // Ambil konten detail via AJAX
+            $.get('/MonitoringCCTVUPTB/Detail', { nop: nop, vendorId : vendorId })
+                .done(function (html) {
+                    $("#staticBackdropLargeScrollable .modal-title").html("Log Aktivitas");
+                    $("#staticBackdropLargeScrollable .modal-body").html(html);
+                })
+                .fail(function () {
+                    $("#staticBackdropLargeScrollable .modal-body").html(
+                        `<div class="text-danger text-center p-3">
+                            Gagal memuat data detail.
+                        </div>`
+                    );
+                });
+        }
+
+        function lihatDetailNewTab(nop, vendorId) {
+            // Buka halaman detail di tab baru
+            window.open('/MonitoringCCTVUPTB/Kapasitas?nop=' + encodeURIComponent(nop) + "&vendorId=" + vendorId, '_blank');
+        }
+
+        function detailOPCellTemplate(cellElement, cellInfo) {
+            const value = cellInfo.value ?? 0;
+
+            // Jika nilainya 0 atau null, tampilkan saja 0
+            if (value === 0) {
+                $(cellElement).text('0');
+                return;
+            }
+
+            const nop = cellInfo.data.Nop;
+            const pajak = 4;
+
+            // Buat link klik
+            const $link = $('<a>')
+                .addClass('text-primary ')
+                .attr('href', 'javascript:void(0);')
+                .text(value.toLocaleString('id-ID'))
+                .on('click', () => {
+                    const url = '@Url.Action("Detail", "ProfileOP")'
+                                + '?nop=' + nop
+                                + '&pajak=' + pajak;
+                    window.open(url, '_blank');
+                });
+
+            $(cellElement).append($link);
+        }
+    </script>
+
+
+}
