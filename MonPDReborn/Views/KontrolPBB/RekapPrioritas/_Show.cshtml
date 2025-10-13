@@ -1,0 +1,54 @@
+﻿@using static MonPDReborn.Models.KontrolPBB.RekapPrioritasVM.ViewModels
+@model MonPDReborn.Models.KontrolPBB.RekapPrioritasVM.Show
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<Prioritas>()
+        .ID("prioritasGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NOP).Caption("nop");
+            columns.AddFor(m => m.NamaWP).Caption("nama wp");
+            columns.AddFor(m => m.Tunggakan).Caption("tunggakan");
+            columns.AddFor(m => m.Tahun).Caption("tahun");
+            columns.AddFor(m => m.PrioritasKet).Caption("prioritas");
+            columns.AddFor(m => m.Petugas).Caption("petugas");
+            columns.AddFor(m => m.StatusTagih).Caption("Upaya");
+        })
+        @* .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.KategoriWP)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+                items.AddFor(m => m.JmlObjek)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Target)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Realisasi)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            });
+        }) *@
+        )
+</div>
+
