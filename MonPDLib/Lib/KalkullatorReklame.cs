@@ -160,6 +160,10 @@ namespace MonPDLib.Lib
             decimal skorTinggiBobot = 0m;
             decimal totalStrategis = 0m;
 
+            decimal skorLokasi = 0m;
+            decimal skorPandang = 0m;
+            decimal skorTinggi = 0m;
+
             var def = _context.MNilaiStrategisDefs
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                     && x.TglAwalBerlaku <= today
@@ -168,11 +172,19 @@ namespace MonPDLib.Lib
                 .FirstOrDefault();
             if (def != null)
             {
+                skorLokasi = def.Lokasi;
+                skorPandang = def.Spandang;
+                skorTinggi = def.Ketinggian;
+
                 skorLokasiBobot = def.Lokasi * lokasi.Bobot;
                 skorPandangBobot = def.Spandang * pandang.Bobot;
                 skorTinggiBobot = def.Ketinggian * tinggiData.Bobot;
                 totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
             }
+            skorLokasi = lokasi.Skor;
+            skorPandang = pandang.Skor;
+            skorTinggi = tinggiData.Skor;
+
             skorLokasiBobot = lokasi.Skor * lokasi.Bobot;
             skorPandangBobot = pandang.Skor * pandang.Bobot;
             skorTinggiBobot = tinggiData.Skor * tinggiData.Bobot;
@@ -223,9 +235,9 @@ namespace MonPDLib.Lib
                 NjopLuas = njopLuas,
                 NjopKetinggian = njopKetinggian,
                 TotalNjop = totalNjop,
-                SkorLokasi = skorLokasiBobot,
-                SkorPandang = skorPandangBobot,
-                SkorKetinggian = skorTinggiBobot,
+                SkorLokasi = skorLokasi,
+                SkorPandang = skorPandang,
+                SkorKetinggian = skorTinggi,
                 TotalSkor = totalStrategis,
                 TotalNilaiStrategis = totalNilaiStrategis,
                 TotalNjopStrategis = totalNjopStrategis,
