@@ -492,21 +492,21 @@
             let updateCount = 0;
 
             evtSource.onmessage = function (e) {
-                console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
+                // console.log(`📩 Update #${++updateCount}`, new Date().toLocaleTimeString());
                 try {
 
                     const data = JSON.parse(e.data);
           
                     // 💡 PERUBAHAN KRITIS 1: Panggil properti 'analysisResult' (camelCase)
                     if (data.analysisResult) { 
-                        console.log(`[SSE DEBUG] Analysis Mobil: ${data.analysisResult.mobil}, Motor: ${data.analysisResult.motor}`);
+                        // console.log(`[SSE DEBUG] Analysis Mobil: ${data.analysisResult.mobil}, Motor: ${data.analysisResult.motor}`);
                         updateAnalysisUI(data.analysisResult); 
                     }
 
                     var deltaData = data.newActivityEntries || data.NewActivityEntries;
 
                       // 💡 DEBUG LOG 2: Cek Status Array DataGrid Delta
-                    console.log(`[SSE DEBUG] Delta Status: ${deltaData ? 'Ditemukan, Panjang: ' + deltaData.length : 'TIDAK DITEMUKAN atau null'}`);
+                    // console.log(`[SSE DEBUG] Delta Status: ${deltaData ? 'Ditemukan, Panjang: ' + deltaData.length : 'TIDAK DITEMUKAN atau null'}`);
 
                     if (deltaData && deltaData.length > 0) {
                         
