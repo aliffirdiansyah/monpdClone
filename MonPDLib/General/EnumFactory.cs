@@ -33,6 +33,14 @@ namespace MonPDLib.General
             [Description("Indoor")]
             Indoor = 1
         }
+        
+        public enum ProdukReklame
+        {
+            [Description("Rokok")]
+            Rokok = 0,
+            [Description("Non Rokok")]
+            NonRokok = 1
+        }
 
         [AttributeUsage(AttributeTargets.Field)]
         public class ColorAttribute : Attribute
