@@ -119,6 +119,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonPbbSummary> DbMonPbbSummaries { get; set; }
 
+    public virtual DbSet<DbMonPbbSumpage> DbMonPbbSumpages { get; set; }
+
     public virtual DbSet<DbMonPbbViewRealisasi> DbMonPbbViewRealisasis { get; set; }
 
     public virtual DbSet<DbMonPbbViewRealisasi2> DbMonPbbViewRealisasi2s { get; set; }
@@ -266,6 +268,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<MUserLogin> MUserLogins { get; set; }
 
     public virtual DbSet<MWilayah> MWilayahs { get; set; }
+
+    public virtual DbSet<MvDbOpAccHotel> MvDbOpAccHotels { get; set; }
 
     public virtual DbSet<MvDbOpPhr> MvDbOpPhrs { get; set; }
 
@@ -1087,6 +1091,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Npwpd).IsFixedLength();
         });
 
+        modelBuilder.Entity<DbMonPbbSumpage>(entity =>
+        {
+            entity.ToView("DB_MON_PBB_SUMPAGE");
+        });
+
         modelBuilder.Entity<DbMonPbbViewRealisasi>(entity =>
         {
             entity.ToView("DB_MON_PBB_VIEW_REALISASI");
@@ -1653,6 +1662,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<MWilayah>(entity =>
         {
             entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
+        modelBuilder.Entity<MvDbOpAccHotel>(entity =>
+        {
+            entity.ToView("MV_DB_OP_ACC_HOTEL");
         });
 
         modelBuilder.Entity<MvDbOpPhr>(entity =>

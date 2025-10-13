@@ -103,7 +103,7 @@ namespace CCTVParkirWorker
                 );
             }
 
-            _INTERVAL_API = 45;
+            _INTERVAL_API = 10;
             _URL = "http://202.146.133.26/grpc";
 
             _USER = "bapendasby";
@@ -112,7 +112,7 @@ namespace CCTVParkirWorker
             _USER_TELKOM = "pemkot_surabaya_va";
             _PASS_TELKOM = "P3mk0tSuR4b4Ya";
 
-            _INTERVAL_DAY = 90;
+            _INTERVAL_DAY = 5;
 
             dataGridView1.CellClick += DataGridView1_CellClick;
             btnStartAll.Click += BtnStartAll_Click;
