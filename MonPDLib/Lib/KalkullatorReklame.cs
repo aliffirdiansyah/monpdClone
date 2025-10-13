@@ -13,13 +13,12 @@ namespace MonPDLib.Lib
     {
         public class ReklameInput
         {
+            public decimal IdJalan { get; set; }
             public decimal Panjang { get; set; }
             public decimal Lebar { get; set; }
             public decimal Tinggi { get; set; }
-            public int KelasJalan { get; set; }
             public int SudutPandang { get; set; }
             public EnumFactory.KategoriReklame JenisReklame { get; set; }
-            public int MasaPajak { get; set; }
             public EnumFactory.ProdukReklame JenisProduk { get; set; }
             public EnumFactory.LetakReklame LetakReklame { get; set; }
         }
@@ -31,6 +30,7 @@ namespace MonPDLib.Lib
         public decimal SkorLokasi { get; private set; }
         public decimal SkorPandang { get; private set; }
         public decimal SkorKetinggian { get; private set; }
+        public decimal TotalSkor { get; private set; }
         public decimal TotalNilaiStrategis { get; private set; }
         public decimal TotalNjopStrategis { get; private set; }
         public decimal PenambahanKetinggian { get; private set; }
@@ -39,6 +39,18 @@ namespace MonPDLib.Lib
         public decimal TotalNilaiSewa { get; private set; }
         public decimal JaminanBongkar { get; private set; }
 
+        //---------------------------------------------------------------
+        public decimal NsrLuas { get; private set; }
+        public decimal NsrKetinggian { get; private set; }
+        public decimal Nss { get; private set; }
+        public decimal BobotLokasiNilai { get; private set; }
+        public decimal BobotPandangNilai { get; private set; }
+        public decimal BobotKetinggianNilai { get; private set; }
+        public EnumFactory.KawasanReklame Kawasan { get; set; }
+        public string NamaJalan { get; set; }
+        public string KelasJalan { get; set; }
+        public int MasaPajak { get; set; } = 12;
+
         private static ReklameContext _context = DBClass.GetReklameContext();
 
         public static KalkullatorReklame HitungNilaiSewaReklame(ReklameInput input)
@@ -46,10 +58,16 @@ namespace MonPDLib.Lib
             decimal luas = input.Panjang * input.Lebar;
             DateTime today = DateTime.Today;
 
+            var jalan = _context.MJalans
+                .Where(x => x.IdJalan == input.IdJalan)
+                .FirstOrDefault();
+
+            if (jalan == null)
+                throw new Exception("Data jalan tidak ditemukan.");
+
             // 1️⃣ Ambil NSR Luas (cek tanggal berlaku)
             var nsrLuas = _context.MNsrLuas
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
-                         && x.MasaPajak == input.MasaPajak
                          && luas >= x.MinLuas
                          && (x.MaxLuas == null || luas <= x.MaxLuas)
                          && x.TglAwalBerlaku <= today
@@ -63,7 +81,6 @@ namespace MonPDLib.Lib
             // 2️⃣ Ambil NSR Tinggi
             var nsrTinggi = _context.MNsrTinggis
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
-                         && x.MasaPajak == input.MasaPajak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
@@ -75,7 +92,6 @@ namespace MonPDLib.Lib
             // 3️⃣ Ambil nilai satuan strategis (NSS)
             var nss = _context.MNilaiSatuanStrategis
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
-                         && x.MasaPajak == input.MasaPajak
                          && luas >= x.MinLuas
                          && (x.MaxLuas == null || luas <= x.MaxLuas)
                          && x.TglAwalBerlaku <= today
@@ -99,7 +115,7 @@ namespace MonPDLib.Lib
 
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
             var lokasi = _context.MNilaiStrategisLokasis
-                .Where(x => x.KelasJalan == input.KelasJalan
+                .Where(x => x.KelasJalan == jalan.KelasJalan
                          && x.IsDlmRuang == letak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
@@ -210,13 +226,23 @@ namespace MonPDLib.Lib
                 SkorLokasi = skorLokasiBobot,
                 SkorPandang = skorPandangBobot,
                 SkorKetinggian = skorTinggiBobot,
+                TotalSkor = totalStrategis,
                 TotalNilaiStrategis = totalNilaiStrategis,
                 TotalNjopStrategis = totalNjopStrategis,
                 PenambahanKetinggian = penambahanKetinggian,
                 PokokPajak = pokokPajak,
                 ProdukRokok = produkRokok,
                 TotalNilaiSewa = totalNilaiSewa,
-                JaminanBongkar = jaminanBongkar
+                JaminanBongkar = jaminanBongkar,
+                NsrLuas = nsrLuas.NilaiSewa,
+                NsrKetinggian = nsrTinggi.NilaiKetinggian,
+                Nss = nss.NilaiSatuan,
+                BobotLokasiNilai = lokasi.Bobot,
+                BobotPandangNilai = pandang.Bobot,
+                BobotKetinggianNilai = tinggiData.Bobot,
+                NamaJalan = jalan.NamaJalan,
+                Kawasan = (EnumFactory.KawasanReklame)jalan.Kawasan,
+                KelasJalan = "Kelas " + Convert.ToString(jalan.KelasJalan.Value),
             };
         }
 

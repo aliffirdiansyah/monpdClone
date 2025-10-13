@@ -1,0 +1,123 @@
+﻿@using MonPDLib.General
+@model MonPDReborn.Models.Reklame.KakulatorReklameVM.Show
+
+@{
+    Layout =  null;
+}
+@model Show
+@{
+    Layout = null; // karena partial, tidak perlu layout utama
+}
+<style>
+    body { font-family: "Courier New", monospace; font-size: 14px; }
+    .table td, .table th { vertical-align: middle; padding: 4px 8px; }
+    .judul { text-align: center; font-weight: bold; text-transform: uppercase; }
+    .section-title { font-weight: bold; border-bottom: 2px solid black; margin-top: 1rem; }
+    .right { text-align: right; }
+</style>
+
+<div class="container p-4">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h5 class="judul">NOTA PERHITUNGAN NILAI SEWA REKLAME</h5>
+        <p>
+            Alamat Penempatan : ..............................................<br />
+            Berdasarkan Peraturan Walikota Surabaya No. 70 & 71 Tahun 2010
+        </p>
+    </div>
+
+    <!-- DATA OBYEK PAJAK -->
+    <div class="section-title">DATA OBYEK PAJAK</div>
+    <table class="table table-bordered border-dark mb-3">
+        <tbody>
+            <tr><td width="25%">Jenis</td><td colspan="3">@Model.Output.JenisReklame</td></tr>
+            <tr>
+                <td>Panjang</td><td>@Model.Output.Panjang</td>
+                <td>Sisi</td><td>1</td>
+            </tr>
+            <tr>
+                <td>Luas</td>
+                <td>@Model.Output.Panjang × @Model.Output.Lebar = @Model.KalkullatorReklameRow.Luas</td>
+                <td>Letak Reklame</td><td>@Model.Output.LetakReklame.GetDescription()</td>
+            </tr>
+            <tr>
+                <td>Ketinggian</td><td>@Model.Output.Tinggi</td>
+                <td>Status Lokasi</td><td>@Model.KalkullatorReklameRow.Kawasan.GetDescription()</td>
+            </tr>
+            <tr>
+                <td>Sudut Pandang</td><td>@Model.Output.SudutPandang</td>
+                <td>Kelas Jalan</td><td>@Model.KalkullatorReklameRow.KelasJalan</td>
+            </tr>
+            <tr>
+                <td>Jenis Produk</td><td>@Model.Output.JenisProduk.GetDescription()</td>
+                <td></td><td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- PERHITUNGAN -->
+    <div class="section-title">PERHITUNGAN</div>
+    <table class="table table-bordered border-dark">
+        <tbody>
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">NJOP</td></tr>
+            <tr>
+                <td>Luas</td>
+                <td class="right">@Model.KalkullatorReklameRow.Luas</td>
+                <td class="right">× @Model.KalkullatorReklameRow.NsrLuas.ToString("N0")</td>
+                <td class="right">Rp. @Model.KalkullatorReklameRow.NjopLuas</td>
+            </tr>
+            <tr>
+                <td>Ketinggian</td>
+                <td class="right">@Model.Output.Tinggi</td>
+                <td class="right">× @Model.KalkullatorReklameRow.Luas.ToString("N0")</td>
+                <td class="right">Rp. @Model.KalkullatorReklameRow.NjopKetinggian</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="fw-bold right">TOTAL NJOP</td>
+                <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNjop</td>
+            </tr>
+
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">NILAI STRATEGIS</td></tr>
+            <tr><td>Skor Lokasi</td><td class="right">@Model.KalkullatorReklameRow.SkorLokasi.ToString("N2") × @Model.KalkullatorReklameRow.BobotLokasiNilai.ToString("P2")</td><td></td><td class="right">@Model.KalkullatorReklameRow.SkorLokasi</td></tr>
+            <tr><td>Skor S. Pandang</td><td class="right">@Model.KalkullatorReklameRow.SkorPandang.ToString("N2") × @Model.KalkullatorReklameRow.BobotPandangNilai.ToString("P2")</td><td></td><td class="right">@Model.KalkullatorReklameRow.SkorPandang</td></tr>
+            <tr><td>Skor Ketinggian</td><td class="right">@Model.KalkullatorReklameRow.SkorKetinggian.ToString("N2") × @Model.KalkullatorReklameRow.BobotKetinggianNilai.ToString("P2")</td><td></td><td class="right">@Model.KalkullatorReklameRow.SkorKetinggian</td></tr>
+            <tr><td colspan="3" class="fw-bold right">BOBOT TOTAL</td><td class="right fw-bold">@Model.KalkullatorReklameRow.TotalSkor</td></tr>
+
+            <tr><td colspan="3" class="right">TOTAL NILAI STRATEGIS</td><td class="right">Rp. @Model.KalkullatorReklameRow.TotalNjopStrategis</td></tr>
+            <tr><td colspan="3" class="right">TOTAL NJOP + N. STRATEGIS</td><td class="right">Rp. @Model.KalkullatorReklameRow.TotalNjopStrategis</td></tr>
+            <tr><td colspan="3" class="right">Penambahan Ketinggian</td><td class="right">Rp. @Model.KalkullatorReklameRow.PenambahanKetinggian</td></tr>
+
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">POKOK PAJAK</td></tr>
+            <tr>
+                <td colspan="3" class="right">@Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N2") × 25%</td>
+                <td class="right">Rp. @Model.KalkullatorReklameRow.PokokPajak</td>
+            </tr>
+            <tr>
+                <td>Produk Rokok</td>
+                <td colspan="2"></td>
+                <td class="right">Rp. @Model.KalkullatorReklameRow.ProdukRokok</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="fw-bold right">TOTAL NILAI SEWA</td>
+                <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa</td>
+            </tr>
+
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr>
+            <tr>
+                <td>@Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000</td>
+                <td colspan="2"></td>
+                <td class="right">Rp. @Model.KalkullatorReklameRow.JaminanBongkar</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="mt-4">Keterangan : ...........................................................................................................</p>
+@* 
+    <div class="text-end mt-5">
+        Surabaya, @DateTime.Now.ToString("dd - MM - yyyy")<br /><br />
+        <b>Agung Pambudi, SE</b><br />
+        NIP. 19751115 200501 1 011
+    </div>
+ *@
+</div>
