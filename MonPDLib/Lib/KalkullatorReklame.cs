@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MonPDLib.EFReklame;
+using MonPDLib.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,10 @@ namespace MonPDLib.Lib
             public decimal Tinggi { get; set; }
             public int KelasJalan { get; set; }
             public int SudutPandang { get; set; }
-            public int IdJenisReklame { get; set; }
+            public EnumFactory.KategoriReklame JenisReklame { get; set; }
             public int MasaPajak { get; set; }
             public string JenisProduk { get; set; } = string.Empty;
+            public EnumFactory.LetakReklame LetakReklame { get; set; }
         }
 
         public decimal Luas { get; private set; }
@@ -46,7 +48,7 @@ namespace MonPDLib.Lib
 
             // 1️⃣ Ambil NSR Luas (cek tanggal berlaku)
             var nsrLuas = await _context.MNsrLuas
-                .Where(x => x.IdJenisReklame == input.IdJenisReklame
+                .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                          && x.MasaPajak == input.MasaPajak
                          && luas >= x.MinLuas
                          && (x.MaxLuas == null || luas <= x.MaxLuas)
@@ -60,7 +62,7 @@ namespace MonPDLib.Lib
 
             // 2️⃣ Ambil NSR Tinggi
             var nsrTinggi = await _context.MNsrTinggis
-                .Where(x => x.IdJenisReklame == input.IdJenisReklame
+                .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                          && x.MasaPajak == input.MasaPajak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
@@ -72,7 +74,7 @@ namespace MonPDLib.Lib
 
             // 3️⃣ Ambil nilai satuan strategis (NSS)
             var nss = await _context.MNilaiSatuanStrategis
-                .Where(x => x.IdJenisReklame == input.IdJenisReklame
+                .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                          && x.MasaPajak == input.MasaPajak
                          && luas >= x.MinLuas
                          && (x.MaxLuas == null || luas <= x.MaxLuas)
@@ -84,6 +86,12 @@ namespace MonPDLib.Lib
             if (nss == null)
                 throw new Exception("Nilai Satuan Strategis tidak ditemukan atau tidak berlaku.");
 
+            int letak = 1; // Default indoor
+            if (input.LetakReklame == EnumFactory.LetakReklame.Outdoor)
+            {
+                letak = 0;
+            }
+
             // 4️⃣ Hitung NJOP dasar (luas + tinggi)
             decimal njopLuas = luas * (nsrLuas.NilaiSewa ?? 0);
             decimal njopKetinggian = input.Tinggi * (nsrTinggi.NilaiKetinggian ?? 0);
@@ -92,6 +100,7 @@ namespace MonPDLib.Lib
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
             var lokasi = await _context.MNilaiStrategisLokasis
                 .Where(x => x.KelasJalan == input.KelasJalan
+                         && x.IsDlmRuang == letak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
@@ -99,18 +108,32 @@ namespace MonPDLib.Lib
 
             var pandang = await _context.MNilaiStrategisSpandangs
                 .Where(x => x.SudutPandang == input.SudutPandang
+                         && x.IsDlmRuang == letak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
                 .FirstOrDefaultAsync();
 
-            var tinggiData = await _context.MNilaiStrategisTinggis
-                .Where(x => input.Tinggi >= x.MinKetinggian
-                         && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
-                         && x.TglAwalBerlaku <= today
-                         && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
-                .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefaultAsync();
+            if (letak == 0)
+            {
+                var tinggiData = await _context.MNilaiStrategisTinggis
+                    .Where(x => input.Tinggi >= x.MinKetinggian
+                             && x.MinKetinggian > 0
+                             && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
+                             && x.TglAwalBerlaku <= today
+                             && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                    .OrderByDescending(x => x.TglAwalBerlaku)
+                    .FirstOrDefaultAsync();
+            }
+            else { 
+                var tinggiData = await _context.MNilaiStrategisTinggis
+                    .Where(x => input.Tinggi >= x.MinKetinggian
+                             && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
+                             && x.TglAwalBerlaku <= today
+                             && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                    .OrderByDescending(x => x.TglAwalBerlaku)
+                    .FirstOrDefaultAsync();
+            }
 
             if (lokasi == null || pandang == null || tinggiData == null)
                 throw new Exception("Nilai strategis lokasi / sudut pandang / tinggi tidak ditemukan atau tidak berlaku.");
@@ -122,7 +145,7 @@ namespace MonPDLib.Lib
             decimal totalStrategis = 0m;
 
             var def = _context.MNilaiStrategisDefs
-                .Where(x => x.IdJenisReklame == input.IdJenisReklame
+                .Where(x => x.IdJenisReklame == (int)input.JenisReklame
                     && x.TglAwalBerlaku <= today
                     && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
