@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MonPDLib.EF;
+using MonPDLib.EFReklame;
 using System.Text;
 using System.Text.Json;
 
@@ -8,6 +9,7 @@ namespace MonPDLib
     public class DBClass
     {        
         public static string Monpd = "";
+        public static string Reklame = "";
         public static string StV1 = "";
         public static string Hpp = "";
         public static string Phrh = "";
@@ -19,6 +21,13 @@ namespace MonPDLib
             var optionsBuilder = new DbContextOptionsBuilder<ModelContext>();
             optionsBuilder.UseOracle(Monpd, opt => opt.UseOracleSQLCompatibility("11"));
             return new ModelContext(optionsBuilder.Options);
+        }
+        
+        public static ReklameContext GetReklameContext()
+        {         
+            var optionsBuilder = new DbContextOptionsBuilder<ReklameContext>();
+            optionsBuilder.UseOracle(Reklame, opt => opt.UseOracleSQLCompatibility("11"));
+            return new ReklameContext(optionsBuilder.Options);
         }
 
         public static SurabayaTaxContext GetSurabayaTaxContext()

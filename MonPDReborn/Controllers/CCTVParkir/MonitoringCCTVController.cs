@@ -244,7 +244,13 @@ namespace MonPDReborn.Controllers.CCTVParkir
             Response.Headers.Add("Connection", "keep-alive");
             Response.Headers.Add("X-Accel-Buffering", "no");
 
-            DateTime lastActivityCheckTime = DateTime.Now.AddMinutes(-5);
+            // Ini menjamin kita mengambil semua data yang masuk saat halaman sedang loading (menutup data gap).
+            DateTime lastActivityCheckTime = DateTime.Now.AddSeconds(-10);
+
+            // 💡 KONTROL FREKUENSI CHART: Hanya hit logic chart setiap 5 loop (10 detik)
+            int chartUpdateCounter = 0;
+            object lastKapasitasChartDetail = null; // Menyimpan snapshot terakhir dari data Chart
+
             try
             {
                 await Response.Body.FlushAsync(cancellationToken);
@@ -255,41 +261,47 @@ namespace MonPDReborn.Controllers.CCTVParkir
                 {
                     try
                     {
-                        // 1. Dapatkan data baru (Hanya Analysis dan Delta Aktivitas)
+                        // --- 1.  Data Analisis (Card) ---
                         var analysis = MonitoringCCTVVM.Method.GetLiveStreamingAnalysis(nop, tgl);
 
-                        // 💡 PANGGIL METHOD BARU UNTUK DELTA DATA
-                        // Kita gunakan waktu saat ini sebagai acuan pemanggilan berikutnya
+                        // --- 2.  Data Delta (DataGrid) ---
                         var newActivityEntries = MonitoringCCTVVM.Method.GetNewActivityEntries(nop, lastActivityCheckTime);
 
-                        // 💡 PENTING: Perbarui waktu pemeriksaan terakhir
-                        lastActivityCheckTime = DateTime.Now;
+                        // UNTUK SINKRONISASI WAKTU:
+                        if (newActivityEntries.Count > 0)
+                        {
+                            // Gunakan waktu masuk TERBARU dari data yang BARU SAJA diambil sebagai acuan berikutnya.
+                            // Ini mengabaikan jam server dan hanya mengikuti waktu database.
+                            lastActivityCheckTime = newActivityEntries.Max(e => e.TanggalMasuk);
+                        }
+                        // Jika tidak ada entri baru (Panjang: 0), waktu pengecekan tetap pada nilai sebelumnya.
 
-                        // 2. Dapatkan data Chart (Jika Anda ingin Chart juga Delta, kita bahas di Langkah 2)
-                        // KARENA CHART JUGA MEMBUTUHKAN SELURUH RIWAYAT data aktivitas harian untuk plot 96 titik,
-                        // kita harus memisahkan pengambilan data CHART dari data DataGrid.
-                        // UNTUK SEMENTARA, kita akan tetap mengirim data chart secara lengkap (Langkah 1A).
-                        var aktivitasListFull = MonitoringCCTVVM.Method.GetAktivitasHarian(nop, tgl); // Data penuh untuk Chart
-                        var kapasitasChart = MonitoringCCTVVM.Method.GetKapasitasChart(aktivitasListFull, tgl);
+                        // --- 3. Ambil Data Chart (Throttled) ---
+                        chartUpdateCounter++;
+                        if (chartUpdateCounter >= 5 || lastKapasitasChartDetail == null)
+                        {
+                            var aktivitasListFull = MonitoringCCTVVM.Method.GetAktivitasHarian(nop, tgl);
+                            lastKapasitasChartDetail = MonitoringCCTVVM.Method.GetKapasitasChart(aktivitasListFull, tgl);
+                            chartUpdateCounter = 0;
+                        }
 
+                        // --- 4. Kirim Payload ---
                         var payload = new
                         {
                             AnalysisResult = analysis,
-                            // 💡 KIRIM DATA DELTA untuk DataGrid (Gantikan AktivitasHarianList yang berat)
                             NewActivityEntries = newActivityEntries,
-                            KapasitasChartDetail = kapasitasChart, // TETAP DIKIRIM LENGKAP SEMENTARA
+                            KapasitasChartDetail = lastKapasitasChartDetail,
                             Timestamp = DateTime.Now
                         };
 
                         await SendSseAsync(payload, cancellationToken);
                         await Task.Delay(2000, cancellationToken);
-                    
                     }
-                    catch (Exception ex) // ← ERROR DI LOOP TIDAK BREAK KONEKSI
+                    catch (Exception ex) 
                     {
                         _logger.LogWarning(ex, "Error fetching data for NOP {Nop}", nop);
                         await SendSseAsync(new { status = "error", message = "Data fetch error" }, cancellationToken);
-                        await Task.Delay(5000, cancellationToken); // ← RETRY LEBIH LAMA
+                        await Task.Delay(5000, cancellationToken); 
                     }
                 }
             }

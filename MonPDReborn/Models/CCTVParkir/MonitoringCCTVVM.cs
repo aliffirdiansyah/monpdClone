@@ -1350,15 +1350,17 @@ namespace MonPDReborn.Models.CCTVParkir
                 var result = new List<LiveStreamingAktivitasHarian>();
                 var context = DBClass.GetContext();
 
-                // Waktu minimal yang harus diambil (misal 5 detik sebelum waktu terakhir dikirim, untuk redundansi)
-                var startTime = lastSentTime.AddSeconds(-5);
+                // 💡 SOLUSI FINAL: Ambil data mulai dari 1 milidetik setelah pengiriman terakhir.
+                // Ini menutup celah waktu presisi milidetik yang memblokir data Grid.
+                var startTimeSafe = lastSentTime.AddMilliseconds(1);
 
                 // ===================================================
-                // A. Ambil data Realtime (TOpParkirCctvRealtimes)
+                // A. Query data Realtime (TOpParkirCctvRealtimes)
                 // ===================================================
                 var newRealtimeData = context.TOpParkirCctvRealtimes
                     .Where(x => x.Nop == nop
-                             && x.WaktuMasuk >= startTime
+                             // Pastikan query TIDAK TERBATAS oleh .Date, karena ini adalah data LIVE
+                             && x.WaktuMasuk >= startTimeSafe
                              && x.JenisKend != 0)
                     .ToList();
 
@@ -1391,7 +1393,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
                 {
                     var newLogs = context.MOpParkirCctvJasnitaLogDs
-                        .Where(x => x.Nop == nop && x.TglEvent >= startTime) // Filter berdasarkan waktu
+                        .Where(x => x.Nop == nop && x.TglEvent >= startTimeSafe) // Filter berdasarkan waktu
                         .ToList();
 
                     foreach (var item in newLogs)
@@ -1412,7 +1414,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 else if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
                 {
                     var newLogs = context.MOpParkirCctvTelkomLogDs
-                        .Where(x => x.Nop == nop && x.TglEvent >= startTime) // Filter berdasarkan waktu
+                        .Where(x => x.Nop == nop && x.TglEvent >= startTimeSafe) // Filter berdasarkan waktu
                         .ToList();
 
                     foreach (var item in newLogs)
@@ -1432,7 +1434,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 }
 
                 // Sort by time, data baru masuk di akhir
-                return result.OrderBy(x => x.TanggalMasuk).ToList();
+                return result.OrderByDescending(x => x.TanggalMasuk).ToList();
             }
             #endregion
             public static List<DateTime> GetTimeIntervals(DateTime tanggal)
@@ -1448,7 +1450,6 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 return result;
             }
-
         }
 
         public class MonitoringCCTV
