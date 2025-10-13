@@ -1,0 +1,54 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.DataKapasitasParkir
+@{
+
+}
+
+@(
+    Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.MonitoringCCTVKapasitas>()
+    .ID("vendorParkirGrid")
+    .DataSource(Model.MonitoringCCTVKapasitasList)
+    .ShowBorders(true)
+    .ShowColumnLines(true)
+    .RowAlternationEnabled(true)
+    .ShowRowLines(true)
+    .ShowColumnHeaders(true)
+    .ColumnAutoWidth(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p
+    .ShowPageSizeSelector(true)
+    .AllowedPageSizes(new[] { 5, 10, 20 })
+    .ShowInfo(true)
+    )
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.JenisKendaraanNama)
+            .Caption("Jenis Kendaraan");
+
+        columns.AddFor(m => m.JumlahKendaraanTerparkir)
+            .Caption("Jumlah Kendaraan")
+            .Format("#,##0");
+
+        columns.AddFor(m => m.Kapasitas)
+            .Caption("Kapasitas")
+            .Format("#,##0");
+
+        columns.AddFor(m => m.Tarif)
+            .Caption("Tarif")
+            .Format("#,##0");
+            // ✅ Kolom Action
+        columns.Add()
+            .Caption("Action")
+            .Width(200)
+            .Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+                <div class="d-flex justify-content-center gap-2">
+                    <!-- Tombol Modal -->
+                    <button class="btn btn-sm btn-primary" onclick="lihatDetailLog('<%- data.Nop %>','<%- data.JenisKendaraan %>')" title="Detail Kendaraan <%- data.JenisKendaraanNama %>">
+                        <i class="bx bx-area"></i>
+                    </button>
+                </div>
+            </text>)
+            ;
+    })
+
+)

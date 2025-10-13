@@ -1,0 +1,170 @@
+﻿@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.Show
+
+
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-90 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-store-3-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total OP</h5>
+                        <h2 class="mb-0 fw-bold">@Model.TotalOp.ToString("n0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-80 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <!-- Judul Card -->
+                <h5 class="text-center text-muted mb-1">Total CCTV</h5>
+
+                <!-- Grid 3 Kolom -->
+                <div class="row text-center">
+                    <div class="col-4 border-end">
+                        <h6 class="fw-bold">Jasnita</h6>
+                        <h3 class="fw-bold text-success mb-0">
+                            @Model.TotalCCTVTerpasangJasnita.ToString("n0")
+                        </h3>
+                    </div>
+                    <div class="col-4 border-end">
+                        <h6 class="fw-bold">Telkom</h6>
+                        <h3 class="fw-bold text-primary mb-0">
+                            @Model.TotalCCTVTerpasangTelkom.ToString("n0")
+                        </h3>
+                    </div>
+                    <div class="col-4">
+                        <h6 class="fw-bold">Performa</h6>
+                        <h3 class="fw-bold text-warning mb-0">
+                            @Model.TotalCCTVTerpasangPerforma.ToString("n0")
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-4">
+        <div class="card card-animate h-90 shadow-lg rounded-3 neon-left-glow">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-items-center mb-2">
+                    <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                        <i class=" ri-store-3-line text-primary fs-1"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="text-muted">Total Belum Terpasang</h5>
+                        <h2 class="mb-0 fw-bold">@Model.TotalBelumTerpasang.ToString("n0")</h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.MonitoringCCTV>()
+        .ID("MonitoringCCTVGrid")
+        .DataSource(Model.MonitoringCCTVList)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+        .Visible(true)
+        .Width(240)
+        .Placeholder("Cari...")
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP").CellTemplate(new JS("detailOPCellTemplate"));
+            columns.AddFor(m => m.NamaOp).Caption("Nama OP");
+            columns.AddFor(m => m.AlamatOp).Caption("Alamat OP");
+            columns.AddFor(m => m.TglTerpasang).Caption("Tgl Terpasang").Format("dd MMM yyyy");
+            columns.AddFor(m => m.Vendor).Caption("Vendor");
+            columns.AddFor(m => m.StatusTerpasang).Caption("Kondisi CCTV");
+            columns.AddFor(m => m.StatusAktif)
+                .Caption("Status CCTV")
+                .Alignment(HorizontalAlignment.Center)
+                .CellTemplate(@<text>
+            <% if (data.StatusAktif === "UNASSIGNED") { %>
+                <span class="badge bg-info">UNASSIGNED</span>
+            <% } else if (data.StatusAktif === "ACTIVE") { %>
+                <span class="badge bg-success">ACTIVE</span>
+            <% } else if (data.StatusAktif === "INACTIVE") { %>
+                <span class="badge bg-danger">INACTIVE</span><br />
+                <span><%- data.TglTerakhirAktifString %></span>
+               
+            <% } %>
+            </text>);
+
+            // ✅ Kolom Action
+            columns.Add()
+            .Caption("Action")
+            .Width(200)
+            .Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+                <div class="d-flex justify-content-center gap-2">
+
+                    <% if (data.StatusTerpasang === "TERPASANG") { %>
+                        <button class="btn btn-sm btn-primary" onclick="lihatDetailModal('<%- data.Nop %>','<%- data.VedorId %>')" title="Log">
+                            <i class="bx bx-area"></i>
+                        </button>
+
+                        <button class="btn btn-sm btn-secondary" onclick="lihatDetailNewTab('<%- data.Nop %>','<%- data.VedorId %>')" title="Detail">
+                        <i class="bx bx-archive"></i>
+                        </button>
+
+                        <a href="javascript:void(0)"
+                           onclick="openLiveStreaming('<%- data.Nop %>', '<%- data.VedorId %>')"
+                           class="btn btn-sm btn-outline-secondary"
+                           title="Live Streaming">
+                           <i class="bx bx-play-circle"></i>
+                        </a>
+                    <% } %>
+                </div>
+            </text>)
+            ;
+        })
+        )
+</div>
+
+<script>
+function openLiveStreaming(nop, vendorId) {
+    const now = new Date();
+
+    // Format tanggal dengan jam diset ke 00:00:00 agar cocok dengan query backend
+    const local = now.getFullYear() + "-" +
+        String(now.getMonth() + 1).padStart(2, '0') + "-" +
+        String(now.getDate()).padStart(2, '0') + "T00:00:00";
+
+    const url = `/MonitoringCCTVUPTB/LiveStreaming?nop=${nop}&vendorId=${vendorId}&tgl=${encodeURIComponent(local)}`;
+    window.open(url, "_blank");
+}
+</script>
+

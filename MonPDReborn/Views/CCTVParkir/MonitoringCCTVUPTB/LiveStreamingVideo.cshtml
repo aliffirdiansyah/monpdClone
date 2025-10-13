@@ -1,0 +1,38 @@
+﻿@using MonPDLib.General
+@model MonPDReborn.Models.CCTVParkir.MonitoringCCTVUPTBVM.LiveStreamingVideo
+
+<style>
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .ratio video {
+        background-color: #000;
+    }
+</style>
+@if(Model.VendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
+{
+    
+    <div class="ratio ratio-16x9">
+        <video id="videoRtc" autoplay playsinline controls
+               class="w-100 h-100 rounded border">
+        </video>
+    </div>
+
+    <script>
+        startWebRTC("videoRtc", '@(Model.MediaMtxSource)');
+    </script>
+}
+
+@if(Model.VendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+{
+@* <h2>Live Camera - WebRTC</h2> *@
+    <div class="ratio ratio-16x9">
+        <video controls autoplay muted playsinline class="w-100 h-100 rounded border">
+            <source src="@Model.JasnitaSource" type="video/mp4" />
+            Browser tidak mendukung video tag.
+        </video>
+    </div>
+}
+
