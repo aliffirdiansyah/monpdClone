@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EFReklame;
 
-[PrimaryKey("IdJenisReklame", "TglAwalBerlaku")]
+[PrimaryKey("IdJenisReklame", "MinLuas", "MaxLuas", "TglAwalBerlaku")]
 [Table("M_NILAI_SATUAN_STRATEGIS")]
 public partial class MNilaiSatuanStrategi
 {
@@ -19,14 +19,16 @@ public partial class MNilaiSatuanStrategi
     [Precision(2)]
     public byte MasaPajak { get; set; }
 
+    [Key]
     [Column("MIN_LUAS", TypeName = "NUMBER(10,2)")]
-    public decimal? MinLuas { get; set; }
+    public decimal MinLuas { get; set; }
 
+    [Key]
     [Column("MAX_LUAS", TypeName = "NUMBER(10,2)")]
-    public decimal? MaxLuas { get; set; }
+    public decimal MaxLuas { get; set; }
 
     [Column("NILAI_SATUAN", TypeName = "NUMBER(18,2)")]
-    public decimal? NilaiSatuan { get; set; }
+    public decimal NilaiSatuan { get; set; }
 
     [Column("KET")]
     [StringLength(255)]

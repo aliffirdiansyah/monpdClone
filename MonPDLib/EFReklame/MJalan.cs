@@ -9,6 +9,10 @@ namespace MonPDLib.EFReklame;
 [Table("M_JALAN")]
 public partial class MJalan
 {
+    [Column("KAWASAN")]
+    [Precision(10)]
+    public int? Kawasan { get; set; }
+
     [Column("KELAS_JALAN")]
     [Precision(10)]
     public int? KelasJalan { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EFReklame;
 
-[PrimaryKey("IdJenisReklame", "TglAwalBerlaku")]
+[PrimaryKey("IdJenisReklame", "NilaiKetinggian", "TglAwalBerlaku")]
 [Table("M_NSR_TINGGI")]
 public partial class MNsrTinggi
 {
@@ -19,8 +19,9 @@ public partial class MNsrTinggi
     [Precision(2)]
     public byte MasaPajak { get; set; }
 
+    [Key]
     [Column("NILAI_KETINGGIAN", TypeName = "NUMBER(10,2)")]
-    public decimal? NilaiKetinggian { get; set; }
+    public decimal NilaiKetinggian { get; set; }
 
     [Column("KET")]
     [StringLength(255)]

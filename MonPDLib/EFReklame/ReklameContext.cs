@@ -60,7 +60,7 @@ public partial class ReklameContext : DbContext
 
         modelBuilder.Entity<MNilaiSatuanStrategi>(entity =>
         {
-            entity.HasKey(e => new { e.IdJenisReklame, e.TglAwalBerlaku }).HasName("PK_M_SATUAN_STGRS");
+            entity.HasKey(e => new { e.IdJenisReklame, e.MinLuas, e.MaxLuas, e.TglAwalBerlaku }).HasName("M_NILAI_SATUAN_STRATEGIS_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
 
@@ -105,6 +105,8 @@ public partial class ReklameContext : DbContext
 
         modelBuilder.Entity<MNsrLua>(entity =>
         {
+            entity.HasKey(e => new { e.IdJenisReklame, e.MinLuas, e.MaxLuas, e.TglAwalBerlaku }).HasName("M_NSR_LUAS_PK");
+
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
 
             entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.MNsrLuas)
@@ -114,7 +116,7 @@ public partial class ReklameContext : DbContext
 
         modelBuilder.Entity<MNsrTinggi>(entity =>
         {
-            entity.HasKey(e => new { e.IdJenisReklame, e.TglAwalBerlaku }).HasName("PK_M_NSR_TGG");
+            entity.HasKey(e => new { e.IdJenisReklame, e.NilaiKetinggian, e.TglAwalBerlaku }).HasName("M_NSR_TINGGI_PK");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
 
