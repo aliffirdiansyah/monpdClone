@@ -4,6 +4,36 @@ namespace MonPDLib.General
 {
     public class EnumFactory
     {
+
+        public enum KategoriReklame
+        {
+            [Description("Megatron")]
+            Megatron = 1,
+
+            [Description("Papan/Billboard - Pada JPO/Bando")]
+            PapanBillboard_JPOBando = 2,
+
+            [Description("Papan/Billboard - Dengan Penerangan")]
+            PapanBillboard_DenganPenerangan = 3,
+
+            [Description("Papan/Billboard - Tanpa Penerangan")]
+            PapanBillboard_TanpaPenerangan = 4,
+
+            [Description("Papan/Billboard - Menempel Dinding/Mural")]
+            PapanBillboard_MenempelDindingMural = 5,
+
+            [Description("Berjalan")]
+            Berjalan = 6
+        }
+
+        public enum LetakReklame
+        {
+            [Description("Outdoor")]
+            Outdoor = 0,
+            [Description("Indoor")]
+            Indoor = 1
+        }
+
         [AttributeUsage(AttributeTargets.Field)]
         public class ColorAttribute : Attribute
         {
