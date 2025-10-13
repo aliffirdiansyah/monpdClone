@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Linq.Dynamic.Core;
 using System.Text.RegularExpressions;
 using static MonPDLib.General.EnumFactory;
+using static MonPDReborn.Models.DashboardUPTBVM.ViewModel;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 
 namespace MonPDReborn.Models.DataOP
@@ -3267,7 +3268,7 @@ namespace MonPDReborn.Models.DataOP
                                 awal = context.DbOpRestos.Count(x => x.TahunBuku == yearBefore && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > yearBefore));
                                 tutup = context.DbOpRestos.Count(x => x.TahunBuku == year && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == year);
                                 baru = context.DbOpRestos.Count(x => x.TahunBuku == year && x.TglMulaiBukaOp.Year == year);
-                                akhir = context.DbOpRestos.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year));
+                                akhir = context.DbOpRestos.Count(x => x.TahunBuku == year && (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > year) && x.PajakNama != "MAMIN");
                                 break;
 
                             case EnumFactory.EPajak.JasaPerhotelan:
@@ -3440,7 +3441,7 @@ namespace MonPDReborn.Models.DataOP
 
                             akhir = query.Count(x =>
                                 x.TahunBuku == tahun &&
-                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun));
+                                (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
 
                             switch (i)
                             {

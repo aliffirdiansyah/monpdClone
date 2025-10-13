@@ -36,7 +36,6 @@
                                                 .DisplayExpr("Text")
                                                 .ValueExpr("Value")
                                                 .Placeholder("Pilih Kecamatan")
-                                                .OnValueChanged("onKecChanged")
                                                 )
                     </div>
 
@@ -99,6 +98,53 @@
             </div>
         </div>
     </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Kontribusi per Segmen
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="loading2-ShowKontribusi" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="ShowKontribusi">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Top 10 Tunggakan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="loading2-ShowTunggakan" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="ShowTunggakan">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @section Scripts{
         <script>
@@ -111,128 +157,155 @@
                 }));
                 kecSelect.reset();
 
-                let kelSelect = $("#kelSelect").dxSelectBox("instance");
+                let kelSelect = $("#kecSelect").dxSelectBox("instance");
                 kelSelect.reset();
-            }
-
-            function onKecChanged(e) {
-                let kelSelect = $("#kelSelect").dxSelectBox("instance");
-                kelSelect.option("dataSource", DevExpress.data.AspNet.createStore({
-                    key: "Value",
-                    loadUrl: "/AnalitikView/GetKel",
-                    loadParams: { kecamatan: e.value }
-                }));
-                kelSelect.reset();
-            }
-
-            function onTerapkanClick(e) {
-                let uptb = $("#uptbSelect").dxSelectBox("instance").option("value");
-                let kec = $("#kecSelect").dxSelectBox("instance").option("value");
-
-                if (!uptb || !kec || !kel) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Verifikasi Data',
-                        text: '⚠ Harap pilih semua data sebelum menerapkan.',
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-                }
-
-                $.ajax({
-                     url: '/AnalitikView/RekapPerWilayah',
-                     method: 'GET',
-                     data: {
-                         uptb: uptb, kec: kec
-                     },
-                     beforeSend: function () {
-                      $('#loading2-ShowWilayah').show();
-                      $('#ShowWilayah').hide();
-                       },
-                       success: function (response) {
-                             if (response.Status === undefined) {
-                                 $('#loading2-ShowWilayah').hide();
-                                 $('#ShowWilayah').show();
-                                 $('#ShowWilayah').html(response);
-                             }
-                             else {
-                                 swal.fire({
-                                     icon: 'warning',
-                                     title: '<b style="color:orange">Peringatan</b>',
-                                     text: response.Message
-                                 })
-                             }
-                       },
-                       error: function (xhr, status, error) {
-                          $('#loading2-ShowWilayah').hide();
-                          $('#ShowWilayah').hide();
-                          $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                       }
-                 });
             }
         </script>
         <script>
-            $(document).ready(function () {
-                fnShowWilayah();
-            fnShowSegmentasi();
-            });
-            function fnShowWilayah() {
-                $.ajax({
-                    url: '@(Url.Action("ShowWilayah"))',
-                    type: 'GET',
-                    beforeSend: function () {
-                        $('#loading2-ShowWilayah').show();
-                        $('#ShowWilayah').hide();
-                    },
-                    success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-ShowWilayah').hide();
-                            $('#ShowWilayah').show();
-                            $('#ShowWilayah').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        $('#loading2-ShowWilayah').hide();
-                        $('#ShowWilayah').hide();
-                        $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                    }
+        function onTerapkanClick(e) {
+            let uptbValue = $("#uptbSelect").dxSelectBox("instance").option("value");
+            let kec = $("#kecSelect").dxSelectBox("instance").option("value");
+
+            if (!uptbValue || !kec) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi Data',
+                    text: '⚠ Harap pilih semua data sebelum menerapkan.',
+                    confirmButtonText: 'OK'
                 });
+                return;
             }
-            function fnShowSegmentasi() {
-                $.ajax({
-                    url: '@(Url.Action("ShowSegmentasi"))',
-                    type: 'GET',
-                    beforeSend: function () {
-                        $('#loading2-ShowSegmentasi').show();
-                        $('#ShowSegmentasi').hide();
-                    },
-                    success: function (response) {
-                        if (response.Status === undefined) {
-                            $('#loading2-ShowSegmentasi').hide();
-                            $('#ShowSegmentasi').show();
-                            $('#ShowSegmentasi').html(response);
-                        }
-                        else {
-                            swal.fire({
-                                icon: 'warning',
-                                title: '<b style="color:orange">Peringatan</b>',
-                                text: response.Message
-                            })
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        $('#loading2-ShowSegmentasi').hide();
-                        $('#ShowSegmentasi').hide();
-                        $('#ShowSegmentasi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-                    }
-                });
+
+            let uptb = "UPTB " + uptbValue;
+
+            fnShowWilayah(uptb, kec);
+            fnShowSegmentasi(uptb, kec);
+            fnShowKontribusi(uptb, kec);
+            fnShowTunggakan(uptb, kec);
         }
+
+        function fnShowWilayah(uptb, kec) {
+            $.ajax({
+                url: '@(Url.Action("ShowWilayah"))',
+                type: 'GET',
+                data: { wilayah: uptb, kec: kec},
+                beforeSend: function () {
+                    $('#loading2-ShowWilayah').show();
+                    $('#ShowWilayah').hide();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-ShowWilayah').hide();
+                        $('#ShowWilayah').show();
+                        $('#ShowWilayah').html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $('#loading2-ShowWilayah').hide();
+                    $('#ShowWilayah').hide();
+                    $('#ShowWilayah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
+        function fnShowSegmentasi(uptb, kec) {
+            console.log("KIRIM DATA:", { uptb, kec });
+            $.ajax({
+                url: '@(Url.Action("ShowSegmentasi"))',
+                type: 'GET',
+                data: { wilayah: uptb, kec: kec},
+                beforeSend: function () {
+                    $('#loading2-ShowSegmentasi').show();
+                    $('#ShowSegmentasi').hide();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-ShowSegmentasi').hide();
+                        $('#ShowSegmentasi').show();
+                        $('#ShowSegmentasi').html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $('#loading2-ShowSegmentasi').hide();
+                    $('#ShowSegmentasi').hide();
+                    $('#ShowSegmentasi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
+        function fnShowKontribusi(uptb, kec) {
+            console.log("KIRIM DATA:", { uptb, kec });
+            $.ajax({
+                url: '@(Url.Action("ShowKontribusi"))',
+                type: 'GET',
+                data: { wilayah: uptb, kec: kec},
+                beforeSend: function () {
+                    $('#loading2-ShowKontribusi').show();
+                    $('#ShowKontribusi').hide();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-ShowKontribusi').hide();
+                        $('#ShowKontribusi').show();
+                        $('#ShowKontribusi').html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $('#loading2-ShowKontribusi').hide();
+                    $('#ShowKontribusi').hide();
+                    $('#ShowKontribusi').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
+        function fnShowTunggakan(uptb, kec) {
+            console.log("KIRIM DATA:", { uptb, kec });
+            $.ajax({
+                url: '@(Url.Action("ShowTunggakan"))',
+                type: 'GET',
+                data: { wilayah: uptb, kec: kec},
+                beforeSend: function () {
+                    $('#loading2-ShowTunggakan').show();
+                    $('#ShowTunggakan').hide();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-ShowTunggakan').hide();
+                        $('#ShowTunggakan').show();
+                        $('#ShowTunggakan').html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $('#loading2-ShowTunggakan').hide();
+                    $('#ShowTunggakan').hide();
+                    $('#ShowTunggakan').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+
         </script>
 }

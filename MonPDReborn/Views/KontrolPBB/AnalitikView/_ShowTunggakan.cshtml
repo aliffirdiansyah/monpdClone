@@ -1,0 +1,40 @@
+﻿@using static MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ViewModels
+@model MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ShowTunggakan
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<Tunggakan>()
+        .ID("tunggakanGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NamaWP).Caption("Nama WP");
+            columns.AddFor(m => m.TunggakanWP).Caption("Tunggakan").Format("#,##0");
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.NamaWP)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+                items.AddFor(m => m.TunggakanWP)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            });
+        })
+        )
+</div>
