@@ -42,6 +42,9 @@ builder.Services.AddCors(options =>
 var configValue = builder.Configuration.GetSection("Conn:Monpd").Value;
 DBClass.Monpd = configValue ?? throw new ArgumentNullException("Connection string 'Monpd' is not configured.");
 
+var configValueReklame = builder.Configuration.GetSection("Conn:Reklame").Value;
+DBClass.Reklame = configValue ?? throw new ArgumentNullException("Connection string 'Reklame' is not configured.");
+
 var supportedCultures = new[] { new CultureInfo("id-ID") };
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {

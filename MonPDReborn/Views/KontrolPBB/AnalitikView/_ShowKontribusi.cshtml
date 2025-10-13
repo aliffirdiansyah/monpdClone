@@ -1,0 +1,29 @@
+﻿@using static MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ViewModels
+@model MonPDReborn.Models.KontrolPBB.AnalitikViewVM.ShowKontribusi
+
+@if (Model != null && Model.Data.Any())
+{
+    foreach (var item in Model.Data)
+    {
+        string bgColor = item.Segmen.Contains("Besar") ? "#eef5ff"
+        : item.Segmen.Contains("Menengah") ? "#f2fff2"
+        : "#fffce8";
+
+        string textColor = item.Segmen.Contains("Besar") ? "text-primary"
+        : item.Segmen.Contains("Menengah") ? "text-success"
+        : "text-warning";
+
+        <div class="p-3 mb-2 rounded" style="background-color:@bgColor;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="fw-semibold">@item.Segmen</div>
+                <div class="fw-bold @textColor">
+                    @String.Format("{0:0.##}%", item.Persentase) kontribusi
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="text-muted mb-0">Tidak ada data kontribusi segmen.</p>
+}

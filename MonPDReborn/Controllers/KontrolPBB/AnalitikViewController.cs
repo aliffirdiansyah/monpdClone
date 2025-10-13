@@ -54,7 +54,7 @@ namespace MonPDReborn.Controllers.KontrolPBB
                 return Json(response);
             }
         }
-        public IActionResult ShowWilayah(int wilayah, int kec)
+        public IActionResult ShowWilayah(string wilayah, string kec)
         {
             try
             {
@@ -74,11 +74,51 @@ namespace MonPDReborn.Controllers.KontrolPBB
                 return Json(response);
             }
         }
-        public IActionResult ShowSegmentasi(int wilayah, int kec)
+        public IActionResult ShowSegmentasi(string wilayah, string kec)
         {
             try
             {
                 var model = new Models.KontrolPBB.AnalitikViewVM.ShowSegmentasi(wilayah, kec);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = ResponseBase.StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = ResponseBase.StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult ShowKontribusi(string wilayah, string kec)
+        {
+            try
+            {
+                var model = new Models.KontrolPBB.AnalitikViewVM.ShowKontribusi(wilayah, kec);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = ResponseBase.StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = ResponseBase.StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult ShowTunggakan(string wilayah, string kec)
+        {
+            try
+            {
+                var model = new Models.KontrolPBB.AnalitikViewVM.ShowTunggakan(wilayah, kec);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -127,7 +167,7 @@ namespace MonPDReborn.Controllers.KontrolPBB
                     .GroupBy(x => new { x.KdKecamatan, x.NmKecamatan })
                     .Select(g => new kecamatanView
                     {
-                        Value = g.Key.KdKecamatan,
+                        Value = g.Key.NmKecamatan,
                         Text = g.Key.NmKecamatan
                     })
                     .ToList();

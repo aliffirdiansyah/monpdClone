@@ -26,12 +26,27 @@ namespace MonPDLib.General
             Berjalan = 6
         }
 
+        public enum KawasanReklame
+        {
+            [Description("Non Penataan")]
+            NonPenataan = 0,
+            [Description("Penataan")]
+            Penataan = 1
+        }
         public enum LetakReklame
         {
             [Description("Outdoor")]
             Outdoor = 0,
             [Description("Indoor")]
             Indoor = 1
+        }
+        
+        public enum ProdukReklame
+        {
+            [Description("Rokok")]
+            Rokok = 0,
+            [Description("Non Rokok")]
+            NonRokok = 1
         }
 
         [AttributeUsage(AttributeTargets.Field)]

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using static MonPDLib.Helper;
 
 namespace MonPDReborn.Models.KontrolPBB
 {
@@ -62,6 +63,7 @@ namespace MonPDReborn.Models.KontrolPBB
                 public decimal Gap => Penetapan - Realisasi;
                 public decimal Pencapaian => Penetapan == 0 ? 0 : (Realisasi / Penetapan);
                 public decimal Prediksi { get; set; }
+                public decimal PersenPrediksi => Penetapan == 0 ? 0 : (Prediksi / Penetapan);
             }
             public class CapaianTunggakan
             {
@@ -69,10 +71,12 @@ namespace MonPDReborn.Models.KontrolPBB
                 public decimal JmlObjek { get; set; }
                 public decimal Ketetapan { get; set; }
                 public decimal Realisasi { get; set; }
-                public decimal Tunggakan => Realisasi - Ketetapan;
+                public decimal Tunggakan => Ketetapan - Realisasi;
                 public decimal Gap => Realisasi - Tunggakan;
                 public decimal Pencapaian => Tunggakan == 0 ? 0 : (Realisasi / Tunggakan);
                 public decimal Prediksi { get; set; }
+                public decimal PersenPrediksi => Ketetapan == 0 ? 0 : (Prediksi / Ketetapan);
+
             }
             public class Dashboard
             {
@@ -113,8 +117,12 @@ namespace MonPDReborn.Models.KontrolPBB
                 var ret = new List<ViewModels.KategoriOP>();
 
                 var tahun = DateTime.Now.Year;
-                var bulan = DateTime.Now.Month;
-                var sisaBulan = 12 - bulan;
+                var hariIni = DateTime.Now.Date;
+                var awalTahun = new DateTime(tahun, 1, 1);
+                var akhirTahun = new DateTime(tahun, 12, 31);
+
+                var hariBerjalan = (hariIni - awalTahun).Days + 1;  
+                var sisaHari = (akhirTahun - hariIni).Days;         
 
                 ret = context.DbMonPbbSummaries
                     .Where(x => x.TahunPajak == tahun)
@@ -125,10 +133,12 @@ namespace MonPDReborn.Models.KontrolPBB
                         JmlObjek = g.Count(),
                         Penetapan = g.Sum(x => x.Ketetapan) ?? 0,
                         Realisasi = g.Sum(x => x.Realisasi) ?? 0,
-                        Prediksi = ((g.Sum(x => x.Ketetapan) ?? 0) / 12m) * sisaBulan
-
+                        Prediksi = hariBerjalan > 0
+                            ? ((g.Sum(x => x.Ketetapan) ?? 0) / hariBerjalan) * sisaHari
+                            : 0
                     })
                     .ToList();
+
                 return ret;
             }
             public static List<ViewModels.CapaianTunggakan> GetCapaianTunggakan()
@@ -136,8 +146,13 @@ namespace MonPDReborn.Models.KontrolPBB
                 var context = DBClass.GetContext();
                 var ret = new List<ViewModels.CapaianTunggakan>();
 
-                var bulan = DateTime.Now.Month;
-                var sisa = 12 - bulan;
+                var tahun = DateTime.Now.Year;
+                var hariIni = DateTime.Now.Date;
+                var awalTahun = new DateTime(tahun, 1, 1);
+                var akhirTahun = new DateTime(tahun, 12, 31);
+
+                var hariBerjalan = (hariIni - awalTahun).Days + 1;
+                var sisaHari = (akhirTahun - hariIni).Days;
 
                 ret = context.DbMonPbbSummaries
                     .GroupBy(x => x.TahunPajak)
@@ -147,7 +162,9 @@ namespace MonPDReborn.Models.KontrolPBB
                         JmlObjek = g.Count(),
                         Ketetapan = g.Sum(x => x.Ketetapan) ?? 0,
                         Realisasi = g.Sum(x => x.Realisasi) ?? 0,
-                        Prediksi = ((g.Sum(x => x.Ketetapan) ?? 0) / 12m) * sisa
+                        Prediksi = hariBerjalan > 0
+                            ? ((g.Sum(x => x.Ketetapan) ?? 0) / hariBerjalan) * sisaHari
+                            : 0
                     })
                     .OrderByDescending(x => x.TahunPajak)
                     .ToList();
