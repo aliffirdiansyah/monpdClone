@@ -114,9 +114,16 @@ namespace MonPDLib.Lib
                 .OrderByDescending(x => x.TglAwalBerlaku)
                 .FirstOrDefaultAsync();
 
+            var tinggiData = await _context.MNilaiStrategisTinggis
+                .Where(x => input.Tinggi >= x.MinKetinggian
+                            && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
+                            && x.TglAwalBerlaku <= today
+                            && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                .OrderByDescending(x => x.TglAwalBerlaku)
+                .FirstOrDefaultAsync();
             if (letak == 0)
             {
-                var tinggiData = await _context.MNilaiStrategisTinggis
+                tinggiData = await _context.MNilaiStrategisTinggis
                     .Where(x => input.Tinggi >= x.MinKetinggian
                              && x.MinKetinggian > 0
                              && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
@@ -124,15 +131,8 @@ namespace MonPDLib.Lib
                              && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                     .OrderByDescending(x => x.TglAwalBerlaku)
                     .FirstOrDefaultAsync();
-            }
-            else { 
-                var tinggiData = await _context.MNilaiStrategisTinggis
-                    .Where(x => input.Tinggi >= x.MinKetinggian
-                             && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
-                             && x.TglAwalBerlaku <= today
-                             && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
-                    .OrderByDescending(x => x.TglAwalBerlaku)
-                    .FirstOrDefaultAsync();
+                if (tinggiData == null)
+                    throw new Exception("Nilai strategis tinggi tidak ditemukan atau tidak berlaku.");
             }
 
             if (lokasi == null || pandang == null || tinggiData == null)
