@@ -153,6 +153,11 @@ namespace MonPDLib.Lib
                 // Setiap kelipatan menambah 20%
                 decimal tambahanPersen = 0.20m * kelipatan;
 
+                if (tambahanPersen == 0)
+                {
+                    penambahanKetinggian = totalNjopStrategis;
+                }
+
                 penambahanKetinggian = totalNjopStrategis * tambahanPersen;
             }
 
