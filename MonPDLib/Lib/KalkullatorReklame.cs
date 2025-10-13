@@ -116,10 +116,28 @@ namespace MonPDLib.Lib
                 throw new Exception("Nilai strategis lokasi / sudut pandang / tinggi tidak ditemukan atau tidak berlaku.");
 
             // 6️⃣ Hitung nilai strategis (skor * bobot)
-            decimal skorLokasiBobot = lokasi.Skor * lokasi.Bobot;
-            decimal skorPandangBobot = pandang.Skor * pandang.Bobot;
-            decimal skorTinggiBobot = tinggiData.Skor * tinggiData.Bobot;
-            decimal totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
+            decimal skorLokasiBobot = 0m;
+            decimal skorPandangBobot = 0m;
+            decimal skorTinggiBobot = 0m;
+            decimal totalStrategis = 0m;
+
+            var def = _context.MNilaiStrategisDefs
+                .Where(x => x.IdJenisReklame == input.IdJenisReklame
+                    && x.TglAwalBerlaku <= today
+                    && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                .OrderByDescending(x => x.TglAwalBerlaku)
+                .FirstOrDefault();
+            if (def != null)
+            {
+                skorLokasiBobot = def.Lokasi * lokasi.Bobot;
+                skorPandangBobot = def.Spandang * pandang.Bobot;
+                skorTinggiBobot = def.Ketinggian * tinggiData.Bobot;
+                totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
+            }
+            skorLokasiBobot = lokasi.Skor * lokasi.Bobot;
+            skorPandangBobot = pandang.Skor * pandang.Bobot;
+            skorTinggiBobot = tinggiData.Skor * tinggiData.Bobot;
+            totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
 
             // 7️⃣ Total Nilai Strategis (dikalikan NSS)
             decimal totalNilaiStrategis = totalStrategis * (nss.NilaiSatuan ?? 0);
