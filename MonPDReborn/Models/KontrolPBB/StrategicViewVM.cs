@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExpress.CodeParser;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
@@ -8,9 +9,10 @@ namespace MonPDReborn.Models.KontrolPBB
     {
         public class Index
         {
+            public ViewModels.Dashboard Data { get; set; } = new ViewModels.Dashboard();
             public Index()
             {
-
+                Data = Methods.GetDashboard();
             }
         }
         public class ShowCapaian
@@ -58,18 +60,26 @@ namespace MonPDReborn.Models.KontrolPBB
                 public decimal Penetapan { get; set; }
                 public decimal Realisasi { get; set; }
                 public decimal Gap => Penetapan - Realisasi;
-                public decimal Pencapaian => Penetapan == 0 ? 0 : (Realisasi / Penetapan) * 100;
+                public decimal Pencapaian => Penetapan == 0 ? 0 : (Realisasi / Penetapan);
                 public decimal Prediksi { get; set; }
             }
-            public class  CapaianTunggakan
+            public class CapaianTunggakan
             {
                 public decimal TahunPajak { get; set; }
                 public decimal JmlObjek { get; set; }
-                public decimal Tunggakan { get; set; }
+                public decimal Ketetapan { get; set; }
                 public decimal Realisasi { get; set; }
-                public decimal Gap => Tunggakan - Realisasi;
-                public decimal Pencapaian => Tunggakan == 0 ? 0 : (Realisasi / Tunggakan) * 100;
+                public decimal Tunggakan => Realisasi - Ketetapan;
+                public decimal Gap => Realisasi - Tunggakan;
+                public decimal Pencapaian => Tunggakan == 0 ? 0 : (Realisasi / Tunggakan);
                 public decimal Prediksi { get; set; }
+            }
+            public class Dashboard
+            {
+                public decimal Target { get; set; }
+                public decimal Realisasi { get; set; }
+                public decimal Capaian { get; set; }
+                public decimal Potensi { get; set; }
             }
         }
         public class Methods
@@ -103,6 +113,8 @@ namespace MonPDReborn.Models.KontrolPBB
                 var ret = new List<ViewModels.KategoriOP>();
 
                 var tahun = DateTime.Now.Year;
+                var bulan = DateTime.Now.Month;
+                var sisaBulan = 12 - bulan;
 
                 ret = context.DbMonPbbSummaries
                     .Where(x => x.TahunPajak == tahun)
@@ -110,67 +122,52 @@ namespace MonPDReborn.Models.KontrolPBB
                     .Select(g => new ViewModels.KategoriOP
                     {
                         Kategori = g.Key,
-                        JmlObjek = g.Count(), 
-                        Penetapan = g.Sum(x => x.Ketetapan) ?? 0, 
-                        Realisasi = g.Sum(x => x.Realisasi) ?? 0
+                        JmlObjek = g.Count(),
+                        Penetapan = g.Sum(x => x.Ketetapan) ?? 0,
+                        Realisasi = g.Sum(x => x.Realisasi) ?? 0,
+                        Prediksi = ((g.Sum(x => x.Ketetapan) ?? 0) / 12m) * sisaBulan
+
                     })
                     .ToList();
                 return ret;
             }
             public static List<ViewModels.CapaianTunggakan> GetCapaianTunggakan()
             {
-                var list = new List<ViewModels.CapaianTunggakan>
+                var context = DBClass.GetContext();
+                var ret = new List<ViewModels.CapaianTunggakan>();
+
+                var bulan = DateTime.Now.Month;
+                var sisa = 12 - bulan;
+
+                ret = context.DbMonPbbSummaries
+                    .GroupBy(x => x.TahunPajak)
+                    .Select(g => new ViewModels.CapaianTunggakan
+                    {
+                        TahunPajak = g.Key ?? 0,
+                        JmlObjek = g.Count(),
+                        Ketetapan = g.Sum(x => x.Ketetapan) ?? 0,
+                        Realisasi = g.Sum(x => x.Realisasi) ?? 0,
+                        Prediksi = ((g.Sum(x => x.Ketetapan) ?? 0) / 12m) * sisa
+                    })
+                    .OrderByDescending(x => x.TahunPajak)
+                    .ToList();
+
+                return ret;
+            }
+            public static ViewModels.Dashboard GetDashboard()
+            {
+                var context = DBClass.GetContext();
+                var ret = new ViewModels.Dashboard();
+
+                ret = new ViewModels.Dashboard
                 {
-                    new ViewModels.CapaianTunggakan
-                    {
-                        TahunPajak = 2020,
-                        JmlObjek = 5000,
-                        Tunggakan = 2000000000,
-                        Realisasi = 1500000000,
-                        Prediksi = 2200000000
-                    },
-                    new ViewModels.CapaianTunggakan
-                    {
-                        TahunPajak = 2021,
-                        JmlObjek = 3000,
-                        Tunggakan = 1000000000,
-                        Realisasi = 800000000,
-                        Prediksi = 1200000000
-                    },
-                    new ViewModels.CapaianTunggakan
-                    {
-                        TahunPajak = 2022,
-                        JmlObjek = 2000,
-                        Tunggakan = 500000000,
-                        Realisasi = 400000000,
-                        Prediksi = 600000000
-                    },
-                    new ViewModels.CapaianTunggakan
-                    {
-                        TahunPajak = 2023,
-                        JmlObjek = 2000,
-                        Tunggakan = 500000000,
-                        Realisasi = 400000000,
-                        Prediksi = 600000000
-                    },
-                    new ViewModels.CapaianTunggakan
-                    {
-                        TahunPajak = 2024,
-                        JmlObjek = 2000,
-                        Tunggakan = 500000000,
-                        Realisasi = 400000000,
-                        Prediksi = 600000000
-                    },
-                    new ViewModels.CapaianTunggakan
-                    {
-                        TahunPajak = 2025,
-                        JmlObjek = 2000,
-                        Tunggakan = 500000000,
-                        Realisasi = 400000000,
-                        Prediksi = 600000000
-                    }
+                    Target = context.DbMonPbbSumpages.Sum(x => x.TargetTahunan) ?? 0,
+                    Realisasi = context.DbMonPbbSumpages.Sum(x => x.TotalRealisasi) ?? 0,
+                    Capaian = context.DbMonPbbSumpages.Average(x => x.CapaianPersen) ?? 0,
+                    Potensi = context.DbMonPbbSumpages.Sum(x => x.Prediksi) ?? 0
                 };
-                return list;
+
+                return ret;
             }
         }
     }

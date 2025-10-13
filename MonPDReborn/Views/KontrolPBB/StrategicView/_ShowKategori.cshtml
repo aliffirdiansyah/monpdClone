@@ -25,7 +25,7 @@
             columns.AddFor(m => m.Penetapan).Caption("Penetapan").Format("#,##0");
             columns.AddFor(m => m.Realisasi).Caption("Realisasi").Format("#,##0");
             columns.AddFor(m => m.Gap).Caption("Gap").Format("#,##0");
-            columns.AddFor(m => m.Pencapaian).Caption("%").Format("#,#0%");
+            columns.AddFor(m => m.Pencapaian).Caption("%").Format("#,##0%");
             columns.AddFor(m => m.Prediksi).Caption("Prediksi s.d Des").Format("#,##0");
 
         })
@@ -59,8 +59,8 @@
             .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Pencapaian)
-            .SummaryType(SummaryType.Sum)
-            .ValueFormat("#,##0")
+            .SummaryType(SummaryType.Avg)
+            .ValueFormat("#,##0%")
             .DisplayFormat("{0}");
 
                 items.AddFor(m => m.Prediksi)
