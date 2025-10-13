@@ -22,6 +22,32 @@ namespace CCTVParkirWorker
 
             return result;
         }
+        public static string GetUrlApiTelkom()
+        {
+            var result = "";
+
+            var context = DBClass.GetContext();
+            var query = context.Settings.Where(x => x.Properti == "URL_API_TELKOM").SingleOrDefault();
+            if (query != null)
+            {
+                result = query.Value;
+            }
+
+            return result;
+        }
+        public static string GetUrlApiTokenTelkom()
+        {
+            var result = "";
+
+            var context = DBClass.GetContext();
+            var query = context.Settings.Where(x => x.Properti == "URL_TOKEN_TELKOM").SingleOrDefault();
+            if (query != null)
+            {
+                result = query.Value;
+            }
+
+            return result;
+        }
         public static string GetUserJasnita()
         {
             var result = "";
@@ -74,7 +100,7 @@ namespace CCTVParkirWorker
 
             return result;
         }
-        public static int GetIntervalDayTelkom()
+        public static int GetIntervalDay()
         {
             var result = 0;
 
@@ -87,18 +113,18 @@ namespace CCTVParkirWorker
 
             return result;
         }
-        //public static int GetIntervalDayTelkom()
-        //{
-        //    var result = 0;
+        public static int GetIntervalDelay()
+        {
+            var result = 0;
 
-        //    var context = DBClass.GetContext();
-        //    var query = context.Settings.Where(x => x.Properti == "INTERVAL_DAY").SingleOrDefault();
-        //    if (query != null)
-        //    {
-        //        result = Convert.ToInt32(query.Value);
-        //    }
+            var context = DBClass.GetContext();
+            var query = context.Settings.Where(x => x.Properti == "INTERVAL_DELAY").SingleOrDefault();
+            if (query != null)
+            {
+                result = Convert.ToInt32(query.Value);
+            }
 
-        //    return result;
-        //}
+            return result;
+        }
     }
 }
