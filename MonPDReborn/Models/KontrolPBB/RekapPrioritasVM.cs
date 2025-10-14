@@ -7,9 +7,10 @@ namespace MonPDReborn.Models.KontrolPBB
     {
         public class Index
         {
+            public ViewModels.Dashboard Data { get; set; } = new();
             public Index()
             {
-
+                Data = Methods.GetDashboard();
             }
         }
         public class Show
@@ -34,6 +35,13 @@ namespace MonPDReborn.Models.KontrolPBB
                 public string Petugas { get; set; } = null!;
                 public string StatusTagih { get;set; } = null!;
             }
+            public class Dashboard
+            {
+                public decimal PrioritasTinggi { get; set; }
+                public decimal PrioritasSedang { get; set; }
+                public decimal PrioritasRendah { get; set; }
+                public decimal TotalOP { get; set; }
+            }
         }
         public class Methods
         {
@@ -44,7 +52,7 @@ namespace MonPDReborn.Models.KontrolPBB
 
                 var ret = context.DbMonPbbSummaries
                     .Where(x => x.TahunPajak == tahun)
-                    .GroupBy(x => new { x.Nop, x.NamaWp, x.Petugas, x.Upaya }) // grouping per NOP dan info WP
+                    .GroupBy(x => new { x.Nop, x.NamaWp, x.Petugas, x.Upaya }) 
                     .Select(g => new ViewModels.Prioritas()
                     {
                         NOP = g.Key.Nop ?? "-",
@@ -58,7 +66,6 @@ namespace MonPDReborn.Models.KontrolPBB
                     })
                     .ToList();
 
-                // Tentukan prioritas berdasarkan total tunggakan
                 ret.ForEach(x =>
                 {
                     if (x.Tunggakan >= 100_000_000)
@@ -69,7 +76,6 @@ namespace MonPDReborn.Models.KontrolPBB
                         x.PrioritasKet = "Rendah";
                 });
 
-                // Ambil 100 NOP dengan tunggakan tertinggi
                 ret = ret
                     .OrderByDescending(x => x.Tunggakan)
                     .Take(100)
@@ -77,6 +83,33 @@ namespace MonPDReborn.Models.KontrolPBB
 
                 return ret;
             }
+            public static ViewModels.Dashboard GetDashboard()
+            {
+                var context = DBClass.GetContext();
+                var tahun = DateTime.Now.Year;
+
+                var data = context.DbMonPbbSummaries
+                    .Where(x => x.TahunPajak == tahun)
+                    .GroupBy(x => new { x.Nop, x.NamaWp })
+                    .Select(g => new
+                    {
+                        NOP = g.Key.Nop,
+                        TotalKetetapan = g.Sum(x => x.Ketetapan ?? 0),
+                        TotalRealisasi = g.Sum(x => x.Realisasi ?? 0)
+                    })
+                    .ToList();
+
+                var ret = new ViewModels.Dashboard
+                {
+                    PrioritasTinggi = data.Count(x => (x.TotalKetetapan - x.TotalRealisasi) >= 100_000_000),
+                    PrioritasSedang = data.Count(x => (x.TotalKetetapan - x.TotalRealisasi) >= 25_000_000 && (x.TotalKetetapan - x.TotalRealisasi) < 100_000_000),
+                    PrioritasRendah = data.Count(x => (x.TotalKetetapan - x.TotalRealisasi) < 25_000_000),
+                    TotalOP = data.Count()
+                };
+
+                return ret;
+            }
+
 
         }
     }
