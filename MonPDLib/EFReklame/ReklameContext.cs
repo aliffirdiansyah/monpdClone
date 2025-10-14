@@ -60,8 +60,9 @@ public partial class ReklameContext : DbContext
 
         modelBuilder.Entity<MNilaiSatuanStrategi>(entity =>
         {
-            entity.HasKey(e => new { e.IdJenisReklame, e.MinLuas, e.MaxLuas, e.TglAwalBerlaku }).HasName("M_NILAI_SATUAN_STRATEGIS_PK");
+            entity.HasKey(e => new { e.IdJenisReklame, e.MinLuas, e.MaxLuas, e.TglAwalBerlaku, e.Kawasan }).HasName("M_NILAI_SATUAN_STRATEGIS_PK");
 
+            entity.Property(e => e.Kawasan).HasDefaultValueSql("0 ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
 
             entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.MNilaiSatuanStrategis)

@@ -66,9 +66,9 @@
 
                         <!-- Nama Jalan -->
                         <div class="col-12 col-md-6 col-lg-3">
-                            <label for="IdJalan" class="form-label fw-semibold">Nama Jalan</label>
+                            <label for="NamaJalan" class="form-label fw-semibold">Nama Jalan</label>
                             @(Html.DevExtreme().SelectBox()
-                                .ID("IdJalan")
+                                .ID("NamaJalan")
                                 .DataSource(Model.JalanList)
                                 .DisplayExpr("Text")
                                 .ValueExpr("Value")
@@ -168,13 +168,13 @@
             let jenisReklame = $("#JenisReklame").dxSelectBox("instance").option("value");
             let letakReklame = $("#LetakReklame").dxSelectBox("instance").option("value");
             let produk = $("#produkList").dxSelectBox("instance").option("value");
-            let idJalan = $("#IdJalan").dxSelectBox("instance")?.option("value");
+            let NamaJalan = $("#NamaJalan").dxSelectBox("instance")?.option("value");
             let panjang = $("#Panjang").dxNumberBox("instance")?.option("value");
             let lebar = $("#Lebar").dxNumberBox("instance")?.option("value");
             let tinggi = $("#Tinggi").dxNumberBox("instance")?.option("value");
             let sudutPandang = $("#SudutPandang").dxNumberBox("instance")?.option("value");
 
-            if (!jenisReklame || !letakReklame || !produk || !idJalan || !panjang || !lebar || !tinggi ||!sudutPandang) {
+            if (!jenisReklame || !letakReklame || !produk || !NamaJalan || !panjang || !lebar || !tinggi ||!sudutPandang) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Verifikasi Data',
@@ -190,7 +190,7 @@
                     IdJenisReklame: jenisReklame,
                     IdLetakReklame: letakReklame,
                     IdJenisProduk: produk,
-                    idJalan: idJalan,
+                    NamaJalan: NamaJalan,
                     panjang: panjang,
                     lebar: lebar,
                     tinggi: tinggi,

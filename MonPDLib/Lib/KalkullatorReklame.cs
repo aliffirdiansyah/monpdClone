@@ -13,7 +13,7 @@ namespace MonPDLib.Lib
     {
         public class ReklameInput
         {
-            public decimal IdJalan { get; set; }
+            public string NamaJalan { get; set; }
             public decimal Panjang { get; set; }
             public decimal Lebar { get; set; }
             public decimal Tinggi { get; set; }
@@ -63,16 +63,41 @@ namespace MonPDLib.Lib
 
         public static KalkullatorReklame HitungNilaiSewaReklame(ReklameInput input)
         {
-            decimal luas = input.Panjang * input.Lebar;
             DateTime today = DateTime.Today;
-
-            var jalan = _context.MJalans
-                .Where(x => x.IdJalan == input.IdJalan)
-                .FirstOrDefault();
-
-            if (jalan == null)
+            var jalanData = _context.MJalans
+                .Where(x => x.NamaJalan.Trim().ToUpper() == input.NamaJalan.Trim().ToUpper())
+                .ToList();
+            if (jalanData.Count <= 0)
+            {
                 throw new ArgumentException("Data jalan tidak ditemukan.");
+            }
 
+            var kelasJalan = 0;
+            var kawasan = EnumFactory.KawasanReklame.NonPenataan;
+            var jenisReklame = input.JenisReklame;
+            decimal luas = input.Panjang * input.Lebar;
+
+            var distinctKelasJalan = jalanData.Select(x => x.KelasJalan).Distinct().ToList();
+            if (distinctKelasJalan.Count > 1)
+            {
+                throw new Exception("Data jalan memiliki kelas jalan yang berbeda");
+            }
+
+            kelasJalan = distinctKelasJalan.First() ?? 0;
+            if (kelasJalan == 1)
+            {
+                if (jenisReklame == EnumFactory.KategoriReklame.Megatron)
+                {
+                    kawasan = EnumFactory.KawasanReklame.Penataan;
+                }
+                else
+                {
+                    if (luas > 8)
+                    {
+                        kawasan = EnumFactory.KawasanReklame.Penataan;
+                    }
+                }
+            }
             // 1️⃣ Ambil NSR Luas (cek tanggal berlaku)
             var nsrLuas = _context.MNsrLuas
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
@@ -99,13 +124,14 @@ namespace MonPDLib.Lib
 
             // 3️⃣ Ambil nilai satuan strategis (NSS)
             var nss = _context.MNilaiSatuanStrategis
-                .Where(x => x.IdJenisReklame == (int)input.JenisReklame
-                         && luas >= x.MinLuas
-                         && (x.MaxLuas == null || luas <= x.MaxLuas)
-                         && x.TglAwalBerlaku <= today
-                         && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
-                .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefault();
+                    .Where(x => x.IdJenisReklame == (int)input.JenisReklame
+                             && x.Kawasan == (int)kawasan
+                             && luas >= x.MinLuas
+                             && (x.MaxLuas == null || luas <= x.MaxLuas)
+                             && x.TglAwalBerlaku <= today
+                             && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                    .OrderByDescending(x => x.TglAwalBerlaku)
+                    .FirstOrDefault();
 
             if (nss == null)
                 throw new ArgumentException("Nilai Satuan Strategis tidak ditemukan atau tidak berlaku.");
@@ -128,14 +154,23 @@ namespace MonPDLib.Lib
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
                 .FirstOrDefault();
-
             var pandang = _context.MNilaiStrategisSpandangs
-                .Where(x => x.IsDlmRuang == letak
-                         && x.TglAwalBerlaku <= today
-                         && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
-                .OrderByDescending(x => x.TglAwalBerlaku)
-                .FirstOrDefault();
+                    .Where(x => x.IsDlmRuang == letak
+                             && x.TglAwalBerlaku <= today
+                             && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                    .OrderByDescending(x => x.TglAwalBerlaku)
+                    .FirstOrDefault();
 
+            //sudut pandang = 25 => skor == 10
+            if (input.SudutPandang > 4)
+            {
+                pandang = _context.MNilaiStrategisSpandangs
+                    .Where(x => x.SudutPandang == 5
+                             && x.TglAwalBerlaku <= today
+                             && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                    .OrderByDescending(x => x.TglAwalBerlaku)
+                    .FirstOrDefault();
+            }
             var tinggiData = _context.MNilaiStrategisTinggis
                 .Where(x => input.Tinggi >= x.MinKetinggian
                             && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
@@ -160,6 +195,15 @@ namespace MonPDLib.Lib
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
                 .FirstOrDefault();
+                if (input.SudutPandang > 4)
+                {
+                    pandang = _context.MNilaiStrategisSpandangs
+                        .Where(x => x.SudutPandang == 5
+                                 && x.TglAwalBerlaku <= today
+                                 && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                        .OrderByDescending(x => x.TglAwalBerlaku)
+                        .FirstOrDefault();
+                }
 
                 tinggiData = _context.MNilaiStrategisTinggis
                     .Where(x => input.Tinggi >= x.MinKetinggian
@@ -283,9 +327,9 @@ namespace MonPDLib.Lib
                 BobotLokasiNilai = lokasi.Bobot,
                 BobotPandangNilai = pandang.Bobot,
                 BobotKetinggianNilai = tinggiData.Bobot,
-                NamaJalan = jalan.NamaJalan,
-                Kawasan = (EnumFactory.KawasanReklame)jalan.Kawasan,
-                KelasJalan = "Kelas " + Convert.ToString(jalan.KelasJalan.Value),
+                NamaJalan = input.NamaJalan,
+                Kawasan = (EnumFactory.KawasanReklame)kawasan,
+                KelasJalan = "Kelas " + Convert.ToString(kelasJalan),
             };
         }
 
