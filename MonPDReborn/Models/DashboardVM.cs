@@ -34,7 +34,7 @@ namespace MonPDReborn.Models
                 Data = Method.GetSeriesPajakDaerahData();
             }
         }
-        public class JumlahObjekPajakTahunan
+        /*public class JumlahObjekPajakTahunan
         {
             public List<ViewModel.JumlahObjekPajakTahunan> Data { get; set; } = new List<ViewModel.JumlahObjekPajakTahunan>();
             public JumlahObjekPajakTahunan()
@@ -123,7 +123,7 @@ namespace MonPDReborn.Models
             {
                 Data = Method.GetJumlahObjekPajakData();
             }
-        }
+        }*/
 
 
         public class ViewModel
@@ -1315,7 +1315,7 @@ namespace MonPDReborn.Models
 
                 return result;
             }
-            public static List<ViewModel.JumlahObjekPajakTahunan> GetJumlahObjekPajakTahunanData()
+            /*public static List<ViewModel.JumlahObjekPajakTahunan> GetJumlahObjekPajakTahunanData()
             {
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
@@ -2420,7 +2420,7 @@ namespace MonPDReborn.Models
 
                 return ret;
 
-            }
+            }*/
 
         }
     }

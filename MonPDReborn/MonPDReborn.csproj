@@ -11,6 +11,19 @@
     <None Remove="Models\Aktivitas\**" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="Views\Dashboard\DataKontrolPotensiOp.cshtml" />
+    <Content Remove="Views\Dashboard\DataMutasi.cshtml" />
+    <Content Remove="Views\Dashboard\DataPiutang.cshtml" />
+    <Content Remove="Views\Dashboard\JumlahObjekPajak.cshtml" />
+    <Content Remove="Views\Dashboard\JumlahObjekPajakSeries.cshtml" />
+    <Content Remove="Views\Dashboard\JumlahObjekPajakTahunan.cshtml" />
+    <Content Remove="Views\Dashboard\PemasanganAlatRekamDetail.cshtml" />
+    <Content Remove="Views\Dashboard\PemasanganAlatRekamSeries.cshtml" />
+    <Content Remove="Views\Dashboard\PemeriksaanPajak.cshtml" />
+    <Content Remove="Views\Dashboard\PengedokanPajak.cshtml" />
+    <Content Remove="Views\Dashboard\_DetailPiutang.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="BuildBundlerMinifierPlus" Version="5.3.0" />
     <PackageReference Include="ClosedXML" Version="0.102.2" />
