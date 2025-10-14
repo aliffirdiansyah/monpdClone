@@ -59,6 +59,16 @@
                                 .StylingMode(EditorStylingMode.Outlined)
                                 .ElementAttr("class", "form-control"))
                         </div>
+                        
+                        <!-- Sudut Pandang -->
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label for="Sisi" class="form-label fw-semibold">Sisi</label>
+                            @(Html.DevExtreme().NumberBox()
+                                .ID("Sisi")
+                                .ShowClearButton(true)
+                                .StylingMode(EditorStylingMode.Outlined)
+                                .ElementAttr("class", "form-control"))
+                        </div>
 
                         <!-- Nama Jalan -->
                         <div class="col-12 col-md-6 col-lg-3">
@@ -163,6 +173,7 @@
             let NamaJalan = $("#NamaJalan").dxSelectBox("instance")?.option("value");
             let panjang = $("#Panjang").dxNumberBox("instance")?.option("value");
             let lebar = $("#Lebar").dxNumberBox("instance")?.option("value");
+            let sisi = $("#Sisi").dxNumberBox("instance")?.option("value");
             let tinggi = $("#Tinggi").dxNumberBox("instance")?.option("value");
             let sudutPandang = $("#SudutPandang").dxNumberBox("instance")?.option("value");
 
@@ -183,6 +194,7 @@
                     IdLetakReklame: letakReklame,
                     IdJenisProduk: produk,
                     NamaJalan: NamaJalan,
+                    Sisi: sisi,
                     panjang: panjang,
                     lebar: lebar,
                     tinggi: tinggi,
