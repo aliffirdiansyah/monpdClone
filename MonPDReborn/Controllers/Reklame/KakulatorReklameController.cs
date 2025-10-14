@@ -67,5 +67,25 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
+        public IActionResult ShowKontrak(decimal NilaiKontrak)
+        {
+            try
+            {
+                var model = new Models.Reklame.KakulatorReklameVM.ShowKontrak(NilaiKontrak);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = ResponseBase.StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = ResponseBase.StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }

@@ -64,5 +64,16 @@ namespace MonPDReborn.Models.Reklame
                 KalkullatorReklameRow = KalkullatorReklame.HitungNilaiSewaReklame(input);
             }
         }
+
+        public class ShowKontrak
+        {
+            public decimal nilaiKontrak { get; set; } = new();
+            public KalkullatorReklame HitungKontrak { get; set;} = new();
+            public ShowKontrak(decimal NilaiKontrak)
+            {
+                nilaiKontrak = NilaiKontrak; 
+                HitungKontrak = KalkullatorReklame.HitungNilaiSewaReklame(NilaiKontrak);
+            }
+        }
     }
 }

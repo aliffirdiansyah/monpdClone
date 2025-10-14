@@ -1,0 +1,87 @@
+﻿@using MonPDLib.General
+@model MonPDReborn.Models.Reklame.KakulatorReklameVM.ShowKontrak
+
+@{
+    Layout = null;
+}
+
+<style>
+    body {
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 4px 8px;
+    }
+
+    .judul {
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .section-title {
+        font-weight: bold;
+        border-bottom: 2px solid black;
+        margin-top: 1rem;
+    }
+
+    .right {
+        text-align: right;
+    }
+</style>
+
+<div class="container p-4">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h5 class="judul">NOTA PERHITUNGAN NILAI SEWA REKLAME</h5>
+        <p>
+            Berdasarkan Peraturan Walikota Surabaya No. 70 & 71 Tahun 2010
+        </p>
+    </div>
+
+    <!-- PERHITUNGAN -->
+    <div class="section-title text-center">PERHITUNGAN</div>
+    <table class="table table-bordered border-dark">
+        <tbody>
+            
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">POKOK PAJAK</td></tr>
+            <tr>
+                <td class="right">Pokok Pajak</td>
+                <td colspan="2" class="right">@Model.nilaiKontrak.ToString("N0") × 25%</td>
+                <td class="right">Rp. @Model.HitungKontrak.PokokPajak.ToString("N0")</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title text-center">HASIL PERHITUNGAN</div>
+    <table class="table table-bordered border-dark">
+        <tbody>
+            <tr>
+                <td class="right fw-bold">Total Nilai Sewa Reklame</td>
+                <td class="right fw-bold">Rp. @Model.HitungKontrak.TotalNilaiSewa.ToString("N0")</td>
+            </tr>
+
+            @* <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr> *@
+            <tr>
+                <td class="right fw-bold">Jaminan Bongkar</td>
+                <td class="right">Rp. @Model.HitungKontrak.JaminanBongkar.ToString("N0")</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="mt-4">
+        Keterangan : Estimasi ini hanya bersifat simulasi. Nilai pajak sesungguhnya akan ditentukan berdasarkan pemeriksaan oleh petugas sesuai data dan ketentuan yang berlaku.<br />
+        Jambong hanya dikenakan untuk reklame yang diselenggarakan di atas tanah, bangunan, atau barang milik/yang dikuasai oleh Pemerintah Kota Surabaya.
+    </p>
+    @* 
+    <div class="text-end mt-5">
+        Surabaya, @DateTime.Now.ToString("dd - MM - yyyy")<br /><br />
+        <b>Agung Pambudi, SE</b><br />
+        NIP. 19751115 200501 1 011
+    </div>
+ *@
+</div>

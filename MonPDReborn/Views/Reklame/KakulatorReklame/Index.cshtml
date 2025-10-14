@@ -33,11 +33,12 @@
                                                         .ID("Panjang")
                                                         .ShowClearButton(true)
                                                         .StylingMode(EditorStylingMode.Outlined)
+                                                        .Format("#,##0")
                                                         .Height(45)
                                                         )
                             <small class="form-text text-danger devextreme-helper helper-text mt-auto">
                                 <i class='bx bx-info-circle text- me-1 '></i>
-                                Panjang bidang reklame dalam meter, diukur dari sisi kiri ke kanan papan reklame.
+                                Panjang diukur horizontal dari sisi kiri terluar s/d sisi kanan terluar.
                             </small>
                         </div>
 
@@ -47,11 +48,12 @@
                                                         .ID("Lebar")
                                                         .ShowClearButton(true)
                                                         .StylingMode(EditorStylingMode.Outlined)
+                                                        .Format("#,##0")
                                                         .Height(45)
                                                         )
                             <small class="form-text text-danger devextreme-helper helper-text mt-auto">
                                 <i class='bx bx-info-circle text- me-1 '></i>
-                                Lebar bidang reklame dalam meter, diukur dari sisi bawah ke atas papan reklame.
+                                Lebar diukur vertikal titik terluar reklame.
                             </small>
                         </div>
 
@@ -61,11 +63,12 @@
                                                         .ID("Tinggi")
                                                         .ShowClearButton(true)
                                                         .StylingMode(EditorStylingMode.Outlined)
+                                                        .Format("#,##0")
                                                         .Height(45)
                                                         )
                             <small class="form-text text-danger devextreme-helper helper-text mt-auto">
                                 <i class='bx bx-info-circle text- me-1 '></i>
-                                Ketinggian posisi reklame dari permukaan tanah ke titik bawah reklame.
+                                Ketinggian posisi reklame teratas sampai ke tanah.
                             </small>
                         </div>
 
@@ -76,11 +79,12 @@
                                                         .ShowClearButton(true)
                                                         .Placeholder("Jumlah arah pandang reklame dapat dilihat")
                                                         .StylingMode(EditorStylingMode.Outlined)
+                                                        .Format("#,##0")
                                                         .Height(45)
                                                         )
                             <small class="form-text text-danger devextreme-helper helper-text mt-auto">
                                 <i class='bx bx-info-circle text- me-1 '></i>
-                                Besaran sudut kemiringan papan reklame terhadap arah pandang pengguna jalan.
+                                Jumlah arah pandang reklame dapat dilihat (1 arah atau lebih).
                             </small>
                         </div>
 
@@ -90,6 +94,7 @@
                                                         .ID("Sisi")
                                                         .ShowClearButton(true)
                                                         .StylingMode(EditorStylingMode.Outlined)
+                                                        .Format("#,##0")
                                                         .Height(45)
                                                         )
                             <small class="form-text text-danger devextreme-helper helper-text mt-auto">
@@ -179,6 +184,35 @@
                     </div>
                 </div>
             </div>
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+                    <div class="row g-3">
+
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                            <label for="nilaiKontrak" class="form-label fw-semibold">Nilai Kontrak</label>
+                            @(Html.DevExtreme().NumberBox()
+                                                        .ID("nilaiKontrak")
+                                                        .ShowClearButton(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Format("#,##0")
+                                                        .Height(45)
+                                                        )
+                            @* <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Panjang bidang reklame dalam meter, diukur dari sisi kiri ke kanan papan reklame.
+                            </small> *@
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                            <label class="form-label fw-semibold">&nbsp;</label>
+                            <button type="button" class="btn btn-info w-100" id="btnFilter">
+                                <i class="bi bi-funnel-fill me-1"></i> Hitung Nilai Kontrak
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -201,6 +235,8 @@
                     </div>
                 </div>
                 <div id="Show">
+                </div>
+                <div id="ShowKontrak">
                 </div>
             </div>
         </div>
@@ -269,6 +305,49 @@
         }
 
         $(".btn-success").on("click", loadShowData);
+    </script>
+    <script>
+        function loadShowKontrak() {
+            let nilaiKontrak = $("#nilaiKontrak").dxNumberBox("instance")?.option("value");
+
+            if (!nilaiKontrak) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi Data',
+                    text: '⚠ Harap pilih semua filter utama sebelum menerapkan.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("ShowKontrak", "KakulatorReklame")',
+                type: "GET",
+                data: {
+                    NilaiKontrak: nilaiKontrak,
+                },
+                beforeSend: function () {
+                    $("#ShowKontrak").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    $("#ShowKontrak").html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: 'Gagal memuat data show.'
+                    });
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                    $("#ShowKontrak").show();
+                }
+            });
+        }
+
+        $(".btn-info").on("click", loadShowKontrak);
     </script>
 
 
