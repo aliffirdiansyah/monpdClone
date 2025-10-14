@@ -45,7 +45,7 @@ namespace MonPDReborn.Models.Reklame
                     .Select(q => new SelectListItem
                     {
                         Value = q.IdJalan.ToString(),
-                        Text = q.NamaJalan
+                        Text = q.NamaJalan + " [ KELAS " + q.KelasJalan + " ]"
                     })
                     .ToList();
             }

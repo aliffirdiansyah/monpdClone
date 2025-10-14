@@ -147,11 +147,11 @@
                     @Model.KalkullatorReklameRow.TotalSkor.ToString("N2") × @Model.KalkullatorReklameRow.Nss.ToString("N0")
                 </td>
                 <td class="text-end">
-                   Rp. @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
+                    Rp. @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
                 </td>
             </tr>
 
-           @*  <tr>
+            @*  <tr>
                 <td class="fw-bold right">Total NJOP + Nilai Strategis</td>
                 <td colspan="2" class="text-end">
                     @Model.KalkullatorReklameRow.TotalNjop.ToString("N0") + @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
@@ -173,12 +173,18 @@
 
             <tr>
                 <td class="fw-bold text-end">Penambahan Ketinggian</td>
-                <td colspan="2" class="right">@Model.Output.Tinggi.ToString("N2") × @Model.KalkullatorReklameRow.PersenTambahKetinggian.ToString("P2")</td>
+                @if (Model.Output.Tinggi >= 16)
+                {
+                    <td colspan="2" class="right">@Model.KalkullatorReklameRow.TotalNjopStrategis.ToString("N0") × @Model.KalkullatorReklameRow.PersenTambahKetinggian.ToString("P2")</td>
+                }
+                else
+                {
+                    <td colspan="2"></td>
+                }
                 <td class="fw-bold text-end">
                     Rp. @Model.KalkullatorReklameRow.PenambahanKetinggian.ToString("N0")
                 </td>
             </tr>
-
 
             <tr class="table-secondary"><td colspan="4" class="fw-bold">POKOK PAJAK</td></tr>
             <tr>

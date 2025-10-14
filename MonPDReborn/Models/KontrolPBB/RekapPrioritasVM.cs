@@ -44,22 +44,24 @@ namespace MonPDReborn.Models.KontrolPBB
 
                 var ret = context.DbMonPbbSummaries
                     .Where(x => x.TahunPajak == tahun)
-                    .Select(x => new ViewModels.Prioritas()
+                    .GroupBy(x => new { x.Nop, x.NamaWp, x.Petugas, x.Upaya }) // grouping per NOP dan info WP
+                    .Select(g => new ViewModels.Prioritas()
                     {
-                        NOP = x.Nop ?? "-",
-                        NamaWP = x.NamaWp ?? "-",
-                        Ketetapan = x.Ketetapan ?? 0,
-                        Realisasi = x.Realisasi ?? 0,
-                        Tahun = x.TahunPajak ?? 0,
-                        Petugas = x.Petugas ?? "-",
-                        StatusTagih = x.Upaya ?? "-",
-                        Tunggakan = (x.Ketetapan ?? 0) - (x.Realisasi ?? 0)
+                        NOP = g.Key.Nop ?? "-",
+                        NamaWP = g.Key.NamaWp ?? "-",
+                        Ketetapan = g.Sum(x => x.Ketetapan ?? 0),
+                        Realisasi = g.Sum(x => x.Realisasi ?? 0),
+                        Tahun = tahun,
+                        Petugas = g.Key.Petugas ?? "-",
+                        StatusTagih = g.Key.Upaya ?? "-",
+                        Tunggakan = g.Sum(x => (x.Ketetapan ?? 0) - (x.Realisasi ?? 0))
                     })
                     .ToList();
 
+                // Tentukan prioritas berdasarkan total tunggakan
                 ret.ForEach(x =>
                 {
-                    if (x.Tunggakan >= 100_000_000) 
+                    if (x.Tunggakan >= 100_000_000)
                         x.PrioritasKet = "Tinggi";
                     else if (x.Tunggakan >= 25_000_000)
                         x.PrioritasKet = "Sedang";
@@ -67,6 +69,7 @@ namespace MonPDReborn.Models.KontrolPBB
                         x.PrioritasKet = "Rendah";
                 });
 
+                // Ambil 100 NOP dengan tunggakan tertinggi
                 ret = ret
                     .OrderByDescending(x => x.Tunggakan)
                     .Take(100)

@@ -448,13 +448,25 @@
                     <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "StrategicView" ? "active" : "")"
                            href="@Url.Action("Index", "StrategicView")" role="button">
-                            <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-reklamesummary">Strategi View</span>
+                            <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-sView">Strategi View</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AnalitikView" ? "active" : "")"
+                           href="@Url.Action("Index", "AnalitikView")" role="button">
+                            <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-analitik">Analitik View</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "RekapPrioritas" ? "active" : "")"
+                           href="@Url.Action("Index", "RekapPrioritas")" role="button">
+                            <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-prioritas">NOP Prioritas</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PencarianPBB" ? "active" : "")"
                            href="@Url.Action("Index", "PencarianPBB")" role="button">
-                            <i class=" bx bx-archive me-1 align-middle"></i><span data-key="t-reklame">Pencarian PBB</span>
+                            <i class=" bx bx-archive me-1 align-middle"></i><span data-key="t-pencarianpbb">Pencarian PBB</span>
                         </a>
                     </li>
                 </ul>
