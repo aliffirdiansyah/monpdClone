@@ -7,29 +7,29 @@
 
 <style>
     body {
-    font-family: "Courier New", monospace;
-    font-size: 14px;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
     }
 
     .table td, .table th {
-    vertical-align: middle;
-    padding: 4px 8px;
+        vertical-align: middle;
+        padding: 4px 8px;
     }
 
     .judul {
-    text-align: center;
-    font-weight: bold;
-    text-transform: uppercase;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
     }
 
     .section-title {
-    font-weight: bold;
-    border-bottom: 2px solid black;
-    margin-top: 1rem;
+        font-weight: bold;
+        border-bottom: 2px solid black;
+        margin-top: 1rem;
     }
 
     .right {
-    text-align: right;
+        text-align: right;
     }
 </style>
 
@@ -39,7 +39,6 @@
     <div class="text-center mb-4">
         <h5 class="judul">NOTA PERHITUNGAN NILAI SEWA REKLAME</h5>
         <p>
-            Alamat Penempatan : ..............................................<br />
             Berdasarkan Peraturan Walikota Surabaya No. 70 & 71 Tahun 2010
         </p>
     </div>
@@ -215,13 +214,20 @@
                     totalSebelumSisi = Model.KalkullatorReklameRow.TotalNilaiSewa / Model.Output.Sisi;
                 }
             }
+            
+        </tbody>
+    </table>
+
+    <div class="section-title text-center">HASIL PERHITUNGAN</div>
+    <table class="table table-bordered border-dark">
+        <tbody>
             <tr>
                 <td class="right fw-bold">Total Nilai Sewa Reklame</td>
                 <td colspan="2" class="right">@(Model.Output.Sisi > 1 ? $"{totalSebelumSisi.ToString("N0")} × {Model.Output.Sisi} " : "")</td>
                 <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
             </tr>
 
-            <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr>
+            @* <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr> *@
             <tr>
                 <td class="right fw-bold">Jaminan Bongkar</td>
                 <td colspan="2" class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000 @(Model.Output.Sisi > 1 ? $" × {Model.Output.Sisi} " : "")</td>

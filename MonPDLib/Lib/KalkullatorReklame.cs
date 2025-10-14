@@ -313,6 +313,10 @@ namespace MonPDLib.Lib
                 jaminanBongkar = (luas * 50000) * input.Sisi;
             }
 
+            // 🧮 Pembulatan ke atas ke kelipatan Rp 100
+            totalNilaiSewa = Math.Ceiling(totalNilaiSewa / 100) * 100;
+            jaminanBongkar = Math.Ceiling(jaminanBongkar / 100) * 100;
+
             return new KalkullatorReklame
             {
                 Luas = luas,
@@ -346,6 +350,25 @@ namespace MonPDLib.Lib
                 KelasJalan = "Kelas " + Convert.ToString(kelasJalan),
             };
         }
+        public static KalkullatorReklame HitungNilaiSewaReklame(decimal NilaiKontrak)
+        {
+            decimal totalNilaiSewa = 0m;
+            decimal jaminanBongkar = 0m;
+            decimal pokokPajak = NilaiKontrak * 0.25m;
 
+            totalNilaiSewa = (pokokPajak);
+
+
+            // 🧮 Pembulatan ke atas ke kelipatan Rp 100
+            totalNilaiSewa = Math.Ceiling(totalNilaiSewa / 100) * 100;
+            jaminanBongkar = Math.Ceiling(jaminanBongkar / 100) * 100;
+
+            return new KalkullatorReklame
+            {
+                PokokPajak = pokokPajak,
+                TotalNilaiSewa = totalNilaiSewa,
+                JaminanBongkar = jaminanBongkar,
+            };
+        }
     }
 }
