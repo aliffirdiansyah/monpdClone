@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EFReklame;
 
-[PrimaryKey("IdJenisReklame", "MinLuas", "MaxLuas", "TglAwalBerlaku")]
+[PrimaryKey("IdJenisReklame", "MinLuas", "MaxLuas", "TglAwalBerlaku", "Kawasan")]
 [Table("M_NILAI_SATUAN_STRATEGIS")]
 public partial class MNilaiSatuanStrategi
 {
@@ -49,6 +49,11 @@ public partial class MNilaiSatuanStrategi
     [StringLength(100)]
     [Unicode(false)]
     public string? InsBy { get; set; }
+
+    [Key]
+    [Column("KAWASAN")]
+    [Precision(10)]
+    public int Kawasan { get; set; }
 
     [ForeignKey("IdJenisReklame")]
     [InverseProperty("MNilaiSatuanStrategis")]

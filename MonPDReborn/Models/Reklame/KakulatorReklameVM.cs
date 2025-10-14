@@ -42,10 +42,13 @@ namespace MonPDReborn.Models.Reklame
                         Text = x.GetDescription()
                     }).ToList();
                 JalanList = context.MJalans
+                    .AsEnumerable() // ⬅️ Pindahkan ke memory agar LINQ to Objects, bukan LINQ to Entities
+                    .GroupBy(q => q.NamaJalan)
+                    .Select(g => g.First())
                     .Select(q => new SelectListItem
                     {
-                        Value = q.IdJalan.ToString(),
-                        Text = q.NamaJalan + " [ KELAS " + q.KelasJalan + "(" + ((EnumFactory.KawasanReklame)q.Kawasan).GetDescription() +") ]"
+                        Value = q.NamaJalan.Trim().ToUpper().ToString(),
+                        Text = q.NamaJalan
                     })
                     .ToList();
             }
