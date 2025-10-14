@@ -5,6 +5,12 @@
     Layout = "~/Views/Shared/_LayoutReklame.cshtml";
 }
 
+<style>
+    .devextreme-helper {
+        font-size: 0.8rem;
+    }
+</style>
+
 <div class="row">
 
     <div class="col-lg-12">
@@ -19,123 +25,153 @@
             <div class="card shadow-sm">
 
                 <div class="card-body">
-                    <div class="row g-3 align-items-end">
-                        <!-- ✅ tambahkan align-items-end agar tombol sejajar -->
-                        <!-- Panjang -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                    <div class="row g-3">
+
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="Panjang" class="form-label fw-semibold">Panjang (m)</label>
                             @(Html.DevExtreme().NumberBox()
-                                .ID("Panjang")
-                                .ShowClearButton(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", ""))
-                            <small class="text-danger d-block mt-1">
+                                                        .ID("Panjang")
+                                                        .ShowClearButton(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
                                 Panjang bidang reklame dalam meter, diukur dari sisi kiri ke kanan papan reklame.
                             </small>
                         </div>
 
-                        <!-- Lebar -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="Lebar" class="form-label fw-semibold">Lebar (m)</label>
                             @(Html.DevExtreme().NumberBox()
-                                .ID("Lebar")
-                                .ShowClearButton(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", "form-control"))
+                                                        .ID("Lebar")
+                                                        .ShowClearButton(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Lebar bidang reklame dalam meter, diukur dari sisi bawah ke atas papan reklame.
+                            </small>
                         </div>
 
-                        <!-- Tinggi -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="Tinggi" class="form-label fw-semibold">Tinggi (m)</label>
                             @(Html.DevExtreme().NumberBox()
-                                .ID("Tinggi")
-                                .ShowClearButton(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", "form-control"))
+                                                        .ID("Tinggi")
+                                                        .ShowClearButton(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Ketinggian posisi reklame dari permukaan tanah ke titik bawah reklame.
+                            </small>
                         </div>
 
-                        <!-- Sudut Pandang -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="SudutPandang" class="form-label fw-semibold">Sudut Pandang (°)</label>
                             @(Html.DevExtreme().NumberBox()
-                                .ID("SudutPandang")
-                                .ShowClearButton(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", "form-control"))
+                                                        .ID("SudutPandang")
+                                                        .ShowClearButton(true)
+                                                        .Placeholder("Jumlah arah pandang reklame dapat dilihat")
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Besaran sudut kemiringan papan reklame terhadap arah pandang pengguna jalan.
+                            </small>
                         </div>
 
-                        <!-- Sisi -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="Sisi" class="form-label fw-semibold">Jumlah Sisi</label>
                             @(Html.DevExtreme().NumberBox()
-                                .ID("Sisi")
-                                .ShowClearButton(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", ""))
-                            <small class="text-danger d-block mt-1">
+                                                        .ID("Sisi")
+                                                        .ShowClearButton(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
                                 Jumlah sisi reklame yang menampilkan iklan (misal: 1 sisi tunggal, 2 sisi bolak-balik).
                             </small>
                         </div>
 
-                        <!-- Nama Jalan -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="NamaJalan" class="form-label fw-semibold">Nama Jalan</label>
                             @(Html.DevExtreme().SelectBox()
-                                .ID("NamaJalan")
-                                .DataSource(Model.JalanList)
-                                .DisplayExpr("Text")
-                                .ValueExpr("Value")
-                                .Placeholder("Pilih Nama Jalan")
-                                .SearchEnabled(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", "form-select"))
+                                                        .ID("NamaJalan")
+                                                        .DataSource(Model.JalanList)
+                                                        .DisplayExpr("Text")
+                                                        .ValueExpr("Value")
+                                                        .Placeholder("Pilih Nama Jalan")
+                                                        .SearchEnabled(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Lokasi jalan tempat reklame dipasang, berpengaruh pada nilai strategis (NSR).
+                            </small>
                         </div>
 
-                        <!-- Jenis Reklame -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="JenisReklame" class="form-label fw-semibold">Jenis Reklame</label>
                             @(Html.DevExtreme().SelectBox()
-                                .ID("JenisReklame")
-                                .DataSource(Model.JenisReklameList)
-                                .DisplayExpr("Text")
-                                .ValueExpr("Value")
-                                .Placeholder("Pilih Jenis Reklame")
-                                .SearchEnabled(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", "form-select"))
+                                                        .ID("JenisReklame")
+                                                        .DataSource(Model.JenisReklameList)
+                                                        .DisplayExpr("Text")
+                                                        .ValueExpr("Value")
+                                                        .Placeholder("Pilih Jenis Reklame")
+                                                        .SearchEnabled(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Jenis media reklame, misalnya papan/baliho, videotron, spanduk, atau neon box.
+                            </small>
                         </div>
 
-                        <!-- Letak Reklame -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="LetakReklame" class="form-label fw-semibold">Letak Reklame</label>
                             @(Html.DevExtreme().SelectBox()
-                                .ID("LetakReklame")
-                                .DataSource(Model.LetakReklameList)
-                                .DisplayExpr("Text")
-                                .ValueExpr("Value")
-                                .Placeholder("Pilih Letak Reklame")
-                                .SearchEnabled(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", "form-select"))
+                                                        .ID("LetakReklame")
+                                                        .DataSource(Model.LetakReklameList)
+                                                        .DisplayExpr("Text")
+                                                        .ValueExpr("Value")
+                                                        .Placeholder("Pilih Letak Reklame")
+                                                        .SearchEnabled(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Posisi reklame terhadap bangunan atau jalan, misalnya: di atas gedung, menempel di tembok, atau berdiri sendiri.
+                            </small>
                         </div>
 
-                        <!-- Produk -->
-                        <div class="col-12 col-md-6 col-lg-3">
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                             <label for="produkList" class="form-label fw-semibold">Jenis Produk</label>
                             @(Html.DevExtreme().SelectBox()
-                                .ID("produkList")
-                                .DataSource(Model.ProdukList)
-                                .DisplayExpr("Text")
-                                .ValueExpr("Value")
-                                .Placeholder("Pilih Produk")
-                                .SearchEnabled(true)
-                                .StylingMode(EditorStylingMode.Outlined)
-                                .ElementAttr("class", "form-select"))
+                                                        .ID("produkList")
+                                                        .DataSource(Model.ProdukList)
+                                                        .DisplayExpr("Text")
+                                                        .ValueExpr("Value")
+                                                        .Placeholder("Pilih Produk")
+                                                        .SearchEnabled(true)
+                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                        .Height(45)
+                                                        )
+                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                                <i class='bx bx-info-circle text- me-1 '></i>
+                                Kategori produk atau layanan yang diiklankan pada media reklame.
+                            </small>
                         </div>
 
-                        <!-- Tombol Hitung -->
-                        <div class="col-12 col-md-6 col-lg-3 d-flex align-items-end">
-                            <!-- ✅ agar sejajar dengan input -->
+                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                            <label class="form-label fw-semibold">&nbsp;</label>
                             <button type="button" class="btn btn-success w-100" id="btnFilter">
                                 <i class="bi bi-funnel-fill me-1"></i> Hitung NSR
                             </button>
