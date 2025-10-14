@@ -80,7 +80,7 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
-        public IActionResult JumlahObjekPajakTahunan()
+        /*public IActionResult JumlahObjekPajakTahunan()
         {
             var response = new ResponseBase();
             try
@@ -232,7 +232,7 @@ namespace MonPDReborn.Controllers
                 _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
                 return Json(response.ToInternalServerError());
             }
-        }
+        }*/
 
         //public IActionResult DataPiutang()
         //{

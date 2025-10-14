@@ -78,6 +78,12 @@ namespace MonPDReborn.Models.KontrolPBB
                 public decimal TunggakanWP => Ketetapan - Realisasi;
             }
 
+            public class Pembayaran
+            {
+                public string Bayar { get; set; } = null!;
+                public decimal Persentase { get; set; }
+            }
+
             public class DashoboardKinerjaPetugas
             {
                 public string Petugas { get; set; } = null!;
@@ -184,34 +190,20 @@ namespace MonPDReborn.Models.KontrolPBB
 
                 var totalSemua = data.Sum(x => x.Ketetapan ?? 0);
 
-                var wpBesar = data.Where(x => (x.Ketetapan ?? 0) > 50_000_000).Sum(x => x.Ketetapan ?? 0);
-                var wpMenengah = data.Where(x => (x.Ketetapan ?? 0) >= 10_000_000 && (x.Ketetapan ?? 0) <= 50_000_000).Sum(x => x.Ketetapan ?? 0);
-                var wpKecil = data.Where(x => (x.Ketetapan ?? 0) < 10_000_000).Sum(x => x.Ketetapan ?? 0);
+                var groupSegmen = data
+                    .GroupBy(x => x.SegmentWp)
+                    .Select(g => new ViewModels.KontribusiSegmen
+                    {
+                        Segmen = g.Key ?? "Tidak Diketahui",
+                        Ketetapan = g.Sum(x => x.Ketetapan ?? 0),
+                        Persentase = totalSemua == 0 ? 0 : (g.Sum(x => x.Ketetapan ?? 0) / totalSemua) * 100
+                    })
+                    .OrderByDescending(x => x.Ketetapan)
+                    .ToList();
 
-                var result = new List<ViewModels.KontribusiSegmen>
-                {
-                    new ViewModels.KontribusiSegmen
-                    {
-                        Segmen = "WP Besar (>50 juta)",
-                        Ketetapan = wpBesar,
-                        Persentase = totalSemua == 0 ? 0 : (wpBesar / totalSemua) * 100
-                    },
-                    new ViewModels.KontribusiSegmen
-                    {
-                        Segmen = "WP Menengah (10–50 juta)",
-                        Ketetapan = wpMenengah,
-                        Persentase = totalSemua == 0 ? 0 : (wpMenengah / totalSemua) * 100
-                    },
-                    new ViewModels.KontribusiSegmen
-                    {
-                        Segmen = "WP Kecil (<10 juta)",
-                        Ketetapan = wpKecil,
-                        Persentase = totalSemua == 0 ? 0 : (wpKecil / totalSemua) * 100
-                    }
-                };
-
-                return result;
+                return groupSegmen;
             }
+
             public static List<ViewModels.Tunggakan> GetDataTunggakan(string wilayah, string kec)
             {
                 var context = DBClass.GetContext();

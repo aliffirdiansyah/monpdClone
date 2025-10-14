@@ -7,29 +7,29 @@
 
 <style>
     body {
-        font-family: "Courier New", monospace;
-        font-size: 14px;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
     }
 
     .table td, .table th {
-        vertical-align: middle;
-        padding: 4px 8px;
+    vertical-align: middle;
+    padding: 4px 8px;
     }
 
     .judul {
-        text-align: center;
-        font-weight: bold;
-        text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
     }
 
     .section-title {
-        font-weight: bold;
-        border-bottom: 2px solid black;
-        margin-top: 1rem;
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    margin-top: 1rem;
     }
 
     .right {
-        text-align: right;
+    text-align: right;
     }
 </style>
 
@@ -52,7 +52,7 @@
                 <td width="25%">Jenis</td>
                 <td class="left">@Model.Output.JenisReklame.GetDescription()</td>
                 <td>Sisi</td>
-                <td>1</td>
+                <td>@Model.Output.Sisi.ToString("N0")</td>
             </tr>
             <tr>
                 <td>Panjang</td>
@@ -208,21 +208,29 @@
                 }
                 <td class="right">Rp. @Model.KalkullatorReklameRow.ProdukRokok.ToString("N0")</td>
             </tr>
+            @{
+                decimal totalSebelumSisi = Model.KalkullatorReklameRow.TotalNilaiSewa;
+                if (Model.Output.Sisi > 1)
+                {
+                    totalSebelumSisi = Model.KalkullatorReklameRow.TotalNilaiSewa / Model.Output.Sisi;
+                }
+            }
             <tr>
-                <td colspan="3" class="fw-bold right">Total Nilai Sewa Reklame</td>
+                <td class="right fw-bold">Total Nilai Sewa Reklame</td>
+                <td colspan="2" class="right">@(Model.Output.Sisi > 1 ? $"{totalSebelumSisi.ToString("N0")} × {Model.Output.Sisi} " : "")</td>
                 <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
             </tr>
 
             <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr>
             <tr>
-                <td class="right">Jaminan Bongkar</td>
-                <td colspan="2" class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000</td>
+                <td class="right fw-bold">Jaminan Bongkar</td>
+                <td colspan="2" class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000 @(Model.Output.Sisi > 1 ? $" × {Model.Output.Sisi} " : "")</td>
                 <td class="right">Rp. @Model.KalkullatorReklameRow.JaminanBongkar.ToString("N0")</td>
             </tr>
         </tbody>
     </table>
 
-    <p class="mt-4">Keterangan : ...........................................................................................................</p>
+    <p class="mt-4">Keterangan : Estimasi ini hanya bersifat simulasi. Nilai pajak sesungguhnya akan ditentukan berdasarkan pemeriksaan oleh petugas sesuai data dan ketentuan yang berlaku.</p>
     @* 
     <div class="text-end mt-5">
         Surabaya, @DateTime.Now.ToString("dd - MM - yyyy")<br /><br />

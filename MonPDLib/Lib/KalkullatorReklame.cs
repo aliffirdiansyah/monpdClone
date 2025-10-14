@@ -18,6 +18,7 @@ namespace MonPDLib.Lib
             public decimal Lebar { get; set; }
             public decimal Tinggi { get; set; }
             public int SudutPandang { get; set; }
+            public int Sisi { get; set; }
             public int IdJenisReklame { get; set; }
             public int IdJenisProduk { get; set; }
             public int IdLetakReklame { get; set; }
@@ -294,10 +295,23 @@ namespace MonPDLib.Lib
                 produkRokok = pokokPajak * 0.25m;
             }
 
-            decimal totalNilaiSewa = pokokPajak + produkRokok;
+            decimal totalNilaiSewa = 0m;
+            decimal jaminanBongkar = 0m;
 
-            // ⓫ Jaminan bongkar
-            decimal jaminanBongkar = luas * 50000;
+            if (input.Sisi == 0)
+            {
+                totalNilaiSewa = pokokPajak + produkRokok;
+
+                // ⓫ Jaminan bongkar
+                jaminanBongkar = luas * 50000;
+            }
+            else
+            {
+                totalNilaiSewa = (pokokPajak + produkRokok) * input.Sisi;
+
+                // ⓫ Jaminan bongkar
+                jaminanBongkar = (luas * 50000) * input.Sisi;
+            }
 
             return new KalkullatorReklame
             {
