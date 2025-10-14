@@ -45,7 +45,7 @@ namespace MonPDReborn.Models.Reklame
                     .Select(q => new SelectListItem
                     {
                         Value = q.IdJalan.ToString(),
-                        Text = q.NamaJalan + " [ KELAS " + q.KelasJalan + " ]"
+                        Text = q.NamaJalan + " [ KELAS " + q.KelasJalan + "(" + ((EnumFactory.KawasanReklame)q.Kawasan).GetDescription() +") ]"
                     })
                     .ToList();
             }

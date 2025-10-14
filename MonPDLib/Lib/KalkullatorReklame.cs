@@ -123,16 +123,14 @@ namespace MonPDLib.Lib
 
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
             var lokasi = _context.MNilaiStrategisLokasis
-                .Where(x => x.KelasJalan == jalan.KelasJalan
-                         && x.IsDlmRuang == letak
+                .Where(x => x.IsDlmRuang == letak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
                 .FirstOrDefault();
 
             var pandang = _context.MNilaiStrategisSpandangs
-                .Where(x => x.SudutPandang == input.SudutPandang
-                         && x.IsDlmRuang == letak
+                .Where(x => x.IsDlmRuang == letak
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
@@ -155,8 +153,24 @@ namespace MonPDLib.Lib
                              && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                     .OrderByDescending(x => x.TglAwalBerlaku)
                     .FirstOrDefault();
-                if (tinggiData == null)
-                    throw new ArgumentException("Nilai strategis tinggi tidak ditemukan atau tidak berlaku.");
+                pandang = _context.MNilaiStrategisSpandangs
+                .Where(x => x.SudutPandang == input.SudutPandang
+                         && x.IsDlmRuang == letak
+                         && x.TglAwalBerlaku <= today
+                         && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                .OrderByDescending(x => x.TglAwalBerlaku)
+                .FirstOrDefault();
+
+                tinggiData = _context.MNilaiStrategisTinggis
+                    .Where(x => input.Tinggi >= x.MinKetinggian
+                                && (x.MaxKetinggian == null || input.Tinggi <= x.MaxKetinggian)
+                                && x.TglAwalBerlaku <= today
+                                && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                    .OrderByDescending(x => x.TglAwalBerlaku)
+                    .FirstOrDefault();
+
+                if (lokasi == null || pandang == null || tinggiData == null)
+                    throw new ArgumentException("Nilai strategis lokasi / sudut pandang / tinggi tidak ditemukan atau tidak berlaku.");
             }
 
             if (lokasi == null || pandang == null || tinggiData == null)
