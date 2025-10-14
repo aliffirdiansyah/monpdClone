@@ -404,12 +404,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "KakulatorReklame" ? "active" : "")"
-                           href="@Url.Action("Index", "KakulatorReklame")" role="button">
-                            <i class="bx bx-calculator  me-1 align-middle"></i><span data-key="t-reklamesummary">Reklame Kakulator</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reklame" ? "active" : "")"
                            href="@Url.Action("Index", "Reklame")" role="button">
                             <i class=" bx bx-archive me-1 align-middle"></i><span data-key="t-reklame">Kontrol Reklame</span>
@@ -441,7 +435,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="container-fluid">
+            @* <div class="container-fluid">
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">
                     <li class="menu-title"><span data-key="t-laporanpbb">Kontrol PBB</span></li>
@@ -470,7 +464,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> *@
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">

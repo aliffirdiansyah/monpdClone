@@ -166,7 +166,7 @@
             let tinggi = $("#Tinggi").dxNumberBox("instance")?.option("value");
             let sudutPandang = $("#SudutPandang").dxNumberBox("instance")?.option("value");
 
-            if (!jenisReklame || !letakReklame || !produk) {
+            if (!jenisReklame || !letakReklame || !produk || !idJalan || !panjang || !lebar || !tinggi ||!sudutPandang) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Verifikasi Data',
