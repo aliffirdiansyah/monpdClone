@@ -58,6 +58,7 @@ public partial class ReklameContext : DbContext
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'\r\n");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
             entity.Property(e => e.IsBerjalan).HasDefaultValueSql("0");
+            entity.Property(e => e.Kategori).HasDefaultValueSql("1 ");
         });
 
         modelBuilder.Entity<MNilaiSatuanStrategi>(entity =>

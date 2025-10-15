@@ -36,6 +36,10 @@ public partial class MJenisReklame
     [Unicode(false)]
     public string? InsBy { get; set; }
 
+    [Column("KATEGORI")]
+    [Precision(10)]
+    public int Kategori { get; set; }
+
     [InverseProperty("IdJenisReklameNavigation")]
     public virtual ICollection<MNilaiSatuanStrategi> MNilaiSatuanStrategis { get; set; } = new List<MNilaiSatuanStrategi>();
 
