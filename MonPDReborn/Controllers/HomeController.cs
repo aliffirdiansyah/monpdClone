@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using MonPDReborn.Models;
 using System.Diagnostics;
@@ -16,8 +17,18 @@ namespace MonPDReborn.Controllers
 
         public IActionResult Index()
         {
+            var nama = HttpContext.Session.GetString(Utility.SESSION_NAMA).ToString();
+            if (nama.Contains("SEKDA"))
+            {
+                return RedirectToAction("Index", "SeriesPendapatan");
+            }
             return RedirectToAction("Index", "Dashboard");
         }
+
+        /*public IActionResult Index()
+        {
+            return RedirectToAction("Index", "Dashboard");
+        }*/
 
         public IActionResult Privacy()
         {

@@ -23,193 +23,211 @@
                 </div>
             </div>
             <div class="card shadow-sm">
-
                 <div class="card-body">
-                    <div class="row g-3">
 
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="Panjang" class="form-label fw-semibold">Panjang (m)</label>
-                            @(Html.DevExtreme().NumberBox()
-                                                        .ID("Panjang")
-                                                        .ShowClearButton(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Format("#,##0")
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Panjang diukur horizontal dari sisi kiri terluar s/d sisi kanan terluar.
-                            </small>
+                    <!-- 🧭 Tab Navigation -->
+                    <ul class="nav nav-pills arrow-navtabs nav-success bg-light mb-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#tab-nsr" role="tab">
+                                <span class="d-block d-sm-none"><i class="bx bx-analyse"></i></span>
+                                <span class="d-none d-sm-block fw-semibold">NSR</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#tab-kontrak" role="tab">
+                                <span class="d-block d-sm-none"><i class="bx bx-calculator"></i></span>
+                                <span class="d-none d-sm-block fw-semibold">Nilai Kontrak</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- 🧩 Tab Content -->
+                    <div class="tab-content text-muted">
+
+                        <!-- ✅ TAB 1: NSR -->
+                        <div class="tab-pane active" id="tab-nsr" role="tabpanel">
+                            <div class="row g-3">
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="Panjang" class="form-label fw-semibold">Panjang (m)</label>
+                                    @(Html.DevExtreme().NumberBox()
+                                                                        .ID("Panjang")
+                                                                        .ShowClearButton(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45)
+                                                                        .Max(999))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Panjang bidang reklame dalam meter, diukur dari sisi kiri ke kanan papan reklame.
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="Lebar" class="form-label fw-semibold">Lebar (m)</label>
+                                    @(Html.DevExtreme().NumberBox()
+                                                                        .ID("Lebar")
+                                                                        .ShowClearButton(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45)
+                                                                        .Max(999))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Lebar bidang reklame dalam meter, diukur dari sisi bawah ke atas papan reklame.
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="Tinggi" class="form-label fw-semibold">Tinggi (m)</label>
+                                    @(Html.DevExtreme().NumberBox()
+                                                                        .ID("Tinggi")
+                                                                        .ShowClearButton(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45)
+                                                                        .Max(999))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Ketinggian posisi reklame dari permukaan tanah ke titik bawah reklame.
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="SudutPandang" class="form-label fw-semibold">Sudut Pandang (°)</label>
+                                    @(Html.DevExtreme().NumberBox()
+                                                                        .ID("SudutPandang")
+                                                                        .ShowClearButton(true)
+                                                                        .Placeholder("Jumlah arah pandang reklame dapat dilihat")
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45)
+                                                                        .Max(999))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Besaran sudut kemiringan papan reklame terhadap arah pandang pengguna jalan.
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="Sisi" class="form-label fw-semibold">Jumlah Sisi</label>
+                                    @(Html.DevExtreme().NumberBox()
+                                                                        .ID("Sisi")
+                                                                        .ShowClearButton(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45)
+                                                                        .Max(4))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Jumlah sisi reklame yang menampilkan iklan (misal: 1 sisi tunggal, 2 sisi bolak-balik).
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="NamaJalan" class="form-label fw-semibold">Nama Jalan</label>
+                                    @(Html.DevExtreme().SelectBox()
+                                                                        .ID("NamaJalan")
+                                                                        .DataSource(Model.JalanList)
+                                                                        .DisplayExpr("Text")
+                                                                        .ValueExpr("Value")
+                                                                        .Placeholder("Pilih Nama Jalan")
+                                                                        .SearchEnabled(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Lokasi jalan tempat reklame dipasang, berpengaruh pada nilai strategis (NSR).
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="JenisReklame" class="form-label fw-semibold">Jenis Reklame</label>
+                                    @(Html.DevExtreme().SelectBox()
+                                                                        .ID("JenisReklame")
+                                                                        .DataSource(Model.JenisReklameList)
+                                                                        .DisplayExpr("Text")
+                                                                        .ValueExpr("Value")
+                                                                        .Placeholder("Pilih Jenis Reklame")
+                                                                        .SearchEnabled(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Jenis media reklame, misalnya papan/baliho, videotron, spanduk, atau neon box.
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="LetakReklame" class="form-label fw-semibold">Letak Reklame</label>
+                                    @(Html.DevExtreme().SelectBox()
+                                                                        .ID("LetakReklame")
+                                                                        .DataSource(Model.LetakReklameList)
+                                                                        .DisplayExpr("Text")
+                                                                        .ValueExpr("Value")
+                                                                        .Placeholder("Pilih Letak Reklame")
+                                                                        .SearchEnabled(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Posisi reklame dipasang di luar ruangan (outdoor) atau dalam ruangan (indoor).
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="produkList" class="form-label fw-semibold">Jenis Produk</label>
+                                    @(Html.DevExtreme().SelectBox()
+                                                                        .ID("produkList")
+                                                                        .DataSource(Model.ProdukList)
+                                                                        .DisplayExpr("Text")
+                                                                        .ValueExpr("Value")
+                                                                        .Placeholder("Pilih Produk")
+                                                                        .SearchEnabled(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Height(45))
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Kategori produk atau layanan yang diiklankan pada media reklame.
+                                    </small>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label class="form-label fw-semibold">&nbsp;</label>
+                                    <button type="button" class="btn btn-success w-100" id="btnFilter">
+                                        <i class="bi bi-funnel-fill me-1"></i> Hitung NSR
+                                    </button>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="Lebar" class="form-label fw-semibold">Lebar (m)</label>
-                            @(Html.DevExtreme().NumberBox()
-                                                        .ID("Lebar")
-                                                        .ShowClearButton(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Format("#,##0")
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Lebar diukur vertikal titik terluar reklame.
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="Tinggi" class="form-label fw-semibold">Tinggi (m)</label>
-                            @(Html.DevExtreme().NumberBox()
-                                                        .ID("Tinggi")
-                                                        .ShowClearButton(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Format("#,##0")
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Ketinggian posisi reklame teratas sampai ke tanah.
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="SudutPandang" class="form-label fw-semibold">Sudut Pandang (°)</label>
-                            @(Html.DevExtreme().NumberBox()
-                                                        .ID("SudutPandang")
-                                                        .ShowClearButton(true)
-                                                        .Placeholder("Jumlah arah pandang reklame dapat dilihat")
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Format("#,##0")
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Jumlah arah pandang reklame dapat dilihat (1 arah atau lebih).
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="Sisi" class="form-label fw-semibold">Jumlah Sisi</label>
-                            @(Html.DevExtreme().NumberBox()
-                                                        .ID("Sisi")
-                                                        .ShowClearButton(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Format("#,##0")
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Jumlah sisi reklame yang menampilkan iklan (misal: 1 sisi tunggal, 2 sisi bolak-balik).
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="NamaJalan" class="form-label fw-semibold">Nama Jalan</label>
-                            @(Html.DevExtreme().SelectBox()
-                                                        .ID("NamaJalan")
-                                                        .DataSource(Model.JalanList)
-                                                        .DisplayExpr("Text")
-                                                        .ValueExpr("Value")
-                                                        .Placeholder("Pilih Nama Jalan")
-                                                        .SearchEnabled(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Lokasi jalan tempat reklame dipasang, berpengaruh pada nilai strategis (NSR).
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="JenisReklame" class="form-label fw-semibold">Jenis Reklame</label>
-                            @(Html.DevExtreme().SelectBox()
-                                                        .ID("JenisReklame")
-                                                        .DataSource(Model.JenisReklameList)
-                                                        .DisplayExpr("Text")
-                                                        .ValueExpr("Value")
-                                                        .Placeholder("Pilih Jenis Reklame")
-                                                        .SearchEnabled(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Jenis media reklame, misalnya papan/baliho, videotron, spanduk, atau neon box.
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="LetakReklame" class="form-label fw-semibold">Letak Reklame</label>
-                            @(Html.DevExtreme().SelectBox()
-                                                        .ID("LetakReklame")
-                                                        .DataSource(Model.LetakReklameList)
-                                                        .DisplayExpr("Text")
-                                                        .ValueExpr("Value")
-                                                        .Placeholder("Pilih Letak Reklame")
-                                                        .SearchEnabled(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Posisi reklame terhadap bangunan atau jalan, misalnya: di atas gedung, menempel di tembok, atau berdiri sendiri.
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="produkList" class="form-label fw-semibold">Jenis Produk</label>
-                            @(Html.DevExtreme().SelectBox()
-                                                        .ID("produkList")
-                                                        .DataSource(Model.ProdukList)
-                                                        .DisplayExpr("Text")
-                                                        .ValueExpr("Value")
-                                                        .Placeholder("Pilih Produk")
-                                                        .SearchEnabled(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Height(45)
-                                                        )
-                            <small class="form-text text-danger devextreme-helper helper-text mt-auto">
-                                <i class='bx bx-info-circle text- me-1 '></i>
-                                Kategori produk atau layanan yang diiklankan pada media reklame.
-                            </small>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label class="form-label fw-semibold">&nbsp;</label>
-                            <button type="button" class="btn btn-success w-100" id="btnFilter">
-                                <i class="bi bi-funnel-fill me-1"></i> Hitung NSR
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-                    <div class="row g-3">
-
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label for="nilaiKontrak" class="form-label fw-semibold">Nilai Kontrak</label>
-                            @(Html.DevExtreme().NumberBox()
-                                                        .ID("nilaiKontrak")
-                                                        .ShowClearButton(true)
-                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                        .Format("#,##0")
-                                                        .Height(45)
-                                                        )
-                            @* <small class="form-text text-danger devextreme-helper helper-text mt-auto">
+                        <!-- 📊 TAB 2: Nilai Kontrak -->
+                        <div class="tab-pane" id="tab-kontrak" role="tabpanel">
+                            <div class="p-3 border rounded bg-light-subtle">
+                                <p class="mb-0 text-muted">
+                                    <i class='bx bx-info-circle me-1'></i>
+                                    Hitung pajak berdasarkan nilai kontrak.
+                                </p>
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label for="nilaiKontrak" class="form-label fw-semibold">Nilai Kontrak</label>
+                                    @(Html.DevExtreme().NumberBox()
+                                                                        .ID("nilaiKontrak")
+                                                                        .ShowClearButton(true)
+                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                        .Format("#,##0")
+                                                                        .Height(45)
+                                                                        )
+                                    @* <small class="form-text text-danger devextreme-helper helper-text mt-auto">
                                 <i class='bx bx-info-circle text- me-1 '></i>
                                 Panjang bidang reklame dalam meter, diukur dari sisi kiri ke kanan papan reklame.
                             </small> *@
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                    <label class="form-label fw-semibold">&nbsp;</label>
+                                    <button type="button" class="btn btn-info w-100" id="btnFilter">
+                                        <i class="bi bi-funnel-fill me-1"></i> Hitung Nilai Kontrak
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                            <label class="form-label fw-semibold">&nbsp;</label>
-                            <button type="button" class="btn btn-info w-100" id="btnFilter">
-                                <i class="bi bi-funnel-fill me-1"></i> Hitung Nilai Kontrak
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -217,8 +235,15 @@
         </div>
     </div>
 
-    <div class="col-lg-12">
-        <div class="card">
+    <div class="col-lg-12" >
+        <div id="loading2-Show" style="display:none;">
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div class="card" id="card-show" style="display:none;">
             <div class="card-header d-flex bg-header-color align-items-center">
                 <div class="flex-grow-1">
                     <h4 class="card-title text-dark fs-16 mb-1">
@@ -227,13 +252,6 @@
                 </div>
             </div>
             <div class="card-body">
-                <div id="loading2-Show" style="display:none;">
-                    <div class="text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </div>
                 <div id="Show">
                 </div>
                 <div id="ShowKontrak">
@@ -283,11 +301,24 @@
                     sudutPandang: sudutPandang
                 },
                 beforeSend: function () {
+                    $("#Show").html('');
+                    $("#ShowKontrak").html('');
+                    $("#card-show").hide();
                     $("#Show").hide();
                     $("#loading2-Show").show();
                 },
                 success: function (response) {
-                    $("#Show").html(response);
+                    if (response.Status === undefined) {
+                        $("#card-show").show();
+                        $("#Show").html(response);
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message,
+                        })
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);
@@ -326,11 +357,24 @@
                     NilaiKontrak: nilaiKontrak,
                 },
                 beforeSend: function () {
+                    $("#Show").html('');
+                    $("#ShowKontrak").html('');
+                    $("#card-show").hide();
                     $("#ShowKontrak").hide();
                     $("#loading2-Show").show();
                 },
                 success: function (response) {
-                    $("#ShowKontrak").html(response);
+                    if (response.Status === undefined) {
+                        $("#card-show").show();
+                        $("#ShowKontrak").html(response);
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message,
+                        })
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);

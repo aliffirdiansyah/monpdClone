@@ -219,6 +219,12 @@
                                     <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerahScontro">Series Pendapatan Daerah</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatan" ? "active" : "")"
+                                href="@Url.Action("Index", "SeriesPendapatan")" target="_blank" role="button">
+                                    <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-sPendapatan">Series Pendapatan</span>
+                                </a>
+                            </li>
                             @* <li class="nav-item">
                     <a class="nav-link menu-link" href="@Url.Action("Index","PendataanObjekPajak")" role="button">
                         <i class="bx bx-building"></i><span data-key="t-perbandinganWilayah">Perbandingan Wilayah</span>
@@ -435,7 +441,7 @@
                     </li>
                 </ul>
             </div>
-            @* <div class="container-fluid">
+            <div class="container-fluid">
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">
                     <li class="menu-title"><span data-key="t-laporanpbb">Kontrol PBB</span></li>
@@ -464,7 +470,7 @@
                         </a>
                     </li>
                 </ul>
-            </div> *@
+            </div>
             <div class="container-fluid">
                 <div id="two-column-menu"></div>
                 <ul class="navbar-nav" id="navbar-nav">
@@ -825,6 +831,21 @@
                            href="@Url.Action("Index", "RealisasiControl")" target="_blank" role="button">
                             <i class="bx bx-search-alt me-1 align-middle"></i>
                             <span data-key="t-PencarianReklameAdmin">Realisasi Control</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else if (nama.Contains("SEKDA"))
+        {
+            <div class="container-fluid">
+                <div id="two-column-menu"></div>
+                <ul class="navbar-nav" id="navbar-nav">
+                    <li class="menu-title"><span data-key="t-MonitoringPembayaran">Menu</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatan" ? "active" : "")"
+                           href="@Url.Action("Index", "SeriesPendapatan")" role="button">
+                            <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-sPendapatan">Series Pendapatan</span>
                         </a>
                     </li>
                 </ul>
