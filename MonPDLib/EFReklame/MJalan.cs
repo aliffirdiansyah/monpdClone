@@ -39,4 +39,11 @@ public partial class MJalan
     [StringLength(100)]
     [Unicode(false)]
     public string? InsBy { get; set; }
+
+    [Column("KORIDOR_JALAN")]
+    [Precision(10)]
+    public int? KoridorJalan { get; set; }
+
+    [Column("KORIDOR_NILAI", TypeName = "NUMBER(10,2)")]
+    public decimal KoridorNilai { get; set; }
 }
