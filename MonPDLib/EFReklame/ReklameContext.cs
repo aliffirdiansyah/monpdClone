@@ -23,11 +23,15 @@ public partial class ReklameContext : DbContext
 
     public virtual DbSet<MNilaiStrategisDef> MNilaiStrategisDefs { get; set; }
 
+    public virtual DbSet<MNilaiStrategisJalanIn> MNilaiStrategisJalanIns { get; set; }
+
     public virtual DbSet<MNilaiStrategisLokasi> MNilaiStrategisLokasis { get; set; }
 
     public virtual DbSet<MNilaiStrategisSpandang> MNilaiStrategisSpandangs { get; set; }
 
     public virtual DbSet<MNilaiStrategisTinggi> MNilaiStrategisTinggis { get; set; }
+
+    public virtual DbSet<MNsrIn> MNsrIns { get; set; }
 
     public virtual DbSet<MNsrLua> MNsrLuas { get; set; }
 
@@ -58,6 +62,7 @@ public partial class ReklameContext : DbContext
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'\r\n");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
             entity.Property(e => e.IsBerjalan).HasDefaultValueSql("0");
+            entity.Property(e => e.Kategori).HasDefaultValueSql("1 ");
         });
 
         modelBuilder.Entity<MNilaiSatuanStrategi>(entity =>
@@ -83,6 +88,14 @@ public partial class ReklameContext : DbContext
                 .HasConstraintName("FK_M_STRGS_DEF");
         });
 
+        modelBuilder.Entity<MNilaiStrategisJalanIn>(entity =>
+        {
+            entity.HasKey(e => new { e.IdJenisReklame, e.KelasJalan, e.TglAwalBerlaku }).HasName("PK_M_STGRS_INS");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
+            entity.Property(e => e.IsDlmRuang).HasDefaultValueSql("0 ");
+        });
+
         modelBuilder.Entity<MNilaiStrategisLokasi>(entity =>
         {
             entity.HasKey(e => new { e.KelasJalan, e.TglAwalBerlaku }).HasName("PK_M_STGRS_LOKASI");
@@ -104,6 +117,16 @@ public partial class ReklameContext : DbContext
             entity.HasKey(e => new { e.MinKetinggian, e.MaxKetinggian, e.TglAwalBerlaku }).HasName("PK_M_STGRS_TINGGI");
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<MNsrIn>(entity =>
+        {
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
+            entity.Property(e => e.MasaPajak).HasDefaultValueSql("1 ");
+
+            entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.MNsrIns)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MNSR_JENIS_INS");
         });
 
         modelBuilder.Entity<MNsrLua>(entity =>

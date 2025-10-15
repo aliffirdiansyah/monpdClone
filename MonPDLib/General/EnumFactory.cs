@@ -26,6 +26,13 @@ namespace MonPDLib.General
             Berjalan = 6
         }
 
+        public enum JenisReklame
+        {
+            [Description("Permanen")]
+            Permanen = 1,
+            [Description("Insidentil")]
+            Insidentil = 2
+        }
         public enum KawasanReklame
         {
             [Description("Non Penataan")]

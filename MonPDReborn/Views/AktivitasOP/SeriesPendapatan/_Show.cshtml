@@ -1,0 +1,111 @@
+﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanVM.Show
+
+@* @foreach (var jenis in Model.Data)
+{
+    <h5 class="mt-3 fw-bold text-primary">@jenis.Col.Nama</h5>
+
+    @foreach (var opd in jenis.RekOpds)
+    {
+        <h6 class="text-secondary mb-1">@opd.Col.Nama</h6>
+
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th style="width: 25%;">Objek</th>
+                        <th style="width: 35%;">Sub Rincian</th>
+                        <th style="width: 15%;">Target</th>
+                        <th style="width: 15%;">Realisasi</th>
+                        <th style="width: 10%;">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sub in opd.RekSubRincianObjeks)
+                    {
+                        // Pisahkan nama objek dan sub rincian (karena digabung di Col.Nama)
+                        var splitNama = sub.Col.Nama?.Split('|');
+                        var objek = splitNama?.FirstOrDefault()?.Trim() ?? "-";
+                        var subRincian = splitNama?.Skip(1).FirstOrDefault()?.Trim() ?? "-";
+
+                        <tr>
+                            <td>@objek</td>
+                            <td>@subRincian</td>
+                            <td class="text-end">@sub.Col.TargetTahun1.ToString("N0")</td>
+                            <td class="text-end">@sub.Col.RealisasiTahun1.ToString("N0")</td>
+                            <td class="text-end">@sub.Col.PersentaseTahun1.ToString("N2")%</td>
+                        </tr>
+                    }
+
+                    <tr class="fw-bold bg-light">
+                        <td colspan="2" class="text-end">Total @opd.Col.Nama</td>
+                        <td class="text-end">@opd.Col.TargetTahun1.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.RealisasiTahun1.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.PersentaseTahun1.ToString("N2")%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="fw-bold text-end mb-4">
+        Total @jenis.Col.Nama:
+        <span class="text-dark">
+            Target: @jenis.Col.TargetTahun1.ToString("N0") |
+            Realisasi: @jenis.Col.RealisasiTahun1.ToString("N0") |
+            Persentase: @jenis.Col.PersentaseTahun1.ToString("N2")%
+        </span>
+    </div>
+
+    <hr />
+} *@
+
+<div class="table-responsive mt-3">
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light text-center align-middle">
+            <tr>
+                <th style="width: 10%;">Kode</th>
+                <th style="width: 50%;">Uraian</th>
+                <th style="width: 15%;">Target</th>
+                <th style="width: 15%;">Realisasi</th>
+                <th style="width: 10%;">%</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Data != null && Model.Data.Any())
+            {
+                foreach (var opd in Model.Data)
+                {
+                    <!-- ===== Level 1: OPD ===== -->
+                    <tr class="table-success fw-bold">
+                        <td colspan="2">@($"{opd.Col.Kode} - {opd.Col.Nama}")</td>
+                        <td class="text-end">@opd.Col.Target.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.Realisasi.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.Persentase.ToString("N2")%</td>
+                    </tr>
+
+                    @if (opd.RekSubRincians != null && opd.RekSubRincians.Any())
+                    {
+                        foreach (var sub in opd.RekSubRincians)
+                        {
+                            <!-- ===== Level 2: Sub Rincian ===== -->
+                            <tr>
+                                <td>@sub.Col.Kode</td>
+                                <td class="ps-4">@sub.Col.Nama</td>
+                                <td class="text-end">@sub.Col.Target.ToString("N0")</td>
+                                <td class="text-end">@sub.Col.Realisasi.ToString("N0")</td>
+                                <td class="text-end">@sub.Col.Persentase.ToString("N2")%</td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Tidak ada data</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

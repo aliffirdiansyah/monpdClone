@@ -21,6 +21,7 @@ namespace MonPDReborn.Models.Reklame
             {
                 var context = DBClass.GetReklameContext();
                 JenisReklameList = context.MJenisReklames
+                    .Where(x => x.Kategori == (int)EnumFactory.JenisReklame.Permanen)
                     .Select(j => new SelectListItem
                     {
                         Value = j.IdJenisReklame.ToString(),

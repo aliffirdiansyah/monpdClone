@@ -78,6 +78,7 @@ namespace MonPDLib.Lib
             var jenisReklame = input.JenisReklame;
             decimal luas = input.Panjang * input.Lebar;
 
+
             var distinctKelasJalan = jalanData.Select(x => x.KelasJalan).Distinct().ToList();
             if (distinctKelasJalan.Count > 1)
             {
@@ -295,6 +296,16 @@ namespace MonPDLib.Lib
                 produkRokok = pokokPajak * 0.25m;
             }
 
+            decimal nilaiJambong = 0m;
+            if (luas <= 8)
+            {
+                nilaiJambong = 50000;
+            }
+            else
+            {
+                nilaiJambong = 200000;
+            }
+
             decimal totalNilaiSewa = 0m;
             decimal jaminanBongkar = 0m;
 
@@ -302,15 +313,13 @@ namespace MonPDLib.Lib
             {
                 totalNilaiSewa = pokokPajak + produkRokok;
 
-                // ⓫ Jaminan bongkar
-                jaminanBongkar = luas * 50000;
+                jaminanBongkar = luas * nilaiJambong;
             }
             else
             {
                 totalNilaiSewa = (pokokPajak + produkRokok) * input.Sisi;
 
-                // ⓫ Jaminan bongkar
-                jaminanBongkar = (luas * 50000) * input.Sisi;
+                jaminanBongkar = (luas * nilaiJambong) * input.Sisi;
             }
 
             // 🧮 Pembulatan ke atas ke kelipatan Rp 100
