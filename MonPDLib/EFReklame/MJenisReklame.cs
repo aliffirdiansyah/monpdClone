@@ -47,6 +47,9 @@ public partial class MJenisReklame
     public virtual ICollection<MNilaiStrategisDef> MNilaiStrategisDefs { get; set; } = new List<MNilaiStrategisDef>();
 
     [InverseProperty("IdJenisReklameNavigation")]
+    public virtual ICollection<MNsrIn> MNsrIns { get; set; } = new List<MNsrIn>();
+
+    [InverseProperty("IdJenisReklameNavigation")]
     public virtual ICollection<MNsrLua> MNsrLuas { get; set; } = new List<MNsrLua>();
 
     [InverseProperty("IdJenisReklameNavigation")]
