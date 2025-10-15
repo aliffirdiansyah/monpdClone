@@ -103,14 +103,14 @@ namespace MonPDReborn.Models.AktivitasOP
         }
         public class Methods
         {
-            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> GetSudutPandangRekeningJenisObjekOpdData(int tahunBuku)
+            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> GetSudutPandangRekeningJenisObjekOpdData(int year)
             {
                 var result = new List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>();
                 var context = DBClass.GetContext();
 
                 // Ambil data dari DbPendapatanDaerahs
                 var query = context.DbPendapatanDaerahs
-                    .Where(x => x.TahunBuku == tahunBuku)
+                    .Where(x => x.TahunBuku == year)
                     .GroupBy(x => new
                     {
                         x.KodeOpd,
