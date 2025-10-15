@@ -46,6 +46,8 @@ public partial class ReklameContext : DbContext
             entity.Property(e => e.IdJalan).ValueGeneratedNever();
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY'");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
+            entity.Property(e => e.KoridorJalan).HasDefaultValueSql("0 ");
+            entity.Property(e => e.KoridorNilai).HasDefaultValueSql("0 ");
         });
 
         modelBuilder.Entity<MJenisReklame>(entity =>
