@@ -1,0 +1,98 @@
+﻿@model MonPDReborn.Models.AktivitasOP.SeriesPendapatanVM.Index
+
+@{
+    ViewData["Title"] = "Series Pendapatan Daerah";
+    var tahunSekarang = DateTime.Now.Year;
+    var tahunList = Enumerable.Range(tahunSekarang - 6, 7).Reverse().ToList();
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center justify-content-between">
+                <h4 class="card-title text-dark fs-16 mb-0">
+                    Series Pendapatan Daerah
+                </h4>
+                @(Html.DevExtreme().SelectBox()
+                                .ID("selectTahun")
+                                .DataSource(tahunList)
+                                .Value(tahunSekarang)
+                                .Width(120)
+                                .StylingMode(EditorStylingMode.Outlined)
+                                .ElementAttr("class", "form-select-sm"))
+            </div>
+            <div class="card-body">
+                <div class="flex-shrink-0">
+                    <button class="btn btn-primary" onclick="printReport()">Cetak</button>
+                </div>
+                <div id="loading2-Show" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function printReport() {
+            var printContents = document.getElementById('Show').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+
+        $(document).ready(function () {
+            var tahunSelect = $("#selectTahun").dxSelectBox("instance");
+
+            var defaultYear = 2025;
+            var selectedYear = tahunSelect.option("value") || defaultYear;
+            tahunSelect.option("value", selectedYear);
+
+            loadData(selectedYear);
+
+            tahunSelect.on("valueChanged", function (e) {
+                var tahun = e.value;
+                loadData(tahun);
+            });
+
+            function loadData(tahun) {
+                $.ajax({
+                    url: '/SeriesPendapatan/Show',
+                    type: 'GET',
+                    data: { year: tahun },
+                    beforeSend: function () {
+                         $('#loading2-Show').show();
+                         $('#Show').hide();
+                      },
+                      success: function (response) {
+                            if (response.Status === undefined) {
+                                $('#loading2-Show').hide();
+                                $('#Show').show();
+                                $('#Show').html(response);
+                            }
+                            else {
+                                swal.fire({
+                                    icon: 'warning',
+                                    title: '<b style="color:orange">Peringatan</b>',
+                                    text: response.Message
+                                })
+                            }
+                      },
+                      error: function (xhr, status, error) {
+                         $('#loading2-Show').hide();
+                         $('#Show').hide();
+                         $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                      }
+                });
+            }
+        });
+    </script>
+}
