@@ -36,11 +36,7 @@ namespace MonPDReborn.Controllers.AktivitasOP
 
                 if (!nama.Contains("BAPENDA"))
                 {
-                    if (nama.Contains("BPK"))
-                    {
-
-                    }
-                    else
+                    if (!(nama.Contains("BPK") || nama.Contains("SEKDA")))
                     {
                         return RedirectToAction("Error", "Home", new { statusCode = 403 });
                     }
