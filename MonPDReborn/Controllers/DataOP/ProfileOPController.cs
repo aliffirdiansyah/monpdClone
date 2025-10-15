@@ -102,12 +102,13 @@ namespace MonPDReborn.Controllers.DataOP
             }
         }
         #region REKAP DATA
-        [HttpGet]
-        public object GetRekapDetailData(DataSourceLoadOptions load_options, int JenisPajak, int tahun)
-        {
-            var data = Models.DataOP.ProfileOPVM.Method.GetRekapDetailData((EnumFactory.EPajak)JenisPajak, tahun);
-            return DataSourceLoader.Load(data, load_options);
-        }
+        /* Di tutup sementara */
+        //[HttpGet]
+        //public object GetRekapDetailData(DataSourceLoadOptions load_options, int JenisPajak, int tahun)
+        //{
+        //    var data = Models.DataOP.ProfileOPVM.Method.GetRekapDetailData((EnumFactory.EPajak)JenisPajak, tahun);
+        //    return DataSourceLoader.Load(data, load_options);
+        //}
         public IActionResult RekapMaster(int enumPajak, int kategori, string status, int tahun)
         {
             try

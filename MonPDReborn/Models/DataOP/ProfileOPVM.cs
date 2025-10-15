@@ -9,6 +9,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text.RegularExpressions;
 using static MonPDLib.General.EnumFactory;
@@ -780,6 +781,7 @@ namespace MonPDReborn.Models.DataOP
                         .Where(x => x.TahunBuku >= tahun - 1)
                         .Select(x => new
                         {
+                            x.Nop,
                             x.TahunBuku,
                             x.TglOpTutup,
                             x.TglMulaiBukaOp,
@@ -791,6 +793,7 @@ namespace MonPDReborn.Models.DataOP
                     .Where(x => x.TahunBuku >= tahun - 1)
                     .Select(x => new
                     {
+                        x.Nop,
                         x.TahunBuku,
                         x.TglOpTutup,
                         x.TglMulaiBukaOp,
@@ -801,6 +804,7 @@ namespace MonPDReborn.Models.DataOP
                     .Where(x => x.TahunBuku >= tahun - 1)
                     .Select(x => new
                     {
+                        x.Nop,
                         x.TahunBuku,
                         x.TglOpTutup,
                         x.TglMulaiBukaOp,
@@ -811,6 +815,7 @@ namespace MonPDReborn.Models.DataOP
                     .Where(x => x.TahunBuku >= tahun - 1)
                     .Select(x => new
                     {
+                        x.Nop,
                         x.TahunBuku,
                         x.TglOpTutup,
                         x.TglMulaiBukaOp,
@@ -822,6 +827,7 @@ namespace MonPDReborn.Models.DataOP
                     .Where(x => x.TahunBuku >= tahun - 1)
                     .Select(x => new
                     {
+                        x.Nop,
                         x.TahunBuku,
                         x.TglOpTutup,
                         x.TglMulaiBukaOp,
@@ -833,6 +839,7 @@ namespace MonPDReborn.Models.DataOP
                     .Where(x => x.TahunBuku >= tahun - 1)
                     .Select(x => new
                     {
+                        x.Nop,
                         x.TahunBuku,
                         x.TglOpTutup,
                         x.TglMulaiBukaOp,
@@ -842,7 +849,7 @@ namespace MonPDReborn.Models.DataOP
                 var dbOpReklame = context.DbOpReklames
                     .Where(x => x.TahunBuku >= tahun - 1)
                     .Select(x => new
-                    {
+                    {   
                         x.TahunBuku,
                         x.KategoriId
                     }).AsQueryable();
@@ -859,7 +866,10 @@ namespace MonPDReborn.Models.DataOP
                 var dbOpPbb = context.DbMonPbbs
                     .Where(x => x.TahunBuku >= tahun - 1)
                     .GroupBy(x => new { x.TahunBuku, x.KategoriId })
-                    .Select(x => new { x.Key.TahunBuku, x.Key.KategoriId, Jml = x.Count() })
+                    .Select(x => new { 
+                        x.Key.TahunBuku, 
+                        x.Key.KategoriId, 
+                        Jml = x.Count() })
                     .Distinct()
                     .ToList();
 
@@ -896,73 +906,208 @@ namespace MonPDReborn.Models.DataOP
                     int baru = 0;
                     int akhir = 0;
 
+                    IQueryable<string> opAwal;
+                    IQueryable<string> opBaru;
+                    IQueryable<string> opAkhir;
+                    IQueryable<string> opTutup;
+
                     switch ((EnumFactory.EPajak)pajak.Id)
                     {
                         case EnumFactory.EPajak.MakananMinuman:
 
-                            tutup = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.PajakNama != "MAMIN");
-                            awal = dbOpResto.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN");
-                            baru = dbOpResto.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN");
-                            akhir = dbOpResto.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
+                            //untuk Op tutup kita handle dari hasil union awal dan baru , lalu exclude akhir
+
+                            opAwal = dbOpResto
+                               .Where(x => x.TahunBuku == tahun - 1 &&
+                                           (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN")
+                               .Select(x => x.Nop)
+                               .Distinct();
+
+                            opBaru = dbOpResto
+                                .Where(x => x.TahunBuku == tahun &&
+                                            x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN")
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opAkhir = dbOpResto
+                                .Where(x => x.TahunBuku == tahun &&
+                                            (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN")
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opTutup = opAwal
+                                .Union(opBaru)
+                                .Except(opAkhir)
+                                .Distinct();
+
+                            awal = opAwal.Count();
+                            baru = opBaru.Count();
+                            akhir = opAkhir.Count();
+                            tutup = opTutup.Count();
 
                             break;
-
                         case EnumFactory.EPajak.TenagaListrik:
 
-                            tutup = dbOpListrik.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                            awal = dbOpListrik.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                            baru = dbOpListrik.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                            akhir = dbOpListrik.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                            opAwal = dbOpListrik
+                               .Where(x => x.TahunBuku == tahun - 1 &&
+                                           (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                               .Select(x => x.Nop)
+                               .Distinct();
+
+                            opBaru = dbOpListrik
+                                .Where(x => x.TahunBuku == tahun &&
+                                            x.TglMulaiBukaOp.Year == tahun )
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opAkhir = dbOpListrik
+                                .Where(x => x.TahunBuku == tahun &&
+                                            (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opTutup = opAwal
+                                .Union(opBaru)
+                                .Except(opAkhir)
+                                .Distinct();
+
+                            awal = opAwal.Count();
+                            baru = opBaru.Count();
+                            akhir = opAkhir.Count();
+                            tutup = opTutup.Count();
 
                             break;
-
                         case EnumFactory.EPajak.JasaPerhotelan:
 
+                            opAwal = dbOpHotel
+                               .Where(x => x.TahunBuku == tahun - 1 &&
+                                           (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                               .Select(x => x.Nop)
+                               .Distinct();
 
-                            tutup = dbOpHotel.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                            awal = dbOpHotel.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                            baru = dbOpHotel.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                            akhir = dbOpHotel.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                            opBaru = dbOpHotel
+                                .Where(x => x.TahunBuku == tahun &&
+                                            x.TglMulaiBukaOp.Year == tahun)
+                                .Select(x => x.Nop)
+                                .Distinct();
 
+                            opAkhir = dbOpHotel
+                                .Where(x => x.TahunBuku == tahun &&
+                                            (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opTutup = opAwal
+                                .Union(opBaru)
+                                .Except(opAkhir)
+                                .Distinct();
+
+                            awal = opAwal.Count();
+                            baru = opBaru.Count();
+                            akhir = opAkhir.Count();
+                            tutup = opTutup.Count();
 
                             break;
-
                         case EnumFactory.EPajak.JasaParkir:
+                            
+                            opAwal = dbOpParkir
+                               .Where(x => x.TahunBuku == tahun - 1 &&
+                                           (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                               .Select(x => x.Nop)
+                               .Distinct();
 
-                            tutup = dbOpParkir.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                            awal = dbOpParkir.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                            baru = dbOpParkir.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                            akhir = dbOpParkir.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                            opBaru = dbOpParkir
+                                .Where(x => x.TahunBuku == tahun &&
+                                            x.TglMulaiBukaOp.Year == tahun)
+                                .Select(x => x.Nop)
+                                .Distinct();
 
+                            opAkhir = dbOpParkir
+                                .Where(x => x.TahunBuku == tahun &&
+                                            (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opTutup = opAwal
+                                .Union(opBaru)
+                                .Except(opAkhir)
+                                .Distinct();
+
+                            awal = opAwal.Count();
+                            baru = opBaru.Count();
+                            akhir = opAkhir.Count();
+                            tutup = opTutup.Count();
                             break;
-
                         case EnumFactory.EPajak.JasaKesenianHiburan:
 
-                            tutup = dbOpHiburan.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                            awal = dbOpHiburan.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                            baru = dbOpHiburan.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                            akhir = dbOpHiburan.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
-                            break;
+                            opAwal = dbOpHiburan
+                               .Where(x => x.TahunBuku == tahun - 1 &&
+                                           (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                               .Select(x => x.Nop)
+                               .Distinct();
 
+                            opBaru = dbOpHiburan
+                                .Where(x => x.TahunBuku == tahun &&
+                                            x.TglMulaiBukaOp.Year == tahun)
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opAkhir = dbOpHiburan
+                                .Where(x => x.TahunBuku == tahun &&
+                                            (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opTutup = opAwal
+                                .Union(opBaru)
+                                .Except(opAkhir)
+                                .Distinct();
+
+                            awal = opAwal.Count();
+                            baru = opBaru.Count();
+                            akhir = opAkhir.Count();
+                            tutup = opTutup.Count();
+
+                            break;
                         case EnumFactory.EPajak.AirTanah:
 
-                            tutup = dbOpAbt.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                            awal = dbOpAbt.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                            baru = dbOpAbt.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                            akhir = dbOpAbt.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                            opAwal = dbOpAbt
+                               .Where(x => x.TahunBuku == tahun - 1 &&
+                                           (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                               .Select(x => x.Nop)
+                               .Distinct();
+
+                            opBaru = dbOpAbt
+                                .Where(x => x.TahunBuku == tahun &&
+                                            x.TglMulaiBukaOp.Year == tahun)
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opAkhir = dbOpAbt
+                                .Where(x => x.TahunBuku == tahun &&
+                                            (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                .Select(x => x.Nop)
+                                .Distinct();
+
+                            opTutup = opAwal
+                                .Union(opBaru)
+                                .Except(opAkhir)
+                                .Distinct();
+
+                            awal = opAwal.Count();
+                            baru = opBaru.Count();
+                            akhir = opAkhir.Count();
+                            tutup = opTutup.Count();
 
                             break;
-
                         case EnumFactory.EPajak.Reklame:
-
 
                             tutup = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
                             awal = dbOpReklame.Count(x => x.TahunBuku == tahun - 1 /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/);
                             baru = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
-                            akhir = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahu)n*/);
+                            akhir = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun)*/);
 
                             break;
-
                         case EnumFactory.EPajak.PBB:
 
                             tutup = 0;
@@ -971,28 +1116,23 @@ namespace MonPDReborn.Models.DataOP
                             akhir = context.DbMonPbbs.Where(x => x.TahunBuku == tahun).Select(x => x.Nop).Distinct().Count();
 
                             break;
-
                         case EnumFactory.EPajak.BPHTB:
                             awal = context.DbMonBphtbs.Count(x => x.Tahun == tahun - 1 && x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun - 1);
                             tutup = 0;
                             baru = context.DbMonBphtbs.Count(x => x.Tahun == tahun && x.TglBayar.HasValue && x.TglBayar.Value.Year == tahun);
                             akhir = awal + baru;
                             break;
-
                         case EnumFactory.EPajak.OpsenPkb:
 
                             akhir = dbOpOpsenPkb.Count(x => x.TahunPajakSspd == tahun);
                             awal = dbOpOpsenPkb.Count(x => x.TahunPajakSspd == tahun - 1);
                             break;
-
                         case EnumFactory.EPajak.OpsenBbnkb:
                             akhir = dbOpOpsenBbnkb.Count(x => x.TahunPajakSspd == tahun);
                             awal = dbOpOpsenBbnkb.Count(x => x.TahunPajakSspd == tahun - 1);
 
                             break;
-
                         default:
-
                             break;
                     }
 
@@ -1013,64 +1153,199 @@ namespace MonPDReborn.Models.DataOP
                         int akhirKategori = 0;
                         int tutupKategori = 0;
 
+                        IQueryable<string> opAwalKategori; 
+                        IQueryable<string> opBaruKategori; 
+                        IQueryable<string> opAkhirKategori;
+                        IQueryable<string> opTutupKategori;
+
                         switch ((EnumFactory.EPajak)pajak.Id)
                         {
                             case EnumFactory.EPajak.MakananMinuman:
+                                opAwalKategori = dbOpResto
+                                   .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 &&
+                                               (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN")
+                                   .Select(x => x.Nop)
+                                   .Distinct();
 
-                                tutupKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.PajakNama != "MAMIN");
-                                awalKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.PajakNama != "MAMIN");
-                                baruKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN");
-                                akhirKategori = dbOpResto.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
+                                opBaruKategori = dbOpResto
+                                    .Where(x => x.KategoriId == pajakKategori.Id &&  x.TahunBuku == tahun &&
+                                                x.TglMulaiBukaOp.Year == tahun && x.PajakNama != "MAMIN")
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opAkhirKategori = dbOpResto
+                                    .Where(x => x.KategoriId == pajakKategori.Id &&  x.TahunBuku == tahun &&
+                                                (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN")
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opTutupKategori = opAwalKategori
+                                    .Union(opBaruKategori)
+                                    .Except(opAkhirKategori)
+                                    .Distinct();
+
+                                awalKategori = opAwalKategori.Count();
+                                baruKategori = opBaruKategori.Count();
+                                akhirKategori = opAkhirKategori.Count();
+                                tutupKategori = opTutupKategori.Count();
 
                                 break;
-
                             case EnumFactory.EPajak.TenagaListrik:
 
-                                tutupKategori = dbOpListrik.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                                awalKategori = dbOpListrik.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                                baruKategori = dbOpListrik.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                                akhirKategori = dbOpListrik.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                                opAwalKategori = dbOpListrik
+                                   .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 &&
+                                               (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                                   .Select(x => x.Nop)
+                                   .Distinct();
+
+                                opBaruKategori = dbOpListrik
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                x.TglMulaiBukaOp.Year == tahun)
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opAkhirKategori = dbOpListrik
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opTutupKategori = opAwalKategori
+                                    .Union(opBaruKategori)
+                                    .Except(opAkhirKategori)
+                                    .Distinct();
+
+                                awalKategori = opAwalKategori.Count();
+                                baruKategori = opBaruKategori.Count();
+                                akhirKategori = opAkhirKategori.Count();
+                                tutupKategori = opTutupKategori.Count();
 
                                 break;
-
                             case EnumFactory.EPajak.JasaPerhotelan:
 
+                                opAwalKategori = dbOpHotel
+                                  .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 &&
+                                              (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                                  .Select(x => x.Nop)
+                                  .Distinct();
 
-                                tutupKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                                awalKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                                baruKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                                akhirKategori = dbOpHotel.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                                opBaruKategori = dbOpHotel
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                x.TglMulaiBukaOp.Year == tahun)
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opAkhirKategori = dbOpHotel
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opTutupKategori = opAwalKategori
+                                    .Union(opBaruKategori)
+                                    .Except(opAkhirKategori)
+                                    .Distinct();
+
+                                awalKategori = opAwalKategori.Count();
+                                baruKategori = opBaruKategori.Count();
+                                akhirKategori = opAkhirKategori.Count();
+                                tutupKategori = opTutupKategori.Count();
 
                                 break;
-
                             case EnumFactory.EPajak.JasaParkir:
 
-                                tutupKategori = dbOpParkir.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                                awalKategori = dbOpParkir.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                                baruKategori = dbOpParkir.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                                akhirKategori = dbOpParkir.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                                opAwalKategori = dbOpParkir
+                                  .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 &&
+                                              (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                                  .Select(x => x.Nop)
+                                  .Distinct();
+
+                                opBaruKategori = dbOpParkir
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                x.TglMulaiBukaOp.Year == tahun)
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opAkhirKategori = dbOpParkir
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opTutupKategori = opAwalKategori
+                                    .Union(opBaruKategori)
+                                    .Except(opAkhirKategori)
+                                    .Distinct();
+
+                                awalKategori = opAwalKategori.Count();
+                                baruKategori = opBaruKategori.Count();
+                                akhirKategori = opAkhirKategori.Count();
+                                tutupKategori = opTutupKategori.Count();
 
                                 break;
-
                             case EnumFactory.EPajak.JasaKesenianHiburan:
 
-                                tutupKategori = dbOpHiburan.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                                awalKategori = dbOpHiburan.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                                baruKategori = dbOpHiburan.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                                akhirKategori = dbOpHiburan.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
-                                break;
+                                opAwalKategori = dbOpHiburan
+                                 .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 &&
+                                             (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                                 .Select(x => x.Nop)
+                                 .Distinct();
 
+                                opBaruKategori = dbOpHiburan
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                x.TglMulaiBukaOp.Year == tahun)
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opAkhirKategori = dbOpHiburan
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opTutupKategori = opAwalKategori
+                                    .Union(opBaruKategori)
+                                    .Except(opAkhirKategori)
+                                    .Distinct();
+
+                                awalKategori = opAwalKategori.Count();
+                                baruKategori = opBaruKategori.Count();
+                                akhirKategori = opAkhirKategori.Count();
+                                tutupKategori = opTutupKategori.Count();
+
+                                break;
                             case EnumFactory.EPajak.AirTanah:
 
-                                tutupKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun);
-                                awalKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1));
-                                baruKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun);
-                                akhirKategori = dbOpAbt.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun));
+                                opAwalKategori = dbOpAbt
+                                 .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 &&
+                                             (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun - 1))
+                                 .Select(x => x.Nop)
+                                 .Distinct();
+
+                                opBaruKategori = dbOpAbt
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                x.TglMulaiBukaOp.Year == tahun)
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opAkhirKategori = dbOpAbt
+                                    .Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                (x.TglOpTutup == null || x.TglOpTutup.Value.Year > tahun))
+                                    .Select(x => x.Nop)
+                                    .Distinct();
+
+                                opTutupKategori = opAwalKategori
+                                    .Union(opBaruKategori)
+                                    .Except(opAkhirKategori)
+                                    .Distinct();
+
+                                awalKategori = opAwalKategori.Count();
+                                baruKategori = opBaruKategori.Count();
+                                akhirKategori = opAkhirKategori.Count();
+                                tutupKategori = opTutupKategori.Count();
 
                                 break;
-
                             case EnumFactory.EPajak.Reklame:
-
 
                                 tutupKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
                                 awalKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/);
@@ -1078,7 +1353,6 @@ namespace MonPDReborn.Models.DataOP
                                 akhirKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahu)n*/);
 
                                 break;
-
                             case EnumFactory.EPajak.PBB:
 
                                 tutupKategori = 0;
@@ -1087,24 +1361,20 @@ namespace MonPDReborn.Models.DataOP
                                 akhirKategori = dbOpPbb.Where(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun).Sum(q => q.Jml);
 
                                 break;
-
                             case EnumFactory.EPajak.BPHTB:
                                 akhirKategori = akhir;
                                 awalKategori = awal;
                                 break;
-
                             case EnumFactory.EPajak.OpsenPkb:
 
                                 akhirKategori = dbOpOpsenPkb.Count(x => x.TahunPajakSspd == tahun);
                                 awalKategori = dbOpOpsenPkb.Count(x => x.TahunPajakSspd == tahun - 1);
                                 break;
-
                             case EnumFactory.EPajak.OpsenBbnkb:
                                 akhirKategori = dbOpOpsenBbnkb.Count(x => x.TahunPajakSspd == tahun);
                                 awalKategori = dbOpOpsenBbnkb.Count(x => x.TahunPajakSspd == tahun - 1);
 
                                 break;
-
                             default:
 
                                 break;
@@ -1474,11 +1744,12 @@ namespace MonPDReborn.Models.DataOP
                     case EnumFactory.EPajak.MakananMinuman:
                         foreach (var kat in kategoriList)
                         {
-                            var OpRestoTutup = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
-                            var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kat.Id);
-                            var OpRestoBaru = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id);
-                            var OpRestoAkhir = context.DbOpRestos.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kat.Id);
+                            //var OpRestoTutup = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kat.Id);
+                            var OpRestoAwal = context.DbOpRestos.Count(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kat.Id && x.PajakNama != "MAMIN");
+                            var OpRestoBaru = context.DbOpRestos.Count(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kat.Id && x.PajakNama != "MAMIN");
+                            var OpRestoAkhir = context.DbOpRestos.Count(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kat.Id && x.PajakNama != "MAMIN");
 
+                            var OpRestoTutup = (OpRestoAwal + OpRestoBaru) - OpRestoAkhir;
 
                             ret.Add(new RekapDetail
                             {
@@ -1707,10 +1978,14 @@ namespace MonPDReborn.Models.DataOP
                 switch (JenisPajak)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        var OpRestoTutup = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpRestoAwal = context.DbOpRestos.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
-                        var OpRestoBaru = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpRestoAkhir = context.DbOpRestos.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
+                        //var OpRestoTutup = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
+                        var OpRestoAwal = context.DbOpRestos.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori && x.PajakNama != "MAMIN").ToList();
+                        var OpRestoBaru = context.DbOpRestos.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori && x.PajakNama != "MAMIN").ToList();
+                        var OpRestoAkhir = context.DbOpRestos.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori && x.PajakNama != "MAMIN").ToList();
+                        var OpRestoTutup = OpRestoAwal
+                            .UnionBy(OpRestoBaru, x => x.Nop)
+                            .ExceptBy(OpRestoAkhir.Select(a => a.Nop), x => x.Nop) 
+                            .ToList();
 
                         if (status == "JmlOpAwal")
                         {
@@ -1770,10 +2045,14 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        var OpListrikTutup = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
+                        //var OpListrikTutup = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpListrikAwal = context.DbOpListriks.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
                         var OpListrikBaru = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpListrikAkhir = context.DbOpListriks.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
+                        var OpListrikTutup = OpListrikAwal
+                            .UnionBy(OpListrikBaru, x => x.Nop)
+                            .ExceptBy(OpListrikAkhir.Select(a => a.Nop), x => x.Nop)
+                            .ToList();
 
                         if (status == "JmlOpAwal")
                         {
@@ -1833,10 +2112,14 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        var OpHotelTutup = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
+                        
                         var OpHotelAwal = context.DbOpHotels.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
                         var OpHotelBaru = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpHotelAkhir = context.DbOpHotels.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
+                        var OpHotelTutup = OpHotelAwal
+                            .UnionBy(OpHotelBaru, x => x.Nop)
+                            .ExceptBy(OpHotelAkhir.Select(a => a.Nop), x => x.Nop)
+                            .ToList();
 
                         if (status == "JmlOpAwal")
                         {
@@ -1896,10 +2179,13 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        var OpParkirTutup = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpParkirAwal = context.DbOpParkirs.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
                         var OpParkirBaru = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpParkirAkhir = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
+                        var OpParkirTutup = OpParkirAwal
+                            .UnionBy(OpParkirBaru, x => x.Nop)
+                            .ExceptBy(OpParkirAkhir.Select(a => a.Nop), x => x.Nop)
+                            .ToList();
 
                         if (status == "JmlOpAwal")
                         {
@@ -1959,11 +2245,13 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var OpHiburanTutup = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpHiburanAwal = context.DbOpHiburans.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
                         var OpHiburanBaru = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpHiburanAkhir = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
-
+                        var OpHiburanTutup = OpHiburanAwal
+                            .UnionBy(OpHiburanBaru, x => x.Nop)
+                            .ExceptBy(OpHiburanAkhir.Select(a => a.Nop), x => x.Nop)
+                            .ToList();
                         if (status == "JmlOpAwal")
                         {
                             ret = OpHiburanAwal.Select(x => new RekapMaster()
@@ -2022,11 +2310,13 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        var OpAbtTutup = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpAbtAwal = context.DbOpAbts.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
                         var OpAbtBaru = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
                         var OpAbtAkhir = context.DbOpAbts.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
-
+                        var OpAbtTutup = OpAbtAwal
+                            .UnionBy(OpAbtBaru, x => x.Nop)
+                            .ExceptBy(OpAbtAkhir.Select(a => a.Nop), x => x.Nop)
+                            .ToList();
                         if (status == "JmlOpAwal")
                         {
                             ret = OpAbtAwal.Select(x => new RekapMaster()
@@ -3426,10 +3716,10 @@ namespace MonPDReborn.Models.DataOP
 
                             var query = context.DbOpRestos.Where(x => x.KategoriId == kat.Id);
 
-                            tutup = query.Count(x =>
-                                x.TahunBuku == tahun &&
-                                x.TglOpTutup.HasValue &&
-                                x.TglOpTutup.Value.Year == tahun);
+                            //tutup = query.Count(x =>
+                            //    x.TahunBuku == tahun &&
+                            //    x.TglOpTutup.HasValue &&
+                            //    x.TglOpTutup.Value.Year == tahun);
 
                             awal = query.Count(x =>
                                 x.TahunBuku == tahun - 1 &&
@@ -3442,6 +3732,8 @@ namespace MonPDReborn.Models.DataOP
                             akhir = query.Count(x =>
                                 x.TahunBuku == tahun &&
                                 (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) && x.PajakNama != "MAMIN");
+
+                            tutup = (awal + baru) - akhir;
 
                             switch (i)
                             {
