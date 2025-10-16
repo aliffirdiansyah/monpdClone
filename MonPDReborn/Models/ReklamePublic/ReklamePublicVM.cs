@@ -119,16 +119,18 @@ namespace MonPDReborn.Models.ReklamePublic
 
         public class ReklameJalan
         {
-            
-            public string Jalan { get; set; }
-            public string Alamat { get; set; }
-            public string JenisReklame { get; set; }
-            public string IsiReklame { get; set; }
-            public string DetailLokasi { get; set; }
-            public string Kategori { get; set; }
-            public string Status { get; set; }
+            public string NoFormulir { get; set; } = null!;
+            public string NOR { get;set; } = null!;
+            public string Jalan { get; set; } = null!;
+            public string Alamat { get; set; } = null!;
+            public string JenisReklame { get; set; }  = null!;
+            public string IsiReklame { get; set; }  = null!;
+            public string DetailLokasi { get; set; }  = null!;
+            public string Kategori { get; set; }  = null!;
+            public string Status { get; set; }  = null!;
             public DateTime tglMulai { get; set; }
             public DateTime tglAkhir { get; set; }
+            public string Lampiran { get; set; }  = null!;
             public string TanggalTayang => string.Concat(tglMulai.ToString("dd MMM yyyy", new CultureInfo("id-ID")), " - ", tglAkhir.ToString("dd MMM yyyy", new CultureInfo("id-ID")));
             public decimal Jumlah { get; set; }
         }
