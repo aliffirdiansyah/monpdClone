@@ -45,7 +45,7 @@ public partial class DbMonPbbSummary
     public string? Katagori { get; set; }
 
     [Column("WILAYAH")]
-    [StringLength(54)]
+    [StringLength(45)]
     [Unicode(false)]
     public string? Wilayah { get; set; }
 

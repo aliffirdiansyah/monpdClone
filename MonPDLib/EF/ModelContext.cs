@@ -43,6 +43,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DataTpkHotel> DataTpkHotels { get; set; }
 
+    public virtual DbSet<DataTungPbb> DataTungPbbs { get; set; }
+
     public virtual DbSet<DatapbbSatupetum> DatapbbSatupeta { get; set; }
 
     public virtual DbSet<DbAkun> DbAkuns { get; set; }
@@ -184,6 +186,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbOpPbb> DbOpPbbs { get; set; }
 
     public virtual DbSet<DbOpReklame> DbOpReklames { get; set; }
+
+    public virtual DbSet<DbOpReklameProfil> DbOpReklameProfils { get; set; }
 
     public virtual DbSet<DbOpResto> DbOpRestos { get; set; }
 
@@ -394,6 +398,8 @@ public partial class ModelContext : DbContext
     public virtual DbSet<PT> PTs { get; set; }
 
     public virtual DbSet<PTb> PTbs { get; set; }
+
+    public virtual DbSet<Pbbsppttahunberjalan> Pbbsppttahunberjalans { get; set; }
 
     public virtual DbSet<PenHimbauanBayar> PenHimbauanBayars { get; set; }
 
@@ -619,6 +625,11 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DataReklamePotensi>(entity =>
         {
             entity.ToView("DATA_REKLAME_POTENSI");
+        });
+
+        modelBuilder.Entity<DataTungPbb>(entity =>
+        {
+            entity.Property(e => e.TglInsert).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<DatapbbSatupetum>(entity =>
@@ -1363,6 +1374,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.KelasJalan).IsFixedLength();
             entity.Property(e => e.KodeJenis).IsFixedLength();
             entity.Property(e => e.KodeObyek).IsFixedLength();
+        });
+
+        modelBuilder.Entity<DbOpReklameProfil>(entity =>
+        {
+            entity.ToView("DB_OP_REKLAME_PROFIL");
         });
 
         modelBuilder.Entity<DbOpResto>(entity =>
@@ -2335,6 +2351,17 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<PTb>(entity =>
         {
             entity.HasKey(e => e.Nop).HasName("P_TB_PK");
+        });
+
+        modelBuilder.Entity<Pbbsppttahunberjalan>(entity =>
+        {
+            entity.HasKey(e => new { e.SpptProp, e.SpptKota, e.SpptKec, e.SpptKel, e.SpptUrutblk, e.SpptUrutop, e.SpptTanda }).HasName("PBBSPPTTAHUNBERJALAN_PK");
+
+            entity.Property(e => e.KdCamat).IsFixedLength();
+            entity.Property(e => e.KdLurah).IsFixedLength();
+            entity.Property(e => e.TglInsert).HasDefaultValueSql("SYSDATE\n");
+            entity.Property(e => e.ThnAwalKlsBng).IsFixedLength();
+            entity.Property(e => e.ThnAwalKlsTanah).IsFixedLength();
         });
 
         modelBuilder.Entity<PenHimbauanBayar>(entity =>
