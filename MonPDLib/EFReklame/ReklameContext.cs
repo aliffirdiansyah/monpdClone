@@ -19,6 +19,8 @@ public partial class ReklameContext : DbContext
 
     public virtual DbSet<MJenisReklame> MJenisReklames { get; set; }
 
+    public virtual DbSet<MNilaiJambong> MNilaiJambongs { get; set; }
+
     public virtual DbSet<MNilaiSatuanStrategi> MNilaiSatuanStrategis { get; set; }
 
     public virtual DbSet<MNilaiStrategisDef> MNilaiStrategisDefs { get; set; }
@@ -63,6 +65,13 @@ public partial class ReklameContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
             entity.Property(e => e.IsBerjalan).HasDefaultValueSql("0");
             entity.Property(e => e.Kategori).HasDefaultValueSql("1 ");
+        });
+
+        modelBuilder.Entity<MNilaiJambong>(entity =>
+        {
+            entity.HasKey(e => new { e.IdJenisReklame, e.TglAwalBerlaku }).HasName("PK_NILAI_JAMBONG");
+
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
         });
 
         modelBuilder.Entity<MNilaiSatuanStrategi>(entity =>
