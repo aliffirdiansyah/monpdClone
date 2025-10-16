@@ -62,7 +62,7 @@
         })
         .Columns(columns =>
         {
-            columns.AddFor(m => m.NO_FORMULIR).Caption("Detail Lokasi");
+            columns.AddFor(m => m.NO_FORMULIR).Caption("No ");
             columns.AddFor(m => m.NO_OBYEK_REKLAME).Caption("NOR"); 
             columns.Add()
             .Caption("Lampiran")
@@ -74,8 +74,8 @@
 
 <div id="mobileCardView" class="d-md-none"></div>
 
-<script>
-        $(function () {
+@* <script>
+    $(function () {
         const data = @Html.Raw(Json.Serialize(Model.Data));
 
         renderMobileCards(data);
@@ -118,4 +118,4 @@
         container.append(cardList);
     }
 
-</script>
+</script> *@
