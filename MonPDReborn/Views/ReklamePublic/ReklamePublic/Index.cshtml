@@ -316,13 +316,13 @@
                 beforeSend: function () {
                     $("#loader").show();
 
-                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
                     $modal.find(".modal-title").text("");
                     $modal.find(".modal-body").html("");
                 },
                 success: function (response) {
                     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
 
                     if (response.Status === undefined) {
                         if (isMobile) {
@@ -341,7 +341,7 @@
                     }
                 },
                 error: function () {
-                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    const $modal = $("#staticBackdropLargeScrollableCenter");
                     $modal.find(".modal-title").html("Error");
                     $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
                     $modal.modal('show');
@@ -369,19 +369,6 @@
                 showTitle: true,
                 visible: true,
                 dragEnabled: false,
-                toolbarItems: [
-                    {
-                        widget: 'dxButton',
-                        location: 'after',
-                        options: {
-                            type: 'normal',
-                            stylingMode: 'outlined',
-                            onClick: function () {
-                                $("#" + popupId).dxPopup('instance').hide();
-                            }
-                        }
-                    }
-                ],
                 onHidden: function () {
                     $("#" + popupId).remove();
                 }
