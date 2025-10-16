@@ -15,6 +15,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
     public class ReklamePublicController : Controller
     {
         string URLView = string.Empty;
+        private readonly string _connectionString;
 
         private readonly ILogger<ReklamePublicController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
@@ -27,6 +28,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
         public ReklamePublicController(ILogger<ReklamePublicController> logger, IConfiguration configuration)
         {
             URLView = string.Concat("../ReklamePublic/", GetType().Name.Replace("Controller", ""), "/");
+            _connectionString = configuration.GetConnectionString("REKLAMEFILE") ?? "";
             _logger = logger;
             this.configuration = configuration;
         }
@@ -125,12 +127,11 @@ namespace MonPDReborn.Controllers.ReklamePublic
             }
         }
 
-
-        /*public IActionResult Show(string namaJalan)
+        public IActionResult Detail(string noFormulir)
         {
             try
             {
-                var model = new Models.ReklamePublic.ReklamePublicVM.Show(namaJalan);
+                var model = new Models.ReklamePublic.ReklamePublicVM.Detail(_connectionString, noFormulir);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -145,7 +146,7 @@ namespace MonPDReborn.Controllers.ReklamePublic
                 response.Message = "⚠ Server Error: Internal Server Error";
                 return Json(response);
             }
-        }*/
+        }
         [HttpGet]
         public async Task<object> GetNama(DataSourceLoadOptions loadOptions, string filter)
         {

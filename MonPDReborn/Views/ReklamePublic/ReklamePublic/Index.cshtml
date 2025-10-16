@@ -106,6 +106,9 @@
             </div>
         </div>
     </center>
+    <!-- Harus diletakkan di View -->
+    <div id="popupImageContainer"></div>
+
 
 </div>
 
@@ -208,6 +211,109 @@
                 $('#number1').text(data.number1);
                 $('#number2').text(data.number2);
                 $('#userAnswer').val('');
+            });
+        }
+
+        function lampiranCellTemplate(container, options) {
+            if (!options.data || !options.data.FOTO) {
+                container.append($("<span>").text("Tidak ada foto"));
+                return;
+            }
+
+            const base64Image = `data:image/jpeg;base64,${options.data.FOTO}`;
+
+            const thumbnail = $("<img>")
+                .attr("src", base64Image)
+                .css({
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "cover",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    boxShadow: "0 0 4px rgba(0,0,0,0.3)"
+                })
+                .on("click", function () {
+                    showImagePopup(base64Image);
+                });
+
+            container.append(thumbnail);
+        }
+
+        // ✅ Perbaikan fungsi popup
+        function showImagePopup(imageSrc) {
+            // Jika popup belum pernah dibuat
+            if (!$("#popupImageContainer").data("dxPopup")) {
+                $("#popupImageContainer").dxPopup({
+                    title: "Foto Lampiran",
+                    width: 700,
+                    height: 600,
+                    visible: false,
+                    showCloseButton: true,
+                    dragEnabled: true,
+                    shading: true,
+                    shadingColor: "rgba(0,0,0,0.7)",
+                    contentTemplate: function (contentElement) {
+                        $("<img>")
+                            .attr("id", "popupImageElement")
+                            .css({
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "contain",
+                                borderRadius: "8px"
+                            })
+                            .appendTo(contentElement);
+                    }
+                });
+            }
+
+            // ✅ Ambil instance popup setelah pasti terbuat
+            const popup = $("#popupImageContainer").dxPopup("instance");
+
+            // Update src gambar sebelum tampil
+            $("#popupImageElement").attr("src", imageSrc);
+
+            // Tampilkan popup
+            popup.show();
+        }
+
+
+        function onDetailClick(e) {
+            const noFormulir = (e.row.data.NoFormulir || '').split(' ')[0];
+
+            $.ajax({
+                url: '/ReklamePublic/Detail',
+                type: 'GET',
+                data: { noFormulir },
+                beforeSend: function () {
+                    $("#loader").show();
+
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
+                },
+                success: function (response) {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Detail Upaya – " + noFormulir);
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").html("Error");
+                    $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
             });
         }
     </script>

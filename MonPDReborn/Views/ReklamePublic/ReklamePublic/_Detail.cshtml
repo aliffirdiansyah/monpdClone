@@ -1,0 +1,121 @@
+﻿@model MonPDReborn.Models.ReklamePublic.ReklamePublicVM.Detail
+
+<style>
+    .card-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .card-item {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-header {
+        font-weight: bold;
+        font-size: 1rem;
+        color: #2b2b2b;
+    }
+
+    .card-body {
+        margin-top: 6px;
+        font-size: 0.9rem;
+        color: #444;
+    }
+
+    .card-image {
+        margin-top: 10px;
+        border-radius: 8px;
+        object-fit: cover;
+        width: 100%;
+        height: 180px;
+        box-shadow: 0 0 6px rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+</style>
+
+<div class="table-responsive">
+    @(Html.DevExtreme().DataGrid<MonPDReborn.Models.ReklamePublic.ReklamePublicVM.DetailReklame>()
+        .ID("detailreklameGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .ShowColumnHeaders(true)
+        .AllowColumnResizing(true)
+        .ShowRowLines(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(pager =>
+        {
+            pager.ShowPageSizeSelector(true);
+            pager.AllowedPageSizes(new[] { 10, 20, 50 });
+            pager.ShowInfo(true);
+        })
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.NO_FORMULIR).Caption("Detail Lokasi");
+            columns.AddFor(m => m.NO_OBYEK_REKLAME).Caption("NOR"); 
+            columns.Add()
+            .Caption("Lampiran")
+            .CellTemplate(new JS("lampiranCellTemplate"));
+        })
+        )
+    
+</div>
+
+<div id="mobileCardView" class="d-md-none"></div>
+
+<script>
+        $(function () {
+        const data = @Html.Raw(Json.Serialize(Model.Data));
+
+        renderMobileCards(data);
+    });
+
+    function renderMobileCards(data) {
+        const container = $("#mobileCardView");
+        container.empty();
+
+        const cardList = $("<div>").addClass("card-list");
+
+        data.forEach(item => {
+            const card = $("<div>").addClass("card-item");
+
+            const header = $("<div>").addClass("card-header")
+                .text(`Formulir: ${item.NO_FORMULIR}`);
+
+            const body = $("<div>").addClass("card-body").html(`
+                <div><b>No Obyek Reklame:</b> ${item.NO_OBYEK_REKLAME}</div>
+                <div><b>Status Verifikasi:</b> ${item.STATUS_VERIFIKASI ?? '-'}</div>
+                <div><b>Survey Ke:</b> ${item.SURVEY_KE ?? '-'}</div>
+            `);
+
+            if (item.FOTO) {
+                const img = $("<img>")
+                    .attr("src", `data:image/jpeg;base64,${item.FOTO}`)
+                    .addClass("card-image")
+                    .on("click", function () {
+                        showImagePopup(`data:image/jpeg;base64,${item.FOTO}`);
+                    });
+
+                card.append(header, body, img);
+            } else {
+                card.append(header, body);
+            }
+
+            cardList.append(card);
+        });
+
+        container.append(cardList);
+    }
+
+</script>

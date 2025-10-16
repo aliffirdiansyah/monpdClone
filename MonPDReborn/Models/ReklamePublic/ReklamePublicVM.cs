@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
+using Oracle.ManagedDataAccess.Client;
 using System.Globalization;
 using static MonPDReborn.Models.StrukPBJT.StrukPBJTVM;
 
@@ -40,6 +42,15 @@ namespace MonPDReborn.Models.ReklamePublic
             }
         }
 
+        public class Detail
+        {
+            public List<DetailReklame> Data { get; set; } = new List<DetailReklame>();
+            public Detail(string _connectionString, string noFormulir)
+            {
+                Data = Method.GetDetailReklame(_connectionString, noFormulir);
+            }
+        }
+    
         public class Method
         {
             public static List<ReklameJalan> GetReklameJalanList(string namaJalan, string detailLokasi)
@@ -84,6 +95,7 @@ namespace MonPDReborn.Models.ReklamePublic
                 var result = query
                     .Select(x => new ReklameJalan
                     {
+                        NoFormulir = x.NoFormulir ?? "-",
                         JenisReklame = x.FlagPermohonan ?? "-",
                         Kategori = x.NmJenis ?? "-",
                         Jumlah = x.Jumlah ?? 0,
@@ -99,9 +111,45 @@ namespace MonPDReborn.Models.ReklamePublic
 
                 return result;
             }
+            public static List<DetailReklame> GetDetailReklame(string _connectionString, string noFormulir)
+            {
+                var connection = new OracleConnection(_connectionString);
+                connection.Open();
+                string query = @"SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, SURVEY_KE, NO_OBYEK_REKLAME
+                    FROM (
+                        SELECT 
+                            NO_FORMULIR,
+                            FOTO,
+                            STATUS_VERIFIKASI,
+                            F.SURVEY_KE,
+                            F.NO_OBYEK_REKLAME,
+                            ROW_NUMBER() OVER (PARTITION BY NO_FORMULIR, NO_OBYEK_REKLAME ORDER BY F.SURVEY_KE DESC) AS RN
+                        FROM (
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME 
+                            FROM SURVEYAPP.FOTOSURVEY F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI 
+                            WHERE S.STATUS_VERIFIKASI = 1 AND NO_FORMULIR = :NO_FORMULIR
+                            UNION ALL  
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                            FROM SURVEYAPP.FOTOSURVEY_I F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI 
+                            WHERE S.STATUS_VERIFIKASI = 1 AND NO_FORMULIR = :NO_FORMULIR
+                            UNION ALL  
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                            FROM SURVEYAPP.FOTOSURVEY_K F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI 
+                            WHERE S.STATUS_VERIFIKASI = 1 AND NO_FORMULIR = :NO_FORMULIR
+                            UNION ALL  
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                            FROM SURVEYAPP.FOTOSURVEY_L F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI 
+                            WHERE S.STATUS_VERIFIKASI = 1 AND NO_FORMULIR = :NO_FORMULIR
+                        ) F
+                    )
+                    WHERE RN = 1";
 
-
-
+                return connection.Query<DetailReklame>(query, new { NO_FORMULIR = noFormulir}).ToList();
+            }
 
         }
 
@@ -134,5 +182,14 @@ namespace MonPDReborn.Models.ReklamePublic
             public string TanggalTayang => string.Concat(tglMulai.ToString("dd MMM yyyy", new CultureInfo("id-ID")), " - ", tglAkhir.ToString("dd MMM yyyy", new CultureInfo("id-ID")));
             public decimal Jumlah { get; set; }
         }
+        public class DetailReklame
+        {
+            public string NO_FORMULIR { get; set; }
+            public byte[] FOTO { get; set; }
+            public int STATUS_VERIFIKASI { get; set; }
+            public int SURVEY_KE { get; set; }
+            public string NO_OBYEK_REKLAME { get; set; }
+        }
+
     }
 }
