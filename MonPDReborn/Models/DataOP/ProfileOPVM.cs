@@ -10,7 +10,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Text.RegularExpressions;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DashboardUPTBVM.ViewModel;
@@ -769,6 +768,8 @@ namespace MonPDReborn.Models.DataOP
             }
             public static List<RekapOP> GetDataRekapOPList(int tahun)
             {
+                var startOfYear = new DateTime(tahun, 1, 1);
+                var sysDate = DateTime.Now;
                 var result = new List<RekapOP>();
                 var context = DBClass.GetContext();
 
@@ -846,13 +847,30 @@ namespace MonPDReborn.Models.DataOP
                         x.KategoriId
                     }).AsQueryable();
 
-                var dbOpReklame = context.DbOpReklames
+                //var dbOpReklame = context.DbOpReklames
+                //    .Where(x => x.TahunBuku >= tahun - 1)
+                //    .Select(x => new
+                //    {
+                //        x.TahunBuku,
+                //        x.TglAkhirBerlaku,
+                //        x.TglMulaiBerlaku,
+                //        x.FlagPermohonan,
+                //        x.NoFormulir,
+                //        x.KategoriId,
+                //    }).AsQueryable();
+
+                var dbOpReklameProfile = context.DbOpReklameProfils
                     .Where(x => x.TahunBuku >= tahun - 1)
-                    .Select(x => new
-                    {   
+                    .Select(x => new 
+                    {
                         x.TahunBuku,
-                        x.KategoriId
+                        x.TglAkhir,
+                        x.TglMulai,
+                        x.NoFormulir,
+                        x.Kategori,
+                        x.Status
                     }).AsQueryable();
+
 
                 //var dbOpPbb = context.DbMonPbbs
                 //    .Where(x => x.TahunBuku >= tahun - 1)
@@ -878,7 +896,7 @@ namespace MonPDReborn.Models.DataOP
                     .Select(x => new { x.Tahun, x.Seq })
                     .ToList();
 
-                var dbOpOpsenPkb = context.DbMonOpsenPkbs
+                 var dbOpOpsenPkb = context.DbMonOpsenPkbs
                     .Where(x => x.TahunPajakSspd >= tahun - 1)
                     .AsQueryable();
 
@@ -906,10 +924,10 @@ namespace MonPDReborn.Models.DataOP
                     int baru = 0;
                     int akhir = 0;
 
-                    IQueryable<string> opAwal;
-                    IQueryable<string> opBaru;
-                    IQueryable<string> opAkhir;
-                    IQueryable<string> opTutup;
+                    IEnumerable<string> opAwal;
+                    IEnumerable<string> opBaru;
+                    IEnumerable<string> opAkhir;
+                    IEnumerable<string> opTutup;
 
                     switch ((EnumFactory.EPajak)pajak.Id)
                     {
@@ -1102,10 +1120,43 @@ namespace MonPDReborn.Models.DataOP
                             break;
                         case EnumFactory.EPajak.Reklame:
 
-                            tutup = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
-                            awal = dbOpReklame.Count(x => x.TahunBuku == tahun - 1 /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/);
-                            baru = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
-                            akhir = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun)*/);
+                            //tutup = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
+                            //awal = dbOpReklame.Count(x => x.TahunBuku == tahun - 1 /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/);
+                            //baru = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
+                            //akhir = dbOpReklame.Count(x => x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun)*/);
+                            
+                            // 1.Reklame Awal
+                            opAwal = dbOpReklameProfile
+                                .Where( x => x.TahunBuku == tahun &&
+                                            x.Status == 1)
+                                .Select(x => x.NoFormulir)
+                                .Distinct();
+
+                            // 2️. Reklame Baru
+                            opBaru = dbOpReklameProfile
+                                .Where(x => x.TahunBuku == tahun &&
+                                            x.Status == 2)
+                                .Select(x => x.NoFormulir)
+                                .Distinct();
+
+                            // 3️⃣ Reklame Tutup
+                            opTutup = dbOpReklameProfile
+                                .Where( x => x.TahunBuku == tahun &&
+                                            x.Status == 0)
+                                .Select(x => x.NoFormulir)
+                                .Distinct();
+
+                            // 4️⃣ Reklame Akhir (Masih Aktif)
+                            opAkhir = dbOpReklameProfile
+                                .Where( x => x.TahunBuku == tahun &&
+                                            x.Status == 3)
+                                .Select(x => x.NoFormulir)
+                                .Distinct();
+
+                            awal = opAwal.Count();
+                            baru = opBaru.Count();
+                            tutup = opTutup.Count();
+                            akhir = opAkhir.Count();
 
                             break;
                         case EnumFactory.EPajak.PBB:
@@ -1153,10 +1204,10 @@ namespace MonPDReborn.Models.DataOP
                         int akhirKategori = 0;
                         int tutupKategori = 0;
 
-                        IQueryable<string> opAwalKategori; 
-                        IQueryable<string> opBaruKategori; 
-                        IQueryable<string> opAkhirKategori;
-                        IQueryable<string> opTutupKategori;
+                        IEnumerable<string> opAwalKategori; 
+                        IEnumerable<string> opBaruKategori; 
+                        IEnumerable<string> opAkhirKategori;
+                        IEnumerable<string> opTutupKategori;
 
                         switch ((EnumFactory.EPajak)pajak.Id)
                         {
@@ -1346,11 +1397,40 @@ namespace MonPDReborn.Models.DataOP
 
                                 break;
                             case EnumFactory.EPajak.Reklame:
+                                // --- FILTER BERDASARKAN JENIS REKLAME ---
 
-                                tutupKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/);
-                                awalKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun - 1 /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/);
-                                baruKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& x.TglMulaiBukaOp.Year == tahun*/);
-                                akhirKategori = dbOpReklame.Count(x => x.KategoriId == pajakKategori.Id && x.TahunBuku == tahun /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahu)n*/);
+                                // 1.Reklame Awal
+                                opAwalKategori = dbOpReklameProfile
+                                    .Where(x => x.Kategori == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                x.Status == 1)
+                                    .Select(x => x.NoFormulir)
+                                    .Distinct();
+
+                                // 2️. Reklame Baru
+                                opBaruKategori = dbOpReklameProfile
+                                    .Where(x => x.Kategori == pajakKategori.Id && x.TahunBuku == tahun &&
+                                                x.Status == 2)
+                                    .Select(x => x.NoFormulir)
+                                    .Distinct();
+
+                                // 3️⃣ Reklame Tutup
+                                opTutupKategori = dbOpReklameProfile
+                                    .Where(x => x.Kategori == pajakKategori.Id &&  x.TahunBuku == tahun &&
+                                                x.Status == 0)
+                                    .Select(x => x.NoFormulir)
+                                    .Distinct();
+
+                                // 4️⃣ Reklame Akhir (Masih Aktif)
+                                opAkhirKategori = dbOpReklameProfile
+                                    .Where(x => x.Kategori == pajakKategori.Id &&  x.TahunBuku == tahun &&
+                                                x.Status == 3)
+                                    .Select(x => x.NoFormulir)
+                                    .Distinct();
+
+                                awalKategori = opAwalKategori.Count();
+                                baruKategori = opBaruKategori.Count();
+                                tutupKategori = opTutupKategori.Count();
+                                akhirKategori = opAkhirKategori.Count();
 
                                 break;
                             case EnumFactory.EPajak.PBB:
@@ -1379,7 +1459,6 @@ namespace MonPDReborn.Models.DataOP
 
                                 break;
                         }
-
 
                         re.KategoriId = Convert.ToInt32(pajakKategori.Id);
                         re.KategoriNama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(pajakKategori.Nama.ToLower());
@@ -2375,17 +2454,101 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.Reklame:
-                        var OpReklameTutup = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori /*&& x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun*/).ToList();
-                        var OpReklameAwal = context.DbOpReklames.Where(x => x.TahunBuku == tahun - 1 && x.KategoriId == kategori /*- 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1)*/).ToList();
-                        var OpReklameBaru = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori /*&& x.TglMulaiBukaOp.Value.Year == tahun*/).ToList();
-                        var OpReklameAkhir = context.DbOpReklames.Where(x => x.TahunBuku == tahun && x.KategoriId == kategori /*&& (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun)*/).ToList();
+                        // Untuk Reklame Tahunbuku = tahun ( tidak perlu -1 )karena sudah dihandel dari tabel  DbOpReklameProfils
+
+                        //  STATUS 0 - TUTUP
+                        var OpReklameTutup =
+                             (from p in context.DbOpReklameProfils
+                              join r in context.DbOpReklames
+                                  on new { p.NoFormulir, Kategori = (int)p.Kategori } equals new { r.NoFormulir, Kategori = (int)r.KategoriId }
+                              where p.TahunBuku == tahun && p.Status == 0 && p.Kategori == kategori
+                              select new
+                              {
+                                  p.TahunBuku,
+                                  p.Kategori,
+                                  p.Status,
+                                  p.NoFormulir,
+                                  r.Nama,
+                                  r.Alamat,
+                                  r.KategoriNama,
+                                  r.TglMulaiBerlaku,
+                                  r.TglAkhirBerlaku,
+                                  r.FlagPermohonan
+                              })
+                             .Distinct()
+                             .ToList();
+
+
+                        //  STATUS 1 - AWAL
+                        var OpReklameAwal =
+                           (from p in context.DbOpReklameProfils
+                            join r in context.DbOpReklames
+                                on new { p.NoFormulir, Kategori = (int)p.Kategori } equals new { r.NoFormulir, Kategori = (int)r.KategoriId }
+                            where p.TahunBuku == tahun && p.Status == 1 && p.Kategori == kategori
+                            select new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.NoFormulir,
+                                r.Nama,
+                                r.Alamat,
+                                r.KategoriNama,
+                                r.TglMulaiBerlaku,
+                                r.TglAkhirBerlaku,
+                                r.FlagPermohonan
+                            })
+                             .Distinct()
+                             .ToList();
+
+                        //  STATUS 2 - BARU
+                        var OpReklameBaru =
+                           (from p in context.DbOpReklameProfils
+                            join r in context.DbOpReklames
+                                on new { p.NoFormulir, Kategori = (int)p.Kategori } equals new { r.NoFormulir, Kategori = (int)r.KategoriId }
+                            where p.TahunBuku == tahun && p.Status == 2 && p.Kategori == kategori
+                            select new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.NoFormulir,
+                                r.Nama,
+                                r.KategoriNama,
+                                r.Alamat,
+                                r.TglMulaiBerlaku,
+                                r.TglAkhirBerlaku,
+                            })
+                            .Distinct()
+                            .ToList();
+
+                        //  STATUS 3 - AKHIR
+                        var OpReklameAkhir =
+                            (from p in context.DbOpReklameProfils
+                             join r in context.DbOpReklames
+                                 on new { p.NoFormulir, Kategori = (int)p.Kategori } equals new { r.NoFormulir, Kategori = (int)r.KategoriId }
+                             where p.TahunBuku == tahun && p.Status == 3 && p.Kategori == kategori
+                             select new
+                             {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.NoFormulir,
+                                r.Nama,
+                                r.KategoriNama,
+                                r.Alamat,
+                                r.TglMulaiBerlaku,
+                                r.TglAkhirBerlaku,
+                            })
+                            .Distinct()
+                            .ToList();
 
                         if (status == "JmlOpAwal")
                         {
                             ret = OpReklameAwal.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
@@ -2399,7 +2562,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpReklameTutup.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
@@ -2413,7 +2576,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpReklameBaru.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
@@ -2427,7 +2590,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpReklameAkhir.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.NoFormulir,
                                 NamaOP = x.Nama,
@@ -2592,7 +2755,6 @@ namespace MonPDReborn.Models.DataOP
                         break;
                 }
                 ;
-
                 return ret;
             }
             #endregion
