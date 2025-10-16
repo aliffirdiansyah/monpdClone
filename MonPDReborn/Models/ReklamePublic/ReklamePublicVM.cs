@@ -56,7 +56,6 @@ namespace MonPDReborn.Models.ReklamePublic
                 }
             }
         }
-
         public class Method
         {
             public static List<ReklameJalan> GetReklameJalanList(string namaJalan, string detailLokasi)

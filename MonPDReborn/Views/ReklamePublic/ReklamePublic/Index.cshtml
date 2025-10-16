@@ -239,11 +239,9 @@
             container.append(thumbnail);
         }
 
-        // ✅ Perbaikan fungsi popup
         function showImagePopup(imageSrc) {
             const isMobile = window.innerWidth <= 768; // deteksi mobile berdasarkan lebar layar
 
-            // Jika popup belum pernah dibuat
             if (!$("#popupImageContainer").data("dxPopup")) {
                 $("#popupImageContainer").dxPopup({
                     title: "Foto Lampiran",
@@ -274,20 +272,16 @@
                 });
             }
 
-            // ✅ Ambil instance popup setelah pasti terbuat
             const popup = $("#popupImageContainer").dxPopup("instance");
 
-            // Update ukuran popup berdasarkan mode (mobile/desktop)
             popup.option({
                 width: isMobile ? "100%" : 700,
                 height: isMobile ? "100%" : 600,
                 fullScreen: isMobile
             });
 
-            // Update src gambar sebelum tampil
             $("#popupImageElement").attr("src", imageSrc);
 
-            // Tampilkan popup
             popup.show();
         }
 
@@ -296,11 +290,9 @@
         function onDetailClick(e) {
             let noFormulir = "";
 
-            // Cek apakah e ada dan punya row (klik dari DataGrid)
             if (e && e.row && e.row.data) {
                 noFormulir = (e.row.data.NoFormulir || '').split(' ')[0];
             } 
-            // Cek jika e string langsung (klik manual pakai onclick="onDetailClick('NO123')")
             else if (typeof e === "string") {
                 noFormulir = e.split(' ')[0];
             } 
