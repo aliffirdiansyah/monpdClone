@@ -25,4 +25,7 @@ public partial class DbOpReklameProfil
 
     [Column("STATUS", TypeName = "NUMBER")]
     public decimal? Status { get; set; }
+
+    [Column("TAHUN_BUKU", TypeName = "NUMBER")]
+    public decimal? TahunBuku { get; set; }
 }
