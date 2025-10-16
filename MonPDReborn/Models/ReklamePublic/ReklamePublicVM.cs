@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using ClosedXML;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using Oracle.ManagedDataAccess.Client;
@@ -48,9 +49,14 @@ namespace MonPDReborn.Models.ReklamePublic
             public Detail(string _connectionString, string noFormulir)
             {
                 Data = Method.GetDetailReklame(_connectionString, noFormulir);
+
+                if (Data.Count == 0)
+                {
+                    Data = Method.GetDetailNor(_connectionString, noFormulir);
+                }
             }
         }
-    
+
         public class Method
         {
             public static List<ReklameJalan> GetReklameJalanList(string namaJalan, string detailLokasi)
@@ -148,7 +154,46 @@ namespace MonPDReborn.Models.ReklamePublic
                     )
                     WHERE RN = 1";
 
-                return connection.Query<DetailReklame>(query, new { NO_FORMULIR = noFormulir}).ToList();
+                return connection.Query<DetailReklame>(query, new { NO_FORMULIR = noFormulir }).ToList();
+            }
+            public static List<DetailReklame> GetDetailNor(string _connectionString, string noFormulir)
+            {
+                var connection = new OracleConnection(_connectionString);
+                connection.Open();
+                string query = @"SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, SURVEY_KE, NO_OBYEK_REKLAME
+                FROM (
+                    SELECT 
+                        NO_FORMULIR,
+                        FOTO,
+                        STATUS_VERIFIKASI,
+                        F.SURVEY_KE,
+                        F.NO_OBYEK_REKLAME,
+                        ROW_NUMBER() OVER (PARTITION BY NO_FORMULIR, NO_OBYEK_REKLAME ORDER BY F.SURVEY_KE DESC) AS RN
+                    FROM (            
+                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME 
+                        FROM SURVEYAPP.FOTOSURVEY F 
+                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
+                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
+                        UNION ALL  
+                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                        FROM SURVEYAPP.FOTOSURVEY_I F 
+                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
+                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
+                        UNION ALL  
+                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                        FROM SURVEYAPP.FOTOSURVEY_K F 
+                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
+                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
+                        UNION ALL  
+                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                        FROM SURVEYAPP.FOTOSURVEY_L F 
+                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
+                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)                    
+                    ) F    
+                )
+                WHERE RN = 1";
+
+                return connection.Query<DetailReklame>(query, new { NO_FORMULIR = noFormulir }).ToList();
             }
 
         }
@@ -168,17 +213,17 @@ namespace MonPDReborn.Models.ReklamePublic
         public class ReklameJalan
         {
             public string NoFormulir { get; set; } = null!;
-            public string NOR { get;set; } = null!;
+            public string NOR { get; set; } = null!;
             public string Jalan { get; set; } = null!;
             public string Alamat { get; set; } = null!;
-            public string JenisReklame { get; set; }  = null!;
-            public string IsiReklame { get; set; }  = null!;
-            public string DetailLokasi { get; set; }  = null!;
-            public string Kategori { get; set; }  = null!;
-            public string Status { get; set; }  = null!;
+            public string JenisReklame { get; set; } = null!;
+            public string IsiReklame { get; set; } = null!;
+            public string DetailLokasi { get; set; } = null!;
+            public string Kategori { get; set; } = null!;
+            public string Status { get; set; } = null!;
             public DateTime tglMulai { get; set; }
             public DateTime tglAkhir { get; set; }
-            public string Lampiran { get; set; }  = null!;
+            public string Lampiran { get; set; } = null!;
             public string TanggalTayang => string.Concat(tglMulai.ToString("dd MMM yyyy", new CultureInfo("id-ID")), " - ", tglAkhir.ToString("dd MMM yyyy", new CultureInfo("id-ID")));
             public decimal Jumlah { get; set; }
         }

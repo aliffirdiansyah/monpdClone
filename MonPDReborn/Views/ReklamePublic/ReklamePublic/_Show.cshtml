@@ -116,6 +116,7 @@ else
                         .Columns(columns =>
                         {
                             columns.AddFor(m => m.Jalan).Caption("Jalan");
+                            columns.AddFor(m => m.NoFormulir).Caption("Jalan").Visible(false);
 
                             columns.AddFor(m => m.Alamat).Caption("Alamat").CssClass("WrappedColumnClass").Width(150);
 
@@ -184,11 +185,12 @@ else
     });
 </script>
 <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
         const itemsPerPage = 5;
         const $cards = $("#mobileCards .bg-white");
         const totalItems = $cards.length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const maxVisiblePages = 5;
 
         function showPage(page) {
             $cards.hide();
@@ -196,25 +198,46 @@ else
             const end = start + itemsPerPage;
             $cards.slice(start, end).show();
 
-            // Update active button
-            $("#mobilePaging button").removeClass("active");
-            $(`#mobilePaging button[data-page='${page}']`).addClass("active");
+            updatePagingButtons(page);
         }
 
-        // Generate paging buttons
-        if (totalPages > 1) {
-            let pagingHtml = '';
-            for (let i = 1; i <= totalPages; i++) {
-                pagingHtml += `<button class="btn btn-sm btn-outline-primary me-1" data-page="${i}">${i}</button>`;
-            }
-            $("#mobilePaging").html(pagingHtml);
+        function updatePagingButtons(currentPage) {
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = startPage + maxVisiblePages - 1;
 
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            let pagingHtml = '';
+
+            // Tombol Previous
+            if (currentPage > 1) {
+                pagingHtml += `<button class="btn btn-sm btn-outline-secondary me-1" data-page="${currentPage - 1}">&laquo;</button>`;
+            }
+
+            // Nomor halaman
+            for (let i = startPage; i <= endPage; i++) {
+                pagingHtml += `<button class="btn btn-sm btn-outline-primary me-1 ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+
+            // Tombol Next
+            if (currentPage < totalPages) {
+                pagingHtml += `<button class="btn btn-sm btn-outline-secondary ms-1" data-page="${currentPage + 1}">&raquo;</button>`;
+            }
+
+            $("#mobilePaging").html(pagingHtml);
+        }
+
+        if (totalPages > 1) {
             $("#mobilePaging").on("click", "button", function () {
                 const page = $(this).data("page");
                 showPage(page);
             });
 
-            showPage(1); // Show first page initially
+            showPage(1); // tampilkan halaman pertama
         }
     });
+
 </script>
