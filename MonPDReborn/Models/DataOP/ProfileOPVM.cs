@@ -2107,35 +2107,33 @@ namespace MonPDReborn.Models.DataOP
                 {
                     case EnumFactory.EPajak.MakananMinuman:
                         //  STATUS 0 - TUTUP
-                        var OpRestoTutup =
-                             (from p in context.DbOpProfils
-                              join r in context.DbOpRestos
-                                  on new { p.Nop, Kategori = (int)p.Kategori } equals new { r.Nop, Kategori = (int)r.KategoriId }
-                              where p.TahunBuku == tahun && p.Status == 0 && p.Kategori == kategori && p.PajakId == (int)JenisPajak
-                              select new
-                              {
-                                  p.TahunBuku,
-                                  p.Kategori,
-                                  p.Status,
-                                  p.Nop,
-                                  p.TglOpBuka,
-                                  p.TglOpTutup,
-                                  r.NamaOp,
-                                  r.AlamatOp,
-                                  r.KategoriNama,
-                                  r.WilayahPajak
-                              })
-                             .Distinct()
-                             .ToList();
-
+                        var OpRestoTutup = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 0
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
 
                         //  STATUS 1 - AWAL
-                        var OpRestoAwal =
-                           (from p in context.DbOpProfils
-                            join r in context.DbOpRestos
-                                on new { p.Nop, Kategori = (int)p.Kategori } equals new { r.Nop, Kategori = (int)r.KategoriId }
-                            where p.TahunBuku == tahun && p.Status == 1 && p.Kategori == kategori && p.PajakId == (int)JenisPajak
-                            select new
+                        var OpRestoAwal = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 1
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
                             {
                                 p.TahunBuku,
                                 p.Kategori,
@@ -2143,21 +2141,20 @@ namespace MonPDReborn.Models.DataOP
                                 p.Nop,
                                 p.TglOpBuka,
                                 p.TglOpTutup,
-                                r.NamaOp,
-                                r.AlamatOp,
-                                r.KategoriNama,
-                                r.WilayahPajak
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
                             })
-                             .Distinct()
-                             .ToList();
+                            .ToList();
 
                         //  STATUS 2 - BARU
-                        var OpRestoBaru =
-                           (from p in context.DbOpProfils
-                            join r in context.DbOpRestos
-                                on new { p.Nop, Kategori = (int)p.Kategori } equals new { r.Nop, Kategori = (int)r.KategoriId }
-                            where p.TahunBuku == tahun && p.Status == 2 && p.Kategori == kategori && p.PajakId == (int)JenisPajak
-                            select new
+                        var OpRestoBaru = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 2
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
                             {
                                 p.TahunBuku,
                                 p.Kategori,
@@ -2165,35 +2162,33 @@ namespace MonPDReborn.Models.DataOP
                                 p.Nop,
                                 p.TglOpBuka,
                                 p.TglOpTutup,
-                                r.NamaOp,
-                                r.AlamatOp,
-                                r.KategoriNama,
-                                r.WilayahPajak
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
                             })
-                             .Distinct()
-                             .ToList();
+                            .ToList();
 
                         //  STATUS 3 - AKHIR
-                        var OpRestoAkhir =
-                            (from p in context.DbOpProfils
-                             join r in context.DbOpRestos
-                                 on new { p.Nop, Kategori = (int)p.Kategori } equals new { r.Nop, Kategori = (int)r.KategoriId }
-                             where p.TahunBuku == tahun && p.Status == 3 && p.Kategori == kategori && p.PajakId == (int)JenisPajak
-                             select new
-                             {
-                                 p.TahunBuku,
-                                 p.Kategori,
-                                 p.Status,
-                                 p.Nop,
-                                 p.TglOpBuka,
-                                 p.TglOpTutup,
-                                 r.NamaOp,
-                                 r.AlamatOp,
-                                 r.KategoriNama,
-                                 r.WilayahPajak
-                             })
-                             .Distinct()
-                             .ToList();
+                        var OpRestoAkhir = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 3
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
 
                         if (status == "JmlOpAwal")
                         {
@@ -2253,13 +2248,88 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
-                        //var OpListrikTutup = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.TglOpTutup.HasValue && x.TglOpTutup.Value.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpListrikAwal = context.DbOpListriks.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
-                        var OpListrikBaru = context.DbOpListriks.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpListrikAkhir = context.DbOpListriks.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
-                        var OpListrikTutup = OpListrikAwal
-                            .UnionBy(OpListrikBaru, x => x.Nop)
-                            .ExceptBy(OpListrikAkhir.Select(a => a.Nop), x => x.Nop)
+                        //  STATUS 0 - TUTUP
+                        var OpListrikTutup = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 0
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 1 - AWAL
+                        var OpListrikAwal = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 1
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 2 - BARU
+                        var OpListrikBaru = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 2
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 3 - AKHIR
+                        var OpListrikAkhir = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 3
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
                             .ToList();
 
                         if (status == "JmlOpAwal")
@@ -2267,7 +2337,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpListrikAwal.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2281,7 +2351,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpListrikTutup.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2295,7 +2365,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpListrikBaru.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2309,7 +2379,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpListrikAkhir.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2320,13 +2390,89 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
-                        
-                        var OpHotelAwal = context.DbOpHotels.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
-                        var OpHotelBaru = context.DbOpHotels.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpHotelAkhir = context.DbOpHotels.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
-                        var OpHotelTutup = OpHotelAwal
-                            .UnionBy(OpHotelBaru, x => x.Nop)
-                            .ExceptBy(OpHotelAkhir.Select(a => a.Nop), x => x.Nop)
+
+                        //  STATUS 0 - TUTUP
+                        var OpHotelTutup = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 0
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 1 - AWAL
+                        var OpHotelAwal = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 1
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 2 - BARU
+                        var OpHotelBaru = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 2
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 3 - AKHIR
+                        var OpHotelAkhir = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 3
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
                             .ToList();
 
                         if (status == "JmlOpAwal")
@@ -2334,7 +2480,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpHotelAwal.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2348,7 +2494,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpHotelTutup.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2362,7 +2508,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpHotelBaru.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2376,7 +2522,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpHotelAkhir.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2387,12 +2533,88 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaParkir:
-                        var OpParkirAwal = context.DbOpParkirs.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
-                        var OpParkirBaru = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpParkirAkhir = context.DbOpParkirs.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
-                        var OpParkirTutup = OpParkirAwal
-                            .UnionBy(OpParkirBaru, x => x.Nop)
-                            .ExceptBy(OpParkirAkhir.Select(a => a.Nop), x => x.Nop)
+                        //  STATUS 0 - TUTUP
+                        var OpParkirTutup = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 0
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 1 - AWAL
+                        var OpParkirAwal = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 1
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 2 - BARU
+                        var OpParkirBaru = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 2
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 3 - AKHIR
+                        var OpParkirAkhir = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 3
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
                             .ToList();
 
                         if (status == "JmlOpAwal")
@@ -2400,7 +2622,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpParkirAwal.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2414,7 +2636,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpParkirTutup.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2428,7 +2650,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpParkirBaru.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2442,7 +2664,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpParkirAkhir.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2453,19 +2675,95 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
-                        var OpHiburanAwal = context.DbOpHiburans.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
-                        var OpHiburanBaru = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpHiburanAkhir = context.DbOpHiburans.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
-                        var OpHiburanTutup = OpHiburanAwal
-                            .UnionBy(OpHiburanBaru, x => x.Nop)
-                            .ExceptBy(OpHiburanAkhir.Select(a => a.Nop), x => x.Nop)
+                        //  STATUS 0 - TUTUP
+                        var OpHiburanTutup = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 0
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 1 - AWAL
+                        var OpHiburanAwal = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 1
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 2 - BARU
+                        var OpHiburanBaru = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 2
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 3 - AKHIR
+                        var OpHiburanAkhir = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 3
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
                             .ToList();
                         if (status == "JmlOpAwal")
                         {
                             ret = OpHiburanAwal.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2479,7 +2777,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpHiburanTutup.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2493,7 +2791,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpHiburanBaru.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2507,7 +2805,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpHiburanAkhir.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2518,19 +2816,95 @@ namespace MonPDReborn.Models.DataOP
                         }
                         break;
                     case EnumFactory.EPajak.AirTanah:
-                        var OpAbtAwal = context.DbOpAbts.Where(x => x.TahunBuku == tahun - 1 && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun - 1) && x.KategoriId == kategori).ToList();
-                        var OpAbtBaru = context.DbOpAbts.Where(x => x.TahunBuku == tahun && x.TglMulaiBukaOp.Year == tahun && x.KategoriId == kategori).ToList();
-                        var OpAbtAkhir = context.DbOpAbts.Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && x.KategoriId == kategori).ToList();
-                        var OpAbtTutup = OpAbtAwal
-                            .UnionBy(OpAbtBaru, x => x.Nop)
-                            .ExceptBy(OpAbtAkhir.Select(a => a.Nop), x => x.Nop)
+                        //  STATUS 0 - TUTUP
+                        var OpAbtTutup = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 0
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 1 - AWAL
+                        var OpAbtAwal = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 1
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 2 - BARU
+                        var OpAbtBaru = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 2
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
+                            .ToList();
+
+                        //  STATUS 3 - AKHIR
+                        var OpAbtAkhir = context.DbOpProfils
+                            .Where(p => p.TahunBuku == (decimal)tahun
+                                      && p.Status == 3
+                                      && p.PajakId == (decimal)JenisPajak
+                                      && p.Kategori == (decimal)kategori)
+                            .Select(p => new
+                            {
+                                p.TahunBuku,
+                                p.Kategori,
+                                p.Status,
+                                p.Nop,
+                                p.TglOpBuka,
+                                p.TglOpTutup,
+                                p.NamaOp,
+                                p.AlamatOp,
+                                p.KategoriNama,
+                                p.WilayahPajak
+                            })
                             .ToList();
                         if (status == "JmlOpAwal")
                         {
                             ret = OpAbtAwal.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2544,7 +2918,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpAbtTutup.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2558,7 +2932,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpAbtBaru.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
@@ -2572,7 +2946,7 @@ namespace MonPDReborn.Models.DataOP
                             ret = OpAbtAkhir.Select(x => new RekapMaster()
                             {
                                 EnumPajak = (int)JenisPajak,
-                                Kategori_Id = (int)x.KategoriId,
+                                Kategori_Id = (int)x.Kategori,
                                 Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
                                 NamaOP = x.NamaOp,
