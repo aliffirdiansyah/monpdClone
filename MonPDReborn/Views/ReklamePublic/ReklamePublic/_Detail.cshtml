@@ -54,41 +54,88 @@
 }
 else
 {
-    <div class="table-responsive">
-        @(Html.DevExtreme().DataGrid<MonPDReborn.Models.ReklamePublic.ReklamePublicVM.DetailReklame>()
-            .ID("detailreklameGrid")
-            .DataSource(Model.Data)
-            .ShowBorders(true)
-            .ShowColumnLines(true)
-            .ShowColumnHeaders(true)
-            .AllowColumnResizing(true)
-            .ShowRowLines(true)
-            .ColumnAutoWidth(true)
-            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-            .FilterRow(f => f.Visible(true))
-            .HeaderFilter(h => h.Visible(true))
-            .Sorting(s => s.Mode(GridSortingMode.Multiple))
-            .Paging(p => p.PageSize(10))
-            .Pager(pager =>
-            {
-                pager.ShowPageSizeSelector(true);
-                pager.AllowedPageSizes(new[] { 10, 20, 50 });
-                pager.ShowInfo(true);
-            })
-            .Columns(columns =>
-            {
-                columns.AddFor(m => m.NO_FORMULIR).Caption("No Formulir");
-                columns.AddFor(m => m.NO_OBYEK_REKLAME).Caption("NOR");
-                columns.Add()
-            .Caption("Lampiran")
-            .CellTemplate(new JS("lampiranCellTemplate"));
-            })
-            )
+    <div class="row">
+    @foreach (var item in Model.Data)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="d-flex align-items-center border rounded p-3 shadow-sm">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <div style="width:4px; height:20px; background-color:#007bff; margin-right:8px;"></div>
+                            <div>
+                                <small class="text-muted d-block">No. Formulir</small>
+                                <strong>@item.NO_FORMULIR</strong>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-2">
+                            <div style="width:4px; height:20px; background-color:#28a745; margin-right:8px;"></div>
+                            <div>
+                                <small class="text-muted d-block">NOR</small>
+                                <strong>@item.NO_OBYEK_REKLAME</strong>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div style="width:4px; height:20px; background-color:#9c27b0; margin-right:8px;"></div>
+                            <div>
+                                <small class="text-muted d-block">Survey Ke</small>
+                                <strong>@item.SURVEY_KE</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ms-3 text-center">
+                        @if (item.FOTO != null && item.FOTO.Length > 0)
+                        {
+                            var base64 = Convert.ToBase64String(item.FOTO);
+                            var imgSrc = $"data:image/jpeg;base64,{base64}";
+                            <img src="@imgSrc"
+                                 class="rounded bg-light shadow-sm"
+                                 style="width:100px; height:120px; object-fit:cover; cursor:pointer;"
+                                 onclick="showPhoto('@imgSrc')"
+                                 data-bs-toggle="tooltip"
+                                 data-bs-placement="top"
+                                 title="Klik untuk perbesar foto" />
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-center align-items-center bg-light rounded" style="width:70px; height:90px;">
+                                <i class="bi bi-person fs-3 text-secondary"></i>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- Modal untuk preview foto -->
+    <div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body p-0 text-center">
+                    <img id="photoPreview" src="" class="img-fluid rounded" />
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="mobileCardView" class="d-md-none"></div>
 }
-
+<script>
+    function showPhoto(src) {
+        const modalImg = document.getElementById('photoPreview');
+        modalImg.src = src;
+        const modal = new bootstrap.Modal(document.getElementById('photoModal'));
+        modal.show();
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
 @* <script>
     $(function () {
         const data = @Html.Raw(Json.Serialize(Model.Data));

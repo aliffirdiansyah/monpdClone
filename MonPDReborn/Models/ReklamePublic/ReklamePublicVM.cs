@@ -160,37 +160,37 @@ namespace MonPDReborn.Models.ReklamePublic
                 var connection = new OracleConnection(_connectionString);
                 connection.Open();
                 string query = @"SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, SURVEY_KE, NO_OBYEK_REKLAME
-                FROM (
-                    SELECT 
-                        NO_FORMULIR,
-                        FOTO,
-                        STATUS_VERIFIKASI,
-                        F.SURVEY_KE,
-                        F.NO_OBYEK_REKLAME,
-                        ROW_NUMBER() OVER (PARTITION BY NO_FORMULIR, NO_OBYEK_REKLAME ORDER BY F.SURVEY_KE DESC) AS RN
-                    FROM (            
-                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME 
-                        FROM SURVEYAPP.FOTOSURVEY F 
-                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
-                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
-                        UNION ALL  
-                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
-                        FROM SURVEYAPP.FOTOSURVEY_I F 
-                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
-                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
-                        UNION ALL  
-                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
-                        FROM SURVEYAPP.FOTOSURVEY_K F 
-                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
-                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
-                        UNION ALL  
-                        SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
-                        FROM SURVEYAPP.FOTOSURVEY_L F 
-                        LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_OBYEK_REKLAME = F.NO_OBYEK_REKLAME 
-                        WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)                    
-                    ) F    
-                )
-                WHERE RN = 1";
+                    FROM (
+                        SELECT 
+                            NO_FORMULIR,
+                            FOTO,
+                            STATUS_VERIFIKASI,
+                            F.SURVEY_KE,
+                            F.NO_OBYEK_REKLAME,
+                            ROW_NUMBER() OVER (PARTITION BY NO_OBYEK_REKLAME ORDER BY F.SURVEY_KE DESC) AS RN
+                        FROM (                
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME 
+                            FROM SURVEYAPP.FOTOSURVEY F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI
+                            WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
+                            UNION ALL  
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                            FROM SURVEYAPP.FOTOSURVEY_I F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI
+                            WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
+                            UNION ALL  
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                            FROM SURVEYAPP.FOTOSURVEY_K F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI
+                            WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)
+                            UNION ALL  
+                            SELECT NO_FORMULIR, FOTO, STATUS_VERIFIKASI, F.SURVEY_KE, F.NO_OBYEK_REKLAME  
+                            FROM SURVEYAPP.FOTOSURVEY_L F 
+                            LEFT JOIN SURVEYAPP.DATASURVEY S ON S.NO_TRANSAKSI = F.NO_TRANSAKSI
+                            WHERE S.STATUS_VERIFIKASI = 1 AND S.NO_OBYEK_REKLAME IN (SELECT NO_OBYEK_REKLAME_MOHON FROM SURVEYAPP.DATAPERMOHONAN WHERE NO_FORMULIR= :NO_FORMULIR)                            
+                        ) F    ORDER BY F.SURVEY_KE DESC   
+                    )
+                    WHERE RN = 1";
 
                 return connection.Query<DetailReklame>(query, new { NO_FORMULIR = noFormulir }).ToList();
             }
