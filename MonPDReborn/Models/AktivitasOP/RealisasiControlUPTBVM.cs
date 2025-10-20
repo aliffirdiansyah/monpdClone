@@ -80,7 +80,19 @@ namespace MonPDReborn.Models.AktivitasOP
                 var TanggalCutOff = DateTime.Now;
 
                 //Target [BIMOUW]
-                var dataTarget = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                var dataTarget = context.DbAkunTargetBulanUptbs
+                    .Where(x =>
+                        x.TahunBuku == TanggalCutOff.Year &&
+                        x.Uptb == wilayah &&
+                        x.PajakId != 7 &&
+                        x.PajakId != 12 &&
+                        x.PajakId != 20 &&
+                        x.PajakId != 21 &&
+                        (
+                            (x.PajakId == 2 && x.SubRincian == "2") || 
+                            (x.PajakId != 2)                           
+                        )
+                    )
                     .GroupBy(x => new
                     {
                         x.PajakId
@@ -91,7 +103,19 @@ namespace MonPDReborn.Models.AktivitasOP
                     }).ToList();
 
                 //TargetAKP [BIMOUW]
-                var dataTargetAkp = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan == TanggalCutOff.Month && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                var dataTargetAkp = context.DbAkunTargetBulanUptbs
+                    .Where(x => x.TahunBuku == TanggalCutOff.Year && 
+                                x.Bulan == TanggalCutOff.Month && 
+                                x.Uptb == wilayah && 
+                                x.PajakId != 7 && 
+                                x.PajakId != 12 && 
+                                x.PajakId != 20 && 
+                                x.PajakId != 21 &&
+                                (
+                                    (x.PajakId == 2 && x.SubRincian == "2") ||
+                                    (x.PajakId != 2)
+                                )
+                    )
                     .GroupBy(x => new
                     {
                         x.PajakId
@@ -102,7 +126,19 @@ namespace MonPDReborn.Models.AktivitasOP
                     }).ToList();
 
                 //TargetSdBulanIni [BIMOUW]
-                var dataTargetAkpSdBulanIni = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan <= TanggalCutOff.Month && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                var dataTargetAkpSdBulanIni = context.DbAkunTargetBulanUptbs
+                    .Where(x => x.TahunBuku == TanggalCutOff.Year && 
+                                x.Bulan <= TanggalCutOff.Month && 
+                                x.Uptb == wilayah && 
+                                x.PajakId != 7 && 
+                                x.PajakId != 12 && 
+                                x.PajakId != 20 && 
+                                x.PajakId != 21 &&
+                                (
+                                    (x.PajakId == 2 && x.SubRincian == "2") ||
+                                    (x.PajakId != 2)
+                                )
+                    )
                     .GroupBy(x => new
                     {
                         x.PajakId
@@ -123,7 +159,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year))
                     .Select(x => x.Nop).Distinct().ToList();
                 var nopListSemuaListrik = context.DbOpListriks
-                    .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year))
+                    .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year) && x.Sumber == 55)
                     .Select(x => x.Nop).Distinct().ToList();
                 var nopListSemuaParkir = context.DbOpParkirs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year))
@@ -262,7 +298,19 @@ namespace MonPDReborn.Models.AktivitasOP
                 var TanggalCutOff = new DateTime(tahun, DateTime.Now.Month, 1);
 
                 //Target [BIMOUW]
-                var dataTarget = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                var dataTarget = context.DbAkunTargetBulanUptbs
+                    .Where(x =>
+                        x.TahunBuku == TanggalCutOff.Year &&
+                        x.Uptb == wilayah &&
+                        x.PajakId != 7 &&
+                        x.PajakId != 12 &&
+                        x.PajakId != 20 &&
+                        x.PajakId != 21 &&
+                        (
+                            (x.PajakId == 2 && x.SubRincian == "2") ||
+                            (x.PajakId != 2)
+                        )
+                    )
                     .GroupBy(x => new
                     {
                         x.PajakId
@@ -273,7 +321,19 @@ namespace MonPDReborn.Models.AktivitasOP
                     }).ToList();
 
                 //TargetAKP [BIMOUW]
-                var dataTargetAkp = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan == TanggalCutOff.Month && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                var dataTargetAkp = context.DbAkunTargetBulanUptbs
+                    .Where(x => x.TahunBuku == TanggalCutOff.Year &&
+                                x.Bulan == TanggalCutOff.Month &&
+                                x.Uptb == wilayah &&
+                                x.PajakId != 7 &&
+                                x.PajakId != 12 &&
+                                x.PajakId != 20 &&
+                                x.PajakId != 21 &&
+                                (
+                                    (x.PajakId == 2 && x.SubRincian == "2") ||
+                                    (x.PajakId != 2)
+                                )
+                    )
                     .GroupBy(x => new
                     {
                         x.PajakId
@@ -284,7 +344,19 @@ namespace MonPDReborn.Models.AktivitasOP
                     }).ToList();
 
                 //TargetSdBulanIni [BIMOUW]
-                var dataTargetAkpSdBulanIni = context.DbAkunTargetBulanUptbs.Where(x => x.TahunBuku == TanggalCutOff.Year && x.Bulan <= TanggalCutOff.Month && x.Uptb == wilayah && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21)
+                var dataTargetAkpSdBulanIni = context.DbAkunTargetBulanUptbs
+                    .Where(x => x.TahunBuku == TanggalCutOff.Year &&
+                                x.Bulan <= TanggalCutOff.Month &&
+                                x.Uptb == wilayah &&
+                                x.PajakId != 7 &&
+                                x.PajakId != 12 &&
+                                x.PajakId != 20 &&
+                                x.PajakId != 21 &&
+                                (
+                                    (x.PajakId == 2 && x.SubRincian == "2") ||
+                                    (x.PajakId != 2)
+                                )
+                    )
                     .GroupBy(x => new
                     {
                         x.PajakId
@@ -305,7 +377,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year))
                     .Select(x => x.Nop).Distinct().ToList();
                 var nopListSemuaListrik = context.DbOpListriks
-                    .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year))
+                    .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year) && x.Sumber == 55)
                     .Select(x => x.Nop).Distinct().ToList();
                 var nopListSemuaParkir = context.DbOpParkirs
                     .Where(x => x.TahunBuku == TanggalCutOff.Year && x.WilayahPajak == ((int)wilayah).ToString() && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > TanggalCutOff.Year))

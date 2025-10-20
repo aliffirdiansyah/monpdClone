@@ -45,6 +45,9 @@ DBClass.Monpd = configValue ?? throw new ArgumentNullException("Connection strin
 var configValueReklame = builder.Configuration.GetSection("Conn:Reklame").Value;
 DBClass.Reklame = configValue ?? throw new ArgumentNullException("Connection string 'Reklame' is not configured.");
 
+var configValuePenyelia = builder.Configuration.GetSection("Conn:Penyelia").Value;
+DBClass.Penyelia = configValue ?? throw new ArgumentNullException("Connection string 'Penyelia' is not configured.");
+
 var supportedCultures = new[] { new CultureInfo("id-ID") };
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {

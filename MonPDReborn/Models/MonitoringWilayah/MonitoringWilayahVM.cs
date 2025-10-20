@@ -282,13 +282,13 @@ namespace MonPDReborn.Models.MonitoringWilayah
 
                             foreach (var uptb in uptbList)
                             {
-                                var nopList = context.DbOpListriks.Where(x => x.WilayahPajak == uptb)
+                                var nopList = context.DbOpListriks.Where(x => x.WilayahPajak == uptb && x.Sumber == 55)
                                     .Select(x => x.Nop)
                                     .Distinct()
                                     .ToList();
 
                                 var totalTarget = context.DbAkunTargetBulanUptbs
-                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb))
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.PajakId == (decimal)jenisPajak && x.Uptb == Convert.ToInt32(uptb) && x.SubRincian == "2")
                                     .Sum(x => x.Target);
                                 var totalRealisasi = context.DbMonPpjs
                                         .Where(x =>
