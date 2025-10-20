@@ -39,11 +39,15 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DataReklamePotensi> DataReklamePotensis { get; set; }
 
+    public virtual DbSet<DataTargetBulanan> DataTargetBulanans { get; set; }
+
     public virtual DbSet<DataTargetPajak> DataTargetPajaks { get; set; }
 
     public virtual DbSet<DataTpkHotel> DataTpkHotels { get; set; }
 
     public virtual DbSet<DataTungPbb> DataTungPbbs { get; set; }
+
+    public virtual DbSet<DataTungPbbback> DataTungPbbbacks { get; set; }
 
     public virtual DbSet<DatapbbSatupetum> DatapbbSatupeta { get; set; }
 
@@ -184,6 +188,20 @@ public partial class ModelContext : DbContext
     public virtual DbSet<DbOpParkir> DbOpParkirs { get; set; }
 
     public virtual DbSet<DbOpPbb> DbOpPbbs { get; set; }
+
+    public virtual DbSet<DbOpProfil> DbOpProfils { get; set; }
+
+    public virtual DbSet<DbOpProfilAbt> DbOpProfilAbts { get; set; }
+
+    public virtual DbSet<DbOpProfilHiburan> DbOpProfilHiburans { get; set; }
+
+    public virtual DbSet<DbOpProfilHotel> DbOpProfilHotels { get; set; }
+
+    public virtual DbSet<DbOpProfilListrik> DbOpProfilListriks { get; set; }
+
+    public virtual DbSet<DbOpProfilParkir> DbOpProfilParkirs { get; set; }
+
+    public virtual DbSet<DbOpProfilResto> DbOpProfilRestos { get; set; }
 
     public virtual DbSet<DbOpReklame> DbOpReklames { get; set; }
 
@@ -399,7 +417,13 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<PTb> PTbs { get; set; }
 
+    public virtual DbSet<PbbrealisasiBerjalan> PbbrealisasiBerjalans { get; set; }
+
+    public virtual DbSet<PbbrealisasiBerjalanback> PbbrealisasiBerjalanbacks { get; set; }
+
     public virtual DbSet<Pbbsppttahunberjalan> Pbbsppttahunberjalans { get; set; }
+
+    public virtual DbSet<Pbbsppttahunberjalanback> Pbbsppttahunberjalanbacks { get; set; }
 
     public virtual DbSet<PenHimbauanBayar> PenHimbauanBayars { get; set; }
 
@@ -545,9 +569,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -629,6 +653,15 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DataTungPbb>(entity =>
         {
+            entity.HasKey(e => new { e.SpptProp, e.SpptKota, e.SpptKec, e.SpptKel, e.SpptUrutblk, e.SpptUrutop, e.SpptTanda, e.TahunPbb }).HasName("DATA_TUNG_PBB_PK");
+
+            entity.Property(e => e.TglInsert).HasDefaultValueSql("SYSDATE");
+        });
+
+        modelBuilder.Entity<DataTungPbbback>(entity =>
+        {
+            entity.HasKey(e => new { e.SpptProp, e.SpptKota, e.SpptKec, e.SpptKel, e.SpptUrutblk, e.SpptUrutop, e.SpptTanda, e.TahunPbb }).HasName("DATA_TUNG_PBBBACK_PK");
+
             entity.Property(e => e.TglInsert).HasDefaultValueSql("SYSDATE");
         });
 
@@ -1365,6 +1398,41 @@ public partial class ModelContext : DbContext
 
             entity.Property(e => e.InsDate).HasDefaultValueSql("sysdate               ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
+        });
+
+        modelBuilder.Entity<DbOpProfil>(entity =>
+        {
+            entity.ToView("DB_OP_PROFIL");
+        });
+
+        modelBuilder.Entity<DbOpProfilAbt>(entity =>
+        {
+            entity.ToView("DB_OP_PROFIL_ABT");
+        });
+
+        modelBuilder.Entity<DbOpProfilHiburan>(entity =>
+        {
+            entity.ToView("DB_OP_PROFIL_HIBURAN");
+        });
+
+        modelBuilder.Entity<DbOpProfilHotel>(entity =>
+        {
+            entity.ToView("DB_OP_PROFIL_HOTEL");
+        });
+
+        modelBuilder.Entity<DbOpProfilListrik>(entity =>
+        {
+            entity.ToView("DB_OP_PROFIL_LISTRIK");
+        });
+
+        modelBuilder.Entity<DbOpProfilParkir>(entity =>
+        {
+            entity.ToView("DB_OP_PROFIL_PARKIR");
+        });
+
+        modelBuilder.Entity<DbOpProfilResto>(entity =>
+        {
+            entity.ToView("DB_OP_PROFIL_RESTO");
         });
 
         modelBuilder.Entity<DbOpReklame>(entity =>
@@ -2357,6 +2425,15 @@ public partial class ModelContext : DbContext
         {
             entity.HasKey(e => new { e.SpptProp, e.SpptKota, e.SpptKec, e.SpptKel, e.SpptUrutblk, e.SpptUrutop, e.SpptTanda }).HasName("PBBSPPTTAHUNBERJALAN_PK");
 
+            entity.Property(e => e.KdCamat).IsFixedLength();
+            entity.Property(e => e.KdLurah).IsFixedLength();
+            entity.Property(e => e.TglInsert).HasDefaultValueSql("SYSDATE\n");
+            entity.Property(e => e.ThnAwalKlsBng).IsFixedLength();
+            entity.Property(e => e.ThnAwalKlsTanah).IsFixedLength();
+        });
+
+        modelBuilder.Entity<Pbbsppttahunberjalanback>(entity =>
+        {
             entity.Property(e => e.KdCamat).IsFixedLength();
             entity.Property(e => e.KdLurah).IsFixedLength();
             entity.Property(e => e.TglInsert).HasDefaultValueSql("SYSDATE\n");

@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EF;
 
 [PrimaryKey("SpptProp", "SpptKota", "SpptKec", "SpptKel", "SpptUrutblk", "SpptUrutop", "SpptTanda", "TahunPbb")]
-[Table("DATA_TUNG_PBB")]
-public partial class DataTungPbb
+[Table("DATA_TUNG_PBBBACK")]
+public partial class DataTungPbbback
 {
     [Column("KETDATA")]
     [StringLength(30)]

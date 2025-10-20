@@ -6,47 +6,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EF;
 
-[PrimaryKey("SpptProp", "SpptKota", "SpptKec", "SpptKel", "SpptUrutblk", "SpptUrutop", "SpptTanda")]
-[Table("PBBSPPTTAHUNBERJALAN")]
-public partial class Pbbsppttahunberjalan
+[Keyless]
+[Table("PBBSPPTTAHUNBERJALANBACK")]
+public partial class Pbbsppttahunberjalanback
 {
-    [Key]
     [Column("SPPT_PROP")]
     [StringLength(2)]
     [Unicode(false)]
     public string SpptProp { get; set; } = null!;
 
-    [Key]
     [Column("SPPT_KOTA")]
     [StringLength(2)]
     [Unicode(false)]
     public string SpptKota { get; set; } = null!;
 
-    [Key]
     [Column("SPPT_KEC")]
     [StringLength(3)]
     [Unicode(false)]
     public string SpptKec { get; set; } = null!;
 
-    [Key]
     [Column("SPPT_KEL")]
     [StringLength(3)]
     [Unicode(false)]
     public string SpptKel { get; set; } = null!;
 
-    [Key]
     [Column("SPPT_URUTBLK")]
     [StringLength(3)]
     [Unicode(false)]
     public string SpptUrutblk { get; set; } = null!;
 
-    [Key]
     [Column("SPPT_URUTOP")]
     [StringLength(4)]
     [Unicode(false)]
     public string SpptUrutop { get; set; } = null!;
 
-    [Key]
     [Column("SPPT_TANDA")]
     [StringLength(1)]
     [Unicode(false)]
@@ -313,9 +306,4 @@ public partial class Pbbsppttahunberjalan
 
     [Column("TGL_INSERT", TypeName = "DATE")]
     public DateTime? TglInsert { get; set; }
-
-    [Column("DETIL_BANGUNAN")]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string? DetilBangunan { get; set; }
 }
