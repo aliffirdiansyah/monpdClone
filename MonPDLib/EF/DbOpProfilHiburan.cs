@@ -31,4 +31,24 @@ public partial class DbOpProfilHiburan
 
     [Column("PAJAK_ID", TypeName = "NUMBER")]
     public decimal? PajakId { get; set; }
+
+    [Column("NAMA_OP")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string? NamaOp { get; set; }
+
+    [Column("ALAMAT_OP")]
+    [StringLength(250)]
+    [Unicode(false)]
+    public string? AlamatOp { get; set; }
+
+    [Column("KATEGORI_NAMA")]
+    [StringLength(150)]
+    [Unicode(false)]
+    public string? KategoriNama { get; set; }
+
+    [Column("WILAYAH_PAJAK")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? WilayahPajak { get; set; }
 }
