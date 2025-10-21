@@ -29,16 +29,24 @@ public partial class MJenisReklame
     public int? IsBerjalan { get; set; }
 
     [Column("INS_DATE", TypeName = "DATE")]
-    public DateTime? InsDate { get; set; }
+    public DateTime InsDate { get; set; }
 
     [Column("INS_BY")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? InsBy { get; set; }
+    public string InsBy { get; set; } = null!;
 
     [Column("KATEGORI")]
     [Precision(10)]
     public int Kategori { get; set; }
+
+    [Column("MODE_UKUR")]
+    [Precision(2)]
+    public byte? ModeUkur { get; set; }
+
+    [Column("AKTIF")]
+    [Precision(10)]
+    public int Aktif { get; set; }
 
     [InverseProperty("IdJenisReklameNavigation")]
     public virtual ICollection<MNilaiSatuanStrategi> MNilaiSatuanStrategis { get; set; } = new List<MNilaiSatuanStrategi>();
@@ -54,4 +62,13 @@ public partial class MJenisReklame
 
     [InverseProperty("IdJenisReklameNavigation")]
     public virtual ICollection<MNsrTinggi> MNsrTinggis { get; set; } = new List<MNsrTinggi>();
+
+    [InverseProperty("IdJenisReklameNavigation")]
+    public virtual ICollection<TPermohonanIn> TPermohonanIns { get; set; } = new List<TPermohonanIn>();
+
+    [InverseProperty("IdJenisReklameNavigation")]
+    public virtual ICollection<TPermohonanInsNilai> TPermohonanInsNilais { get; set; } = new List<TPermohonanInsNilai>();
+
+    [InverseProperty("IdJenisReklameNavigation")]
+    public virtual ICollection<TPermohonanPrmn> TPermohonanPrmns { get; set; } = new List<TPermohonanPrmn>();
 }

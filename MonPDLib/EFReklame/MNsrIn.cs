@@ -19,10 +19,18 @@ public partial class MNsrIn
     [Precision(2)]
     public byte MasaPajak { get; set; }
 
+    [Column("IS_EVENT")]
+    [Precision(2)]
+    public byte IsEvent { get; set; }
+
     [Column("SATUAN")]
     [StringLength(10)]
     [Unicode(false)]
     public string? Satuan { get; set; }
+
+    [Column("SATUAN_NOMINAL")]
+    [Precision(10)]
+    public int? SatuanNominal { get; set; }
 
     [Column("NILAI_NJOP", TypeName = "NUMBER(18,2)")]
     public decimal? NilaiNjop { get; set; }
@@ -31,9 +39,6 @@ public partial class MNsrIn
     [StringLength(255)]
     [Unicode(false)]
     public string? Ket { get; set; }
-
-    [Column("INDIKATOR", TypeName = "NUMBER(10,2)")]
-    public decimal? Indikator { get; set; }
 
     [Key]
     [Column("TGL_AWAL_BERLAKU", TypeName = "DATE")]
@@ -53,4 +58,7 @@ public partial class MNsrIn
     [ForeignKey("IdJenisReklame")]
     [InverseProperty("MNsrIns")]
     public virtual MJenisReklame IdJenisReklameNavigation { get; set; } = null!;
+
+    [InverseProperty("MNsrIn")]
+    public virtual MNsrInsJambong? MNsrInsJambong { get; set; }
 }
