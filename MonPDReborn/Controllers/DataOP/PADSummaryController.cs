@@ -81,11 +81,11 @@ namespace MonPDReborn.Controllers.DataOP
             var data = Models.DataOP.PADSummaryVM.Methods.GetDataKategori(tahun, bulan, pajakId);
             return DataSourceLoader.Load(data, load_options);
         }
-        /*public IActionResult Kategori(int tahun, int bulan, int pajakId)
+        public IActionResult DetailOPbuka(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
         {
             try
             {
-                var model = new MonPDReborn.Models.DataOP.PADSummaryVM.Kategori(tahun, bulan, pajakId);
+                var model = new MonPDReborn.Models.DataOP.PADSummaryVM.DetailOPbuka(tahun, bulan, pajakId, kategoriId);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -100,6 +100,6 @@ namespace MonPDReborn.Controllers.DataOP
                 response.Message = "⚠️ Server Error: Internal Server Error";
                 return Json(response);
             }
-        }*/
+        }
     }
 }

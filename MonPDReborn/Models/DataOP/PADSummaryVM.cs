@@ -57,7 +57,14 @@ namespace MonPDReborn.Models.DataOP
                 Data = Methods.GetDataKategori(tahun, bulan, pajakId);
             }
         }
-
+        public class DetailOPbuka
+        {
+            public List<ViewModels.DetailOP> Data { get; set; } = new();
+            public DetailOPbuka(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
+            {
+                Data = Methods.GetDetailOPBuka(tahun, bulan, pajakId, kategoriId);
+            }
+        }
         public class Detail
         {
             public Detail()
@@ -100,7 +107,17 @@ namespace MonPDReborn.Models.DataOP
                 public int Silang { get; set; }
                 public int Penutupan { get; set; }
             }
+            public class DetailOP
+            {
+                public string Nop { get; set; } = null!;
+                public string FormattedNOP => Utility.GetFormattedNOP(NOP);
+                public string NamaOP { get; set; } = null!;
+                public string Alamat { get; set; } = null!;
+                public decimal? SudahBayar { get; set; }
+                public DateTime TglBayar { get; set; }
+            }
         }
+        
         private static PenyeliaContext _context = DBClass.GetPenyeliaContext();
         public class Methods
         {
@@ -132,7 +149,7 @@ namespace MonPDReborn.Models.DataOP
                             SudahBayar = g.Where(x => x.NominalPokokBayar.HasValue && x.NominalPokokBayar.Value > 0 && x.TglBayarPokok.Value.Month == bulan)
                                             .Select(x => x.Nop)
                                              .Distinct()
-                                             .Count(), 
+                                             .Count(),
                             NominalBayar = g.Sum(x => (decimal?)x.NominalPokokBayar) ?? 0,
                         })
                         .AsEnumerable()
@@ -153,7 +170,7 @@ namespace MonPDReborn.Models.DataOP
                             SudahBayar = g.Where(x => x.TglBayarPokok.Value.Month == bulan && x.NominalPokokBayar > 0)
                                              .Select(x => x.Nop)
                                              .Distinct()
-                                             .Count(), 
+                                             .Count(),
                             NominalBayar = g.Sum(x => (decimal?)x.NominalPokokBayar) ?? 0,
                         })
                         .AsEnumerable()
@@ -174,7 +191,7 @@ namespace MonPDReborn.Models.DataOP
                             SudahBayar = g.Where(x => x.NominalPokokBayar.HasValue && x.NominalPokokBayar.Value > 0 && x.TglBayarPokok.Value.Month == bulan)
                                             .Select(x => x.Nop)
                                              .Distinct()
-                                             .Count(), 
+                                             .Count(),
                             NominalBayar = g.Sum(x => (decimal?)x.NominalPokokBayar) ?? 0,
                         })
                         .AsEnumerable()
@@ -195,7 +212,7 @@ namespace MonPDReborn.Models.DataOP
                             SudahBayar = g.Where(x => x.NominalPokokBayar.HasValue && x.NominalPokokBayar.Value > 0 && x.TglBayarPokok.Value.Month == bulan)
                                             .Select(x => x.Nop)
                                             .Distinct()
-                                            .Count(),   
+                                            .Count(),
                             NominalBayar = g.Sum(x => (decimal?)x.NominalPokokBayar) ?? 0,
                         })
                         .AsEnumerable()
@@ -216,7 +233,7 @@ namespace MonPDReborn.Models.DataOP
                             SudahBayar = g.Where(x => x.NominalPokokBayar.HasValue && x.NominalPokokBayar.Value > 0 && x.TglBayarPokok.Value.Month == bulan)
                                             .Select(x => x.Nop)
                                             .Distinct()
-                                            .Count(), 
+                                            .Count(),
                             NominalBayar = g.Sum(x => (decimal?)x.NominalPokokBayar) ?? 0,
                         })
                         .AsEnumerable()
@@ -237,7 +254,7 @@ namespace MonPDReborn.Models.DataOP
                             SudahBayar = g.Where(x => x.NominalPokokBayar.HasValue && x.NominalPokokBayar.Value > 0 && x.TglBayarPokok.Value.Month == bulan)
                                             .Select(x => x.Nop)
                                             .Distinct()
-                                            .Count(), 
+                                            .Count(),
                             NominalBayar = g.Sum(x => (decimal?)x.NominalPokokBayar) ?? 0,
                         })
                         .AsEnumerable()
@@ -313,7 +330,7 @@ namespace MonPDReborn.Models.DataOP
                 var ret = new List<ViewModels.PADKategori>();
 
                 var nopList = context.MObjekPajaks
-                    .Select(x => new { x.Nop, x.PajakId, x.KategoriPajak})
+                    .Select(x => new { x.Nop, x.PajakId, x.KategoriPajak })
                     .ToList();
 
                 var kategoriList = MonPDContext.MKategoriPajaks
@@ -428,9 +445,12 @@ namespace MonPDReborn.Models.DataOP
 
                             return new ViewModels.PADKategori
                             {
-                                PajakID = (int)n.PajakID,
+                                PajakID = (int)EnumFactory.EPajak.MakananMinuman,
                                 JenisPajak = n.JenisPajak,
-                                KategoriID = n.KategoriId,
+                                KategoriID = (int)MonPDContext.MKategoriPajaks
+                                    .Where(k => k.Id == n.KategoriId)
+                                    .Select(k => k.Id)
+                                    .FirstOrDefault(),
                                 Kategori = MonPDContext.MKategoriPajaks
                                     .Where(k => k.Id == n.KategoriId)
                                     .Select(k => k.Nama)
@@ -450,8 +470,8 @@ namespace MonPDReborn.Models.DataOP
                         .ToList();
 
                         var hasil = retData
-                            .Where(x => kategoriList.Any(k => k.Id == x.KategoriID)) 
-                            .OrderBy(x => kategoriList.FindIndex(k => k.Id == x.KategoriID)) 
+                            .Where(x => kategoriList.Any(k => k.Id == x.KategoriID))
+                            .OrderBy(x => kategoriList.FindIndex(k => k.Id == x.KategoriID))
                             .ToList();
 
                         ret.AddRange(hasil);
@@ -482,26 +502,26 @@ namespace MonPDReborn.Models.DataOP
                             .ToList();
 
                         var listrik = (from r in dbListrik
-                                     join o in opListrik on r.Nop equals o.Nop
-                                     join n in context.MObjekPajaks on r.Nop equals n.Nop
-                                     group new { r, o, n } by new
-                                     {
-                                         o.PajakId,
-                                         KategoriId = n.KategoriPajak,
-                                         Bulan = r.TglBayarPokok.Value.Month
-                                     } into g
-                                     select new
-                                     {
-                                         PajakId = g.Key.PajakId,
-                                         KategoriId = g.Key.KategoriId,
-                                         Bulan = g.Key.Bulan,
-                                         TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
-                                         JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
-                                             .Select(x => x.r.Nop)
-                                             .Distinct()
-                                             .Count()
+                                       join o in opListrik on r.Nop equals o.Nop
+                                       join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                       group new { r, o, n } by new
+                                       {
+                                           o.PajakId,
+                                           KategoriId = n.KategoriPajak,
+                                           Bulan = r.TglBayarPokok.Value.Month
+                                       } into g
+                                       select new
+                                       {
+                                           PajakId = g.Key.PajakId,
+                                           KategoriId = g.Key.KategoriId,
+                                           Bulan = g.Key.Bulan,
+                                           TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
+                                           JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
+                                               .Select(x => x.r.Nop)
+                                               .Distinct()
+                                               .Count()
 
-                                     })
+                                       })
                                     .ToList();
 
 
@@ -610,26 +630,26 @@ namespace MonPDReborn.Models.DataOP
                             .ToList();
 
                         var hotel = (from r in dbHotel
-                                       join o in opHotel on r.Nop equals o.Nop
-                                       join n in context.MObjekPajaks on r.Nop equals n.Nop
-                                       group new { r, o, n } by new
-                                       {
-                                           o.PajakId,
-                                           KategoriId = n.KategoriPajak,
-                                           Bulan = r.TglBayarPokok.Value.Month
-                                       } into g
-                                       select new
-                                       {
-                                           PajakId = g.Key.PajakId,
-                                           KategoriId = g.Key.KategoriId,
-                                           Bulan = g.Key.Bulan,
-                                           TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
-                                           JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
-                                               .Select(x => x.r.Nop)
-                                               .Distinct()
-                                               .Count()
+                                     join o in opHotel on r.Nop equals o.Nop
+                                     join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                     group new { r, o, n } by new
+                                     {
+                                         o.PajakId,
+                                         KategoriId = n.KategoriPajak,
+                                         Bulan = r.TglBayarPokok.Value.Month
+                                     } into g
+                                     select new
+                                     {
+                                         PajakId = g.Key.PajakId,
+                                         KategoriId = g.Key.KategoriId,
+                                         Bulan = g.Key.Bulan,
+                                         TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
+                                         JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
+                                             .Select(x => x.r.Nop)
+                                             .Distinct()
+                                             .Count()
 
-                                       })
+                                     })
                                     .ToList();
 
 
@@ -738,26 +758,26 @@ namespace MonPDReborn.Models.DataOP
                             .ToList();
 
                         var parkir = (from r in dbParkir
-                                       join o in opParkir on r.Nop equals o.Nop
-                                       join n in context.MObjekPajaks on r.Nop equals n.Nop
-                                       group new { r, o, n } by new
-                                       {
-                                           o.PajakId,
-                                           KategoriId = n.KategoriPajak,
-                                           Bulan = r.TglBayarPokok.Value.Month
-                                       } into g
-                                       select new
-                                       {
-                                           PajakId = g.Key.PajakId,
-                                           KategoriId = g.Key.KategoriId,
-                                           Bulan = g.Key.Bulan,
-                                           TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
-                                           JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
-                                               .Select(x => x.r.Nop)
-                                               .Distinct()
-                                               .Count()
+                                      join o in opParkir on r.Nop equals o.Nop
+                                      join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                      group new { r, o, n } by new
+                                      {
+                                          o.PajakId,
+                                          KategoriId = n.KategoriPajak,
+                                          Bulan = r.TglBayarPokok.Value.Month
+                                      } into g
+                                      select new
+                                      {
+                                          PajakId = g.Key.PajakId,
+                                          KategoriId = g.Key.KategoriId,
+                                          Bulan = g.Key.Bulan,
+                                          TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
+                                          JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
+                                              .Select(x => x.r.Nop)
+                                              .Distinct()
+                                              .Count()
 
-                                       })
+                                      })
                                     .ToList();
 
 
@@ -994,26 +1014,26 @@ namespace MonPDReborn.Models.DataOP
                             .ToList();
 
                         var abt = (from r in dbABT
-                                       join o in opABT on r.Nop equals o.Nop
-                                       join n in context.MObjekPajaks on r.Nop equals n.Nop
-                                       group new { r, o, n } by new
-                                       {
-                                           o.PajakId,
-                                           KategoriId = n.KategoriPajak,
-                                           Bulan = r.TglBayarPokok.Value.Month
-                                       } into g
-                                       select new
-                                       {
-                                           PajakId = g.Key.PajakId,
-                                           KategoriId = g.Key.KategoriId,
-                                           Bulan = g.Key.Bulan,
-                                           TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
-                                           JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
-                                               .Select(x => x.r.Nop)
-                                               .Distinct()
-                                               .Count()
+                                   join o in opABT on r.Nop equals o.Nop
+                                   join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                   group new { r, o, n } by new
+                                   {
+                                       o.PajakId,
+                                       KategoriId = n.KategoriPajak,
+                                       Bulan = r.TglBayarPokok.Value.Month
+                                   } into g
+                                   select new
+                                   {
+                                       PajakId = g.Key.PajakId,
+                                       KategoriId = g.Key.KategoriId,
+                                       Bulan = g.Key.Bulan,
+                                       TotalNominal = g.Sum(x => x.r.NominalPokokBayar),
+                                       JumlahOp = g.Where(x => x.r.TglBayarPokok.Value.Month == bulan && x.r.NominalPokokBayar > 0)
+                                           .Select(x => x.r.Nop)
+                                           .Distinct()
+                                           .Count()
 
-                                       })
+                                   })
                                     .ToList();
 
 
@@ -1101,12 +1121,121 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
             }
+            public static List<ViewModels.DetailOP> GetDetailOPBuka(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
+            {
+                var MonPDContext = DBClass.GetContext();
+                var context = _context;
+                var ret = new List<ViewModels.DetailOP>();
 
+                var nopList = context.MObjekPajaks
+                    .Where(x => x.KategoriPajak == kategoriId)
+                    .Select(x => new { x.Nop, x.PajakId, x.KategoriPajak })
+                    .ToList();
 
+                var kategoriList = MonPDContext.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)pajakId)
+                    .OrderBy(x => x.Urutan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
 
+                switch (pajakId)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        var dbRestos = MonPDContext.DbMonRestos
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun && x.PajakNama != "MAMIN" &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
 
+                        var opRestos = MonPDContext.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun && 
+                                        (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) && 
+                                        x.PajakNama != "MAMIN" && 
+                                        x.KategoriId == kategoriId &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.MakananMinuman
+                            })
+                            .ToList();
 
+                        // 1) Pastikan restos sudah benar dan ter-materialisasi
+                        var restosList = (from r in dbRestos
+                                          join o in opRestos on r.Nop equals o.Nop
+                                          join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                          where o.KategoriId == kategoriId
+                                            && r.TglBayarPokok.HasValue
+                                            && r.TglBayarPokok.Value.Month == bulan
+                                            && r.NominalPokokBayar > 0
+                                          select new
+                                          {
+                                              r.Nop,
+                                              n.NamaOp,
+                                              n.AlamatOp,
+                                              NominalPokokBayar = r.NominalPokokBayar,
+                                              r.TglBayarPokok
+                                          })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             Nop = g.Key.Nop,
+                                             NamaOp = g.Key.NamaOp,
+                                             AlamatOp = g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
 
+                        // 2) Debug: periksa counts sebelum projection
+                        var countRestos = restosList.Count; // breakpoint di sini
+
+                        // 3) Projection ke DTO (ViewModels.DetailOP)
+                        var detailList = restosList
+                            .Select(x => new ViewModels.DetailOP
+                            {
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        var countDetail = detailList.Count; // breakpoint di sini — harus == countRestos
+
+                        // 4) Assign ke ret (hindari menimpa variabel yang sama dengan list lama tanpa clear)
+                        ret = detailList;
+
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                }
+
+                return ret;
+            }
         }
     }
 }

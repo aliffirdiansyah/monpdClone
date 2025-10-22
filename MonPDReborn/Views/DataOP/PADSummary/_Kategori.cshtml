@@ -22,13 +22,22 @@
         .Columns(columns =>
         {
             columns.AddFor(m => m.Kategori).Caption("Kategori");
-            columns.AddFor(m => m.OPbuka).Caption("OP Buka").Format("#,##0");
-            columns.AddFor(m => m.OpBayar).Caption("OP Bayar").Format("#,##0");
-            columns.AddFor(m => m.SudahBayar).Caption("Sudah Bayar").Format("#,##0");
-            columns.AddFor(m => m.OpBlmBayar).Caption("OP Blm Bayar").Format("#,##0");
+            columns.AddFor(m => m.OPbuka).Caption("Total OP").Format("#,##0");
+            columns.Add()
+            .Caption("Sudah Bayar")
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub =>
+            {
+                sub.AddFor(m => m.OpBayar).Caption("OP").Format("#,##0").CellTemplate(new JS("opBayarCelltemplate"));
+                sub.AddFor(m => m.SudahBayar).Caption("Realisasi").Format("#,##0");
+            });
+                @* columns.AddFor(m => m.OpBayar).Caption("OP Bayar").Format("#,##0");
+            columns.AddFor(m => m.SudahBayar).Caption("Sudah Bayar").Format("#,##0"); *@
+            columns.AddFor(m => m.OpBlmBayar).Caption("OP Belum Bayar").Format("#,##0");
             columns.AddFor(m => m.Himbauan).Caption("Himbauan").Format("#,##0");
             columns.AddFor(m => m.Teguran).Caption("Teguran").Format("#,##0");
             columns.AddFor(m => m.Silang).Caption("Silang").Format("#,##0");
+            columns.AddFor(m => m.Penutupan).Caption("Penutupan").Format("#,##0");
         })
         .Summary(summary =>
         {
