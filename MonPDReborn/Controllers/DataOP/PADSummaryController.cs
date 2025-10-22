@@ -201,5 +201,25 @@ namespace MonPDReborn.Controllers.DataOP
                 return Json(response);
             }
         }
+        public IActionResult DetailBlmBayar(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
+        {
+            try
+            {
+                var model = new MonPDReborn.Models.DataOP.PADSummaryVM.DetailBlmBayar(tahun, bulan, pajakId, kategoriId);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
     }
 }

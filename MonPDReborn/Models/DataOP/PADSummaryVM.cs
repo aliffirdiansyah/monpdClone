@@ -105,6 +105,14 @@ namespace MonPDReborn.Models.DataOP
                 Data = Methods.GetDetailBayarAll(tahun, bulan, pajakId);
             }
         }
+        public class DetailBlmBayar
+        {
+            public List<ViewModels.OPBlmBayarKategori> Data { get; set; } = new();
+            public DetailBlmBayar(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
+            {
+                Data = Methods.GetBlmBayarKategori(tahun, bulan, pajakId, kategoriId);
+            }
+        }
 
         public class Detail
         {
@@ -200,6 +208,14 @@ namespace MonPDReborn.Models.DataOP
                 public string Alamat { get; set; } = null!;
                 public decimal? SudahBayar { get; set; }
                 public DateTime TglBayar { get; set; }
+            }
+            public class OPBlmBayarKategori
+            {
+                public string Nop { get; set; } = null!;
+                public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+                public string NamaOP { get; set; } = null!;
+                public string Alamat { get; set; } = null!;
+                public string Wilayah { get; set; } = null!;
             }
         }
         
@@ -1823,6 +1839,96 @@ namespace MonPDReborn.Models.DataOP
                             .ToList();
 
                         ret = detailList;
+
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                }
+
+                return ret;
+            }
+            public static List<ViewModels.OPBlmBayarKategori> GetBlmBayarKategori(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
+            {
+                var MonPDContext = DBClass.GetContext();
+                var context = _context;
+                var ret = new List<ViewModels.OPBlmBayarKategori>();
+
+                var nopList = context.MObjekPajaks
+                    .Where(x => x.KategoriPajak == kategoriId)
+                    .Select(x => new { x.Nop, x.PajakId, x.KategoriPajak })
+                    .ToList();
+
+                var kategoriList = MonPDContext.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)pajakId)
+                    .OrderBy(x => x.Urutan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                switch (pajakId)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        // 1) Ambil semua NOP yang sudah bayar
+                        var paidNops = MonPDContext.DbMonRestos
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.PajakNama != "MAMIN")
+                            .Select(x => x.Nop)
+                            .Distinct()
+                            .ToList();
+
+                        // 2) Ambil semua OP aktif (belum tutup)
+                        var opRestos = MonPDContext.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year >= tahun) &&
+                                        x.PajakNama != "MAMIN" &&
+                                        x.KategoriId == kategoriId)
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId
+                            })
+                            .ToList();
+
+                        // 3) Cari OP Belum Bayar
+                        var belumBayarList = (from o in opRestos
+                                              join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                              where !paidNops.Contains(o.Nop)
+                                              select new
+                                              {
+                                                  o.Nop,
+                                                  n.NamaOp,
+                                                  n.AlamatOp,
+                                                  n.WilayahPajak
+                                              })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        // 4) Map ke ViewModel
+                        var detailBelumBayar = belumBayarList
+                            .Select(x => new ViewModels.OPBlmBayarKategori
+                            {
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                Wilayah = x.WilayahPajak ?? "UPTB"
+                            })
+                            .ToList();
+
+                        ret = detailBelumBayar;
+
 
                         break;
                     case EnumFactory.EPajak.TenagaListrik:

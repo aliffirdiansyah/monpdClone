@@ -1,0 +1,29 @@
+﻿@using static MonPDReborn.Models.DataOP.PADSummaryVM.ViewModels
+@model MonPDReborn.Models.DataOP.PADSummaryVM.DetailBlmBayar
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<OPBlmBayarKategori>()
+        .ID("detailOPGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat OP");
+            columns.AddFor(m => m.Wilayah).Caption("Wilayah Pajak");
+        })
+        )
+</div>
