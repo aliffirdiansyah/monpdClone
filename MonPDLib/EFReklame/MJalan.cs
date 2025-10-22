@@ -33,12 +33,12 @@ public partial class MJalan
     public string? Ket { get; set; }
 
     [Column("INS_DATE", TypeName = "DATE")]
-    public DateTime? InsDate { get; set; }
+    public DateTime InsDate { get; set; }
 
     [Column("INS_BY")]
     [StringLength(100)]
     [Unicode(false)]
-    public string? InsBy { get; set; }
+    public string InsBy { get; set; } = null!;
 
     [Column("KORIDOR_JALAN")]
     [Precision(10)]
