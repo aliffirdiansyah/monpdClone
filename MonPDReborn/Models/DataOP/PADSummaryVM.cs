@@ -97,6 +97,14 @@ namespace MonPDReborn.Models.DataOP
                 Data = Methods.GetUpayaAll(tahun, bulan, pajakId, upaya);
             }
         }
+        public class DetailBayarAll
+        {
+            public List<ViewModels.DetailBayarAll> Data { get; set; } = new();
+            public DetailBayarAll(int tahun, int bulan, EnumFactory.EPajak pajakId)
+            {
+                Data = Methods.GetDetailBayarAll(tahun, bulan, pajakId);
+            }
+        }
 
         public class Detail
         {
@@ -183,6 +191,15 @@ namespace MonPDReborn.Models.DataOP
                 public string Alamat { get; set; } = null!;
                 public string Wilayah { get; set; } = null!;
                 public DateTime TglUpaya { get; set; }
+            }
+            public class DetailBayarAll
+            {
+                public string Nop { get; set; } = null!;
+                public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+                public string NamaOP { get; set; } = null!;
+                public string Alamat { get; set; } = null!;
+                public decimal? SudahBayar { get; set; }
+                public DateTime TglBayar { get; set; }
             }
         }
         
@@ -1722,6 +1739,103 @@ namespace MonPDReborn.Models.DataOP
                     })
                     .OrderBy(x => x.Nop)
                     .ToList();
+
+                return ret;
+            }
+            public static List<ViewModels.DetailBayarAll> GetDetailBayarAll(int tahun, int bulan, EnumFactory.EPajak pajakId)
+            {
+                var MonPDContext = DBClass.GetContext();
+                var context = _context;
+                var ret = new List<ViewModels.DetailBayarAll>();
+
+                var nopList = context.MObjekPajaks
+                    .Where(x => x.PajakId == (int)pajakId)
+                    .Select(x => new { x.Nop, x.PajakId })
+                    .ToList();
+
+                switch (pajakId)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        var dbRestos = MonPDContext.DbMonRestos
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun && x.PajakNama != "MAMIN" &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opRestos = MonPDContext.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.PajakNama != "MAMIN" &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.MakananMinuman
+                            })
+                            .ToList();
+
+                        // 1) Pastikan restos sudah benar dan ter-materialisasi
+                        var restosList = (from r in dbRestos
+                                          join o in opRestos on r.Nop equals o.Nop
+                                          join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                          where r.TglBayarPokok.HasValue
+                                            && r.TglBayarPokok.Value.Month == bulan
+                                            && r.NominalPokokBayar > 0
+                                          select new
+                                          {
+                                              r.Nop,
+                                              n.NamaOp,
+                                              n.AlamatOp,
+                                              NominalPokokBayar = r.NominalPokokBayar,
+                                              r.TglBayarPokok
+                                          })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             Nop = g.Key.Nop,
+                                             NamaOp = g.Key.NamaOp,
+                                             AlamatOp = g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var countRestos = restosList.Count;
+
+                        var detailList = restosList
+                            .Select(x => new ViewModels.DetailBayarAll
+                            {
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        ret = detailList;
+
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        break;
+                }
 
                 return ret;
             }

@@ -27,7 +27,7 @@
                 .Alignment(HorizontalAlignment.Center)
                 .Columns(sub =>
                 {
-                    sub.AddFor(m => m.OpBayar).Caption("OP").Format("#,##0");
+                    sub.AddFor(m => m.OpBayar).Caption("OP").Format("#,##0").CellTemplate(new JS("bayarallCelltemplate"));
                     sub.AddFor(m => m.SudahBayar).Caption("Realisasi").Format("#,##0");
                 });
             @* columns.AddFor(m => m.OpBayar).Caption("OP Bayar").Format("#,##0");
