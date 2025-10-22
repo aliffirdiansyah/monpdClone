@@ -34,10 +34,17 @@
                 @* columns.AddFor(m => m.OpBayar).Caption("OP Bayar").Format("#,##0");
             columns.AddFor(m => m.SudahBayar).Caption("Sudah Bayar").Format("#,##0"); *@
             columns.AddFor(m => m.OpBlmBayar).Caption("OP Belum Bayar").Format("#,##0").CellTemplate(new JS("blmBayarCelltemplate"));
-            columns.AddFor(m => m.Himbauan).Caption("Himbauan").Format("#,##0").DataField("Himbauan").CellTemplate(new JS("upayaCelltemplate"));
+            columns.Add().Caption("Upaya").Alignment(HorizontalAlignment.Center).Columns(sub =>
+            {
+                sub.AddFor(m => m.Himbauan).Caption("Himbauan").Format("#,##0").DataField("Himbauan").CellTemplate(new JS("upayaCelltemplate"));
+                sub.AddFor(m => m.Teguran).Caption("Teguran").Format("#,##0").DataField("Teguran").CellTemplate(new JS("upayaCelltemplate"));
+                sub.AddFor(m => m.Silang).Caption("Silang").Format("#,##0").DataField("Silang").CellTemplate(new JS("upayaCelltemplate"));
+                sub.AddFor(m => m.Penutupan).Caption("Penutupan").Format("#,##0").DataField("Penutupan").CellTemplate(new JS("upayaCelltemplate"));
+            });
+            @* columns.AddFor(m => m.Himbauan).Caption("Himbauan").Format("#,##0").DataField("Himbauan").CellTemplate(new JS("upayaCelltemplate"));
             columns.AddFor(m => m.Teguran).Caption("Teguran").Format("#,##0").DataField("Teguran").CellTemplate(new JS("upayaCelltemplate"));
             columns.AddFor(m => m.Silang).Caption("Silang").Format("#,##0").DataField("Silang").CellTemplate(new JS("upayaCelltemplate"));
-            columns.AddFor(m => m.Penutupan).Caption("Penutupan").Format("#,##0").DataField("Penutupan").CellTemplate(new JS("upayaCelltemplate"));
+            columns.AddFor(m => m.Penutupan).Caption("Penutupan").Format("#,##0").DataField("Penutupan").CellTemplate(new JS("upayaCelltemplate")); *@
         })
         .Summary(summary =>
         {
