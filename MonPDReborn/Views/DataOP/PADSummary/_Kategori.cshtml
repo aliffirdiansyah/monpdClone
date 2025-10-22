@@ -22,7 +22,7 @@
         .Columns(columns =>
         {
             columns.AddFor(m => m.Kategori).Caption("Kategori");
-            columns.AddFor(m => m.OPbuka).Caption("Total OP").Format("#,##0");
+            columns.AddFor(m => m.OPbuka).Caption("Total OP").Format("#,##0").CellTemplate(new JS("totalopkategoriCelltemplate"));
             columns.Add()
             .Caption("Sudah Bayar")
             .Alignment(HorizontalAlignment.Center)
