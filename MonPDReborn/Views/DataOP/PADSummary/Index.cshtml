@@ -249,6 +249,67 @@
         }
     </script>
     <script>
+        function totalopallCelltemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const pajakId = cellInfo.data.PajakID;
+
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    loadtotalOPAll(tahun, bulan, pajakId);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function loadtotalOPAll(tahun, bulan, pajakId) {
+
+            const $modal = $("#staticBackdropLargeScrollable");
+            $modal.find(".modal-title").text(`Detail PAD Summary`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+            $modal.modal("show");
+
+            $.ajax({
+                url: '/PADSummary/DetailOPAll',
+                type: 'GET',
+                data: {
+                    tahun: tahun,
+                    bulan: bulan,
+                    pajakId: pajakId,
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
+    </script>
+    <script>
         function getupayaFromColumn(columnName) {
             switch (columnName) {
                 case 'Himbauan': return 6;
@@ -308,6 +369,79 @@
                     bulan: bulan,
                     pajakId: pajakId,
                     kategoriId: kategoriId,
+                    upaya: upaya
+                },
+                success: function (response) {
+                    $modal.find(".modal-body").html(response);
+                },
+                error: function () {
+                    $modal.find(".modal-body").html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat detail data.
+                        </div>
+                    `);
+                }
+            });
+        }
+    </script>
+    <script>
+        function getupayaAllFromColumn(columnName) {
+            switch (columnName) {
+                case 'Himbauan': return 6;
+                case 'Teguran': return 7;
+                case 'Silang': return 8;
+                case 'Penutupan': return 9;
+                default: return 0; // fallback
+            }
+        }
+        function upayaAllCelltemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const pajakId = cellInfo.data.PajakID;
+            const namaKolom = cellInfo.column.dataField;
+            const upaya = getupayaAllFromColumn(namaKolom);
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    loadUpayaAll(tahun, bulan, pajakId, upaya);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+
+        function loadUpayaAll(tahun, bulan, pajakId, upaya) {
+
+            const $modal = $("#staticBackdropLargeScrollable");
+            $modal.find(".modal-title").text(`Detail PAD Summary`);
+            $modal.find(".modal-body").html(`
+                <div class="text-center my-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+            $modal.modal("show");
+
+            $.ajax({
+                url: '/PADSummary/DetailUpayaAll',
+                type: 'GET',
+                data: {
+                    tahun: tahun,
+                    bulan: bulan,
+                    pajakId: pajakId,
                     upaya: upaya
                 },
                 success: function (response) {

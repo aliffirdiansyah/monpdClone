@@ -81,6 +81,23 @@ namespace MonPDReborn.Models.DataOP
                 Data = Methods.GetOPTotalKategori(tahun, bulan, pajakId, kategoriId);
             }
         }
+        public class DetailOPAll
+        {
+            public List<ViewModels.TotalOPAll> Data { get; set; } = new();
+            public DetailOPAll(int tahun, int bulan, EnumFactory.EPajak pajakId)
+            {
+                Data = Methods.GetOPAll(tahun, bulan, pajakId);
+            }
+        }
+        public class DetailUpayaAll
+        {
+            public List<ViewModels.DetailUpayaAll> Data { get; set; } = new();
+            public DetailUpayaAll(int tahun, int bulan, EnumFactory.EPajak pajakId, int upaya)
+            {
+                Data = Methods.GetUpayaAll(tahun, bulan, pajakId, upaya);
+            }
+        }
+
         public class Detail
         {
             public Detail()
@@ -147,6 +164,24 @@ namespace MonPDReborn.Models.DataOP
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
                 public string Alamat { get; set; } = null!;
+                public string Wilayah { get; set; } = null!;
+                public DateTime TglUpaya { get; set; }
+            }
+            public class TotalOPAll
+            {
+                public string Nop { get; set; } = null!;
+                public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+                public string NamaOP { get; set; } = null!;
+                public string Alamat { get; set; } = null!;
+                public string Wilayah { get; set; } = null!;
+            }
+            public class DetailUpayaAll
+            {
+                public string Nop { get; set; } = null!;
+                public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+                public string NamaOP { get; set; } = null!;
+                public string Alamat { get; set; } = null!;
+                public string Wilayah { get; set; } = null!;
                 public DateTime TglUpaya { get; set; }
             }
         }
@@ -1619,6 +1654,7 @@ namespace MonPDReborn.Models.DataOP
                         Nop = x.Nop,
                         NamaOP = x.NopNavigation.NamaOp,
                         Alamat = x.NopNavigation.AlamatOp,
+                        Wilayah = "UPTB " + x.NopNavigation.WilayahPajak,
                         TglUpaya = x.TanggalAktifitas ?? DateTime.MinValue,
                     })
                     .OrderBy(x => x.Nop)
@@ -1639,6 +1675,52 @@ namespace MonPDReborn.Models.DataOP
                         Alamat = x.AlamatOp,
                         Wilayah = "UPTB " + x.WilayahPajak
                     })
+                    .ToList();
+
+                return ret;
+            }
+            public static List<ViewModels.TotalOPAll> GetOPAll(int tahun, int bulan, EnumFactory.EPajak pajakId)
+            {
+                var context = _context;
+                var ret = new List<ViewModels.TotalOPAll>();
+
+                ret = context.MObjekPajaks
+                    .Where(x => x.PajakId == (int)pajakId)
+                    .Select(x => new ViewModels.TotalOPAll
+                    {
+                        Nop = x.Nop,
+                        NamaOP = x.NamaOp,
+                        Alamat = x.AlamatOp,
+                        Wilayah = "UPTB " + x.WilayahPajak
+                    })
+                    .ToList();
+
+                return ret;
+            }
+            public static List<ViewModels.DetailUpayaAll> GetUpayaAll(int tahun, int bulan, EnumFactory.EPajak pajakId, int upaya)
+            {
+                var context = _context;
+                var ret = new List<ViewModels.DetailUpayaAll>();
+
+                ret = context.TAktifitasPegawais
+                    .Where(x => x.TanggalAktifitas.HasValue &&
+                                x.TanggalAktifitas.Value.Year == tahun &&
+                                x.TanggalAktifitas.Value.Month == bulan &&
+                                x.IdAktifitas == upaya &&
+                                context.MObjekPajaks
+                                    .Where(o => o.PajakId == (int)pajakId)
+                                    .Select(o => o.Nop)
+                                    .Contains(x.Nop))
+                    .Include(x => x.NopNavigation)
+                    .Select(x => new ViewModels.DetailUpayaAll
+                    {
+                        Nop = x.Nop,
+                        NamaOP = x.NopNavigation.NamaOp,
+                        Alamat = x.NopNavigation.AlamatOp,
+                        Wilayah = "UPTB " + x.NopNavigation.WilayahPajak,
+                        TglUpaya = x.TanggalAktifitas ?? DateTime.MinValue,
+                    })
+                    .OrderBy(x => x.Nop)
                     .ToList();
 
                 return ret;

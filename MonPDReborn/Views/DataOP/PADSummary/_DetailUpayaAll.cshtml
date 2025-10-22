@@ -1,10 +1,10 @@
 ﻿@using static MonPDReborn.Models.DataOP.PADSummaryVM.ViewModels
-@model MonPDReborn.Models.DataOP.PADSummaryVM.DetailUpaya
+@model MonPDReborn.Models.DataOP.PADSummaryVM.DetailUpayaAll
 
 <div class="table-responsive">
     @(
-        Html.DevExtreme().DataGrid<DetailUpaya>()
-        .ID("detailupayaOPGrid")
+        Html.DevExtreme().DataGrid<DetailUpayaAll>()
+        .ID("detailupayaOPAllGrid")
         .DataSource(Model.Data)
         .ShowBorders(true)
         .ShowColumnLines(true)
@@ -25,9 +25,8 @@
             columns.AddFor(m => m.Alamat).Caption("Alamat OP");
             columns.AddFor(m => m.Alamat).Caption("Wilayah Pajak");
             columns.AddFor(m => m.TglUpaya).Caption("Tgl Upaya");
-            @* columns.AddFor(m => m.SudahBayar).Caption("Realisasi").Format("#,##0"); *@
         })
-        @* .Summary(summary =>
+    @* .Summary(summary =>
         {
             summary.TotalItems(items =>
             {
