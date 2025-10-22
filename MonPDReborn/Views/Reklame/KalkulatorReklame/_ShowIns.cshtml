@@ -1,0 +1,345 @@
+﻿@using MonPDLib.General
+@model MonPDReborn.Models.Reklame.KalkulatorReklameVM.ShowIns
+
+@{
+    Layout = null;
+}
+
+<style>
+    body {
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 4px 8px;
+    }
+
+    .judul {
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .section-title {
+        font-weight: bold;
+        border-bottom: 2px solid black;
+        margin-top: 1rem;
+    }
+
+    .right {
+        text-align: right;
+    }
+</style>
+
+<div class="container p-4">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h5 class="judul">NOTA PERHITUNGAN NILAI SEWA REKLAME</h5>
+        <p>
+            Berdasarkan Peraturan Walikota Surabaya No. 70 & 71 Tahun 2010
+        </p>
+    </div>
+
+    <!-- DATA OBYEK PAJAK -->
+    <div class="section-title text-center">DATA OBJEK PAJAK</div>
+    <table class="table table-bordered border-dark mb-3">
+        <tbody>
+            <!-- Jenis Reklame -->
+            <tr>
+                <td width="25%">Jenis Reklame</td>
+                <td class="left">@Model.Output.JenisReklame.GetDescription()</td>
+                <td>Jumlah</td>
+                <td>@Model.Output.JumlahSatuan.ToString("N0")</td>
+            </tr>
+
+            @switch (Model.KalkullatorReklameRow.ModeUkur)
+            {
+                // ================================================================
+                // 🟩 MODE LUAS / INSIDENTIL
+                // ================================================================
+                case EnumFactory.EModeUkur.Luas:
+                case EnumFactory.EModeUkur.Satuan:
+                    <tr>
+                        <td>Panjang</td>
+                        <td>@Model.Output.Panjang.ToString("N2") m</td>
+                        <td>Lebar</td>
+                        <td>@Model.Output.Lebar.ToString("N2") m</td>
+                    </tr>
+                    <tr>
+                        <td>Luas</td>
+                        <td>@Model.Output.Panjang.ToString("N2") × @Model.Output.Lebar.ToString("N2") = @Model.KalkullatorReklameRow.Luas.ToString("N2") m²</td>
+                        <td>Letak Reklame</td>
+                        <td>@Model.Output.LetakReklame.GetDescription()</td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal Berlaku</td>
+                        <td>@Model.Output.TglMulaiBerlaku.ToString("dd MMMM yyyy") s.d. @Model.Output.TglSelesaiBerlaku.ToString("dd MMMM yyyy")</td>
+                        <td>Lama Penyelenggaraan</td>
+                        <td>@Model.Output.LamaPenyelenggaraan hari</td>
+                    </tr>
+                    <tr>
+                        <td>Jenis Produk</td>
+                        <td>@Model.Output.JenisProduk.GetDescription()</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    break;
+
+                // ================================================================
+                // 🟨 MODE PERULANGAN (misal LED / Digital)
+                // ================================================================
+                case EnumFactory.EModeUkur.Perulangan:
+                    <tr>
+                        <td>Jumlah Perulangan</td>
+                        <td>@Model.Output.JumlahPerulangan</td>
+                        <td>Jumlah Layar</td>
+                        <td>@Model.Output.JumlahLayar</td>
+                    </tr>
+                    <tr>
+                        <td>Letak Reklame</td>
+                        <td>@Model.Output.LetakReklame.GetDescription()</td>
+                        <td>Jenis Produk</td>
+                        <td>@Model.Output.JenisProduk.GetDescription()</td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal Berlaku</td>
+                        <td>@Model.Output.TglMulaiBerlaku.ToString("dd MMMM yyyy") s.d. @Model.Output.TglSelesaiBerlaku.ToString("dd MMMM yyyy")</td>
+                        <td>Lama Penyelenggaraan</td>
+                        <td>@Model.Output.LamaPenyelenggaraan hari</td>
+                    </tr>
+                    break;
+
+                // ================================================================
+                // 🟦 DEFAULT (jika jenis belum di-handle)
+                // ================================================================
+                default:
+                    <tr>
+                        <td colspan="4" class="text-center text-muted fst-italic">
+                            Jenis reklame belum memiliki tampilan detail khusus.
+                        </td>
+                    </tr>
+                    break;
+            }
+
+            <!-- Informasi Lokasi -->
+            <tr>
+                <td>Nama Jalan</td>
+                <td>@Model.KalkullatorReklameRow.NamaJalan</td>
+                <td>Kelas Jalan</td>
+                <td>@Model.KalkullatorReklameRow.KelasJalan</td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <!-- PERHITUNGAN -->
+    <div class="section-title text-center">PERHITUNGAN</div>
+    <table class="table table-bordered border-dark">
+        <tbody>
+            @{
+                var mode = Model.KalkullatorReklameRow.ModeUkur;
+            }
+            @if (mode == EnumFactory.EModeUkur.Luas)
+            {
+                <tr class="table-secondary">
+                    <td colspan="4" class="fw-bold">PERHITUNGAN</td>
+                </tr>
+
+                <tr>
+                    <td class="right">Luas</td>
+                    <td class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2") m²</td>
+                    <td class="right">× NJOP @Model.KalkullatorReklameRow.NjopLuas.ToString("N0")</td>
+                    <td class="right">Rp. @Model.KalkullatorReklameRow.Nsr.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td class="right">Jumlah Satuan</td>
+                    <td class="right">@Model.Output.JumlahSatuan</td>
+                    <td class="right">× Lama Penyelenggaraan</td>
+                    <td class="right">@Model.Output.LamaPenyelenggaraan</td>
+                </tr>
+
+                <tr>
+                    <td class="fw-bold right">Total Sebelum Pajak</td>
+                    <td colspan="2"></td>
+                    <td class="fw-bold right">Rp. @((Model.KalkullatorReklameRow.Nsr * Model.Output.JumlahSatuan * Model.Output.LamaPenyelenggaraan).ToString("N0"))</td>
+                </tr>
+
+                <tr>
+                    <td>Pokok Pajak (@(Model.KalkullatorReklameRow.PokokPajak / (Model.KalkullatorReklameRow.Nsr * Model.Output.JumlahSatuan * Model.Output.LamaPenyelenggaraan) * 100).ToString("N2")%)</td>
+                    <td colspan="2"></td>
+                    <td class="right">Rp. @Model.KalkullatorReklameRow.PokokPajak.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td>Produk Rokok (@(Model.KalkullatorReklameRow.ProdukRokok / Model.KalkullatorReklameRow.PokokPajak * 100).ToString("N2")%)</td>
+                    <td colspan="2"></td>
+                    <td class="right">Rp. @Model.KalkullatorReklameRow.ProdukRokok.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td class="fw-bold">Total Nilai Sewa</td>
+                    <td colspan="2"></td>
+                    <td class="fw-bold text-end">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td>Jaminan Bongkar</td>
+                    <td colspan="2"></td>
+                    <td class="text-end">Rp. @Model.KalkullatorReklameRow.JaminanBongkar.ToString("N0")</td>
+                </tr>
+            }
+
+            else if (mode == EnumFactory.EModeUkur.Satuan)
+            {
+                <tr class="table-secondary">
+                    <td colspan="4" class="fw-bold">PERHITUNGAN</td>
+                </tr>
+
+                <tr>
+                    <td class="right">Jumlah Satuan</td>
+                    <td class="right">@Model.Output.JumlahSatuan</td>
+                    <td class="right">× NJOP</td>
+                    <td class="right">@Model.KalkullatorReklameRow.Nsr.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td class="fw-bold right">Pokok Pajak</td>
+                    <td colspan="2"></td>
+                    <td class="fw-bold text-end">Rp. @Model.KalkullatorReklameRow.PokokPajak.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td>Produk Rokok</td>
+                    <td colspan="2"></td>
+                    <td class="text-end">Rp. @Model.KalkullatorReklameRow.ProdukRokok.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td class="fw-bold">Total Nilai Sewa</td>
+                    <td colspan="2"></td>
+                    <td class="fw-bold text-end">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
+                </tr>
+            }
+
+            else if (mode == EnumFactory.EModeUkur.Perulangan)
+            {
+                <tr class="table-secondary">
+                    <td colspan="4" class="fw-bold">PERHITUNGAN</td>
+                </tr>
+
+                <tr>
+                    <td class="right">Lama Penyelenggaraan</td>
+                    <td class="right">@Model.Output.LamaPenyelenggaraan</td>
+                    <td class="right">/ @Model.KalkullatorReklameRow.SatuanNominal</td>
+                    <td class="right">= @(Model.Output.LamaPenyelenggaraan / Model.KalkullatorReklameRow.SatuanNominal)</td>
+                </tr>
+
+                <tr>
+                    <td class="right">× Jumlah Layar</td>
+                    <td class="right">@Model.Output.JumlahLayar</td>
+                    <td class="right">× Jumlah Perulangan</td>
+                    <td class="right">@Model.Output.JumlahPerulangan</td>
+                </tr>
+
+                <tr>
+                    <td class="fw-bold">Total NSR</td>
+                    <td colspan="2"></td>
+                    <td class="fw-bold text-end">Rp. @Model.KalkullatorReklameRow.Nsr.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td class="right">Pokok Pajak</td>
+                    <td colspan="2"></td>
+                    <td class="text-end">Rp. @Model.KalkullatorReklameRow.PokokPajak.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td class="right">Produk Rokok</td>
+                    <td colspan="2"></td>
+                    <td class="text-end">Rp. @Model.KalkullatorReklameRow.ProdukRokok.ToString("N0")</td>
+                </tr>
+
+                <tr>
+                    <td class="fw-bold">Total Nilai Sewa</td>
+                    <td colspan="2"></td>
+                    <td class="fw-bold text-end">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
+                </tr>
+            }
+
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Mode ukur tidak dikenal.</td>
+                </tr>
+            }
+
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">POKOK PAJAK</td></tr>
+            <tr>
+                <td class="right">Pokok Pajak</td>
+                <td colspan="2" class="right"></td>
+                <td class="right">Rp. @Model.KalkullatorReklameRow.PokokPajak.ToString("N0")</td>
+            </tr>
+            <tr>
+                <td class="right">Produk Rokok</td>
+                @if (Model.Output.JenisProduk == EnumFactory.ProdukReklame.Rokok)
+                {
+                    <td class="right" colspan="2">
+                        @Model.KalkullatorReklameRow.PokokPajak.ToString("N0")  × 25%
+                    </td>
+                }
+                else
+                {
+                    <td colspan="2"></td>
+                }
+                <td class="right">Rp. @Model.KalkullatorReklameRow.ProdukRokok.ToString("N0")</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title text-center">HASIL PERHITUNGAN</div>
+    <table class="table table-bordered border-dark align-middle">
+        <tbody>
+            <!-- TOTAL NILAI SEWA REKLAME -->
+            <tr class="table-secondary">
+                <td colspan="4" class="fw-bold text-center">TOTAL NILAI SEWA REKLAME</td>
+            </tr>
+            <tr>
+                <td class="right fw-bold">Total Nilai Sewa Reklame</td>
+                <td colspan="2" class="right"></td>
+                <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
+            </tr>
+
+            <!-- JAMINAN BONGKAR -->
+            <tr class="table-secondary">
+                <td colspan="4" class="fw-bold text-center">JAMINAN BONGKAR</td>
+            </tr>
+            <tr>
+                <td class="right fw-bold">Jaminan Bongkar</td>
+                <td colspan="2" class="right">
+                    @Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000
+                </td>
+                <td class="right">Rp. @Model.KalkullatorReklameRow.JaminanBongkar.ToString("N0")</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <p class="mt-4">
+        Keterangan : <br />
+        <ul>
+            <li>
+                Estimasi ini hanya bersifat simulasi. Nilai pajak sesungguhnya akan ditentukan berdasarkan pemeriksaan oleh petugas sesuai data dan ketentuan yang berlaku.<br />
+
+            </li>
+            <li>
+                Jambong hanya dikenakan untuk reklame yang diselenggarakan di atas tanah, bangunan, atau barang milik/yang dikuasai oleh Pemerintah Kota Surabaya.
+
+            </li>
+        </ul>
+    </p>
+    
+</div>

@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EFReklame;
 
-[PrimaryKey("TahunPel", "BulanPel", "SeqPel", "Seq", "ActId", "WfId", "ActSeq")]
-[Table("T_PERMOHONAN_INS_NILAI_ACT")]
-public partial class TPermohonanInsNilaiAct
+[PrimaryKey("TahunPel", "BulanPel", "SeqPel", "Seq", "ActId", "WfId", "ActSeq", "SeqHistory")]
+[Table("T_PERMOHONAN_PRMN_NILAI_HIST")]
+public partial class TPermohonanPrmnNilaiHist
 {
     [Key]
     [Column("TAHUN_PEL")]
@@ -45,27 +45,29 @@ public partial class TPermohonanInsNilaiAct
     [Precision(10)]
     public int ActSeq { get; set; }
 
-    [Column("STATUS")]
+    [Key]
+    [Column("SEQ_HISTORY")]
     [Precision(10)]
-    public int Status { get; set; }
+    public int SeqHistory { get; set; }
 
-    [Column("INS_DATE", TypeName = "DATE")]
-    public DateTime InsDate { get; set; }
+    [Column("JENIS_PROSES")]
+    [Precision(10)]
+    public int? JenisProses { get; set; }
 
-    [Column("INS_BY")]
+    [Column("KET")]
+    [StringLength(250)]
+    [Unicode(false)]
+    public string? Ket { get; set; }
+
+    [Column("PROSES_DATE", TypeName = "DATE")]
+    public DateTime? ProsesDate { get; set; }
+
+    [Column("PROSES_BY")]
     [StringLength(100)]
     [Unicode(false)]
-    public string InsBy { get; set; } = null!;
+    public string? ProsesBy { get; set; }
 
-    [ForeignKey("ActId")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
-    public virtual MWfActivity Act { get; set; } = null!;
-
-    [ForeignKey("TahunPel, BulanPel, SeqPel, Seq")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
-    public virtual TPermohonanInsNilai TPermohonanInsNilai { get; set; } = null!;
-
-    [ForeignKey("WfId")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
-    public virtual MWfWorkflow Wf { get; set; } = null!;
+    [ForeignKey("TahunPel, BulanPel, SeqPel, Seq, ActId, WfId, ActSeq")]
+    [InverseProperty("TPermohonanPrmnNilaiHists")]
+    public virtual TPermohonanPrmnNilaiAct TPermohonanPrmnNilaiAct { get; set; } = null!;
 }

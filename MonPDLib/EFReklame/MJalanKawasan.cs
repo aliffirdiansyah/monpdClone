@@ -11,16 +11,19 @@ namespace MonPDLib.EFReklame;
 public partial class MJalanKawasan
 {
     [Key]
-    [Column("ID_JALAN", TypeName = "NUMBER")]
-    public decimal IdJalan { get; set; }
+    [Column("ID_JALAN")]
+    [Precision(10)]
+    public int IdJalan { get; set; }
 
     [Key]
-    [Column("KAWASAN_ID", TypeName = "NUMBER")]
-    public decimal KawasanId { get; set; }
+    [Column("KAWASAN_ID")]
+    [Precision(10)]
+    public int KawasanId { get; set; }
 
     [Key]
-    [Column("KELAS_JALAN_ID", TypeName = "NUMBER")]
-    public decimal KelasJalanId { get; set; }
+    [Column("KELAS_JALAN_ID")]
+    [Precision(10)]
+    public int KelasJalanId { get; set; }
 
     [Column("INS_DATE", TypeName = "DATE")]
     public DateTime InsDate { get; set; }
@@ -32,7 +35,7 @@ public partial class MJalanKawasan
 
     [ForeignKey("IdJalan")]
     [InverseProperty("MJalanKawasans")]
-    public virtual DrftMJalan IdJalanNavigation { get; set; } = null!;
+    public virtual MJalan IdJalanNavigation { get; set; } = null!;
 
     [ForeignKey("KawasanId, KelasJalanId")]
     [InverseProperty("MJalanKawasans")]

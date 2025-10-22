@@ -44,4 +44,7 @@ public partial class MWfWorkflow
 
     [InverseProperty("Wf")]
     public virtual ICollection<TPermohonanInsNilaiAct> TPermohonanInsNilaiActs { get; set; } = new List<TPermohonanInsNilaiAct>();
+
+    [InverseProperty("Wf")]
+    public virtual ICollection<TPermohonanPrmnNilaiAct> TPermohonanPrmnNilaiActs { get; set; } = new List<TPermohonanPrmnNilaiAct>();
 }

@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EFReklame;
 
 [PrimaryKey("SuratKlasifikasi", "SuratAgenda", "SuratDokumen", "SuratBidang", "SuratPajak", "SuratOpd", "SuratTahun")]
-[Table("T_SKPD_INS_PENETAPAN")]
-public partial class TSkpdInsPenetapan
+[Table("T_SKPD_PRMN_PENETAPAN")]
+public partial class TSkpdPrmnPenetapan
 {
     [Key]
     [Column("SURAT_KLASIFIKASI")]
@@ -96,6 +96,6 @@ public partial class TSkpdInsPenetapan
     public string InsBy { get; set; } = null!;
 
     [ForeignKey("SuratKlasifikasi, SuratAgenda, SuratDokumen, SuratBidang, SuratPajak, SuratOpd, SuratTahun")]
-    [InverseProperty("TSkpdInsPenetapan")]
-    public virtual TSkpdIn Surat { get; set; } = null!;
+    [InverseProperty("TSkpdPrmnPenetapan")]
+    public virtual TSkpdPrmn Surat { get; set; } = null!;
 }

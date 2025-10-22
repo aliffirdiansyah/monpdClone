@@ -10,8 +10,9 @@ namespace MonPDLib.EFReklame;
 public partial class MKawasan
 {
     [Key]
-    [Column("KAWASAN_ID", TypeName = "NUMBER")]
-    public decimal KawasanId { get; set; }
+    [Column("KAWASAN_ID")]
+    [Precision(10)]
+    public int KawasanId { get; set; }
 
     [Column("NAMA_KAWASAN")]
     [StringLength(100)]

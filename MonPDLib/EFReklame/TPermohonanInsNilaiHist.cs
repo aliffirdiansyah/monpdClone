@@ -12,13 +12,13 @@ public partial class TPermohonanInsNilaiHist
 {
     [Key]
     [Column("TAHUN_PEL")]
-    [Precision(4)]
-    public byte TahunPel { get; set; }
+    [Precision(10)]
+    public int TahunPel { get; set; }
 
     [Key]
     [Column("BULAN_PEL")]
-    [Precision(2)]
-    public byte BulanPel { get; set; }
+    [Precision(10)]
+    public int BulanPel { get; set; }
 
     [Key]
     [Column("SEQ_PEL")]
@@ -51,8 +51,8 @@ public partial class TPermohonanInsNilaiHist
     public int SeqHistory { get; set; }
 
     [Column("JENIS_PROSES")]
-    [Precision(2)]
-    public byte? JenisProses { get; set; }
+    [Precision(10)]
+    public int? JenisProses { get; set; }
 
     [Column("KET")]
     [StringLength(250)]

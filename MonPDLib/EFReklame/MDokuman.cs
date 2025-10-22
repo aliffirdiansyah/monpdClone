@@ -33,4 +33,10 @@ public partial class MDokuman
 
     [InverseProperty("IdDokumenNavigation")]
     public virtual MDokumenIn? MDokumenIn { get; set; }
+
+    [InverseProperty("IdDokumenNavigation")]
+    public virtual MDokumenPrmn? MDokumenPrmn { get; set; }
+
+    [InverseProperty("IdDokumenNavigation")]
+    public virtual MDokumenTerb? MDokumenTerb { get; set; }
 }

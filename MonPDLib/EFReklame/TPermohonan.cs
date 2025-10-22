@@ -12,13 +12,13 @@ public partial class TPermohonan
 {
     [Key]
     [Column("TAHUN_PEL")]
-    [Precision(4)]
-    public byte TahunPel { get; set; }
+    [Precision(10)]
+    public int TahunPel { get; set; }
 
     [Key]
     [Column("BULAN_PEL")]
-    [Precision(2)]
-    public byte BulanPel { get; set; }
+    [Precision(10)]
+    public int BulanPel { get; set; }
 
     [Key]
     [Column("SEQ_PEL")]
@@ -28,34 +28,32 @@ public partial class TPermohonan
     [Column("NPWPD_NO")]
     [StringLength(20)]
     [Unicode(false)]
-    public string? NpwpdNo { get; set; }
+    public string NpwpdNo { get; set; } = null!;
 
     [Column("TGL_PERMOHONAN", TypeName = "DATE")]
-    public DateTime? TglPermohonan { get; set; }
-
-    [Column("JENIS_PERMOHONAN")]
-    [Precision(2)]
-    public byte JenisPermohonan { get; set; }
+    public DateTime TglPermohonan { get; set; }
 
     [Column("STATUS_PERMOHONAN")]
-    [Precision(2)]
-    public byte StatusPermohonan { get; set; }
+    [Precision(10)]
+    public int StatusPermohonan { get; set; }
 
     [Column("STATUS_PROSES")]
-    [Precision(2)]
-    public byte StatusProses { get; set; }
+    [Precision(10)]
+    public int StatusProses { get; set; }
 
     [Column("KAT_PENYELENGGARAAN")]
-    [Precision(9)]
-    public int? KatPenyelenggaraan { get; set; }
+    [Precision(10)]
+    public int KatPenyelenggaraan { get; set; }
 
     [Column("KD_CAMAT")]
-    [Precision(10)]
-    public int? KdCamat { get; set; }
+    [StringLength(3)]
+    [Unicode(false)]
+    public string KdCamat { get; set; } = null!;
 
     [Column("KD_LURAH")]
-    [Precision(10)]
-    public int? KdLurah { get; set; }
+    [StringLength(3)]
+    [Unicode(false)]
+    public string KdLurah { get; set; } = null!;
 
     [Column("INS_DATE", TypeName = "DATE")]
     public DateTime InsDate { get; set; }
@@ -65,9 +63,16 @@ public partial class TPermohonan
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
 
+    [ForeignKey("KdCamat, KdLurah")]
+    [InverseProperty("TPermohonans")]
+    public virtual MWilayah Kd { get; set; } = null!;
+
     [InverseProperty("TPermohonan")]
     public virtual ICollection<TPermohonanFile> TPermohonanFiles { get; set; } = new List<TPermohonanFile>();
 
     [InverseProperty("TPermohonan")]
     public virtual ICollection<TPermohonanIn> TPermohonanIns { get; set; } = new List<TPermohonanIn>();
+
+    [InverseProperty("TPermohonan")]
+    public virtual ICollection<TPermohonanPrmn> TPermohonanPrmns { get; set; } = new List<TPermohonanPrmn>();
 }

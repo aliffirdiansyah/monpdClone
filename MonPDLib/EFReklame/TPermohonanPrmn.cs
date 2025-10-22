@@ -12,48 +12,44 @@ public partial class TPermohonanPrmn
 {
     [Key]
     [Column("TAHUN_PEL")]
-    [Precision(4)]
-    public byte TahunPel { get; set; }
+    [Precision(10)]
+    public int TahunPel { get; set; }
 
     [Key]
     [Column("BULAN_PEL")]
-    [Precision(2)]
-    public byte BulanPel { get; set; }
+    [Precision(10)]
+    public int BulanPel { get; set; }
 
     [Key]
     [Column("SEQ_PEL")]
     [Precision(10)]
     public int SeqPel { get; set; }
 
+    [Key]
+    [Column("SEQ")]
+    [Precision(10)]
+    public int Seq { get; set; }
+
     [Column("LETAK_REKLAME")]
     [Precision(2)]
-    public byte? LetakReklame { get; set; }
+    public byte LetakReklame { get; set; }
 
     [Column("STATUS_TANAH")]
     [Precision(2)]
-    public byte? StatusTanah { get; set; }
+    public byte StatusTanah { get; set; }
 
     [Column("LOK_PENYELENGGARAAN")]
     [StringLength(300)]
     [Unicode(false)]
-    public string? LokPenyelenggaraan { get; set; }
-
-    [Column("DET_PENYELENGGARAAN")]
-    [StringLength(500)]
-    [Unicode(false)]
-    public string? DetPenyelenggaraan { get; set; }
+    public string LokPenyelenggaraan { get; set; } = null!;
 
     [Column("ID_JENIS_REKLAME")]
     [Precision(10)]
     public int IdJenisReklame { get; set; }
 
-    [Column("SUDUT_PANDANG")]
-    [Precision(10)]
-    public int? SudutPandang { get; set; }
-
     [Column("JENIS_PRODUK")]
     [Precision(2)]
-    public byte? JenisProduk { get; set; }
+    public byte JenisProduk { get; set; }
 
     [Column("PANJANG")]
     [Precision(10)]
@@ -67,6 +63,15 @@ public partial class TPermohonanPrmn
     [Precision(10)]
     public int Tinggi { get; set; }
 
+    [Column("SUDUT_PANDANG")]
+    [Precision(10)]
+    public int SudutPandang { get; set; }
+
+    [Column("KET_SISI")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string KetSisi { get; set; } = null!;
+
     [Column("TGL_MULAI_BERLAKU", TypeName = "DATE")]
     public DateTime TglMulaiBerlaku { get; set; }
 
@@ -76,14 +81,32 @@ public partial class TPermohonanPrmn
     [Column("MATERI_REKLAME")]
     [StringLength(200)]
     [Unicode(false)]
-    public string? MateriReklame { get; set; }
+    public string MateriReklame { get; set; } = null!;
 
-    [Key]
-    [Column("SEQ")]
+    [Column("STATUS_TERPASANG")]
     [Precision(10)]
-    public int Seq { get; set; }
+    public int StatusTerpasang { get; set; }
+
+    [Column("EST_TGL_PASANG", TypeName = "DATE")]
+    public DateTime? EstTglPasang { get; set; }
+
+    [Column("AKTUAL_PASANG", TypeName = "DATE")]
+    public DateTime? AktualPasang { get; set; }
 
     [ForeignKey("IdJenisReklame")]
     [InverseProperty("TPermohonanPrmns")]
     public virtual MJenisReklame IdJenisReklameNavigation { get; set; } = null!;
+
+    [ForeignKey("TahunPel, BulanPel, SeqPel")]
+    [InverseProperty("TPermohonanPrmns")]
+    public virtual TPermohonan TPermohonan { get; set; } = null!;
+
+    [InverseProperty("TPermohonanPrmn")]
+    public virtual ICollection<TPermohonanPrmnFoto> TPermohonanPrmnFotos { get; set; } = new List<TPermohonanPrmnFoto>();
+
+    [InverseProperty("TPermohonanPrmn")]
+    public virtual TPermohonanPrmnNilai? TPermohonanPrmnNilai { get; set; }
+
+    [InverseProperty("TPermohonanPrmn")]
+    public virtual TPermohonanPrmnPenelitian? TPermohonanPrmnPenelitian { get; set; }
 }

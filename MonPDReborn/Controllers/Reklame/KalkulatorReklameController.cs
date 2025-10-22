@@ -6,11 +6,11 @@ using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers.Reklame
 {
-    public class KakulatorReklameController : Controller
+    public class KalkulatorReklameController : Controller
     {
         string URLView = string.Empty;
 
-        private readonly ILogger<KakulatorReklameController> _logger;
+        private readonly ILogger<KalkulatorReklameController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
@@ -19,7 +19,7 @@ namespace MonPDReborn.Controllers.Reklame
         ResponseBase response = new ResponseBase();
 
         private IConfiguration configuration;
-        public KakulatorReklameController(ILogger<KakulatorReklameController> logger, IConfiguration configuration)
+        public KalkulatorReklameController(ILogger<KalkulatorReklameController> logger, IConfiguration configuration)
         {
             URLView = string.Concat("../Reklame/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
@@ -30,7 +30,7 @@ namespace MonPDReborn.Controllers.Reklame
             try
             {
                 ViewData["Title"] = controllerName;
-                var model = new Models.Reklame.KakulatorReklameVM.Index();
+                var model = new Models.Reklame.KalkulatorReklameVM.Index();
 
                 return View($"{URLView}{actionName}", model);
             }
@@ -47,11 +47,11 @@ namespace MonPDReborn.Controllers.Reklame
                 return Json(response);
             }
         }
-        public IActionResult Show(MonPDLib.Lib.KalkullatorReklame.ReklameInput input)
+        public IActionResult Show(MonPDLib.Lib.KalkulatorReklamePermanen.ReklameInput input)
         {
             try
             {
-                var model = new Models.Reklame.KakulatorReklameVM.Show(input);
+                var model = new Models.Reklame.KalkulatorReklameVM.Show(input);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)
@@ -71,7 +71,7 @@ namespace MonPDReborn.Controllers.Reklame
         {
             try
             {
-                var model = new Models.Reklame.KakulatorReklameVM.ShowKontrak(NilaiKontrak);
+                var model = new Models.Reklame.KalkulatorReklameVM.ShowKontrak(NilaiKontrak);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EFReklame;
 
-[PrimaryKey("TahunPel", "BulanPel", "SeqPel", "Seq", "ActId", "WfId", "ActSeq")]
-[Table("T_PERMOHONAN_INS_NILAI_ACT")]
-public partial class TPermohonanInsNilaiAct
+[PrimaryKey("TahunPel", "BulanPel", "SeqPel", "Seq", "SeqFoto")]
+[Table("T_PERMOHONAN_PRMN_FOTO")]
+public partial class TPermohonanPrmnFoto
 {
     [Key]
     [Column("TAHUN_PEL")]
@@ -31,23 +31,17 @@ public partial class TPermohonanInsNilaiAct
     public int Seq { get; set; }
 
     [Key]
-    [Column("ACT_ID")]
+    [Column("SEQ_FOTO")]
     [Precision(10)]
-    public int ActId { get; set; }
+    public int SeqFoto { get; set; }
 
-    [Key]
-    [Column("WF_ID")]
-    [Precision(10)]
-    public int WfId { get; set; }
+    [Column("FILE_DATA", TypeName = "BLOB")]
+    public byte[] FileData { get; set; } = null!;
 
-    [Key]
-    [Column("ACT_SEQ")]
-    [Precision(10)]
-    public int ActSeq { get; set; }
-
-    [Column("STATUS")]
-    [Precision(10)]
-    public int Status { get; set; }
+    [Column("KET")]
+    [StringLength(500)]
+    [Unicode(false)]
+    public string? Ket { get; set; }
 
     [Column("INS_DATE", TypeName = "DATE")]
     public DateTime InsDate { get; set; }
@@ -57,15 +51,7 @@ public partial class TPermohonanInsNilaiAct
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
 
-    [ForeignKey("ActId")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
-    public virtual MWfActivity Act { get; set; } = null!;
-
     [ForeignKey("TahunPel, BulanPel, SeqPel, Seq")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
-    public virtual TPermohonanInsNilai TPermohonanInsNilai { get; set; } = null!;
-
-    [ForeignKey("WfId")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
-    public virtual MWfWorkflow Wf { get; set; } = null!;
+    [InverseProperty("TPermohonanPrmnFotos")]
+    public virtual TPermohonanPrmn TPermohonanPrmn { get; set; } = null!;
 }

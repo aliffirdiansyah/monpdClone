@@ -15,11 +15,13 @@ public partial class ReklameContext : DbContext
     {
     }
 
-    public virtual DbSet<DrftMJalan> DrftMJalans { get; set; }
-
     public virtual DbSet<MDokuman> MDokumen { get; set; }
 
     public virtual DbSet<MDokumenIn> MDokumenIns { get; set; }
+
+    public virtual DbSet<MDokumenPrmn> MDokumenPrmns { get; set; }
+
+    public virtual DbSet<MDokumenTerb> MDokumenTerbs { get; set; }
 
     public virtual DbSet<MJalan> MJalans { get; set; }
 
@@ -59,6 +61,8 @@ public partial class ReklameContext : DbContext
 
     public virtual DbSet<MWfWorkflowFinal> MWfWorkflowFinals { get; set; }
 
+    public virtual DbSet<MWilayah> MWilayahs { get; set; }
+
     public virtual DbSet<Setting> Settings { get; set; }
 
     public virtual DbSet<TPermohonan> TPermohonans { get; set; }
@@ -67,19 +71,35 @@ public partial class ReklameContext : DbContext
 
     public virtual DbSet<TPermohonanIn> TPermohonanIns { get; set; }
 
+    public virtual DbSet<TPermohonanInsFoto> TPermohonanInsFotos { get; set; }
+
     public virtual DbSet<TPermohonanInsNilai> TPermohonanInsNilais { get; set; }
 
     public virtual DbSet<TPermohonanInsNilaiAct> TPermohonanInsNilaiActs { get; set; }
 
     public virtual DbSet<TPermohonanInsNilaiHist> TPermohonanInsNilaiHists { get; set; }
 
+    public virtual DbSet<TPermohonanInsPenelitian> TPermohonanInsPenelitians { get; set; }
+
     public virtual DbSet<TPermohonanPrmn> TPermohonanPrmns { get; set; }
 
+    public virtual DbSet<TPermohonanPrmnFoto> TPermohonanPrmnFotos { get; set; }
+
     public virtual DbSet<TPermohonanPrmnNilai> TPermohonanPrmnNilais { get; set; }
+
+    public virtual DbSet<TPermohonanPrmnNilaiAct> TPermohonanPrmnNilaiActs { get; set; }
+
+    public virtual DbSet<TPermohonanPrmnNilaiHist> TPermohonanPrmnNilaiHists { get; set; }
+
+    public virtual DbSet<TPermohonanPrmnPenelitian> TPermohonanPrmnPenelitians { get; set; }
 
     public virtual DbSet<TSkpdIn> TSkpdIns { get; set; }
 
     public virtual DbSet<TSkpdInsPenetapan> TSkpdInsPenetapans { get; set; }
+
+    public virtual DbSet<TSkpdPrmn> TSkpdPrmns { get; set; }
+
+    public virtual DbSet<TSkpdPrmnPenetapan> TSkpdPrmnPenetapans { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -88,13 +108,6 @@ public partial class ReklameContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("REKLAME");
-
-        modelBuilder.Entity<DrftMJalan>(entity =>
-        {
-            entity.HasKey(e => e.IdJalan).HasName("DRFT_M_JALAN_PK");
-
-            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE");
-        });
 
         modelBuilder.Entity<MDokuman>(entity =>
         {
@@ -116,13 +129,35 @@ public partial class ReklameContext : DbContext
                 .HasConstraintName("M_DOKUMEN_INS_FK");
         });
 
+        modelBuilder.Entity<MDokumenPrmn>(entity =>
+        {
+            entity.HasKey(e => e.IdDokumen).HasName("M_DOKUMEN_PRMN_PK");
+
+            entity.Property(e => e.IdDokumen).ValueGeneratedNever();
+
+            entity.HasOne(d => d.IdDokumenNavigation).WithOne(p => p.MDokumenPrmn)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("M_DOKUMEN_PRMN_M_DOKUMEN_FK");
+        });
+
+        modelBuilder.Entity<MDokumenTerb>(entity =>
+        {
+            entity.HasKey(e => e.IdDokumen).HasName("M_DOKUMEN_TERB_PK");
+
+            entity.Property(e => e.IdDokumen).ValueGeneratedNever();
+
+            entity.HasOne(d => d.IdDokumenNavigation).WithOne(p => p.MDokumenTerb)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("M_DOKUMEN_TERB_M_DOKUMEN_FK");
+        });
+
         modelBuilder.Entity<MJalan>(entity =>
         {
+            entity.HasKey(e => e.IdJalan).HasName("DRFT_M_JALAN_PK");
+
             entity.Property(e => e.IdJalan).ValueGeneratedNever();
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
-            entity.Property(e => e.KoridorJalan).HasDefaultValueSql("0 ");
-            entity.Property(e => e.KoridorNilai).HasDefaultValueSql("0 ");
         });
 
         modelBuilder.Entity<MJalanKawasan>(entity =>
@@ -156,6 +191,8 @@ public partial class ReklameContext : DbContext
         modelBuilder.Entity<MKawasan>(entity =>
         {
             entity.HasKey(e => e.KawasanId).HasName("DRFT_M_KAWASAN_PK");
+
+            entity.Property(e => e.KawasanId).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<MKelasJalan>(entity =>
@@ -315,6 +352,11 @@ public partial class ReklameContext : DbContext
                 .HasConstraintName("M_WF_WORKFLOW_FINAL_R01");
         });
 
+        modelBuilder.Entity<MWilayah>(entity =>
+        {
+            entity.HasKey(e => new { e.KdKecamatan, e.KdKelurahan }).HasName("M_WILAYAH_PK");
+        });
+
         modelBuilder.Entity<Setting>(entity =>
         {
             entity.HasKey(e => e.Properti).HasName("SYS_C0034835");
@@ -326,6 +368,10 @@ public partial class ReklameContext : DbContext
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
             entity.Property(e => e.StatusPermohonan).HasDefaultValueSql("1 ");
             entity.Property(e => e.StatusProses).HasDefaultValueSql("0 ");
+
+            entity.HasOne(d => d.Kd).WithMany(p => p.TPermohonans)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_PERMOHONAN_M_WILAYAH_FK");
         });
 
         modelBuilder.Entity<TPermohonanFile>(entity =>
@@ -341,18 +387,32 @@ public partial class ReklameContext : DbContext
         {
             entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERMOHONAN_INS_PK");
 
-            entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.TPermohonanIns).HasConstraintName("T_PERMOHONAN_INS_JENIS_FK");
+            entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.TPermohonanIns)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_PERMOHONAN_INS_JENIS_FK");
 
             entity.HasOne(d => d.TPermohonan).WithMany(p => p.TPermohonanIns)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("T_PERMOHONAN_INS_FK");
         });
 
+        modelBuilder.Entity<TPermohonanInsFoto>(entity =>
+        {
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+
+            entity.HasOne(d => d.TPermohonanIn).WithMany(p => p.TPermohonanInsFotos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PERMOHONAN_INS_FOTO");
+        });
+
         modelBuilder.Entity<TPermohonanInsNilai>(entity =>
         {
             entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERMOHONAN_INS_NILAI_PK");
 
-            entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.TPermohonanInsNilais).HasConstraintName("T_PER_INS_NILAI_JENIS_FK");
+            entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.TPermohonanInsNilais)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_PER_INS_NILAI_JENIS_FK");
 
             entity.HasOne(d => d.TPermohonanIn).WithOne(p => p.TPermohonanInsNilai).HasConstraintName("T_PERMOHONAN_INS_NILAI_FK");
         });
@@ -381,26 +441,110 @@ public partial class ReklameContext : DbContext
             entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq, e.ActId, e.WfId, e.ActSeq, e.SeqHistory }).HasName("T_PERMOHONAN_INS_NILAI_HIST_PK");
         });
 
+        modelBuilder.Entity<TPermohonanInsPenelitian>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERMOHONAN_INS_PENELITIAN_PK");
+
+            entity.HasOne(d => d.IdJalanNavigation).WithMany(p => p.TPermohonanInsPenelitians)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_MOHON_INS_PEN_JALAN_FK");
+
+            entity.HasOne(d => d.Kd).WithMany(p => p.TPermohonanInsPenelitians)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_MOHON_INS_PEN_WILAYAH_FK");
+
+            entity.HasOne(d => d.TPermohonanIn).WithOne(p => p.TPermohonanInsPenelitian)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_MOHON_INS_PEN_T_PMOHON_FK");
+        });
+
         modelBuilder.Entity<TPermohonanPrmn>(entity =>
         {
             entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERMOHONAN_PRMN_PK");
 
+            entity.Property(e => e.StatusTerpasang).HasDefaultValueSql("1 ");
+
             entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.TPermohonanPrmns)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("T_PERMOHONAN_PRMN_JENIS_FK");
+
+            entity.HasOne(d => d.TPermohonan).WithMany(p => p.TPermohonanPrmns)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_PERMOHONAN_PRMN_FK");
+        });
+
+        modelBuilder.Entity<TPermohonanPrmnFoto>(entity =>
+        {
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+
+            entity.HasOne(d => d.TPermohonanPrmn).WithMany(p => p.TPermohonanPrmnFotos)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PERMOHONAN_PRMN_FOTO");
         });
 
         modelBuilder.Entity<TPermohonanPrmnNilai>(entity =>
         {
-            entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERM_PRMN_NILAI_PK");
+            entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERMOHONAN_PRMN_NILAI_PK");
+
+            entity.Property(e => e.StatusTerpasang).HasDefaultValueSql("1 ");
+
+            entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.TPermohonanPrmnNilais)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_MOHON_PRMN_NILAI_JENIS_FK");
+
+            entity.HasOne(d => d.TPermohonanPrmn).WithOne(p => p.TPermohonanPrmnNilai)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_PERMOHONAN_PRMN_NILAI_FK");
+        });
+
+        modelBuilder.Entity<TPermohonanPrmnNilaiAct>(entity =>
+        {
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+            entity.Property(e => e.Status).HasDefaultValueSql("0 ");
+
+            entity.HasOne(d => d.Act).WithMany(p => p.TPermohonanPrmnNilaiActs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PRMN_NILAI_ACT_WF_ACT");
+
+            entity.HasOne(d => d.Wf).WithMany(p => p.TPermohonanPrmnNilaiActs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PRMN_NILAI_ACT_WF");
+
+            entity.HasOne(d => d.TPermohonanPrmnNilai).WithMany(p => p.TPermohonanPrmnNilaiActs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PRMN_NILAI_ACT_NILAI");
+        });
+
+        modelBuilder.Entity<TPermohonanPrmnNilaiHist>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq, e.ActId, e.WfId, e.ActSeq, e.SeqHistory }).HasName("PK_T_MOHON_PRMN_NILAI_HIST");
+
+            entity.HasOne(d => d.TPermohonanPrmnNilaiAct).WithMany(p => p.TPermohonanPrmnNilaiHists)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PRMN_NILAI_HIST_NILAI_ACT");
+        });
+
+        modelBuilder.Entity<TPermohonanPrmnPenelitian>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERMOHONAN_PRMN_PENEL_PK");
+
+            entity.HasOne(d => d.IdJalanNavigation).WithMany(p => p.TPermohonanPrmnPenelitians).HasConstraintName("T_MOHON_PRMN_PEN_JALAN_FK");
+
+            entity.HasOne(d => d.Kd).WithMany(p => p.TPermohonanPrmnPenelitians).HasConstraintName("T_MOHON_PRMN_PEN_WILAYAH_FK");
+
+            entity.HasOne(d => d.TPermohonanPrmn).WithOne(p => p.TPermohonanPrmnPenelitian)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_PERMOHONAN_PRMN_PENEL_FK");
         });
 
         modelBuilder.Entity<TSkpdIn>(entity =>
         {
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
-            entity.Property(e => e.TarifPajak).HasDefaultValueSql("25");
-            entity.Property(e => e.TarifRokok).HasDefaultValueSql("25");
+            entity.Property(e => e.TarifPajak).HasDefaultValueSql("25 ");
+            entity.Property(e => e.TarifRokok).HasDefaultValueSql("25 ");
         });
 
         modelBuilder.Entity<TSkpdInsPenetapan>(entity =>
@@ -411,6 +555,32 @@ public partial class ReklameContext : DbContext
             entity.HasOne(d => d.Surat).WithOne(p => p.TSkpdInsPenetapan)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_T_SKPD_INS_PENETAPAN");
+        });
+
+        modelBuilder.Entity<TSkpdPrmn>(entity =>
+        {
+            entity.HasKey(e => new { e.SuratKlasifikasi, e.SuratAgenda, e.SuratDokumen, e.SuratBidang, e.SuratPajak, e.SuratOpd, e.SuratTahun }).HasName("PK_T_PRMN");
+
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+            entity.Property(e => e.TarifPajak).HasDefaultValueSql("25 ");
+            entity.Property(e => e.TarifRokok).HasDefaultValueSql("25 ");
+
+            entity.HasOne(d => d.IdJenisReklameNavigation).WithMany(p => p.TSkpdPrmns)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PRMN_JENIS_REKLAME");
+        });
+
+        modelBuilder.Entity<TSkpdPrmnPenetapan>(entity =>
+        {
+            entity.HasKey(e => new { e.SuratKlasifikasi, e.SuratAgenda, e.SuratDokumen, e.SuratBidang, e.SuratPajak, e.SuratOpd, e.SuratTahun }).HasName("PK_T_PRMN_PENETAPAN");
+
+            entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
+            entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+
+            entity.HasOne(d => d.Surat).WithOne(p => p.TSkpdPrmnPenetapan)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_PRMN_PENETAPAN");
         });
 
         OnModelCreatingPartial(modelBuilder);
