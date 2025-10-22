@@ -14,6 +14,7 @@ namespace MonPDReborn.Models.Reklame
             public KalkulatorReklamePermanen.ReklameInput Inputan { get; set; } = new();
             public KalkulatorReklameInsidentil.ReklameInput InputanIns { get; set; } = new();
             public List<SelectListItem> JenisReklameList { get; set; } = new();
+            public List<dynamic> JenisReklameInsList { get; set; } = new();
             public List<SelectListItem> LetakReklameList { get; set; } = new();
             public List<SelectListItem> ProdukList { get; set; } = new();
             public List<SelectListItem> JalanList { get; set; } = new();
@@ -29,6 +30,16 @@ namespace MonPDReborn.Models.Reklame
                     })
                     .OrderBy(x => x.Text)
                     .ToList();
+                JenisReklameInsList = context.MJenisReklames
+                    .Where(x => x.Kategori == (int)EnumFactory.JenisReklame.Insidentil)
+                    .Select(j => new 
+                    {
+                        Value = j.IdJenisReklame.ToString(),
+                        Text = j.NamaJenis,
+                        ModeUkur = j.ModeUkur
+                    })
+                    .OrderBy(x => x.Text)
+                    .ToList<dynamic>();
                 LetakReklameList = Enum.GetValues(typeof(EnumFactory.LetakReklame))
                     .Cast<EnumFactory.LetakReklame>()
                     .Select(x => new SelectListItem
