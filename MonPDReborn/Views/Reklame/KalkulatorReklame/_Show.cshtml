@@ -1,5 +1,5 @@
 ﻿@using MonPDLib.General
-@model MonPDReborn.Models.Reklame.KakulatorReklameVM.Show
+@model MonPDReborn.Models.Reklame.KalkulatorReklameVM.Show
 
 @{
     Layout = null;
@@ -90,7 +90,7 @@
     <div class="section-title text-center">PERHITUNGAN</div>
     <table class="table table-bordered border-dark">
         <tbody>
-            <tr class="table-secondary"><td colspan="4" class="fw-bold">NJOP</td></tr>
+            @* <tr class="table-secondary"><td colspan="4" class="fw-bold">NJOP</td></tr>
             <tr>
                 <td class="right">Luas</td>
                 <td class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2")</td>
@@ -150,7 +150,7 @@
                 <td class="text-end">
                     Rp. @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
                 </td>
-            </tr>
+            </tr> *@
 
             @*  <tr>
                 <td class="fw-bold right">Total NJOP + Nilai Strategis</td>
@@ -162,7 +162,7 @@
                 </td>
             </tr> *@
 
-            <tr>
+            @* <tr>
                 <td class="fw-bold text-end">Total NJOP + Nilai Strategis</td>
                 <td colspan="2" class="fw-bold text-end">
                     @Model.KalkullatorReklameRow.TotalNjop.ToString("N0") + @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
@@ -185,7 +185,7 @@
                 <td class="fw-bold text-end">
                     Rp. @Model.KalkullatorReklameRow.PenambahanKetinggian.ToString("N0")
                 </td>
-            </tr>
+            </tr> *@
 
             <tr class="table-secondary"><td colspan="4" class="fw-bold">POKOK PAJAK</td></tr>
             <tr>
@@ -249,11 +249,4 @@
             </li>
         </ul>
     </p>
-    @* 
-    <div class="text-end mt-5">
-        Surabaya, @DateTime.Now.ToString("dd - MM - yyyy")<br /><br />
-        <b>Agung Pambudi, SE</b><br />
-        NIP. 19751115 200501 1 011
-    </div>
- *@
 </div>

@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EFReklame;
 
 [PrimaryKey("SuratKlasifikasi", "SuratAgenda", "SuratDokumen", "SuratBidang", "SuratPajak", "SuratOpd", "SuratTahun")]
-[Table("T_SKPD_INS")]
-public partial class TSkpdIn
+[Table("T_SKPD_PRMN")]
+public partial class TSkpdPrmn
 {
     [Key]
     [Column("SURAT_KLASIFIKASI")]
@@ -88,14 +88,14 @@ public partial class TSkpdIn
     [Column("LEBAR", TypeName = "NUMBER(10,2)")]
     public decimal Lebar { get; set; }
 
-    [Column("JUMLAH_SATUAN", TypeName = "NUMBER(10,2)")]
-    public decimal JumlahSatuan { get; set; }
+    [Column("TINGGI")]
+    [Precision(10)]
+    public int Tinggi { get; set; }
 
-    [Column("JUMLAH_PERULANGAN", TypeName = "NUMBER(10,2)")]
-    public decimal JumlahPerulangan { get; set; }
-
-    [Column("JUMLAH_LAYAR", TypeName = "NUMBER(10,2)")]
-    public decimal JumlahLayar { get; set; }
+    [Column("KET_SISI")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string KetSisi { get; set; } = null!;
 
     [Column("TGL_MULAI_BERLAKU", TypeName = "DATE")]
     public DateTime TglMulaiBerlaku { get; set; }
@@ -112,18 +112,6 @@ public partial class TSkpdIn
     [StringLength(20)]
     [Unicode(false)]
     public string MasaPajak { get; set; } = null!;
-
-    [Column("IS_EVENT")]
-    [Precision(10)]
-    public int IsEvent { get; set; }
-
-    [Column("SATUAN")]
-    [StringLength(50)]
-    [Unicode(false)]
-    public string Satuan { get; set; } = null!;
-
-    [Column("SATUAN_NOMINAL", TypeName = "NUMBER(15,2)")]
-    public decimal SatuanNominal { get; set; }
 
     [Column("NILAI_NJOP", TypeName = "NUMBER(15,2)")]
     public decimal NilaiNjop { get; set; }
@@ -178,6 +166,10 @@ public partial class TSkpdIn
     [Unicode(false)]
     public string? BatalKet { get; set; }
 
+    [ForeignKey("IdJenisReklame")]
+    [InverseProperty("TSkpdPrmns")]
+    public virtual MJenisReklame IdJenisReklameNavigation { get; set; } = null!;
+
     [InverseProperty("Surat")]
-    public virtual TSkpdInsPenetapan? TSkpdInsPenetapan { get; set; }
+    public virtual TSkpdPrmnPenetapan? TSkpdPrmnPenetapan { get; set; }
 }

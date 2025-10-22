@@ -17,13 +17,13 @@ public partial class TPermohonanFile
 
     [Key]
     [Column("TAHUN_PEL")]
-    [Precision(4)]
-    public byte TahunPel { get; set; }
+    [Precision(10)]
+    public int TahunPel { get; set; }
 
     [Key]
     [Column("BULAN_PEL")]
-    [Precision(2)]
-    public byte BulanPel { get; set; }
+    [Precision(10)]
+    public int BulanPel { get; set; }
 
     [Key]
     [Column("SEQ_PEL")]
@@ -31,8 +31,8 @@ public partial class TPermohonanFile
     public int SeqPel { get; set; }
 
     [Column("IS_MANDATORY")]
-    [Precision(2)]
-    public byte? IsMandatory { get; set; }
+    [Precision(10)]
+    public int? IsMandatory { get; set; }
 
     [Column("ISI_FILE", TypeName = "BLOB")]
     public byte[]? IsiFile { get; set; }

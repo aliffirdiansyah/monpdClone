@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MonPDLib.Lib
 {
-    public class KalkullatorReklame
+    public class KalkulatorReklamePermanen
     {
         public class ReklameInput
         {
-            public string NamaJalan { get; set; }
+            public int IdJalan { get; set; }
             public decimal Panjang { get; set; }
             public decimal Lebar { get; set; }
             public decimal Tinggi { get; set; }
@@ -62,30 +62,35 @@ namespace MonPDLib.Lib
 
         private static ReklameContext _context = DBClass.GetReklameContext();
 
-        public static KalkullatorReklame HitungNilaiSewaReklame(ReklameInput input)
+        public static KalkulatorReklamePermanen HitungNilaiSewaReklame(ReklameInput input)
         {
             DateTime today = DateTime.Today;
-            var jalanData = _context.MJalans
-                .Where(x => x.NamaJalan.Trim().ToUpper() == input.NamaJalan.Trim().ToUpper())
-                .ToList();
-            if (jalanData.Count <= 0)
-            {
-                throw new ArgumentException("Data jalan tidak ditemukan.");
-            }
+            var setting = new SettingReklame();
 
             var kelasJalan = 0;
             var kawasan = EnumFactory.KawasanReklame.NonPenataan;
             var jenisReklame = input.JenisReklame;
             decimal luas = input.Panjang * input.Lebar;
 
+            var jalanData = _context.MJalans
+                .Include(x => x.MJalanKawasans)
+                .Where(x => x.IdJalan == input.IdJalan)
+                .FirstOrDefault();
+            if (jalanData == null)
+            {
+                throw new ArgumentException("Data jalan tidak ditemukan.");
+            }
 
-            var distinctKelasJalan = jalanData.Select(x => x.KelasJalan).Distinct().ToList();
+            var distinctKelasJalan = _context.MJalanKawasans
+                .Where(x => x.IdJalan == jalanData.IdJalan)
+                .Select(x => x.KelasJalanId).Distinct()
+                .ToList();
             if (distinctKelasJalan.Count > 1)
             {
                 throw new Exception("Data jalan memiliki kelas jalan yang berbeda");
             }
 
-            kelasJalan = distinctKelasJalan.First() ?? 0;
+            kelasJalan = distinctKelasJalan.First();
             if (kelasJalan == 1)
             {
                 if (jenisReklame == EnumFactory.KategoriReklame.Megatron)
@@ -100,6 +105,7 @@ namespace MonPDLib.Lib
                     }
                 }
             }
+
             // 1️⃣ Ambil NSR Luas (cek tanggal berlaku)
             var nsrLuas = _context.MNsrLuas
                 .Where(x => x.IdJenisReklame == (int)input.JenisReklame
@@ -266,12 +272,12 @@ namespace MonPDLib.Lib
             decimal totalNjopStrategis = totalNjop + totalNilaiStrategis;
 
             // 8️⃣ Tambahan tinggi (jika > 15m, tiap 15m = +20%)
-            decimal tambahanPersen = 0.20m;
+            decimal tambahanPersen = setting.TAMBAH_KETINGGIAN;
             decimal penambahanKetinggian = 0;
-            if (input.Tinggi > 15)
+            if (input.Tinggi > setting.TAMBAH_KETINGGIAN)
             {
                 // Hitung jumlah kelipatan 15 meter (pembulatan ke bawah)
-                int kelipatan = (int)(input.Tinggi / 15);
+                int kelipatan = (int)(input.Tinggi / setting.TAMBAH_KETINGGIAN);
 
                 // Setiap kelipatan menambah 20%
                 tambahanPersen = tambahanPersen * kelipatan;
@@ -287,13 +293,13 @@ namespace MonPDLib.Lib
             decimal totalSetelahKetinggian = totalNjopStrategis + penambahanKetinggian;
 
             // 9️⃣ Pokok Pajak 25%
-            decimal pokokPajak = totalSetelahKetinggian * 0.25m;
+            decimal pokokPajak = totalSetelahKetinggian * setting.PERSEN_PAJAK;
 
             // 🔟 Tambahan 25% jika produk rokok
             decimal produkRokok = 0;
             if (input.JenisProduk == EnumFactory.ProdukReklame.Rokok)
             {
-                produkRokok = pokokPajak * 0.25m;
+                produkRokok = pokokPajak * setting.PERSEN_ROKOK;
             }
 
             decimal nilaiJambong = 0m;
@@ -326,7 +332,7 @@ namespace MonPDLib.Lib
             totalNilaiSewa = Math.Ceiling(totalNilaiSewa / 100) * 100;
             jaminanBongkar = Math.Ceiling(jaminanBongkar / 100) * 100;
 
-            return new KalkullatorReklame
+            return new KalkulatorReklamePermanen
             {
                 Luas = luas,
                 NjopLuas = njopLuas,
@@ -354,12 +360,12 @@ namespace MonPDLib.Lib
                 BobotLokasiNilai = lokasi.Bobot,
                 BobotPandangNilai = pandang.Bobot,
                 BobotKetinggianNilai = tinggiData.Bobot,
-                NamaJalan = input.NamaJalan,
+                NamaJalan = jalanData.NamaJalan,
                 Kawasan = (EnumFactory.KawasanReklame)kawasan,
                 KelasJalan = "Kelas " + Convert.ToString(kelasJalan),
             };
         }
-        public static KalkullatorReklame HitungNilaiSewaReklame(decimal NilaiKontrak)
+        public static KalkulatorReklamePermanen HitungNilaiSewaReklame(decimal NilaiKontrak)
         {
             decimal totalNilaiSewa = 0m;
             decimal jaminanBongkar = 0m;
@@ -372,7 +378,7 @@ namespace MonPDLib.Lib
             totalNilaiSewa = Math.Ceiling(totalNilaiSewa / 100) * 100;
             jaminanBongkar = Math.Ceiling(jaminanBongkar / 100) * 100;
 
-            return new KalkullatorReklame
+            return new KalkulatorReklamePermanen
             {
                 PokokPajak = pokokPajak,
                 TotalNilaiSewa = totalNilaiSewa,

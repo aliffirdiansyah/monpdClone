@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace MonPDLib.EFReklame;
 
 [PrimaryKey("TahunPel", "BulanPel", "SeqPel", "Seq", "ActId", "WfId", "ActSeq")]
-[Table("T_PERMOHONAN_INS_NILAI_ACT")]
-public partial class TPermohonanInsNilaiAct
+[Table("T_PERMOHONAN_PRMN_NILAI_ACT")]
+public partial class TPermohonanPrmnNilaiAct
 {
     [Key]
     [Column("TAHUN_PEL")]
@@ -58,14 +58,17 @@ public partial class TPermohonanInsNilaiAct
     public string InsBy { get; set; } = null!;
 
     [ForeignKey("ActId")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
+    [InverseProperty("TPermohonanPrmnNilaiActs")]
     public virtual MWfActivity Act { get; set; } = null!;
 
     [ForeignKey("TahunPel, BulanPel, SeqPel, Seq")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
-    public virtual TPermohonanInsNilai TPermohonanInsNilai { get; set; } = null!;
+    [InverseProperty("TPermohonanPrmnNilaiActs")]
+    public virtual TPermohonanPrmnNilai TPermohonanPrmnNilai { get; set; } = null!;
+
+    [InverseProperty("TPermohonanPrmnNilaiAct")]
+    public virtual ICollection<TPermohonanPrmnNilaiHist> TPermohonanPrmnNilaiHists { get; set; } = new List<TPermohonanPrmnNilaiHist>();
 
     [ForeignKey("WfId")]
-    [InverseProperty("TPermohonanInsNilaiActs")]
+    [InverseProperty("TPermohonanPrmnNilaiActs")]
     public virtual MWfWorkflow Wf { get; set; } = null!;
 }

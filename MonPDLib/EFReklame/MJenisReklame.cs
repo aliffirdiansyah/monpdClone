@@ -41,8 +41,8 @@ public partial class MJenisReklame
     public int Kategori { get; set; }
 
     [Column("MODE_UKUR")]
-    [Precision(2)]
-    public byte? ModeUkur { get; set; }
+    [Precision(10)]
+    public int? ModeUkur { get; set; }
 
     [Column("AKTIF")]
     [Precision(10)]
@@ -70,5 +70,11 @@ public partial class MJenisReklame
     public virtual ICollection<TPermohonanInsNilai> TPermohonanInsNilais { get; set; } = new List<TPermohonanInsNilai>();
 
     [InverseProperty("IdJenisReklameNavigation")]
+    public virtual ICollection<TPermohonanPrmnNilai> TPermohonanPrmnNilais { get; set; } = new List<TPermohonanPrmnNilai>();
+
+    [InverseProperty("IdJenisReklameNavigation")]
     public virtual ICollection<TPermohonanPrmn> TPermohonanPrmns { get; set; } = new List<TPermohonanPrmn>();
+
+    [InverseProperty("IdJenisReklameNavigation")]
+    public virtual ICollection<TSkpdPrmn> TSkpdPrmns { get; set; } = new List<TSkpdPrmn>();
 }

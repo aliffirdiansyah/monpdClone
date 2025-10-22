@@ -9,14 +9,6 @@ namespace MonPDLib.EFReklame;
 [Table("M_JALAN")]
 public partial class MJalan
 {
-    [Column("KAWASAN")]
-    [Precision(10)]
-    public int? Kawasan { get; set; }
-
-    [Column("KELAS_JALAN")]
-    [Precision(10)]
-    public int? KelasJalan { get; set; }
-
     [Key]
     [Column("ID_JALAN")]
     [Precision(10)]
@@ -40,10 +32,12 @@ public partial class MJalan
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
 
-    [Column("KORIDOR_JALAN")]
-    [Precision(10)]
-    public int? KoridorJalan { get; set; }
+    [InverseProperty("IdJalanNavigation")]
+    public virtual ICollection<MJalanKawasan> MJalanKawasans { get; set; } = new List<MJalanKawasan>();
 
-    [Column("KORIDOR_NILAI", TypeName = "NUMBER(10,2)")]
-    public decimal KoridorNilai { get; set; }
+    [InverseProperty("IdJalanNavigation")]
+    public virtual ICollection<TPermohonanInsPenelitian> TPermohonanInsPenelitians { get; set; } = new List<TPermohonanInsPenelitian>();
+
+    [InverseProperty("IdJalanNavigation")]
+    public virtual ICollection<TPermohonanPrmnPenelitian> TPermohonanPrmnPenelitians { get; set; } = new List<TPermohonanPrmnPenelitian>();
 }

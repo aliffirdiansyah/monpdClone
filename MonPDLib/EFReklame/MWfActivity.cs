@@ -59,4 +59,7 @@ public partial class MWfActivity
 
     [InverseProperty("Act")]
     public virtual ICollection<TPermohonanInsNilaiAct> TPermohonanInsNilaiActs { get; set; } = new List<TPermohonanInsNilaiAct>();
+
+    [InverseProperty("Act")]
+    public virtual ICollection<TPermohonanPrmnNilaiAct> TPermohonanPrmnNilaiActs { get; set; } = new List<TPermohonanPrmnNilaiAct>();
 }

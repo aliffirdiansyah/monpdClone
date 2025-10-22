@@ -1,4 +1,4 @@
-﻿@model MonPDReborn.Models.Reklame.KakulatorReklameVM.Index
+﻿@model MonPDReborn.Models.Reklame.KalkulatorReklameVM.Index
 
 @{
     ViewData["Title"] = "Kakulator Reklame";
@@ -30,13 +30,19 @@
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#tab-nsr" role="tab">
                                 <span class="d-block d-sm-none"><i class="bx bx-analyse"></i></span>
-                                <span class="d-none d-sm-block fw-semibold">NSR</span>
+                                <span class="d-none d-sm-block fw-semibold">NSR PERMANEN</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#tab-kontrak" role="tab">
                                 <span class="d-block d-sm-none"><i class="bx bx-calculator"></i></span>
                                 <span class="d-none d-sm-block fw-semibold">Nilai Kontrak</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#tab-insidentil" role="tab">
+                                <span class="d-block d-sm-none"><i class="bx bx-calculator"></i></span>
+                                <span class="d-none d-sm-block fw-semibold">NSR INSIDENTIL</span>
                             </a>
                         </li>
                     </ul>
@@ -55,7 +61,8 @@
                                                                         .ShowClearButton(true)
                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                         .Height(45)
-                                                                        .Max(999))
+                                                                        .Max(999)
+                                                                        .Min(1))
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
                                         Panjang bidang reklame dalam meter, diukur dari sisi kiri ke kanan papan reklame.
@@ -69,7 +76,8 @@
                                                                         .ShowClearButton(true)
                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                         .Height(45)
-                                                                        .Max(999))
+                                                                        .Max(999)
+                                                                        .Min(1))
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
                                         Lebar bidang reklame dalam meter, diukur dari sisi bawah ke atas papan reklame.
@@ -83,7 +91,8 @@
                                                                         .ShowClearButton(true)
                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                         .Height(45)
-                                                                        .Max(999))
+                                                                        .Max(999)
+                                                                        .Min(1))
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
                                         Ketinggian reklame dihitung dari bagian paling atas reklame hingga ke permukaan tanah.
@@ -98,7 +107,8 @@
                                                                         .Placeholder("Jumlah arah pandang reklame dapat dilihat")
                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                         .Height(45)
-                                                                        .Max(999))
+                                                                        .Max(999)
+                                                                        .Min(1))
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
                                         Besaran sudut kemiringan papan reklame terhadap arah pandang pengguna jalan.
@@ -107,12 +117,21 @@
 
                                 <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                                     <label for="Sisi" class="form-label fw-semibold">Jumlah Sisi</label>
-                                    @(Html.DevExtreme().NumberBox()
-                                                                        .ID("Sisi")
-                                                                        .ShowClearButton(true)
-                                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                                        .Height(45)
-                                                                        .Max(4))
+                                    @(Html.DevExtreme().SelectBox()
+                                        .ID("Sisi")
+                                        .DataSource(new[] {
+                                    new { Id = 1, Text = "1 Sisi" },
+                                    new { Id = 2, Text = "2 Sisi" },
+                                    new { Id = 3, Text = "3 Sisi" },
+                                    new { Id = 4, Text = "4 Sisi" }
+                                    })
+                                        .ValueExpr("Id")
+                                        .DisplayExpr("Text")
+                                        .Placeholder("Pilih Jumlah Sisi")
+                                        .StylingMode(EditorStylingMode.Outlined)
+                                        .ShowClearButton(true)
+                                        .Height(45)
+                                        )
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
                                         Jumlah sisi reklame yang menampilkan iklan (misal: 1 sisi tunggal, 2 sisi bolak-balik).
@@ -228,6 +247,10 @@
                             </div>
                         </div>
 
+                        <!-- ✅ TAB 3: NSR INSIDENTIL -->
+                        <div class="tab-pane" id="tab-insidentil" role="tabpanel">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -270,14 +293,14 @@
             let jenisReklame = $("#JenisReklame").dxSelectBox("instance").option("value");
             let letakReklame = $("#LetakReklame").dxSelectBox("instance").option("value");
             let produk = $("#produkList").dxSelectBox("instance").option("value");
-            let NamaJalan = $("#NamaJalan").dxSelectBox("instance")?.option("value");
+            let IdJalan = $("#NamaJalan").dxSelectBox("instance")?.option("value");
             let panjang = $("#Panjang").dxNumberBox("instance")?.option("value");
             let lebar = $("#Lebar").dxNumberBox("instance")?.option("value");
-            let sisi = $("#Sisi").dxNumberBox("instance")?.option("value");
+            let sisi = $("#Sisi").dxSelectBox("instance")?.option("value");
             let tinggi = $("#Tinggi").dxNumberBox("instance")?.option("value");
             let sudutPandang = $("#SudutPandang").dxNumberBox("instance")?.option("value");
 
-            if (!jenisReklame || !letakReklame || !produk || !NamaJalan || !panjang || !lebar || !tinggi ||!sudutPandang) {
+            if (!jenisReklame || !letakReklame || !produk || !IdJalan || !panjang || !lebar || !tinggi ||!sudutPandang) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Verifikasi Data',
@@ -287,7 +310,7 @@
                 return;
             }
             $.ajax({
-                url: '@Url.Action("Show", "KakulatorReklame")',
+                url: '@Url.Action("Show", "KalkulatorReklame")',
                 type: "GET",
                 data: {
                     IdJenisReklame: jenisReklame,
@@ -351,7 +374,7 @@
                 return;
             }
             $.ajax({
-                url: '@Url.Action("ShowKontrak", "KakulatorReklame")',
+                url: '@Url.Action("ShowKontrak", "KalkulatorReklame")',
                 type: "GET",
                 data: {
                     NilaiKontrak: nilaiKontrak,

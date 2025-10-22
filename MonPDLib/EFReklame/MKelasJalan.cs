@@ -11,12 +11,14 @@ namespace MonPDLib.EFReklame;
 public partial class MKelasJalan
 {
     [Key]
-    [Column("KAWASAN_ID", TypeName = "NUMBER")]
-    public decimal KawasanId { get; set; }
+    [Column("KAWASAN_ID")]
+    [Precision(10)]
+    public int KawasanId { get; set; }
 
     [Key]
-    [Column("KELAS_JALAN_ID", TypeName = "NUMBER")]
-    public decimal KelasJalanId { get; set; }
+    [Column("KELAS_JALAN_ID")]
+    [Precision(10)]
+    public int KelasJalanId { get; set; }
 
     [Column("NAMA_KELAS_JALAN")]
     [StringLength(100)]

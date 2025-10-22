@@ -23,7 +23,40 @@ namespace MonPDLib.General
             PapanBillboard_MenempelDindingMural = 5,
 
             [Description("Berjalan")]
-            Berjalan = 6
+            Berjalan = 6,
+
+            [Description("Baliho")]
+            Baliho = 7,
+
+            [Description("Kain/Spanduk/Umbul-umbul")]
+            KainSpandukUmbulUmbul = 8,
+
+            [Description("Selebaran/Brosur/Leaflet")]
+            SelebaranBrosurLeaflet = 9,
+
+            [Description("Stiker/Melekat")]
+            StikerMelekat = 10,
+
+            [Description("Film/Slide")]
+            FilmSlide = 11,
+
+            [Description("Udara")]
+            Udara = 12,
+
+            [Description("Apung")]
+            Apung = 13,
+
+            [Description("Suara")]
+            Suara = 14,
+
+            [Description("Peragaan")]
+            Peragaan = 15
+        }
+        public enum EModeUkur
+        {
+            Luas = 1,
+            Satuan = 2,
+            Perulangan = 3
         }
 
         public enum JenisReklame

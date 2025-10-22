@@ -3,16 +3,16 @@ using MonPDLib.General;
 using MonPDLib.Lib;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Web.Mvc;
-using static MonPDLib.Lib.KalkullatorReklame;
 
 namespace MonPDReborn.Models.Reklame
 {
-    public class KakulatorReklameVM
+    public class KalkulatorReklameVM
     {
 
         public class Index
         {
-            public ReklameInput Inputan { get; set; } = new();
+            public KalkulatorReklamePermanen.ReklameInput Inputan { get; set; } = new();
+            public KalkulatorReklameInsidentil.ReklameInput InputanIns { get; set; } = new();
             public List<SelectListItem> JenisReklameList { get; set; } = new();
             public List<SelectListItem> LetakReklameList { get; set; } = new();
             public List<SelectListItem> ProdukList { get; set; } = new();
@@ -27,6 +27,7 @@ namespace MonPDReborn.Models.Reklame
                         Value = j.IdJenisReklame.ToString(),
                         Text = j.NamaJenis
                     })
+                    .OrderBy(x => x.Text)
                     .ToList();
                 LetakReklameList = Enum.GetValues(typeof(EnumFactory.LetakReklame))
                     .Cast<EnumFactory.LetakReklame>()
@@ -44,11 +45,9 @@ namespace MonPDReborn.Models.Reklame
                     }).ToList();
                 JalanList = context.MJalans
                     .AsEnumerable() // ⬅️ Pindahkan ke memory agar LINQ to Objects, bukan LINQ to Entities
-                    .GroupBy(q => q.NamaJalan)
-                    .Select(g => g.First())
                     .Select(q => new SelectListItem
                     {
-                        Value = q.NamaJalan.Trim().ToUpper().ToString(),
+                        Value = q.IdJalan.ToString(),
                         Text = q.NamaJalan
                     })
                     .ToList();
@@ -57,23 +56,34 @@ namespace MonPDReborn.Models.Reklame
 
         public class Show
         {
-            public ReklameInput Output { get; set; } = new();
-            public KalkullatorReklame KalkullatorReklameRow { get; set; } = new();
-            public Show(ReklameInput input)
+            public KalkulatorReklamePermanen.ReklameInput Output { get; set; } = new();
+            public KalkulatorReklamePermanen KalkullatorReklameRow { get; set; } = new();
+            public Show(KalkulatorReklamePermanen.ReklameInput input)
             {
                 Output = input;
-                KalkullatorReklameRow = KalkullatorReklame.HitungNilaiSewaReklame(input);
+                KalkullatorReklameRow = KalkulatorReklamePermanen.HitungNilaiSewaReklame(input);
+            }
+        }
+        
+        public class ShowIns
+        {
+            public KalkulatorReklameInsidentil.ReklameInput Output { get; set; } = new();
+            public KalkulatorReklameInsidentil KalkullatorReklameRow { get; set; } = new();
+            public ShowIns(KalkulatorReklameInsidentil.ReklameInput input)
+            {
+                Output = input;
+                KalkullatorReklameRow = KalkulatorReklameInsidentil.HitungNilaiSewaReklame(input);
             }
         }
 
         public class ShowKontrak
         {
             public decimal nilaiKontrak { get; set; } = new();
-            public KalkullatorReklame HitungKontrak { get; set;} = new();
+            public KalkulatorReklamePermanen HitungKontrak { get; set;} = new();
             public ShowKontrak(decimal NilaiKontrak)
             {
                 nilaiKontrak = NilaiKontrak; 
-                HitungKontrak = KalkullatorReklame.HitungNilaiSewaReklame(NilaiKontrak);
+                HitungKontrak = KalkulatorReklamePermanen.HitungNilaiSewaReklame(NilaiKontrak);
             }
         }
     }

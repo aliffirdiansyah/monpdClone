@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EFReklame;
 
-[Table("M_DOKUMEN_INS")]
-public partial class MDokumenIn
+[Table("M_DOKUMEN_TERB")]
+public partial class MDokumenTerb
 {
     [Key]
     [Column("ID_DOKUMEN")]
@@ -19,6 +19,6 @@ public partial class MDokumenIn
     public byte IsMandatory { get; set; }
 
     [ForeignKey("IdDokumen")]
-    [InverseProperty("MDokumenIn")]
+    [InverseProperty("MDokumenTerb")]
     public virtual MDokuman IdDokumenNavigation { get; set; } = null!;
 }
