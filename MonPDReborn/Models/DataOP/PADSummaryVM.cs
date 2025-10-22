@@ -73,6 +73,14 @@ namespace MonPDReborn.Models.DataOP
                 Data = Methods.GetDetailUpaya(tahun, bulan, pajakId, kategoriId, upaya);
             }
         }
+        public class DetailTotalOPKategori
+        {
+            public List<ViewModels.TotalOPKategori> Data { get; set; } = new();
+            public DetailTotalOPKategori(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
+            {
+                Data = Methods.GetOPTotalKategori(tahun, bulan, pajakId, kategoriId);
+            }
+        }
         public class Detail
         {
             public Detail()
@@ -115,6 +123,15 @@ namespace MonPDReborn.Models.DataOP
                 public int Silang { get; set; }
                 public int Penutupan { get; set; }
             }
+            public class TotalOPKategori
+            {
+                public string Nop { get; set; } = null!;
+                public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+                public string NamaOP { get; set; } = null!;
+                public string Alamat { get; set; } = null!;
+                public string Wilayah { get; set; } = null!;
+            }
+
             public class DetailOP
             {
                 public string Nop { get; set; } = null!;
@@ -1606,6 +1623,24 @@ namespace MonPDReborn.Models.DataOP
                     })
                     .OrderBy(x => x.Nop)
                     .ToList();
+                return ret;
+            }
+            public static List<ViewModels.TotalOPKategori> GetOPTotalKategori(int tahun, int bulan, EnumFactory.EPajak pajakId, int kategoriId)
+            {
+                var context = _context;
+                var ret = new List<ViewModels.TotalOPKategori>();
+
+                ret = context.MObjekPajaks
+                    .Where(x => x.PajakId == (int)pajakId && x.KategoriPajak == kategoriId)
+                    .Select(x => new ViewModels.TotalOPKategori
+                    {
+                        Nop = x.Nop,
+                        NamaOP = x.NamaOp,
+                        Alamat = x.AlamatOp,
+                        Wilayah = "UPTB " + x.WilayahPajak
+                    })
+                    .ToList();
+
                 return ret;
             }
         }
