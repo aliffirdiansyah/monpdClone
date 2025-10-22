@@ -1,0 +1,86 @@
+﻿@using static MonPDReborn.Models.DataOP.PADSummaryVM.ViewModels
+@model MonPDReborn.Models.DataOP.PADSummaryVM.Show
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<PADShow>()
+        .ID("padShowGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
+            columns.AddFor(m => m.OPbuka).Caption("OP Buka").Format("#,##0");
+            columns.AddFor(m => m.OpBayar).Caption("OP Bayar").Format("#,##0");
+            columns.AddFor(m => m.SudahBayar).Caption("Sudah Bayar").Format("#,##0");
+            columns.AddFor(m => m.OpBlmBayar).Caption("OP Blm Bayar").Format("#,##0");
+            columns.AddFor(m => m.Himbauan).Caption("Himbauan").Format("#,##0");
+            columns.AddFor(m => m.Teguran).Caption("Teguran").Format("#,##0");
+            columns.AddFor(m => m.Silang).Caption("Silang").Format("#,##0");
+            columns.AddFor(m => m.Penutupan).Caption("Penutupan").Format("#,##0");
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.JenisPajak)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+                items.AddFor(m => m.OPbuka)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.OpBayar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.SudahBayar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.OpBlmBayar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Himbauan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Teguran)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Silang)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Penutupan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            });
+        }).MasterDetail(md => md
+        .Enabled(true)
+        .Template(
+        @<text>
+        @{
+            ViewData["tahun"] = new JS("data.Tahun");
+            ViewData["bulan"] = new JS("data.Bulan");
+            ViewData["pajakId"] = new JS("data.PajakID");
+        }
+        @await Html.PartialAsync("/Views/DataOP/PADSummary/_Kategori.cshtml")
+    </text>)
+        )
+        )
+</div>
