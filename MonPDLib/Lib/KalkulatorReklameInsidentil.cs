@@ -18,9 +18,9 @@ namespace MonPDLib.Lib
             public int IdJenisReklame { get; set; }
             public int IdJenisProduk { get; set; }
             public int IdLetakReklame { get; set; }
-            public EnumFactory.KategoriReklame JenisReklame { get; set; }
-            public EnumFactory.ProdukReklame JenisProduk { get; set; }
-            public EnumFactory.LetakReklame LetakReklame { get; set; }
+            public EnumFactory.KategoriReklame JenisReklame => (EnumFactory.KategoriReklame)IdJenisReklame;
+            public EnumFactory.ProdukReklame JenisProduk => (EnumFactory.ProdukReklame)IdJenisProduk;
+            public EnumFactory.LetakReklame LetakReklame => (EnumFactory.LetakReklame)IdLetakReklame;
 
             public DateTime TglMulaiBerlaku { get; set; }
             public DateTime TglSelesaiBerlaku { get; set; }
