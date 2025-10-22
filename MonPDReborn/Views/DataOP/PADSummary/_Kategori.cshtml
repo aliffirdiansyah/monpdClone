@@ -1,0 +1,80 @@
+﻿
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PADSummaryVM.ViewModels.PADKategori>()
+        .DataSource(d => d.Mvc()
+        .LoadAction("GetKategori")
+        .Key("PajakID")
+        .LoadParams(new { tahun = ViewData["tahun"], bulan = ViewData["bulan"], pajakId = ViewData["PajakID"] })
+        )
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Kategori).Caption("Kategori");
+            columns.AddFor(m => m.OPbuka).Caption("Total OP").Format("#,##0");
+            columns.Add()
+            .Caption("Sudah Bayar")
+            .Alignment(HorizontalAlignment.Center)
+            .Columns(sub =>
+            {
+                sub.AddFor(m => m.OpBayar).Caption("OP").Format("#,##0").CellTemplate(new JS("opBayarCelltemplate"));
+                sub.AddFor(m => m.SudahBayar).Caption("Realisasi").Format("#,##0");
+            });
+                @* columns.AddFor(m => m.OpBayar).Caption("OP Bayar").Format("#,##0");
+            columns.AddFor(m => m.SudahBayar).Caption("Sudah Bayar").Format("#,##0"); *@
+            columns.AddFor(m => m.OpBlmBayar).Caption("OP Belum Bayar").Format("#,##0");
+            columns.AddFor(m => m.Himbauan).Caption("Himbauan").Format("#,##0").DataField("Himbauan").CellTemplate(new JS("upayaCelltemplate"));
+            columns.AddFor(m => m.Teguran).Caption("Teguran").Format("#,##0").DataField("Teguran").CellTemplate(new JS("upayaCelltemplate"));
+            columns.AddFor(m => m.Silang).Caption("Silang").Format("#,##0").DataField("Silang").CellTemplate(new JS("upayaCelltemplate"));
+            columns.AddFor(m => m.Penutupan).Caption("Penutupan").Format("#,##0").DataField("Penutupan").CellTemplate(new JS("upayaCelltemplate"));
+        })
+        .Summary(summary =>
+        {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Kategori)
+            .SummaryType(SummaryType.Sum)
+            .DisplayFormat("Total");
+                items.AddFor(m => m.OPbuka)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.OpBayar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.SudahBayar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.OpBlmBayar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Himbauan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Teguran)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+                items.AddFor(m => m.Silang)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+            });
+        })
+        )
+</div>

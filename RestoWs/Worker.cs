@@ -424,10 +424,10 @@ WHERE A.NPWPD NOT IN (
                             newRow.ObjekKetetapan = dbAkunPokok.Objek;
                             newRow.RincianKetetapan = dbAkunPokok.Rincian;
                             newRow.SubRincianKetetapan = dbAkunPokok.SubRincian;
-                            newRow.InsDate = DateTime.Now;
-                            newRow.InsBy = "JOB";
-                            newRow.UpdDate = DateTime.Now;
-                            newRow.UpdBy = "JOB";
+                            //newRow.InsDate = DateTime.Now;
+                            //newRow.InsBy = "JOB";
+                            //newRow.UpdDate = DateTime.Now;
+                            //newRow.UpdBy = "JOB";
                             _contMonPd.DbMonRestos.Add(newRow);
                             _contMonPd.SaveChanges();
                         }
@@ -918,10 +918,10 @@ GROUP BY NOP,
                         newRow.ObjekKetetapan = dbAkunPokok.Objek;
                         newRow.RincianKetetapan = dbAkunPokok.Rincian;
                         newRow.SubRincianKetetapan = dbAkunPokok.SubRincian;
-                        newRow.InsDate = DateTime.Now;
-                        newRow.InsBy = "JOB";
-                        newRow.UpdDate = DateTime.Now;
-                        newRow.UpdBy = "JOB";
+                        //newRow.InsDate = DateTime.Now;
+                        //newRow.InsBy = "JOB";
+                        //newRow.UpdDate = DateTime.Now;
+                        //newRow.UpdBy = "JOB";
                         _contMonPd.DbMonRestos.Add(newRow);
                         _contMonPd.SaveChanges();
                         index++;
@@ -1218,10 +1218,10 @@ GROUP BY NOP, MASA, TAHUN  ";
                                 newRow.ObjekKetetapan = objekBayar;
                                 newRow.RincianKetetapan = rincianBayar;
                                 newRow.SubRincianKetetapan = subrincianBayar;
-                                newRow.InsDate = DateTime.Now;
-                                newRow.InsBy = "JOB";
-                                newRow.UpdDate = DateTime.Now;
-                                newRow.UpdBy = "JOB";
+                                //newRow.InsDate = DateTime.Now;
+                                //newRow.InsBy = "JOB";
+                                //newRow.UpdDate = DateTime.Now;
+                                //newRow.UpdBy = "JOB";
 
                                 newRow.TglBayarPokok = itemSSPD.TRANSACTION_DATE;
                                 newRow.NominalPokokBayar = itemSSPD.NOMINAL_POKOK;

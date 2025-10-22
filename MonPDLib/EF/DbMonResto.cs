@@ -153,11 +153,11 @@ public partial class DbMonResto
     [Column("TGL_JATUH_TEMPO_BAYAR", TypeName = "DATE")]
     public DateTime? TglJatuhTempoBayar { get; set; }
 
-    [Column("IS_LUNAS_KETETAPAN", TypeName = "NUMBER")]
-    public decimal? IsLunasKetetapan { get; set; }
+    //[Column("IS_LUNAS_KETETAPAN", TypeName = "NUMBER")]
+    //public decimal? IsLunasKetetapan { get; set; }
 
-    [Column("TGL_LUNAS_KETETAPAN", TypeName = "DATE")]
-    public DateTime? TglLunasKetetapan { get; set; }
+    //[Column("TGL_LUNAS_KETETAPAN", TypeName = "DATE")]
+    //public DateTime? TglLunasKetetapan { get; set; }
 
     [Column("POKOK_PAJAK_KETETAPAN", TypeName = "NUMBER")]
     public decimal? PokokPajakKetetapan { get; set; }
@@ -283,21 +283,21 @@ public partial class DbMonResto
     [Unicode(false)]
     public string? SubRincianKenaikanBayar { get; set; }
 
-    [Column("INS_DATE", TypeName = "DATE")]
-    public DateTime InsDate { get; set; }
+    //[Column("INS_DATE", TypeName = "DATE")]
+    //public DateTime InsDate { get; set; }
 
-    [Column("INS_BY")]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string InsBy { get; set; } = null!;
+    //[Column("INS_BY")]
+    //[StringLength(100)]
+    //[Unicode(false)]
+    //public string InsBy { get; set; } = null!;
 
-    [Column("UPD_DATE", TypeName = "DATE")]
-    public DateTime UpdDate { get; set; }
+    //[Column("UPD_DATE", TypeName = "DATE")]
+    //public DateTime UpdDate { get; set; }
 
-    [Column("UPD_BY")]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string UpdBy { get; set; } = null!;
+    //[Column("UPD_BY")]
+    //[StringLength(100)]
+    //[Unicode(false)]
+    //public string UpdBy { get; set; } = null!;
 
     [Column("KELOMPOK")]
     [StringLength(20)]
