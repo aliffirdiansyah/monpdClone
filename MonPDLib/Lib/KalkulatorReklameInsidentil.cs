@@ -149,12 +149,12 @@ namespace MonPDLib.Lib
                     ret.PokokPajak = totalSebelumPajak * (setting.PERSEN_PAJAK);
                     ret.ProdukRokok = ret.PokokPajak * (setting.PERSEN_ROKOK);
                     ret.TotalNilaiSewa = ret.PokokPajak + ret.ProdukRokok;
-                    ret.JaminanBongkar = jambong.Nilai * luas * input.JumlahSatuan;
+                    ret.JaminanBongkar = (jambong?.Nilai ?? 0) * luas * input.JumlahSatuan;
 
                     break;
                 case EnumFactory.EModeUkur.Satuan:
 
-                    nsr = input.JumlahSatuan * (njop.NilaiNjop ?? 0);
+                    nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0);
 
                     if (nsr <= minimDPP)
                     {
@@ -174,8 +174,8 @@ namespace MonPDLib.Lib
                     break;
                 case EnumFactory.EModeUkur.Perulangan:
 
-                    nsr = (input.LamaPenyelenggaraan / njop.SatuanNominal ?? 0) * input.JumlahLayar * input.JumlahPerulangan * (njop.NilaiNjop ?? 0);
-                    ret.SatuanNominal = njop.SatuanNominal ?? 0;
+                    nsr = (input.LamaPenyelenggaraan / njop?.SatuanNominal ?? 0) * input.JumlahLayar * input.JumlahPerulangan * (njop?.NilaiNjop ?? 0);
+                    ret.SatuanNominal = njop?.SatuanNominal ?? 0;
                     ret.Nsr = nsr;
                     totalSebelumPajak = nsr;
                     ret.PokokPajak = totalSebelumPajak * setting.PERSEN_PAJAK;
