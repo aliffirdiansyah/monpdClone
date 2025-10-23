@@ -1,10 +1,10 @@
 ﻿@using static MonPDReborn.Models.DataOP.PADSummaryVM.ViewModels
-@model MonPDReborn.Models.DataOP.PADSummaryVM.DetailBlmBayar
+@model MonPDReborn.Models.DataOP.PADSummaryVM.DetailAllBlmBayar
 
 <div class="table-responsive">
     @(
-        Html.DevExtreme().DataGrid<OPBlmBayarKategori>()
-        .ID("detailOPGrid")
+        Html.DevExtreme().DataGrid<OPBlmBayarAll>()
+        .ID("detailallblmbayarOPGrid")
         .DataSource(Model.Data)
         .ShowBorders(true)
         .ShowColumnHeaders(true)
@@ -13,20 +13,20 @@
         .AllowColumnResizing(true)
         .RowAlternationEnabled(true)
         .ColumnAutoWidth(true)
-            .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
-            .FilterRow(f => f.Visible(true))
-            .HeaderFilter(h => h.Visible(true))
-            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
         .Paging(p => p.PageSize(20))
         .Pager(p => p
-            .ShowPageSizeSelector(true)
-            .AllowedPageSizes(new[] { 10, 20, 50 })
-            .ShowInfo(true)
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 10, 20, 50 })
+        .ShowInfo(true)
         )
         .SearchPanel(sp => sp
-            .Visible(true)
-            .Width(240)
-            .Placeholder("Cari...")
+        .Visible(true)
+        .Width(240)
+        .Placeholder("Cari...")
         )
         .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
         .OnExporting("exportGrid")
