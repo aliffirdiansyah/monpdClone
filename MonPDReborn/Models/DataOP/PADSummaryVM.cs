@@ -185,8 +185,16 @@ namespace MonPDReborn.Models.DataOP
                 public string NamaOP { get; set; } = null!;
                 public string Alamat { get; set; } = null!;
                 public string Wilayah { get; set; } = null!;
+                public string Petugas { get; set; } = null!;
+                public string Nip { get; set; } = null!;
+                public string WajibPajak { get; set; } = null!;
+                public byte[] Foto { get; set; } = null!;
+                public byte[] File { get; set; } = null!;
                 public DateTime TglUpaya { get; set; }
+                public int Seq { get; set; }
+                public int IdAktifitas { get; set; }
             }
+        
             public class TotalOPAll
             {
                 public int pajakId { get; set; }
@@ -204,7 +212,14 @@ namespace MonPDReborn.Models.DataOP
                 public string NamaOP { get; set; } = null!;
                 public string Alamat { get; set; } = null!;
                 public string Wilayah { get; set; } = null!;
+                public string Petugas { get; set; } = null!;
+                public string Nip { get; set; } = null!;
+                public string WajibPajak { get; set; } = null!;
+                public byte[] Foto { get; set; } = null!;
+                public byte[] File { get; set; } = null!;
                 public DateTime TglUpaya { get; set; }
+                public int Seq { get; set; }
+                public int IdAktifitas { get; set; }
             }
             public class DetailBayarAll
             {
@@ -1712,7 +1727,14 @@ namespace MonPDReborn.Models.DataOP
                         NamaOP = x.NopNavigation.NamaOp,
                         Alamat = x.NopNavigation.AlamatOp,
                         Wilayah = "UPTB " + x.NopNavigation.WilayahPajak,
+                        Petugas = x.NipNavigation.Nama,
+                        Nip = x.Nip,
+                        WajibPajak = x.PenanggungJawab ?? "-",
+                        File = x.TAktifitasPegawaiFile.FileData,
+                        Foto = x.TAktifitasPegawaiFile.FotoFile,
                         TglUpaya = x.TanggalAktifitas ?? DateTime.MinValue,
+                        Seq = x.Seq,
+                        IdAktifitas = (int)x.IdAktifitas
                     })
                     .OrderBy(x => x.Nop)
                     .ToList();
@@ -1778,7 +1800,14 @@ namespace MonPDReborn.Models.DataOP
                         NamaOP = x.NopNavigation.NamaOp,
                         Alamat = x.NopNavigation.AlamatOp,
                         Wilayah = "UPTB " + x.NopNavigation.WilayahPajak,
+                        Petugas = x.NipNavigation.Nama,
+                        Nip = x.Nip,
+                        WajibPajak = x.PenanggungJawab ?? "-",
+                        File = x.TAktifitasPegawaiFile.FileData,
+                        Foto = x.TAktifitasPegawaiFile.FotoFile,
                         TglUpaya = x.TanggalAktifitas ?? DateTime.MinValue,
+                        Seq = x.Seq,
+                        IdAktifitas = (int)x.IdAktifitas
                     })
                     .OrderBy(x => x.Nop)
                     .ToList();

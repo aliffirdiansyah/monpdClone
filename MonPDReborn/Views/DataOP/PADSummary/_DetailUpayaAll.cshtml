@@ -35,8 +35,25 @@
             columns.AddFor(m => m.FormattedNOP).Caption("NOP").CellTemplate(new JS("detailOPCellTemplate"));
             columns.AddFor(m => m.NamaOP).Caption("Nama OP");
             columns.AddFor(m => m.Alamat).Caption("Alamat OP");
-            columns.AddFor(m => m.Alamat).Caption("Wilayah Pajak");
+            columns.AddFor(m => m.Wilayah).Caption("Wilayah Pajak");
+            columns.AddFor(m => m.Petugas).Caption("Petugas");
+            columns.AddFor(m => m.WajibPajak).Caption("Wajib Pajak/Perwakilan");
             columns.AddFor(m => m.TglUpaya).Caption("Tgl Upaya");
+            columns.Add()
+            .Caption("Aksi")
+            .Width("18%")
+            .CellTemplate(@<text>
+                <button class="btn btn-sm btn-outline-primary me-1"
+                        title="Lihat Dokumen"
+                        onclick="lihatFile('@Model.Data.FirstOrDefault().Nip','@Model.Data.FirstOrDefault().Nop', <%- data.IdAktifitas %>, <%- data.Seq %>, 'dokumen')">
+                    📄 Dokumen
+                </button>
+                <button class="btn btn-sm btn-outline-success"
+                        title="Lihat Foto"
+                        onclick="lihatFile('@Model.Data.FirstOrDefault().Nip','@Model.Data.FirstOrDefault().Nop', <%- data.IdAktifitas %>, <%- data.Seq %>, 'foto')">
+                    🖼 Foto
+                </button>
+            </text>);
         })
     @* .Summary(summary =>
         {
@@ -53,3 +70,29 @@
         }) *@
         )
 </div>
+
+<script>
+    function lihatFile(nip, nop, idAktifitas, seq, tipe) {
+        let inputFile;
+        let fileUrl = null;
+
+        // Ambil elemen file input berdasarkan tipe
+        if (tipe === 'dokumen') {
+            inputFile = document.getElementById('FileData');
+        } else if (tipe === 'foto') {
+            inputFile = document.getElementById('FotoData');
+        }
+
+        // Jika user baru upload file (belum disimpan ke DB)
+        if (inputFile && inputFile.files.length > 0) {
+            const file = inputFile.files[0];
+            fileUrl = URL.createObjectURL(file);
+            window.open(fileUrl, '_blank');
+            return;
+        }
+
+        // Jika belum ada file dari upload, ambil dari server
+        fileUrl = `/PADSummary/LihatFile?nip=${nip}&nop=${nop}&idAktifitas=${idAktifitas}&seq=${seq}&tipe=${tipe}`;
+        window.open(fileUrl, '_blank');
+    }
+</script>
