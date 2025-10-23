@@ -1,6 +1,8 @@
 ﻿using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using MonPDLib.EFPenyelia;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
@@ -23,6 +25,7 @@ namespace MonPDReborn.Controllers.DataOP
             URLView = string.Concat("../DataOP/", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
+        private static PenyeliaContext _context = DBClass.GetPenyeliaContext();
         public IActionResult Index()
         {
             try
@@ -239,6 +242,79 @@ namespace MonPDReborn.Controllers.DataOP
                 response.Status = StatusEnum.Error;
                 response.Message = "⚠️ Server Error: Internal Server Error";
                 return Json(response);
+            }
+        }
+        [HttpGet]
+        public IActionResult LihatFile(string nip, string nop, long idAktifitas, int seq, string? tipe)
+        {
+            try
+            {
+                var konteks = _context;
+
+                var file = konteks.TAktifitasPegawaiFiles
+                    .FirstOrDefault(f =>
+                        f.Nip == nip &&
+                        f.Nop == nop &&
+                        f.IdAktifitas == idAktifitas &&
+                        f.Seq == seq);
+
+                if (file == null)
+                    return NotFound("Data tidak ditemukan.");
+
+                byte[]? fileBytes = null;
+                string contentType = "application/octet-stream";
+                string fileExt = "";
+
+                // 🧠 1️⃣ Pilih sumber file sesuai tipe
+                if (string.Equals(tipe, "foto", StringComparison.OrdinalIgnoreCase))
+                {
+                    fileBytes = file.FotoFile;
+                }
+                else if (string.Equals(tipe, "dokumen", StringComparison.OrdinalIgnoreCase))
+                {
+                    fileBytes = file.FileData;
+                }
+
+                if (fileBytes == null || fileBytes.Length == 0)
+                    return NotFound($"File {tipe} tidak ditemukan di database.");
+
+                // 🧠 2️⃣ Deteksi jenis file berdasarkan header bytes
+                if (fileBytes.Length > 4 && fileBytes[0] == 0x25 && fileBytes[1] == 0x50) // %PDF
+                {
+                    contentType = "application/pdf";
+                    fileExt = ".pdf";
+                }
+                else if (fileBytes[0] == 0xFF && fileBytes[1] == 0xD8) // JPEG
+                {
+                    contentType = "image/jpeg";
+                    fileExt = ".jpg";
+                }
+                else if (fileBytes[0] == 0x89 && fileBytes[1] == 0x50 && fileBytes[2] == 0x4E && fileBytes[3] == 0x47) // PNG
+                {
+                    contentType = "image/png";
+                    fileExt = ".png";
+                }
+                else if (fileBytes[0] == 0x47 && fileBytes[1] == 0x49 && fileBytes[2] == 0x46) // GIF
+                {
+                    contentType = "image/gif";
+                    fileExt = ".gif";
+                }
+                else
+                {
+                    contentType = "application/octet-stream";
+                    fileExt = ".bin";
+                }
+
+                // 🧠 3️⃣ Return langsung agar browser preview (tanpa "attachment")
+                Response.Headers.Remove("Content-Disposition");
+                Response.Headers.Add("Content-Disposition", $"inline; filename=\"preview{fileExt}\"");
+
+                return File(fileBytes, contentType);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error di LihatFile()");
+                return Json(new { status = "error", message = ex.Message });
             }
         }
     }
