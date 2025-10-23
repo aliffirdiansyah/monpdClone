@@ -1,0 +1,147 @@
+﻿@model MonPDReborn.Models.DataOP.PenyeliaVM.Index
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-0">
+                        PAD Summary
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mt-3 ms-0">
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBox()
+                                .ID("SelectedTahun")
+                                .Value(Model.SelectedTahun)
+                                .DataSource(Model.TahunList)
+                                .DisplayExpr("Text")
+                                .ValueExpr("Value")
+                                .SearchEnabled(true)
+                                .Value(DateTime.Now.Year.ToString())
+                                .Placeholder("Pilih Tahun")
+                                .StylingMode(EditorStylingMode.Outlined)
+                                .ElementAttr("class", "form-select mb-3")
+                                )
+                    </div>
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBox()
+                                .ID("SelectedBulan")
+                                .Value(Model.SelectedBulan)
+                                .DataSource(Model.BulanList)
+                                .DisplayExpr("Text")
+                                .ValueExpr("Value")
+                                .SearchEnabled(true)
+                                .Value(Model.SelectedBulan.ToString())
+                                .Placeholder("Pilih Bulan")
+                                .StylingMode(EditorStylingMode.Outlined)
+                                .ElementAttr("class", "form-select mb-3")
+                                )
+                    </div>
+
+                    <div class="col-lg-2">
+                        @(Html.DevExtreme().SelectBoxFor(m => m.SelectedBidang)
+                                .ID("bidangView")
+                                .DataSource(d => d.Mvc().LoadAction("GetBidang").Key("filter"))
+                                .DisplayExpr("Text")
+                                .ValueExpr("Value")
+                                .SearchEnabled(true)
+                                .Placeholder("Pilih Bidang")
+                                .StylingMode(EditorStylingMode.Outlined)
+                                .ElementAttr("class", "form-select mb-3")
+                                )
+                    </div>
+
+                    <div class="col-lg-2">
+                        <button type="button" class="btn btn-success w-80">
+                            <i class="bi bi-funnel-fill me-1"></i> Terapkan Filter
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            var tahunSelectBox = $("#SelectedTahun").dxSelectBox("instance");
+            var bulanSelectBox = $("#SelectedBulan").dxSelectBox("instance");
+            var bidangSelectBox = $("#bidangView").dxSelectBox("instance");
+
+            $(".btn-success").on("click", function () {
+                var selectedTahun = tahunSelectBox.option("value");
+                var selectedBulan = bulanSelectBox.option("value");
+                var selectedBidang = bidangSelectBox.option("value");
+
+                if (!selectedTahun || !selectedBulan || !selectedBidang) {
+                    DevExpress.ui.notify("Silakan pilih Tahun, Bulan, dan Bidang terlebih dahulu.", "warning", 2000);
+                    return;
+                }
+
+                show(selectedTahun, selectedBulan, selectedBidang);
+            });
+        });
+
+        function show(tahun, bulan, bidang) {
+            console.log("Filter diterapkan:");
+            console.log("Tahun:", tahun);
+            console.log("Bulan:", bulan);
+            console.log("Bidang:", bidang);
+
+            $.ajax({
+                url: '/Penyelia/Show',
+                type: 'GET',
+                data: {
+                    tahun: tahun,
+                    bulan: bulan,
+                    bidang: bidang
+                },
+                beforeSend: function () {
+                    $('#loading2-Show').show();
+                    $('#Show').hide();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-Show').hide();
+                        $('#Show').show();
+                        $('#Show').html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $('#loading2-Show').hide();
+                    $('#Show').hide();
+                    $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                }
+            });
+        }
+    </script>
+
+    
+}
