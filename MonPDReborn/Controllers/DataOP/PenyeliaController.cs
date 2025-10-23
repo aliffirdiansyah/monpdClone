@@ -1,4 +1,5 @@
-﻿using DevExtreme.AspNet.Mvc;
+﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using MonPDLib.EFPenyelia;
@@ -77,6 +78,12 @@ namespace MonPDReborn.Controllers.DataOP
                 response.Message = "⚠️ Server Error: Internal Server Error";
                 return Json(response);
             }
+        }
+        [HttpGet]
+        public object GetDetail(DataSourceLoadOptions load_options, int tahun, int bulan, string nip)
+        {
+            var data = Models.DataOP.PenyeliaVM.Methods.GetDetailPenyelia( tahun, bulan, nip);
+            return DataSourceLoader.Load(data, load_options);
         }
         [HttpGet]
         public async Task<object> GetBidang(DataSourceLoadOptions loadOptions)

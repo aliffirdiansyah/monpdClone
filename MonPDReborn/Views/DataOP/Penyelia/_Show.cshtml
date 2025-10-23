@@ -1,0 +1,41 @@
+﻿@using static MonPDReborn.Models.DataOP.PenyeliaVM.ViewModels
+@model MonPDReborn.Models.DataOP.PenyeliaVM.Show
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<Penyelia>()
+        .ID("penyeliaGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Nip).Caption("Nip");
+            columns.AddFor(m => m.Nama).Caption("Nama Pegawai");
+            columns.AddFor(m => m.JmlNOP).Caption("Jumlah OP").Format("#,##0");
+            columns.AddFor(m => m.Capaian).Caption("Capaian").Format("#,##0");
+        })
+        .MasterDetail(md => md
+        .Enabled(true)
+        .Template(
+        @<text>
+        @{
+            ViewData["tahun"] = new JS("data.Tahun");
+            ViewData["bulan"] = new JS("data.Bulan");
+            ViewData["nip"] = new JS("data.Nip");
+        }
+        @await Html.PartialAsync("/Views/DataOP/Penyelia/_Detail.cshtml")
+    </text>)
+        )
+        )
+</div>

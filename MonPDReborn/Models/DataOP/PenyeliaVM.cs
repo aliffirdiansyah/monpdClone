@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using MonPDLib.EFPenyelia;
+using MonPDLib.General;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Globalization;
 using System.Web.Mvc;
 
@@ -49,9 +51,10 @@ namespace MonPDReborn.Models.DataOP
         }
         public class Detail
         {
-            public Detail()
+            public List<ViewModels.DetailPenyelia> Data { get; set; } = new();
+            public Detail(int tahun, int bulan, string nip)
             {
-
+                Data = Methods.GetDetailPenyelia(tahun, bulan, nip);
             }
         }
         public class ViewModels
@@ -62,6 +65,8 @@ namespace MonPDReborn.Models.DataOP
                 public string Nama { get; set; } = null!;
                 public decimal JmlNOP { get; set; }
                 public decimal Capaian { get; set; }
+                public int Tahun { get; set; }
+                public int Bulan { get; set; }
             }
             public class DetailPenyelia
             {
@@ -96,52 +101,54 @@ namespace MonPDReborn.Models.DataOP
                 var context = _context;
                 var ret = new List<ViewModels.Penyelia>();
 
+                // Ambil semua NOP yang sudah bayar di bulan & tahun tertentu
                 var nopSudahBayar = new HashSet<string>(
                     MonPdContext.DbMonRestos
-                        .Where(x => x.NominalPokokBayar.HasValue && 
-                                    x.TglBayarPokok.HasValue && 
+                        .Where(x => x.NominalPokokBayar.HasValue &&
+                                    x.TglBayarPokok.HasValue &&
                                     x.TglBayarPokok.Value.Year == tahun &&
                                     x.TglBayarPokok.Value.Month == bulan)
                         .Select(x => x.Nop)
                         .Concat(MonPdContext.DbMonHotels
                             .Where(x => x.NominalPokokBayar.HasValue &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month == bulan)
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
                             .Select(x => x.Nop))
                         .Concat(MonPdContext.DbMonHiburans
                             .Where(x => x.NominalPokokBayar.HasValue &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month == bulan)
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
                             .Select(x => x.Nop))
                         .Concat(MonPdContext.DbMonParkirs
                             .Where(x => x.NominalPokokBayar.HasValue &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month == bulan)
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
                             .Select(x => x.Nop))
                         .Concat(MonPdContext.DbMonPpjs
                             .Where(x => x.NominalPokokBayar.HasValue &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month == bulan)
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
                             .Select(x => x.Nop))
                         .Concat(MonPdContext.DbMonAbts
                             .Where(x => x.NominalPokokBayar.HasValue &&
-                                    x.TglBayarPokok.HasValue &&
-                                    x.TglBayarPokok.Value.Year == tahun &&
-                                    x.TglBayarPokok.Value.Month == bulan)
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
                             .Select(x => x.Nop))
                         .Distinct()
                         .ToList()
                 );
 
+                // Ambil aktivitas, tapi tidak lagi dipakai untuk menentukan capaian
                 var aktivitasPerNop = context.TAktifitasPegawais
                     .GroupBy(a => a.Nop)
                     .ToDictionary(g => g.Key, g => g.Count());
 
-                // === HITUNG CAPAIAN PER PEGAWAI ===
+                // Hitung capaian per pegawai
                 ret = context.MPegawaiBarus
                     .Where(p => p.UnitKerja == bidang)
                     .AsEnumerable()
@@ -162,10 +169,8 @@ namespace MonPDReborn.Models.DataOP
                                 Capaian = 0
                             };
 
-                        var totalCapaian = nopsPegawai.Count(nop =>
-                            nopSudahBayar.Contains(nop) ||
-                            (aktivitasPerNop.ContainsKey(nop) && aktivitasPerNop[nop] >= 4)
-                        );
+                        // 🔹 Capaian hanya dihitung untuk NOP yang sudah bayar
+                        var totalCapaian = nopsPegawai.Count(nop => nopSudahBayar.Contains(nop));
 
                         var capaianPersen = (decimal)totalCapaian / totalNOP * 100;
 
@@ -174,6 +179,8 @@ namespace MonPDReborn.Models.DataOP
                             Nip = p.NipNik ?? "-",
                             Nama = p.Nama,
                             JmlNOP = totalNOP,
+                            Tahun = tahun,
+                            Bulan = bulan,
                             Capaian = Math.Round(capaianPersen, 2)
                         };
                     })
@@ -181,6 +188,77 @@ namespace MonPDReborn.Models.DataOP
 
                 return ret;
 
+            }
+            public static List<ViewModels.DetailPenyelia> GetDetailPenyelia(int tahun, int bulan, string nip)
+            {
+                var MonPdContext = DBClass.GetContext();
+                var context = _context;
+                var ret = new List<ViewModels.DetailPenyelia>();
+
+                var nopSudahBayar = new HashSet<string>(
+                    MonPdContext.DbMonRestos
+                        .Where(x => x.NominalPokokBayar.HasValue &&
+                                    x.TglBayarPokok.HasValue &&
+                                    x.TglBayarPokok.Value.Year == tahun &&
+                                    x.TglBayarPokok.Value.Month == bulan)
+                        .Select(x => x.Nop)
+                        .Concat(MonPdContext.DbMonHotels
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonHiburans
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonParkirs
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonPpjs
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonAbts
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Distinct()
+                        .ToList()
+                );
+
+                var jumlahOp = context.MPegawaiOpDets
+                    .Where(x => x.Nip == nip)
+                    .Select(x => x.Nop)
+                    .ToList();
+
+                var totalCapaian = jumlahOp.Count(nop => nopSudahBayar.Contains(nop));
+
+                var capaianPersen = (decimal)totalCapaian / jumlahOp.Count() * 100;
+
+                ret = context.MPegawaiOpDets
+                    .Where(x => x.Nip == nip)
+                    .AsEnumerable()
+                    .Select(x => new ViewModels.DetailPenyelia
+                    {
+                        Nip = x.Nip,
+                        pajakId = (int)x.NopNavigation.PajakId,
+                        JenisPajak = ((EnumFactory.EPajak)x.NopNavigation.PajakId).GetDescription(),
+                        JmlNOP = jumlahOp.Count(),
+                        Capaian = nopSudahBayar.Contains(x.Nop) ? Math.Round(capaianPersen, 2) : 0
+                    })
+                    .ToList();
+
+                return ret;
             }
         }
     }
