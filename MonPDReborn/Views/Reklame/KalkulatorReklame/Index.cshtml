@@ -139,9 +139,9 @@
                                 </div>
 
                                 <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                                    <label for="NamaJalan" class="form-label fw-semibold">Nama Jalan</label>
+                                    <label for="IdJalan" class="form-label fw-semibold">Nama Jalan</label>
                                     @(Html.DevExtreme().SelectBox()
-                                                                        .ID("NamaJalan")
+                                                                        .ID("IdJalan")
                                                                         .DataSource(Model.JalanList)
                                                                         .DisplayExpr("Text")
                                                                         .ValueExpr("Value")
@@ -208,7 +208,7 @@
 
                                 <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                                     <label class="form-label fw-semibold">&nbsp;</label>
-                                    <button type="button" class="btn btn-success w-100" id="btnFilter">
+                                    <button type="button" class="btn btn-success w-100" onclick="loadShowData()">
                                         <i class="bi bi-funnel-fill me-1"></i> Hitung NSR
                                     </button>
                                 </div>
@@ -240,7 +240,7 @@
 
                                 <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
                                     <label class="form-label fw-semibold">&nbsp;</label>
-                                    <button type="button" class="btn btn-info w-100" id="btnFilter">
+                                    <button type="button" class="btn btn-info w-100" onclick="loadShowKontrak()">
                                         <i class="bi bi-funnel-fill me-1"></i> Hitung Nilai Kontrak
                                     </button>
                                 </div>
@@ -482,7 +482,7 @@
             let jenisReklame = $("#JenisReklame").dxSelectBox("instance").option("value");
             let letakReklame = $("#LetakReklame").dxSelectBox("instance").option("value");
             let produk = $("#produkList").dxSelectBox("instance").option("value");
-            let IdJalan = $("#NamaJalan").dxSelectBox("instance")?.option("value");
+            let IdJalan = $("#IdJalan").dxSelectBox("instance")?.option("value");
             let panjang = $("#Panjang").dxNumberBox("instance")?.option("value");
             let lebar = $("#Lebar").dxNumberBox("instance")?.option("value");
             let sisi = $("#Sisi").dxSelectBox("instance")?.option("value");
@@ -505,7 +505,7 @@
                     IdJenisReklame: jenisReklame,
                     IdLetakReklame: letakReklame,
                     IdJenisProduk: produk,
-                    NamaJalan: NamaJalan,
+                    IdJalan: IdJalan,
                     Sisi: sisi,
                     panjang: panjang,
                     lebar: lebar,
@@ -547,7 +547,7 @@
             });
         }
 
-        $(".btn-success").on("click", loadShowData);
+       
     </script>
     <script>
         function loadShowKontrak() {
@@ -603,7 +603,6 @@
             });
         }
 
-        $(".btn-info").on("click", loadShowKontrak);
     </script>
     <script>
         function onJenisReklameInsChanged(e) {

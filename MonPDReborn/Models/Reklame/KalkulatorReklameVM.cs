@@ -55,7 +55,6 @@ namespace MonPDReborn.Models.Reklame
                         Text = x.GetDescription()
                     }).ToList();
                 JalanList = context.MJalans
-                    .AsEnumerable() // ⬅️ Pindahkan ke memory agar LINQ to Objects, bukan LINQ to Entities
                     .Select(q => new SelectListItem
                     {
                         Value = q.IdJalan.ToString(),
