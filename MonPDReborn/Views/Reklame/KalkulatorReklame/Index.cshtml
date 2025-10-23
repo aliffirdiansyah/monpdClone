@@ -327,6 +327,7 @@
                                                                         .Placeholder("Pilih tanggal mulai")
                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                         .Height(45)
+                                                                        .DisplayFormat("dd MMMM yyyy")
                                                                         )
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
@@ -341,6 +342,7 @@
                                                                         .Placeholder("Pilih tanggal selesai")
                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                         .Height(45)
+                                                                        .DisplayFormat("dd MMMM yyyy")
                                                                         )
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
@@ -360,10 +362,11 @@
                                                                                         .Min(1)
                                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                                         .Height(45)
+                                                                                        .Format("#,##0")
                                                                                         )
                                             <small class="form-text text-danger mt-auto">
                                                 <i class='bx bx-info-circle me-1'></i>
-                                                Jumlah unit atau bidang reklame yang dipasang.
+                                                Jumlah unit atau bidang atau durasi reklame yang dipasang.
                                             </small>
                                         </div>
                                     </div>
@@ -376,9 +379,10 @@
                                             @(Html.DevExtreme().NumberBox()
                                                                                         .ID("PanjangIns")
                                                                                         .Placeholder("Panjang media reklame")
-                                                                                        .Min(0)
+                                                                                        .Min(1)
                                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                                         .Height(45)
+                                                                                        .Format("#,##0")
                                                                                         )
                                             <small class="form-text text-danger mt-auto">
                                                 <i class='bx bx-info-circle me-1'></i>
@@ -394,9 +398,10 @@
                                             @(Html.DevExtreme().NumberBox()
                                                                                         .ID("LebarIns")
                                                                                         .Placeholder("Lebar media reklame")
-                                                                                        .Min(0)
+                                                                                        .Min(1)
                                                                                         .StylingMode(EditorStylingMode.Outlined)
                                                                                         .Height(45)
+                                                                                        .Format("#,##0")
                                                                                         )
                                             <small class="form-text text-danger mt-auto">
                                                 <i class='bx bx-info-circle me-1'></i>
@@ -416,10 +421,11 @@
                                                                                 .Min(1)
                                                                                 .StylingMode(EditorStylingMode.Outlined)
                                                                                 .Height(45)
+                                                                                .Format("#,##0")
                                                                                 )
                                         <small class="form-text text-danger mt-auto">
                                             <i class='bx bx-info-circle me-1'></i>
-                                            Untuk reklame berjalan atau berganti tayang (misal videotron).
+                                            Untuk reklame berjalan atau berganti tayang (misal Film.Suara).
                                         </small>
                                     </div>
 
@@ -431,6 +437,7 @@
                                                                                 .Min(1)
                                                                                 .StylingMode(EditorStylingMode.Outlined)
                                                                                 .Height(45)
+                                                                                .Format("#,##0")
                                                                                 )
                                         <small class="form-text text-danger mt-auto">
                                             <i class='bx bx-info-circle me-1'></i>
@@ -526,6 +533,7 @@
                 beforeSend: function () {
                     $("#Show").html('');
                     $("#ShowKontrak").html('');
+                    $("#ShowIns").html('');
                     $("#card-show").hide();
                     $("#Show").hide();
                     $("#loading2-Show").show();
@@ -604,8 +612,8 @@
                 IdJenisReklame: IdJenisReklame,
                 IdJenisProduk: IdJenisProduk,
                 IdLetakReklame: IdLetakReklame,
-                TglMulaiBerlaku: TglMulaiBerlaku,
-                TglSelesaiBerlaku: TglSelesaiBerlaku,
+                TglMulaiBerlaku: TglMulaiBerlaku ? TglMulaiBerlaku.toLocaleDateString("en-CA") : null,
+                TglSelesaiBerlaku: TglSelesaiBerlaku ? TglSelesaiBerlaku.toLocaleDateString("en-CA") : null,
                 JumlahSatuan: JumlahSatuan || 0,
                 Panjang: Panjang || 0,
                 Lebar: Lebar || 0,
@@ -613,20 +621,22 @@
                 JumlahLayar: JumlahLayar || 0
             };
 
-            console.log("🔍 Data dikirim:", formData);
 
             $.ajax({
                 url: '@Url.Action("ShowIns", "KalkulatorReklame")',
                 type: "GET",
                 data: formData,
                 beforeSend: function () {
+                    $("#Show").html('');
+                    $("#ShowKontrak").html('');
                     $("#ShowIns").html('');
-                    $("#card-show-ins").hide();
+                    $("#card-show").hide();
+                    $("#Show").hide();
                     $("#loading2-Show").show();
                 },
                 success: function (response) {
                     if (response.Status === undefined) {
-                        $("#card-show-ins").show();
+                        $("#card-show").show();
                         $("#ShowIns").html(response);
                     } else {
                         Swal.fire({
@@ -719,7 +729,7 @@
                     $("#frm-jumlahsatuan, #btn-hitungnsr-ins").show();
                     break;
                 case 3:
-                    $("#div-mode-perulangan, #btn-hitungnsr-ins").show();
+                    $("#frm-jumlahsatuan, #div-mode-perulangan, #btn-hitungnsr-ins").show();
                     break;
             }
         }

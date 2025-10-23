@@ -65,6 +65,7 @@ namespace MonPDLib.Lib
         public string NamaJalan { get; set; }
         public string KelasJalan { get; set; }
         public int MasaPajak { get; set; } = 12;
+        public decimal JambongNilai { get; private set; }
         public EnumFactory.EModeUkur ModeUkur { get; set; }
 
         private static ReklameContext _context = DBClass.GetReklameContext();
@@ -73,7 +74,10 @@ namespace MonPDLib.Lib
         {
             var ret = new KalkulatorReklameInsidentil();
             var setting = new SettingReklame();
-
+            if (input.LamaPenyelenggaraan > 30)
+            {
+                throw new ArgumentException("Masa berlaku reklame tidak boleh lebih dari 30 hari");
+            }
             var jenisReklame = _context.MJenisReklames
                 .FirstOrDefault(x => x.Kategori == (int)EnumFactory.JenisReklame.Insidentil && x.IdJenisReklame == input.IdJenisReklame);
             if (jenisReklame == null)
@@ -98,6 +102,7 @@ namespace MonPDLib.Lib
             {
                 throw new Exception("Data jalan memiliki kelas jalan yang berbeda");
             }
+            
             kelasJalan = distinctKelasJalan.First();
 
             ret.NamaJalan = jalanData.NamaJalan;
@@ -108,6 +113,7 @@ namespace MonPDLib.Lib
             var njop = _context.MNsrIns.Where(x => x.IdJenisReklame == input.IdJenisReklame).FirstOrDefault();
             var nss = _context.MNilaiStrategisJalanIns.Where(x => x.IdJenisReklame == input.IdJenisReklame && x.KelasJalan == kelasJalan).FirstOrDefault();
             var jambong = _context.MNsrInsJambongs.Where(x => x.IdJenisReklame == input.IdJenisReklame).FirstOrDefault();
+            ret.JambongNilai = jambong?.Nilai ?? 0m;
 
             decimal luas = 0m;
             decimal nsr = 0m;
@@ -132,22 +138,37 @@ namespace MonPDLib.Lib
             {
                 case EnumFactory.EModeUkur.Luas:
 
-                    luas = input.Panjang * input.Lebar;
-                    ret.Luas = luas;
-                    if (nsr <= minimDPP)
+                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.StikerMelekat))
                     {
-                        ret.Nsr = 0m;
-                        totalSebelumPajak = 0m;
+                        luas = (input.Panjang * input.Lebar) * 100;
                     }
                     else
                     {
-                        nsr = ((njop.NilaiNjop ?? 0 * luas) + (nss.Nilai * luas));
+                        luas = input.Panjang * input.Lebar;
+                    }
+                    ret.Luas = luas;
+                    nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
+                    if (nsr <= minimDPP)
+                    {
+                        nsr = minimDPP;
+                        ret.Nsr = minimDPP;
+                    }
+                    else
+                    {
+                        nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
                         ret.Nsr = nsr;
                     }
-                    
+
                     totalSebelumPajak = input.JumlahSatuan * input.LamaPenyelenggaraan * nsr;
                     ret.PokokPajak = totalSebelumPajak * (setting.PERSEN_PAJAK);
-                    ret.ProdukRokok = ret.PokokPajak * (setting.PERSEN_ROKOK);
+                    if (input.JenisProduk == EnumFactory.ProdukReklame.Rokok)
+                    {
+                        ret.ProdukRokok = ret.PokokPajak * (setting.PERSEN_ROKOK);
+                    }
+                    else
+                    {
+                        ret.ProdukRokok = 0;
+                    }
                     ret.TotalNilaiSewa = ret.PokokPajak + ret.ProdukRokok;
                     ret.JaminanBongkar = (jambong?.Nilai ?? 0) * luas * input.JumlahSatuan;
 
@@ -158,28 +179,46 @@ namespace MonPDLib.Lib
 
                     if (nsr <= minimDPP)
                     {
-                        ret.Nsr = 0m;
-                        totalSebelumPajak = 0m;
+                        nsr = minimDPP;
+                        ret.Nsr = minimDPP;
+                        totalSebelumPajak = minimDPP;
                     }
                     else
                     {
                         ret.Nsr = nsr;
-                        totalSebelumPajak = minimDPP;
+                        totalSebelumPajak = nsr;
                     }
                     ret.PokokPajak = totalSebelumPajak * setting.PERSEN_PAJAK;
-                    ret.ProdukRokok = ret.PokokPajak * setting.PERSEN_ROKOK;
+                    if (input.JenisProduk == EnumFactory.ProdukReklame.Rokok)
+                    {
+                        ret.ProdukRokok = ret.PokokPajak * (setting.PERSEN_ROKOK);
+                    }
+                    else
+                    {
+                        ret.ProdukRokok = 0;
+                    }
                     ret.TotalNilaiSewa = ret.PokokPajak + ret.ProdukRokok;
                     ret.JaminanBongkar = 0m;
 
                     break;
                 case EnumFactory.EModeUkur.Perulangan:
-
-                    nsr = (input.LamaPenyelenggaraan / njop?.SatuanNominal ?? 0) * input.JumlahLayar * input.JumlahPerulangan * (njop?.NilaiNjop ?? 0);
-                    ret.SatuanNominal = njop?.SatuanNominal ?? 0;
+                    if (input.JumlahSatuan > 0)
+                    {
+                        input.JumlahSatuan = (int)(Math.Ceiling(input.JumlahSatuan / 10.0m) * 10);
+                    }
+                    nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
+                    ret.SatuanNominal = (njop?.SatuanNominal ?? 1);
                     ret.Nsr = nsr;
                     totalSebelumPajak = nsr;
                     ret.PokokPajak = totalSebelumPajak * setting.PERSEN_PAJAK;
-                    ret.ProdukRokok = ret.PokokPajak * setting.PERSEN_ROKOK;
+                    if (input.JenisProduk == EnumFactory.ProdukReklame.Rokok)
+                    {
+                        ret.ProdukRokok = ret.PokokPajak * (setting.PERSEN_ROKOK);
+                    }
+                    else
+                    {
+                        ret.ProdukRokok = 0;
+                    }
                     ret.TotalNilaiSewa = ret.PokokPajak + ret.ProdukRokok;
                     ret.JaminanBongkar = 0m;
 
