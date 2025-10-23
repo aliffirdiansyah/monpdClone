@@ -1880,54 +1880,89 @@ namespace MonPDReborn.Models.DataOP
                 switch (pajakId)
                 {
                     case EnumFactory.EPajak.MakananMinuman:
-                        // 1) Ambil semua NOP yang sudah bayar
-                        var paidNops = MonPDContext.DbMonRestos
+                        var dbRestos = MonPDContext.DbMonRestos
                             .Where(x => x.TglBayarPokok.HasValue &&
                                         x.TglBayarPokok.Value.Year == tahun &&
-                                        x.PajakNama != "MAMIN")
-                            .Select(x => x.Nop)
-                            .Distinct()
-                            .ToList();
-
-                        // 2) Ambil semua OP aktif (belum tutup)
-                        var opRestos = MonPDContext.DbOpRestos
-                            .Where(x => x.TahunBuku == tahun &&
-                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year >= tahun) &&
                                         x.PajakNama != "MAMIN" &&
-                                        x.KategoriId == kategoriId)
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
                             .Select(x => new
                             {
                                 x.Nop,
-                                x.KategoriId
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opRestos = MonPDContext.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.PajakNama != "MAMIN" &&
+                                        x.KategoriId == kategoriId &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.MakananMinuman
                             })
                             .ToList();
 
-                        // 3) Cari OP Belum Bayar
-                        var belumBayarList = (from o in opRestos
-                                              join n in context.MObjekPajaks on o.Nop equals n.Nop
-                                              where !paidNops.Contains(o.Nop)
-                                              select new
-                                              {
-                                                  o.Nop,
-                                                  n.NamaOp,
-                                                  n.AlamatOp,
-                                                  n.WilayahPajak
-                                              })
-                                             .OrderBy(x => x.Nop)
-                                             .ToList();
+                        var restosList = (from r in dbRestos
+                                          join o in opRestos on r.Nop equals o.Nop
+                                          join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                          where o.KategoriId == kategoriId
+                                                && r.TglBayarPokok.HasValue
+                                                && r.TglBayarPokok.Value.Month == bulan
+                                                && r.NominalPokokBayar > 0
+                                          select new
+                                          {
+                                              r.Nop,
+                                              n.NamaOp,
+                                              n.AlamatOp,
+                                              r.NominalPokokBayar,
+                                              r.TglBayarPokok
+                                          })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
 
-                        // 4) Map ke ViewModel
-                        var detailBelumBayar = belumBayarList
-                            .Select(x => new ViewModels.OPBlmBayarKategori
+                        var detailSudahBayar = restosList
+                            .Select(x => new ViewModels.DetailOP
                             {
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
-                                Wilayah = x.WilayahPajak ?? "UPTB"
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
                             })
                             .ToList();
 
-                        ret = detailBelumBayar;
+                        var nopSudahBayar = restosList.Select(x => x.Nop).ToList();
+
+                        var belumBayarList = (from o in opRestos
+                                              join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                              where o.KategoriId == kategoriId
+                                                    && !nopSudahBayar.Contains(o.Nop) 
+                                              select new ViewModels.OPBlmBayarKategori
+                                              {
+                                                  Nop = o.Nop,
+                                                  NamaOP = n.NamaOp,
+                                                  Alamat = n.AlamatOp,
+                                                  Wilayah = "UPTB " + n.WilayahPajak
+                                              })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumBayarList;
 
 
                         break;
