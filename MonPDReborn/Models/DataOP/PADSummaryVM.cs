@@ -114,11 +114,12 @@ namespace MonPDReborn.Models.DataOP
             }
         }
 
-        public class Detail
+        public class DetailAllBlmBayar
         {
-            public Detail()
+            public List<ViewModels.OPBlmBayarAll> Data { get; set; } = new();
+            public DetailAllBlmBayar(int tahun, int bulan, EnumFactory.EPajak pajakId)
             {
-
+                Data = Methods.GetAllBlmBayar(tahun, bulan, pajakId);
             }
         }
         public class ViewModels
@@ -158,6 +159,7 @@ namespace MonPDReborn.Models.DataOP
             }
             public class TotalOPKategori
             {
+                public int pajakId { get; set; }
                 public string Nop { get; set; } = null!;
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
@@ -167,6 +169,7 @@ namespace MonPDReborn.Models.DataOP
 
             public class DetailOP
             {
+                public int pajakId { get; set; }
                 public string Nop { get; set; } = null!;
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
@@ -176,6 +179,7 @@ namespace MonPDReborn.Models.DataOP
             }
             public class DetailUpaya
             {
+                public int pajakId { get; set; }
                 public string Nop { get; set; } = null!;
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
@@ -185,6 +189,7 @@ namespace MonPDReborn.Models.DataOP
             }
             public class TotalOPAll
             {
+                public int pajakId { get; set; }
                 public string Nop { get; set; } = null!;
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
@@ -193,6 +198,7 @@ namespace MonPDReborn.Models.DataOP
             }
             public class DetailUpayaAll
             {
+                public int pajakId { get; set; }
                 public string Nop { get; set; } = null!;
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
@@ -202,6 +208,7 @@ namespace MonPDReborn.Models.DataOP
             }
             public class DetailBayarAll
             {
+                public int pajakId { get; set; }
                 public string Nop { get; set; } = null!;
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
@@ -211,6 +218,16 @@ namespace MonPDReborn.Models.DataOP
             }
             public class OPBlmBayarKategori
             {
+                public int pajakId { get; set; }
+                public string Nop { get; set; } = null!;
+                public string FormattedNOP => Utility.GetFormattedNOP(Nop);
+                public string NamaOP { get; set; } = null!;
+                public string Alamat { get; set; } = null!;
+                public string Wilayah { get; set; } = null!;
+            }
+            public class OPBlmBayarAll
+            {
+                public int pajakId { get; set; }
                 public string Nop { get; set; } = null!;
                 public string FormattedNOP => Utility.GetFormattedNOP(Nop);
                 public string NamaOP { get; set; } = null!;
@@ -1307,6 +1324,7 @@ namespace MonPDReborn.Models.DataOP
                         var detailList = restosList
                             .Select(x => new ViewModels.DetailOP
                             {
+                                pajakId = (int)EnumFactory.EPajak.MakananMinuman,
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
@@ -1377,6 +1395,7 @@ namespace MonPDReborn.Models.DataOP
                         var hasilListrik = listrikList
                             .Select(x => new ViewModels.DetailOP
                             {
+                                pajakId = (int)EnumFactory.EPajak.TenagaListrik,
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
@@ -1446,6 +1465,7 @@ namespace MonPDReborn.Models.DataOP
                         var hasilHotel = hotelList
                             .Select(x => new ViewModels.DetailOP
                             {
+                                pajakId = (int)EnumFactory.EPajak.JasaPerhotelan,
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
@@ -1515,6 +1535,7 @@ namespace MonPDReborn.Models.DataOP
                         var hasilParkir = parkirList
                             .Select(x => new ViewModels.DetailOP
                             {
+                                pajakId = (int)EnumFactory.EPajak.JasaParkir,
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
@@ -1584,6 +1605,7 @@ namespace MonPDReborn.Models.DataOP
                         var hasilHiburan = hiburanList
                             .Select(x => new ViewModels.DetailOP
                             {
+                                pajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan,
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
@@ -1653,6 +1675,7 @@ namespace MonPDReborn.Models.DataOP
                         var hasilABT = abtList
                             .Select(x => new ViewModels.DetailOP
                             {
+                                pajakId = (int)EnumFactory.EPajak.AirTanah,
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
@@ -1684,6 +1707,7 @@ namespace MonPDReborn.Models.DataOP
                     .Include(x => x.NopNavigation)
                     .Select(x => new ViewModels.DetailUpaya
                     {
+                        pajakId = (int)pajakId,
                         Nop = x.Nop,
                         NamaOP = x.NopNavigation.NamaOp,
                         Alamat = x.NopNavigation.AlamatOp,
@@ -1703,6 +1727,7 @@ namespace MonPDReborn.Models.DataOP
                     .Where(x => x.PajakId == (int)pajakId && x.KategoriPajak == kategoriId)
                     .Select(x => new ViewModels.TotalOPKategori
                     {
+                        pajakId = (int)pajakId,
                         Nop = x.Nop,
                         NamaOP = x.NamaOp,
                         Alamat = x.AlamatOp,
@@ -1721,6 +1746,7 @@ namespace MonPDReborn.Models.DataOP
                     .Where(x => x.PajakId == (int)pajakId)
                     .Select(x => new ViewModels.TotalOPAll
                     {
+                        pajakId = (int)pajakId,
                         Nop = x.Nop,
                         NamaOP = x.NamaOp,
                         Alamat = x.AlamatOp,
@@ -1747,6 +1773,7 @@ namespace MonPDReborn.Models.DataOP
                     .Include(x => x.NopNavigation)
                     .Select(x => new ViewModels.DetailUpayaAll
                     {
+                        pajakId = (int)pajakId,
                         Nop = x.Nop,
                         NamaOP = x.NopNavigation.NamaOp,
                         Alamat = x.NopNavigation.AlamatOp,
@@ -1798,7 +1825,6 @@ namespace MonPDReborn.Models.DataOP
                             })
                             .ToList();
 
-                        // 1) Pastikan restos sudah benar dan ter-materialisasi
                         var restosList = (from r in dbRestos
                                           join o in opRestos on r.Nop equals o.Nop
                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
@@ -1830,6 +1856,7 @@ namespace MonPDReborn.Models.DataOP
                         var detailList = restosList
                             .Select(x => new ViewModels.DetailBayarAll
                             {
+                                pajakId = (int)EnumFactory.EPajak.MakananMinuman,
                                 Nop = x.Nop,
                                 NamaOP = x.NamaOp,
                                 Alamat = x.AlamatOp,
@@ -1842,14 +1869,344 @@ namespace MonPDReborn.Models.DataOP
 
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
+                        var dbListrik = MonPDContext.DbMonPpjs
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opListrik = MonPDContext.DbOpListriks
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.TenagaListrik
+                            })
+                            .ToList();
+
+                        var listrikList = (from r in dbListrik
+                                          join o in opListrik on r.Nop equals o.Nop
+                                          join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                          where r.TglBayarPokok.HasValue
+                                            && r.TglBayarPokok.Value.Month == bulan
+                                            && r.NominalPokokBayar > 0
+                                          select new
+                                          {
+                                              r.Nop,
+                                              n.NamaOp,
+                                              n.AlamatOp,
+                                              NominalPokokBayar = r.NominalPokokBayar,
+                                              r.TglBayarPokok
+                                          })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             Nop = g.Key.Nop,
+                                             NamaOp = g.Key.NamaOp,
+                                             AlamatOp = g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var countListrik = listrikList.Count;
+
+                        var detailListListrik = listrikList
+                            .Select(x => new ViewModels.DetailBayarAll
+                            {
+                                pajakId = (int)EnumFactory.EPajak.TenagaListrik,
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        ret = detailListListrik;
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
+                        var dbHotel = MonPDContext.DbMonHotels
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opHotel = MonPDContext.DbOpHotels
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaPerhotelan
+                            })
+                            .ToList();
+
+                        var hotelList = (from r in dbHotel
+                                           join o in opHotel on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                             && r.TglBayarPokok.Value.Month == bulan
+                                             && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               NominalPokokBayar = r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             Nop = g.Key.Nop,
+                                             NamaOp = g.Key.NamaOp,
+                                             AlamatOp = g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var countHotel = hotelList.Count;
+
+                        var detailListHotel = hotelList
+                            .Select(x => new ViewModels.DetailBayarAll
+                            {
+                                pajakId = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        ret = detailListHotel;
                         break;
                     case EnumFactory.EPajak.JasaParkir:
+                        var dbParkir = MonPDContext.DbMonParkirs
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opParkir = MonPDContext.DbOpParkirs
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaParkir
+                            })
+                            .ToList();
+
+                        var parkirList = (from r in dbParkir
+                                           join o in opParkir on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                             && r.TglBayarPokok.Value.Month == bulan
+                                             && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               NominalPokokBayar = r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             Nop = g.Key.Nop,
+                                             NamaOp = g.Key.NamaOp,
+                                             AlamatOp = g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var countParkir = parkirList.Count;
+
+                        var detailListParkir = parkirList
+                            .Select(x => new ViewModels.DetailBayarAll
+                            {
+                                pajakId = (int)EnumFactory.EPajak.JasaParkir,
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        ret = detailListParkir;
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var dbHiburan = MonPDContext.DbMonHiburans
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opHiburan = MonPDContext.DbOpHiburans
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan
+                            })
+                            .ToList();
+
+                        var hiburanList = (from r in dbHiburan
+                                           join o in opHiburan on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                             && r.TglBayarPokok.Value.Month == bulan
+                                             && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               NominalPokokBayar = r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             Nop = g.Key.Nop,
+                                             NamaOp = g.Key.NamaOp,
+                                             AlamatOp = g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var countHiburan = hiburanList.Count;
+
+                        var detailListHiburan = hiburanList
+                            .Select(x => new ViewModels.DetailBayarAll
+                            {
+                                pajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan,
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        ret = detailListHiburan;
                         break;
                     case EnumFactory.EPajak.AirTanah:
+                        var dbABT = MonPDContext.DbMonAbts
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opABT = MonPDContext.DbOpAbts
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.AirTanah
+                            })
+                            .ToList();
+
+                        var abtList = (from r in dbABT
+                                           join o in opABT on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                             && r.TglBayarPokok.Value.Month == bulan
+                                             && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               NominalPokokBayar = r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             Nop = g.Key.Nop,
+                                             NamaOp = g.Key.NamaOp,
+                                             AlamatOp = g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var countABT = abtList.Count;
+
+                        var detailListABT = abtList
+                            .Select(x => new ViewModels.DetailBayarAll
+                            {
+                                pajakId = (int)EnumFactory.EPajak.AirTanah,
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        ret = detailListABT;
                         break;
                 }
 
@@ -1954,6 +2311,7 @@ namespace MonPDReborn.Models.DataOP
                                                     && !nopSudahBayar.Contains(o.Nop) 
                                               select new ViewModels.OPBlmBayarKategori
                                               {
+                                                  pajakId = (int)EnumFactory.EPajak.MakananMinuman,
                                                   Nop = o.Nop,
                                                   NamaOP = n.NamaOp,
                                                   Alamat = n.AlamatOp,
@@ -1964,17 +2322,833 @@ namespace MonPDReborn.Models.DataOP
 
                         ret = belumBayarList;
 
+                        break;
+                    case EnumFactory.EPajak.TenagaListrik:
+                        var dbListrik = MonPDContext.DbMonPpjs
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opListrik = MonPDContext.DbOpListriks
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.KategoriId == kategoriId &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.TenagaListrik
+                            })
+                            .ToList();
+
+                        var listrikList = (from r in dbListrik
+                                          join o in opListrik on r.Nop equals o.Nop
+                                          join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                          where o.KategoriId == kategoriId
+                                                && r.TglBayarPokok.HasValue
+                                                && r.TglBayarPokok.Value.Month == bulan
+                                                && r.NominalPokokBayar > 0
+                                          select new
+                                          {
+                                              r.Nop,
+                                              n.NamaOp,
+                                              n.AlamatOp,
+                                              r.NominalPokokBayar,
+                                              r.TglBayarPokok
+                                          })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopListrik = listrikList.Select(x => x.Nop).ToList();
+
+                        var belumListrik = (from o in opListrik
+                                              join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                              where o.KategoriId == kategoriId
+                                                    && !nopListrik.Contains(o.Nop)
+                                              select new ViewModels.OPBlmBayarKategori
+                                              {
+                                                  pajakId = (int)EnumFactory.EPajak.TenagaListrik,
+                                                  Nop = o.Nop,
+                                                  NamaOP = n.NamaOp,
+                                                  Alamat = n.AlamatOp,
+                                                  Wilayah = "UPTB " + n.WilayahPajak
+                                              })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumListrik;
+                        break;
+                    case EnumFactory.EPajak.JasaPerhotelan:
+                        var dbHotel = MonPDContext.DbMonHotels
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opHotel = MonPDContext.DbOpHotels
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.KategoriId == kategoriId &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaPerhotelan
+                            })
+                            .ToList();
+
+                        var hotelList = (from r in dbHotel
+                                           join o in opHotel on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where o.KategoriId == kategoriId
+                                                 && r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopHotel = hotelList.Select(x => x.Nop).ToList();
+
+                        var belumHotel = (from o in opHotel
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where o.KategoriId == kategoriId
+                                                  && !nopHotel.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarKategori
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumHotel;
+                        break;
+                    case EnumFactory.EPajak.JasaParkir:
+                        var dbParkir = MonPDContext.DbMonParkirs
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opParkir = MonPDContext.DbOpParkirs
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.KategoriId == kategoriId &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaParkir
+                            })
+                            .ToList();
+
+                        var parkirList = (from r in dbParkir
+                                           join o in opParkir on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where o.KategoriId == kategoriId
+                                                 && r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopParkir = parkirList.Select(x => x.Nop).ToList();
+
+                        var belumParkir = (from o in opParkir
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where o.KategoriId == kategoriId
+                                                  && !nopParkir.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarKategori
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.JasaParkir,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumParkir;
+                        break;
+                    case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var dbHiburan = MonPDContext.DbMonHiburans
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opHiburan = MonPDContext.DbOpHiburans
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.KategoriId == kategoriId &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan
+                            })
+                            .ToList();
+
+                        var hiburanList = (from r in dbHiburan
+                                           join o in opHiburan on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where o.KategoriId == kategoriId
+                                                 && r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopHiburan = hiburanList.Select(x => x.Nop).ToList();
+
+                        var belumHiburan = (from o in opHiburan
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where o.KategoriId == kategoriId
+                                                  && !nopHiburan.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarKategori
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumHiburan;
+                        break;
+                    case EnumFactory.EPajak.AirTanah:
+                        var dbABT = MonPDContext.DbMonAbts
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opABT = MonPDContext.DbOpAbts
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.KategoriId == kategoriId &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.AirTanah
+                            })
+                            .ToList();
+
+                        var abtList = (from r in dbABT
+                                           join o in opABT on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where o.KategoriId == kategoriId
+                                                 && r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopABT = abtList.Select(x => x.Nop).ToList();
+
+                        var belumABT = (from o in opABT
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where o.KategoriId == kategoriId
+                                                  && !nopABT.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarKategori
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.AirTanah,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumABT;
+                        break;
+                }
+
+                return ret;
+            }
+            public static List<ViewModels.OPBlmBayarAll> GetAllBlmBayar(int tahun, int bulan, EnumFactory.EPajak pajakId)
+            {
+                var MonPDContext = DBClass.GetContext();
+                var context = _context;
+                var ret = new List<ViewModels.OPBlmBayarAll>();
+
+                var nopList = context.MObjekPajaks
+                    .Where(x => x.PajakId == (int)pajakId)
+                    .Select(x => new { x.Nop, x.PajakId, x.KategoriPajak })
+                    .ToList();
+
+                var kategoriList = MonPDContext.MKategoriPajaks
+                    .Where(x => x.PajakId == (int)pajakId)
+                    .OrderBy(x => x.Urutan)
+                    .ToList()
+                    .Select(x => new
+                    {
+                        x.Id,
+                        Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
+                    })
+                    .ToList();
+
+                switch (pajakId)
+                {
+                    case EnumFactory.EPajak.MakananMinuman:
+                        var dbRestos = MonPDContext.DbMonRestos
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.PajakNama != "MAMIN" &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opRestos = MonPDContext.DbOpRestos
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        x.PajakNama != "MAMIN" &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.MakananMinuman
+                            })
+                            .ToList();
+
+                        var restosList = (from r in dbRestos
+                                          join o in opRestos on r.Nop equals o.Nop
+                                          join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                          where r.TglBayarPokok.HasValue
+                                                && r.TglBayarPokok.Value.Month == bulan
+                                                && r.NominalPokokBayar > 0
+                                          select new
+                                          {
+                                              r.Nop,
+                                              n.NamaOp,
+                                              n.AlamatOp,
+                                              r.NominalPokokBayar,
+                                              r.TglBayarPokok
+                                          })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var detailSudahBayar = restosList
+                            .Select(x => new ViewModels.DetailOP
+                            {
+                                Nop = x.Nop,
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
+                                SudahBayar = x.NominalPokokBayar,
+                                TglBayar = x.TglBayarPokok ?? DateTime.MinValue
+                            })
+                            .ToList();
+
+                        var nopSudahBayar = restosList.Select(x => x.Nop).ToList();
+
+                        var belumBayarList = (from o in opRestos
+                                              join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                              where !nopSudahBayar.Contains(o.Nop) 
+                                              select new ViewModels.OPBlmBayarAll
+                                              {
+                                                  pajakId = (int)EnumFactory.EPajak.MakananMinuman,
+                                                  Nop = o.Nop,
+                                                  NamaOP = n.NamaOp,
+                                                  Alamat = n.AlamatOp,
+                                                  Wilayah = "UPTB " + n.WilayahPajak
+                                              })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumBayarList;
 
                         break;
                     case EnumFactory.EPajak.TenagaListrik:
+                        var dbListrik = MonPDContext.DbMonPpjs
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opListrik = MonPDContext.DbOpListriks
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.TenagaListrik
+                            })
+                            .ToList();
+
+                        var listrikList = (from r in dbListrik
+                                          join o in opListrik on r.Nop equals o.Nop
+                                          join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                          where r.TglBayarPokok.HasValue
+                                                && r.TglBayarPokok.Value.Month == bulan
+                                                && r.NominalPokokBayar > 0
+                                          select new
+                                          {
+                                              r.Nop,
+                                              n.NamaOp,
+                                              n.AlamatOp,
+                                              r.NominalPokokBayar,
+                                              r.TglBayarPokok
+                                          })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopListrik = listrikList.Select(x => x.Nop).ToList();
+
+                        var belumListrik = (from o in opListrik
+                                              join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                              where !nopListrik.Contains(o.Nop)
+                                              select new ViewModels.OPBlmBayarAll
+                                              {
+                                                  pajakId = (int)EnumFactory.EPajak.TenagaListrik,
+                                                  Nop = o.Nop,
+                                                  NamaOP = n.NamaOp,
+                                                  Alamat = n.AlamatOp,
+                                                  Wilayah = "UPTB " + n.WilayahPajak
+                                              })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumListrik;
                         break;
                     case EnumFactory.EPajak.JasaPerhotelan:
+                        var dbHotel = MonPDContext.DbMonHotels
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opHotel = MonPDContext.DbOpHotels
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaPerhotelan
+                            })
+                            .ToList();
+
+                        var hotelList = (from r in dbHotel
+                                           join o in opHotel on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopHotel = hotelList.Select(x => x.Nop).ToList();
+
+                        var belumHotel = (from o in opHotel
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where !nopHotel.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarAll
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.JasaPerhotelan,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumHotel;
                         break;
                     case EnumFactory.EPajak.JasaParkir:
+                        var dbParkir = MonPDContext.DbMonParkirs
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opParkir = MonPDContext.DbOpParkirs
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaParkir
+                            })
+                            .ToList();
+
+                        var parkirList = (from r in dbParkir
+                                           join o in opParkir on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopParkir = parkirList.Select(x => x.Nop).ToList();
+
+                        var belumParkir = (from o in opParkir
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where !nopParkir.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarAll
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.JasaParkir,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumParkir;
                         break;
                     case EnumFactory.EPajak.JasaKesenianHiburan:
+                        var dbHiburan = MonPDContext.DbMonHiburans
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opHiburan = MonPDContext.DbOpHiburans
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan
+                            })
+                            .ToList();
+
+                        var hiburanList = (from r in dbHiburan
+                                           join o in opHiburan on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopHiburan = hiburanList.Select(x => x.Nop).ToList();
+
+                        var belumHiburan = (from o in opHiburan
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where !nopHiburan.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarAll
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.JasaKesenianHiburan,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumHiburan;
                         break;
                     case EnumFactory.EPajak.AirTanah:
+                        var dbABT = MonPDContext.DbMonAbts
+                            .Where(x => x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                NominalPokokBayar = x.NominalPokokBayar ?? 0,
+                                x.TglBayarPokok
+                            })
+                            .AsEnumerable()
+                            .ToList();
+
+                        var opABT = MonPDContext.DbOpAbts
+                            .Where(x => x.TahunBuku == tahun &&
+                                        (!x.TglOpTutup.HasValue || x.TglOpTutup.Value.Year > tahun) &&
+                                        nopList.Select(n => n.Nop).Contains(x.Nop))
+                            .Select(x => new
+                            {
+                                x.Nop,
+                                x.KategoriId,
+                                PajakId = (int)EnumFactory.EPajak.AirTanah
+                            })
+                            .ToList();
+
+                        var abtList = (from r in dbABT
+                                           join o in opABT on r.Nop equals o.Nop
+                                           join n in context.MObjekPajaks on r.Nop equals n.Nop
+                                           where r.TglBayarPokok.HasValue
+                                                 && r.TglBayarPokok.Value.Month == bulan
+                                                 && r.NominalPokokBayar > 0
+                                           select new
+                                           {
+                                               r.Nop,
+                                               n.NamaOp,
+                                               n.AlamatOp,
+                                               r.NominalPokokBayar,
+                                               r.TglBayarPokok
+                                           })
+                                         .GroupBy(x => new { x.Nop, x.NamaOp, x.AlamatOp })
+                                         .Select(g => new
+                                         {
+                                             g.Key.Nop,
+                                             g.Key.NamaOp,
+                                             g.Key.AlamatOp,
+                                             NominalPokokBayar = g.Sum(x => x.NominalPokokBayar),
+                                             TglBayarPokok = g.Max(x => x.TglBayarPokok)
+                                         })
+                                         .OrderBy(x => x.Nop)
+                                         .ToList();
+
+                        var nopABT = abtList.Select(x => x.Nop).ToList();
+
+                        var belumABT = (from o in opABT
+                                            join n in context.MObjekPajaks on o.Nop equals n.Nop
+                                            where !nopABT.Contains(o.Nop)
+                                            select new ViewModels.OPBlmBayarAll
+                                            {
+                                                pajakId = (int)EnumFactory.EPajak.AirTanah,
+                                                Nop = o.Nop,
+                                                NamaOP = n.NamaOp,
+                                                Alamat = n.AlamatOp,
+                                                Wilayah = "UPTB " + n.WilayahPajak
+                                            })
+                                             .OrderBy(x => x.Nop)
+                                             .ToList();
+
+                        ret = belumABT;
                         break;
                 }
 
