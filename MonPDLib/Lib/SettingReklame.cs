@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,43 +24,58 @@ namespace MonPDLib.Lib
             var a = DBClass.GetReklameContext().Settings.ToList();
             foreach (var b in a)
             {
-                if (b.Properti == "PERSEN_PAJAK_REKLAME")
+                if (b.Properti == "PERSEN_PAJAK")
                 {
-                    PERSEN_PAJAK = Convert.ToDecimal(b.Nilai);
+                    PERSEN_PAJAK = SafeToDecimal(b.Nilai);
                 }
-                else if (b.Properti == "PERSEN_ROKOK_REKLAME")
+                else if (b.Properti == "PERSEN_ROKOK")
                 {
-                    PERSEN_ROKOK = Convert.ToDecimal(b.Nilai);
+                    PERSEN_ROKOK = SafeToDecimal(b.Nilai);
                 }
                 else if (b.Properti == "JAMBONG_SAMPAI_8M")
                 {
-                    JAMBONG_SAMPAI_8M = Convert.ToDecimal(b.Nilai);
+                    JAMBONG_SAMPAI_8M = SafeToDecimal(b.Nilai);
                 }
                 else if (b.Properti == "JAMBONG_DIATAS_8M")
                 {
-                    JAMBONG_DIATAS_8M = Convert.ToDecimal(b.Nilai);
+                    JAMBONG_DIATAS_8M = SafeToDecimal(b.Nilai);
                 }
-                else if (b.Properti == "TAMBAH_KETINGGIAN_REKLAME")
+                else if (b.Properti == "TAMBAH_KETINGGIAN")
                 {
-                    TAMBAH_KETINGGIAN = Convert.ToDecimal(b.Nilai);
+                    TAMBAH_KETINGGIAN = SafeToDecimal(b.Nilai);
                 }
-                else if (b.Properti == "NILAI_KETINGGIAN_REKLAME")
+                else if (b.Properti == "NILAI_KETINGGIAN")
                 {
-                    NILAI_KETINGGIAN = Convert.ToDecimal(b.Nilai);
+                    NILAI_KETINGGIAN = SafeToDecimal(b.Nilai);
                 }
                 else if (b.Properti == "MINIM_DPP_9_SELEBARAN")
                 {
-                    MINIM_DPP_9_SELEBARAN = Convert.ToDecimal(b.Nilai);
+                    MINIM_DPP_9_SELEBARAN = SafeToDecimal(b.Nilai);
                 }
                 else if (b.Properti == "MINIM_DPP_10_STIKER")
                 {
-                    MINIM_DPP_10_STIKER = Convert.ToDecimal(b.Nilai);
+                    MINIM_DPP_10_STIKER = SafeToDecimal(b.Nilai);
                 }
                 else if (b.Properti == "MINIM_DPP_15_PERAGAAN")
                 {
-                    MINIM_DPP_15_PERAGAAN = Convert.ToDecimal(b.Nilai);
+                    MINIM_DPP_15_PERAGAAN = SafeToDecimal(b.Nilai);
                 }
             }
+        }
+        private static decimal SafeToDecimal(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return 0m;
+
+            value = value.Trim();
+
+            if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+                return result;
+
+            if (decimal.TryParse(value, NumberStyles.Any, new CultureInfo("id-ID"), out result))
+                return result;
+
+            return 0m;
         }
     }
 }
