@@ -438,6 +438,15 @@
                                         </small>
                                     </div>
                                 </div>
+
+                                <div id="btn-hitungnsr-ins" style="display:none">
+                                    <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
+                                        <label class="form-label fw-semibold">&nbsp;</label>
+                                        <button type="button" class="btn btn-success w-100" onclick="loadShowInsData()">
+                                            <i class="bi bi-funnel-fill me-1"></i> Hitung NSR
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -467,6 +476,8 @@
             <div id="Show">
             </div>
             <div id="ShowKontrak">
+            </div>
+            <div id="ShowIns">
             </div>
         </div>
     </div>
@@ -546,8 +557,98 @@
                 }
             });
         }
+    </script>
 
-       
+    <script>
+        function loadShowInsData() {
+            // Ambil instance komponen DevExtreme
+            const IdJalan = $("#NamaJalanIns").dxSelectBox("instance")?.option("value");
+            const IdJenisReklame = $("#JenisReklameIns").dxSelectBox("instance")?.option("value");
+            const IdLetakReklame = $("#LetakReklameIns").dxSelectBox("instance")?.option("value");
+            const IdJenisProduk = $("#produkListIns").dxSelectBox("instance")?.option("value");
+
+            const TglMulaiBerlaku = $("#TglMulaiBerlakuIns").dxDateBox("instance")?.option("value");
+            const TglSelesaiBerlaku = $("#TglSelesaiBerlakuIns").dxDateBox("instance")?.option("value");
+
+            const JumlahSatuan = $("#JumlahSatuanIns").dxNumberBox("instance")?.option("value");
+            const Panjang = $("#PanjangIns").dxNumberBox("instance")?.option("value");
+            const Lebar = $("#LebarIns").dxNumberBox("instance")?.option("value");
+
+            const JumlahPerulangan = $("#JumlahPerulanganIns").dxNumberBox("instance")?.option("value");
+            const JumlahLayar = $("#JumlahLayarIns").dxNumberBox("instance")?.option("value");
+
+            // Validasi dasar sebelum kirim
+            if (!IdJalan || !IdJenisReklame || !IdLetakReklame || !IdJenisProduk) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi Data',
+                    text: '⚠ Harap isi semua data utama terlebih dahulu (Nama Jalan, Jenis Reklame, Letak, dan Produk).',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            if (!TglMulaiBerlaku || !TglSelesaiBerlaku) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verifikasi Tanggal',
+                    text: '⚠ Harap isi tanggal mulai dan tanggal selesai berlaku.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Bentuk objek data sesuai class ReklameInput
+            const formData = {
+                IdJalan: IdJalan,
+                IdJenisReklame: IdJenisReklame,
+                IdJenisProduk: IdJenisProduk,
+                IdLetakReklame: IdLetakReklame,
+                TglMulaiBerlaku: TglMulaiBerlaku,
+                TglSelesaiBerlaku: TglSelesaiBerlaku,
+                JumlahSatuan: JumlahSatuan || 0,
+                Panjang: Panjang || 0,
+                Lebar: Lebar || 0,
+                JumlahPerulangan: JumlahPerulangan || 0,
+                JumlahLayar: JumlahLayar || 0
+            };
+
+            console.log("🔍 Data dikirim:", formData);
+
+            $.ajax({
+                url: '@Url.Action("ShowIns", "KalkulatorReklame")',
+                type: "GET",
+                data: formData,
+                beforeSend: function () {
+                    $("#ShowIns").html('');
+                    $("#card-show-ins").hide();
+                    $("#loading2-Show").show();
+                },
+                success: function (response) {
+                    if (response.Status === undefined) {
+                        $("#card-show-ins").show();
+                        $("#ShowIns").html(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message,
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: 'Gagal memuat data NSR insidentil.'
+                    });
+                },
+                complete: function () {
+                    $("#loading2-Show").hide();
+                }
+            });
+        }
     </script>
     <script>
         function loadShowKontrak() {
@@ -607,18 +708,18 @@
     <script>
         function onJenisReklameInsChanged(e) {
             const item = e.component.getDataSource().items().find(x => x.Value === e.value);
-            $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar, #div-mode-perulangan").hide();
+            $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar, #div-mode-perulangan, #btn-hitungnsr-ins").hide();
             if (!item) return;
 
             switch (item.ModeUkur) {
                 case 1:
-                    $("#frm-jumlahsatuan").show();
+                    $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar, #btn-hitungnsr-ins").show();
                     break;
                 case 2:
-                    $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar").show();
+                    $("#frm-jumlahsatuan, #btn-hitungnsr-ins").show();
                     break;
                 case 3:
-                    $("#div-mode-perulangan").show();
+                    $("#div-mode-perulangan, #btn-hitungnsr-ins").show();
                     break;
             }
         }
