@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EFPenyelia;
 using MonPDLib.General;
@@ -57,6 +58,15 @@ namespace MonPDReborn.Models.DataOP
                 Data = Methods.GetDetailPenyelia(tahun, bulan, nip);
             }
         }
+        public class DetailPajak
+        {
+            public List<ViewModels.DetailNop> Data { get; set; } = new();
+            public DetailPajak(int tahun, int bulan, string nip, int pajakId)
+            {
+                Data = Methods.GetDataNop(tahun, bulan, nip, pajakId);
+            }
+        }
+    
         public class ViewModels
         {
             public class Penyelia
@@ -73,8 +83,11 @@ namespace MonPDReborn.Models.DataOP
                 public string Nip { get; set; } = null!;
                 public string JenisPajak { get; set; } = null!;
                 public int pajakId { get; set; }
+                public int SudahBayar { get; set; }
                 public decimal JmlNOP { get; set; }
                 public decimal Capaian { get; set; }
+                public int Tahun { get; set; }
+                public int Bulan { get; set; }
             }
             public class DetailNop
             {
@@ -83,7 +96,7 @@ namespace MonPDReborn.Models.DataOP
                 public string Nop { get; set; } = null!;
                 public string Alamat { get; set; } = null!;
                 public string NamaOP { get; set; } = null!;
-                public decimal JmlUpaya { get; set; }
+                public string Upaya { get; set; } = null!;
                 public decimal Capaian { get; set; }
             }
             public class BidangView
@@ -172,7 +185,7 @@ namespace MonPDReborn.Models.DataOP
                         // 🔹 Capaian hanya dihitung untuk NOP yang sudah bayar
                         var totalCapaian = nopsPegawai.Count(nop => nopSudahBayar.Contains(nop));
 
-                        var capaianPersen = (decimal)totalCapaian / totalNOP * 100;
+                        var capaianPersen = (decimal)totalCapaian / totalNOP;
 
                         return new ViewModels.Penyelia
                         {
@@ -195,6 +208,7 @@ namespace MonPDReborn.Models.DataOP
                 var context = _context;
                 var ret = new List<ViewModels.DetailPenyelia>();
 
+                // Ambil semua NOP yang sudah bayar
                 var nopSudahBayar = new HashSet<string>(
                     MonPdContext.DbMonRestos
                         .Where(x => x.NominalPokokBayar.HasValue &&
@@ -233,33 +247,144 @@ namespace MonPDReborn.Models.DataOP
                                         x.TglBayarPokok.Value.Month == bulan)
                             .Select(x => x.Nop))
                         .Distinct()
-                        .ToList()
                 );
 
-                var jumlahOp = context.MPegawaiOpDets
+                // Ambil semua NOP pegawai
+                var pegawaiOps = context.MPegawaiOpDets
                     .Where(x => x.Nip == nip)
-                    .Select(x => x.Nop)
+                    .Include(x => x.NopNavigation)
                     .ToList();
 
-                var totalCapaian = jumlahOp.Count(nop => nopSudahBayar.Contains(nop));
+                // Kelompokkan berdasarkan jenis pajak
+                var grupPerPajak = pegawaiOps
+                    .GroupBy(x => x.NopNavigation.PajakId)
+                    .ToList();
 
-                var capaianPersen = (decimal)totalCapaian / jumlahOp.Count() * 100;
+                foreach (var grup in grupPerPajak)
+                {
+                    var pajakId = (int)grup.Key;
+                    var namaPajak = ((EnumFactory.EPajak)pajakId).GetDescription();
 
-                ret = context.MPegawaiOpDets
-                    .Where(x => x.Nip == nip)
-                    .AsEnumerable()
-                    .Select(x => new ViewModels.DetailPenyelia
+                    var totalNOP = grup.Count();
+                    var sudahBayar = grup.Count(x => nopSudahBayar.Contains(x.Nop));
+                    var capaian = totalNOP > 0 ? Math.Round((decimal)sudahBayar / totalNOP, 2) : 0;
+
+                    ret.Add(new ViewModels.DetailPenyelia
                     {
-                        Nip = x.Nip,
-                        pajakId = (int)x.NopNavigation.PajakId,
-                        JenisPajak = ((EnumFactory.EPajak)x.NopNavigation.PajakId).GetDescription(),
-                        JmlNOP = jumlahOp.Count(),
-                        Capaian = nopSudahBayar.Contains(x.Nop) ? Math.Round(capaianPersen, 2) : 0
-                    })
-                    .ToList();
+                        Nip = nip,
+                        pajakId = pajakId,
+                        JenisPajak = namaPajak,
+                        JmlNOP = totalNOP,
+                        SudahBayar = sudahBayar,
+                        Capaian = capaian,
+                        Tahun = tahun,
+                        Bulan = bulan
+                    });
+                }
 
                 return ret;
             }
+            public static List<ViewModels.DetailNop> GetDataNop(int tahun, int bulan, string nip, int pajakId)
+            {
+                var MonPdContext = DBClass.GetContext();
+                var context = _context;
+                var ret = new List<ViewModels.DetailNop>();
+
+                // 🔹 1. Kumpulkan semua NOP yang sudah bayar dari semua jenis pajak
+                var nopSudahBayar = new HashSet<string>(
+                    MonPdContext.DbMonRestos
+                        .Where(x => x.NominalPokokBayar.HasValue &&
+                                    x.TglBayarPokok.HasValue &&
+                                    x.TglBayarPokok.Value.Year == tahun &&
+                                    x.TglBayarPokok.Value.Month == bulan)
+                        .Select(x => x.Nop)
+                        .Concat(MonPdContext.DbMonHotels
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonHiburans
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonParkirs
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonPpjs
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Concat(MonPdContext.DbMonAbts
+                            .Where(x => x.NominalPokokBayar.HasValue &&
+                                        x.TglBayarPokok.HasValue &&
+                                        x.TglBayarPokok.Value.Year == tahun &&
+                                        x.TglBayarPokok.Value.Month == bulan)
+                            .Select(x => x.Nop))
+                        .Distinct()
+                );
+
+                // 🔹 2. Ambil semua objek pajak milik pegawai untuk jenis pajak tertentu
+                var dataPegawai = context.MPegawaiOpDets
+                    .Where(x => x.Nip == nip && x.NopNavigation.PajakId == pajakId)
+                    .Include(x => x.NopNavigation)
+                    .Select(x => new
+                    {
+                        x.Nip,
+                        x.Nop,
+                        x.NopNavigation.NamaOp,
+                        x.NopNavigation.AlamatOp
+                    })
+                    .ToList();
+
+                // 🔹 3. Ambil data Upaya dari tabel monitoring (contoh pakai DbMonUpayas)
+                var dataUpaya = context.TAktifitasPegawais
+                    .Where(x => x.TanggalAktifitas.Value.Year == tahun && x.TanggalAktifitas.Value.Month == bulan && x.Nip == nip)
+                    .Select(x => new { x.Nop, x.Aktifitas })
+                    .ToList();
+
+                // 🔹 4. Mapping hasil ke ViewModel
+                foreach (var item in dataPegawai)
+                {
+                    bool sudahBayar = nopSudahBayar.Contains(item.Nop);
+
+                    var upayaList = dataUpaya
+                        .Where(u => u.Nop == item.Nop)
+                        .Select(u => u.Aktifitas)
+                        .Distinct()
+                        .ToList();
+
+                    string upayaText = "-";
+                    if (upayaList.Any())
+                    {
+                        upayaText = $"{upayaList.Count}x: " + string.Join(", ", upayaList);
+                    }
+
+                    // capaian 100% kalau sudah bayar, 0 kalau belum
+                    decimal capaian = sudahBayar ? 10 : 0m;
+
+                    ret.Add(new ViewModels.DetailNop
+                    {
+                        Nip = item.Nip,
+                        pajakId = pajakId,
+                        Nop = item.Nop,
+                        NamaOP = item.NamaOp,
+                        Alamat = item.AlamatOp,
+                        Upaya = upayaText,
+                        Capaian = capaian
+                    });
+                }
+
+                return ret;
+            }
+
         }
     }
 }

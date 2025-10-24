@@ -23,7 +23,7 @@
             columns.AddFor(m => m.Nip).Caption("Nip");
             columns.AddFor(m => m.Nama).Caption("Nama Pegawai");
             columns.AddFor(m => m.JmlNOP).Caption("Jumlah OP").Format("#,##0");
-            columns.AddFor(m => m.Capaian).Caption("Capaian").Format("#,##0");
+            columns.AddFor(m => m.Capaian).Caption("Capaian").Format("#,##0%");
         })
         .MasterDetail(md => md
         .Enabled(true)

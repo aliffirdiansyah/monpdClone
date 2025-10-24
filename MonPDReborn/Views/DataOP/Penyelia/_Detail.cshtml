@@ -4,7 +4,7 @@
         Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.PenyeliaVM.ViewModels.DetailPenyelia>()
         .DataSource(d => d.Mvc()
         .LoadAction("GetDetail")
-        .Key("PajakID")
+        .Key("Nip")
         .LoadParams(new { tahun = ViewData["tahun"], bulan = ViewData["bulan"], nip = ViewData["Nip"] })
         )
         .ShowBorders(true)
@@ -23,7 +23,17 @@
         {
             columns.AddFor(m => m.JenisPajak).Caption("Jenis Pajak");
             columns.AddFor(m => m.JmlNOP).Caption("Jumlah OP").Format("#,##0");
-            columns.AddFor(m => m.Capaian).Caption("Capaian").Format("#,##0");
+            columns.AddFor(m => m.SudahBayar).Caption("OP Sudah Bayar").Format("#,##0");
+            columns.AddFor(m => m.Capaian).Caption("Capaian").Format("#,##0%");
+            columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Buttons(b =>
+                {
+                    b.Add()
+                .Text("Detail")
+                .Icon("search")
+                .OnClick("onDetailClick");
+                });
         })
         
         )

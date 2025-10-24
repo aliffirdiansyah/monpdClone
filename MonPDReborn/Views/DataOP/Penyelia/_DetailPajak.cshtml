@@ -1,0 +1,30 @@
+﻿@using static MonPDReborn.Models.DataOP.PenyeliaVM.ViewModels
+@model MonPDReborn.Models.DataOP.PenyeliaVM.DetailPajak
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<DetailNop>()
+        .ID("nopGrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnLines(true)
+        .RowAlternationEnabled(true)
+        .ShowRowLines(true)
+        .ShowColumnHeaders(true)
+        .ColumnAutoWidth(true)
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+        .ShowPageSizeSelector(true)
+        .AllowedPageSizes(new[] { 5, 10, 20 })
+        .ShowInfo(true)
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Nop).Caption("Nop");
+            columns.AddFor(m => m.NamaOP).Caption("Nama OP");
+            columns.AddFor(m => m.Alamat).Caption("Alamat OP");
+            columns.AddFor(m => m.Upaya).Caption("Upaya");
+            columns.AddFor(m => m.Capaian).Caption("Capaian").Format("#,##0%");
+        })
+
+        )
+</div>

@@ -142,6 +142,49 @@
             });
         }
     </script>
+    <script>
+        function onDetailClick(e) {
+            const tahun = e.row.data.Tahun;
+            const bulan = e.row.data.Bulan ;
+            const nip = e.row.data.Nip ;
+            const pajakId = e.row.data.pajakId;
 
+            $.ajax({
+                url: '/Penyelia/DetailPajak',
+                type: 'GET',
+                data: { tahun, bulan, nip, pajakId },
+                beforeSend: function () {
+                    $("#loader").show();
+
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
+                },
+                success: function (response) {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Detail Objek Pajak");
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").html("Error");
+                    $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+    </script>
     
 }

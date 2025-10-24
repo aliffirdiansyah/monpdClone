@@ -85,6 +85,26 @@ namespace MonPDReborn.Controllers.DataOP
             var data = Models.DataOP.PenyeliaVM.Methods.GetDetailPenyelia( tahun, bulan, nip);
             return DataSourceLoader.Load(data, load_options);
         }
+        public IActionResult DetailPajak(int tahun, int bulan, string nip, int pajakId)
+        {
+            try
+            {
+                var model = new MonPDReborn.Models.DataOP.PenyeliaVM.DetailPajak(tahun, bulan, nip, pajakId);
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠️ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
         [HttpGet]
         public async Task<object> GetBidang(DataSourceLoadOptions loadOptions)
         {
