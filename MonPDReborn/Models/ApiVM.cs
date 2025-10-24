@@ -5,6 +5,7 @@ using static MonPDReborn.Models.DataOP.ProfilePembayaranOPVM;
 using System.Globalization;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
+using static MonPDLib.Helper;
 
 namespace MonPDReborn.Models
 {
@@ -723,8 +724,52 @@ namespace MonPDReborn.Models
                     return connection.Query<SBData>(query, new { nop, tahun, masa }).ToList();
                 }
             }
-        }
 
+            //public static List<DailyReportView> DailyReportVM(DateTime tglserver, DateTime TglCutOff, bool ww)
+            //{
+            //    var ret = new List<DailyReportView>();
+                
+            //    //PPJ            
+            //    ret.Add(new DailyReportView
+            //    {
+            //        Nomor = (int)EnumFactory.EPajak.PPJ,
+            //        JenisPajak = "PPJ",
+            //        Target = (double)new AkunJenisObjek("4.1", "01", "10", tglserver.Year).GetTotalTarget(),
+            //        Realisasi = (double)SSPDMPS.GetRekapitulasiSSPDMPS(EnumFactory.EPajakMPS.PPJ, tglserver.Year).Sum(m => m.Pokok),
+            //        Daily = (double)SSPDMPS.GetTotalRealisasiPokok(EnumFactory.EPajakMPS.PPJ, tglserver, tglserver),
+            //        SampaiDengan = (double)SSPDMPS.GetTotalRealisasiPokok(EnumFactory.EPajakMPS.PPJ, TglCutOff, tglserver),
+            //        BulanIni = (double)SSPDMPS.GetTotalRealisasiPokokBulanIni(EnumFactory.EPajakMPS.PPJ, TglCutOff, tglserver),
+            //    });
+
+            //    TotPersen = 100;
+
+            //    if (lstDailyReport.Sum(m => m.Target) > 0)
+            //        TotPersen = Math.Round((lstDailyReport.Sum(m => m.SampaiDengan) / lstDailyReport.Sum(m => m.Target)) * 100, 2, MidpointRounding.AwayFromZero);
+            //}
+        }
+        /// DAILY REPORT VIEW
+        public class DailyReportView
+        {
+            public string KodeSubRincian { get; set; }
+            public int Nomor { get; set; }
+            public string JenisPajak { get; set; }
+            public double Target { get; set; }
+            public double Realisasi { get; set; }
+            public double Persen
+            {
+                get
+                {
+                    double prs = 100;
+                    if (Target > 0)
+                        prs = Math.Round((Realisasi / Target) * 100, 2, MidpointRounding.AwayFromZero);
+
+                    return prs;
+                }
+            }
+            public double Daily { get; set; }
+            public double SampaiDengan { get; set; }
+            public double BulanIni { get; set; }
+        }
         ///TARIKAN DATA TS TB SB
         public class TSData
         {

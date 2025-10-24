@@ -1,7 +1,10 @@
 ﻿using DevExpress.DataAccess.Native.Web;
 using Microsoft.AspNetCore.Mvc;
 using MonPDReborn.Lib.General;
+using Newtonsoft.Json;
+using System.Globalization;
 using System.Text;
+using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers
@@ -15,7 +18,75 @@ namespace MonPDReborn.Controllers
         {
             _connectionString = configuration.GetConnectionString("MONPEDE") ?? "";
         }
+        //[HttpGet]
+        //public IActionResult Index(string username, string password, string tanggal = "")
+        //{
+        //    if (username == "BimoUW!API22023" && password == "!Esidatra2023!")
+        //    {
+        //        int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+        //        DateTime tglCutOff = new DateTime(tahun, 1, 1);
+        //        DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+        //        DailyReportVM mod = new DailyReportVM(tglRealisasi, tglCutOff, true);
 
+        //        return Json(mod.lstDailyReport);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //}
+        //[HttpGet]
+        //public IActionResult Realisasi(string username, string password)
+        //{
+        //    if (username == "BimoUW!API22023" && password == "!Esidatra2023!")
+        //    {
+        //        //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+        //        //DateTime tglCutOff = new DateTime(tahun, 1, 1);
+        //        //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+        //        RealisasiNew.GetSubRinci mod = new GetSubRinci();
+
+        //        return Json(mod.SubRinciList);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //}
+
+        //[HttpGet]
+        //public IActionResult GetDataUPTBAPI(string tanggal, string username, string password)
+        //{
+        //    if (username == "BimoUW!API22023" && password == "!Esidatra2023!")
+        //    {
+        //        int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+        //        DateTime tglCutOff = new DateTime(tahun, 1, 1);
+        //        DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+        //        var json = new Models.AksiSembilanAPI.GetDataUPTBAPI(tglRealisasi, tglCutOff);
+
+        //        return Json(json);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //}
+        //[HttpGet]
+        //public IActionResult GetDataUPTBAPITES(string tanggal, string username, string password)
+        //{
+        //    if (username == "BimoUW!API22023" && password == "!Esidatra2023!")
+        //    {
+        //        int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+        //        DateTime tglCutOff = new DateTime(tahun, 1, 1);
+        //        DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+        //        var json = new Models.AksiSembilanVM.WilayahDailyAPI(tglRealisasi, tglCutOff);
+
+        //        return Json(json);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //}
         [HttpGet]
         public IActionResult GetRealisasiPajak(string nop)
         {
@@ -159,5 +230,158 @@ namespace MonPDReborn.Controllers
                 return Json(response);
             }
         }
+        //[HttpGet]
+        //public ActionResult GetDataPajakRealisasi(int masa, int tahun, int uptb, int pajak, string username, string password)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+        //        //DateTime tglCutOff = new DateTime(tahun, 1, 1);
+        //        //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+        //        var data = new Models.TSVM.Realisasi(masa, tahun, uptb, (EPajak)pajak);
+        //        string json = JsonConvert.SerializeObject(data);
+        //        return Content(json, "application/json");
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //}
+        //[HttpGet]
+        //public ActionResult GetRealisasiAllPajak(string tanggal, string username, string password, bool? withDenda = false)
+        //{
+        //    if (username == "BimoUW!API22023" && password == "!Esidatra2023!")
+        //    {
+        //        int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+        //        DateTime tglCutOff = new DateTime(tahun, 1, 1);
+        //        DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+        //        var json = new Models.AksiSembilanAPI.GetDataRealisasiPajakAPI(tglCutOff, tglRealisasi, withDenda);
+
+        //        return Json(json);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //}
+        //[HttpGet]
+        //public ActionResult GetRealisasiAllPajakTesting(string tanggal, string username, string password, bool? withDenda = false)
+        //{
+        //    if (username == "BimoUW!API22023" && password == "!Esidatra2023!")
+        //    {
+        //        int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+        //        DateTime tglCutOff = new DateTime(tahun, 1, 1);
+        //        DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+        //        var json = new Models.AksiSembilanAPI.GetDataRealisasiPajakAPITesting(tglCutOff, tglRealisasi, withDenda);
+
+        //        return Json(json);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    }
+        //}
+        //[HttpGet]
+        //public ActionResult GetRealisasiUPTB2024(string username, string password)
+        //{
+        //    if (username == "BimoUW!API22023" && password == "!Esidatra2023!")
+        //    {
+        //        var data = new Models.AksiSembilanAPI.GetDataUPTBSetahun();
+        //        return Json(data);
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
+        //public ActionResult GetPotensiParkir(string username, string password, string wilayah)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        var data = new Models.KartuDataVM.GetPotensiParkir(wilayah);
+        //        return Json(data);
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
+        //public ActionResult GetPotensiRestoran(string username, string password, string wilayah)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        var data = new Models.KartuDataVM.GetPotensiRestoran(wilayah);
+        //        return Json(data);
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
+        //public ActionResult GetPotensiHiburanBioskop(string username, string password, string wilayah)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        var data = new Models.KartuDataVM.GetPotensiHiburanBioskop(wilayah);
+        //        return Json(data);
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
+        //public ActionResult GetPotensiHiburanNonBioskop(string username, string password, string wilayah)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        var data = new Models.KartuDataVM.GetPotensiHiburanNonBioskop(wilayah);
+        //        return Json(data);
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
+        //[HttpGet]
+        //public ActionResult GetKartuData(string username, string password, string nop, int tahun, int tahun2, int jenis)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        var data = new Models.KartuDataVM.Index(nop, tahun, tahun2, jenis);
+        //        return Json(data);
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
+        //[HttpGet]
+        //public ActionResult GetPenagihanData(string username, string password, int tahun, int tahun2, int jenis)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis);
+        //        string json = JsonConvert.SerializeObject(data);
+        //        return Content(json, "application/json");
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
+        //[HttpGet]
+        //public ActionResult GetPenagihanDataByNOP(string username, string password, int tahun, int tahun2, int jenis, string nop)
+        //{
+        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+        //    {
+        //        var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis, nop);
+        //        string json = JsonConvert.SerializeObject(data);
+        //        return Content(json, "application/json");
+        //    }
+        //    else
+        //    {
+        //        return Json(new { });
+        //    }
+        //}
     }
 }
