@@ -32,11 +32,20 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 SelectedBulan = DateTime.Now.Month;
                 JenisUptbList = Enum.GetValues(typeof(EnumFactory.EUPTB))
                     .Cast<EnumFactory.EUPTB>()
+                    .Where(x => (int)x != 0) // ← skip nilai 0
                     .Select(x => new SelectListItem
                     {
                         Value = ((int)x).ToString(),
                         Text = x.GetDescription()
-                    }).ToList();
+                    })
+                    .ToList();
+                //JenisUptbList = Enum.GetValues(typeof(EnumFactory.EUPTB))
+                //    .Cast<EnumFactory.EUPTB>()
+                //    .Select(x => new SelectListItem
+                //    {
+                //        Value = ((int)x).ToString(),
+                //        Text = x.GetDescription()
+                //    }).ToList();
 
                 JenisPajakList = Enum.GetValues(typeof(EnumFactory.EPajak))
                     .Cast<EnumFactory.EPajak>()
