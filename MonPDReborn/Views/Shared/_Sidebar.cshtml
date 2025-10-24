@@ -242,6 +242,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Penyelia" ? "active" : "")"
+                           href="@Url.Action("Index", "Penyelia")" role="button">
+                            <i class="bx bx-book-content me-1 align-middle"></i><span data-key="t-penyelia">Rapot Pegawai</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PendataanObjekPajak" ? "active" : "")"
                            href="@Url.Action("Index", "PendataanObjekPajak")" role="button">
                             <i class="bx bx-folder-open me-1 align-middle"></i><span data-key="t-pendataanObjek">Pengedokan Pajak</span>

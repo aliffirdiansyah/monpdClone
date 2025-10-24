@@ -350,31 +350,32 @@
                                     </small>
                                 </div>
 
+                                <div class="col-12 col-md-4 col-lg-3 d-flex flex-column">
+                                    <label for="JumlahSatuan" class="form-label fw-semibold">Jumlah Satuan</label>
+                                    @(Html.DevExtreme().NumberBox()
+                                                                            .ID("JumlahSatuanIns")
+                                                                            .Placeholder("Isi jumlah satuan reklame")
+                                                                            .Min(1)
+                                                                            .StylingMode(EditorStylingMode.Outlined)
+                                                                            .Height(45)
+                                                                            .Format("#,##0")
+                                                                            )
+                                    <small class="form-text text-danger mt-auto">
+                                        <i class='bx bx-info-circle me-1'></i>
+                                        Jumlah unit atau bidang atau durasi reklame yang dipasang.
+                                    </small>
+                                </div>
+
                                 <!-- Bagian Ukuran (Mode Satuan) -->
                                 <div class="row g-3 mt-2">
                                     <!-- Jumlah Satuan -->
-                                    <div id="frm-jumlahsatuan" style="display:none">
-                                        <div class="col-12 col-md-4 col-lg-3 d-flex flex-column">
-                                            <label for="JumlahSatuan" class="form-label fw-semibold">Jumlah Satuan</label>
-                                            @(Html.DevExtreme().NumberBox()
-                                                                                        .ID("JumlahSatuanIns")
-                                                                                        .Placeholder("Isi jumlah satuan reklame")
-                                                                                        .Min(1)
-                                                                                        .StylingMode(EditorStylingMode.Outlined)
-                                                                                        .Height(45)
-                                                                                        .Format("#,##0")
-                                                                                        )
-                                            <small class="form-text text-danger mt-auto">
-                                                <i class='bx bx-info-circle me-1'></i>
-                                                Jumlah unit atau bidang atau durasi reklame yang dipasang.
-                                            </small>
-                                        </div>
-                                    </div>
+                                    
 
 
                                     <!-- Panjang -->
-                                    <div id="frm-panjang" style="display:none">
-                                        <div class="col-12 col-md-4 col-lg-3 d-flex flex-column">
+                                    
+                                    <div class="col-12 col-md-4 col-lg-3 d-flex flex-column">
+                                        <div id="frm-panjang" style="display:none">
                                             <label for="Panjang" class="form-label fw-semibold">Panjang (meter)</label>
                                             @(Html.DevExtreme().NumberBox()
                                                                                         .ID("PanjangIns")
@@ -392,8 +393,9 @@
                                     </div>
 
                                     <!-- Lebar -->
-                                    <div id="frm-lebar" style="display:none">
-                                        <div class="col-12 col-md-4 col-lg-3 d-flex flex-column">
+                                    
+                                    <div class="col-12 col-md-4 col-lg-3 d-flex flex-column">
+                                        <div id="frm-lebar" style="display:none">
                                             <label for="Lebar" class="form-label fw-semibold">Lebar (meter)</label>
                                             @(Html.DevExtreme().NumberBox()
                                                                                         .ID("LebarIns")
