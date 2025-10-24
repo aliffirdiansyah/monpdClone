@@ -373,29 +373,59 @@ namespace MonPDReborn.Controllers
         [HttpGet]
         public ActionResult GetPenagihanData(string username, string password, int tahun, int tahun2, int jenis)
         {
-            if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+            try
             {
-                var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis);
-                string json = JsonConvert.SerializeObject(data);
-                return Content(json, "application/json");
+                if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+                {
+                    var data = Models.ApiVM.Method.GetPenagihanData(_connectionString, tahun, tahun2, jenis);
+                    string json = JsonConvert.SerializeObject(data);
+                    return Content(json, "application/json");
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
-            else
+            catch (ArgumentException e)
             {
-                return Json(new { });
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
         [HttpGet]
         public ActionResult GetPenagihanDataByNOP(string username, string password, int tahun, int tahun2, int jenis, string nop)
         {
-            if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+            try
             {
-                var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis, nop);
-                string json = JsonConvert.SerializeObject(data);
-                return Content(json, "application/json");
+                if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+                {
+                    var data = Models.ApiVM.Method.GetPenagihanData(_connectionString, tahun, tahun2, jenis, nop);
+                    string json = JsonConvert.SerializeObject(data);
+                    return Content(json, "application/json");
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
-            else
+            catch (ArgumentException e)
             {
-                return Json(new { });
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
     }
