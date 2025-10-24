@@ -342,46 +342,61 @@ namespace MonPDReborn.Controllers
         //        return Json(new { });
         //    }
         //}
-        //[HttpGet]
-        //public ActionResult GetKartuData(string username, string password, string nop, int tahun, int tahun2, int jenis)
-        //{
-        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
-        //    {
-        //        var data = new Models.KartuDataVM.Index(nop, tahun, tahun2, jenis);
-        //        return Json(data);
-        //    }
-        //    else
-        //    {
-        //        return Json(new { });
-        //    }
-        //}
-        //[HttpGet]
-        //public ActionResult GetPenagihanData(string username, string password, int tahun, int tahun2, int jenis)
-        //{
-        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
-        //    {
-        //        var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis);
-        //        string json = JsonConvert.SerializeObject(data);
-        //        return Content(json, "application/json");
-        //    }
-        //    else
-        //    {
-        //        return Json(new { });
-        //    }
-        //}
-        //[HttpGet]
-        //public ActionResult GetPenagihanDataByNOP(string username, string password, int tahun, int tahun2, int jenis, string nop)
-        //{
-        //    if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
-        //    {
-        //        var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis, nop);
-        //        string json = JsonConvert.SerializeObject(data);
-        //        return Content(json, "application/json");
-        //    }
-        //    else
-        //    {
-        //        return Json(new { });
-        //    }
-        //}
+        [HttpGet]
+        public IActionResult GetKartuData(string username, string password, string nop, int tahun, int tahun2, int jenis)
+        {
+            try
+            {
+                if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+                {
+                    var data = Models.ApiVM.Method.GetKartuDataData(_connectionString, nop, tahun, tahun2, jenis);
+                    return Json(data);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        [HttpGet]
+        public ActionResult GetPenagihanData(string username, string password, int tahun, int tahun2, int jenis)
+        {
+            if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+            {
+                var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis);
+                string json = JsonConvert.SerializeObject(data);
+                return Content(json, "application/json");
+            }
+            else
+            {
+                return Json(new { });
+            }
+        }
+        [HttpGet]
+        public ActionResult GetPenagihanDataByNOP(string username, string password, int tahun, int tahun2, int jenis, string nop)
+        {
+            if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+            {
+                var data = new Models.KartuDataVM.PenagiahanData(tahun, tahun2, jenis, nop);
+                string json = JsonConvert.SerializeObject(data);
+                return Content(json, "application/json");
+            }
+            else
+            {
+                return Json(new { });
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@ using System.Globalization;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using static MonPDLib.Helper;
+using DevExpress.DataAccess.Wizard.Native;
+using static MonPDLib.General.EnumFactory;
 
 namespace MonPDReborn.Models
 {
@@ -725,27 +727,1179 @@ namespace MonPDReborn.Models
                 }
             }
 
-            //public static List<DailyReportView> DailyReportVM(DateTime tglserver, DateTime TglCutOff, bool ww)
-            //{
-            //    var ret = new List<DailyReportView>();
-                
-            //    //PPJ            
-            //    ret.Add(new DailyReportView
-            //    {
-            //        Nomor = (int)EnumFactory.EPajak.PPJ,
-            //        JenisPajak = "PPJ",
-            //        Target = (double)new AkunJenisObjek("4.1", "01", "10", tglserver.Year).GetTotalTarget(),
-            //        Realisasi = (double)SSPDMPS.GetRekapitulasiSSPDMPS(EnumFactory.EPajakMPS.PPJ, tglserver.Year).Sum(m => m.Pokok),
-            //        Daily = (double)SSPDMPS.GetTotalRealisasiPokok(EnumFactory.EPajakMPS.PPJ, tglserver, tglserver),
-            //        SampaiDengan = (double)SSPDMPS.GetTotalRealisasiPokok(EnumFactory.EPajakMPS.PPJ, TglCutOff, tglserver),
-            //        BulanIni = (double)SSPDMPS.GetTotalRealisasiPokokBulanIni(EnumFactory.EPajakMPS.PPJ, TglCutOff, tglserver),
-            //    });
+            public static List<KartuDataData> GetKartuDataData(string connectionString, string idop, int tahun1, int tahun2, int jenisPajak)
+            {
+                using (var conn = new OracleConnection(connectionString))
+                {
+                    conn.Open();
 
-            //    TotPersen = 100;
+                    EPajak pajak = (EPajak)jenisPajak;
+                    string Query = "";
 
-            //    if (lstDailyReport.Sum(m => m.Target) > 0)
-            //        TotPersen = Math.Round((lstDailyReport.Sum(m => m.SampaiDengan) / lstDailyReport.Sum(m => m.Target)) * 100, 2, MidpointRounding.AwayFromZero);
-            //}
+                    switch (pajak)
+                    {
+                        case EPajak.MakananMinuman:
+                            Query = @"
+                            SELECT
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    NOP, MIN(NO_SPTPD) AS NO_SPTPD,
+                                    TAHUN, MASAPAJAK, SUM(NVL(PAJAK_TERUTANG, 0)) AS PAJAK_TERUTANG,
+                                    MIN(KETERANGAN) AS KETERANGAN,
+                                    MIN(TANGGALENTRY) AS TANGGALENTRY, MIN(PENGENTRY) AS PENGENTRY,
+                                    MIN(NPWPD) AS NPWPD, MIN(TANGGALJATUHTEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MASAPAJAKAWAL) AS MASAPAJAKAWAL, MIN(MASAPAJAKAKHIR) AS MASAPAJAKAKHIR,
+                                    MIN(RUMUS_PROSEN) AS RUMUS_PROSEN, SUM(NVL(OMSET, 0)) AS OMSET
+                                FROM T_KETETAPAN_RESTORAN
+                                GROUP BY NOP, TAHUN, MASAPAJAK                            
+                            ) A
+                            JOIN T_OP_RESTORAN B ON A.NOP = B.ID_OP AND B.ID_OP=:IDOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_RESTORAN GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD)
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                            break;
+                        case EPajak.TenagaListrik:
+                            Query = @"
+                            SELECT
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_PPJ
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_PPJ B ON A.NOP = B.FK_NOP AND B.FK_NOP=:IDOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_PPJ GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                            break;
+                        case EPajak.JasaPerhotelan:
+                            Query = @"
+                            SELECT
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT
+                                    NOP, MIN(NO_SPTPD) AS NO_SPTPD, TAHUN, MASAPAJAK,
+                                    SUM(NVL(PAJAK_TERUTANG, 0)) AS PAJAK_TERUTANG, MIN(KETERANGAN) AS KETERANGAN,
+                                    MIN(TANGGALENTRY) AS TANGGALENTRY, MIN(PENGENTRY) AS PENGENTRY,
+                                    MIN(NPWPD) AS NPWPD, MIN(TANGGALJATUHTEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MASAPAJAKAWAL) AS MASAPAJAKAWAL, MIN(MASAPAJAKAKHIR) AS MASAPAJAKAKHIR,
+                                    MIN(RUMUS_PROSEN) AS RUMUS_PROSEN, SUM(NVL(OMSET, 0)) AS OMSET
+                                FROM T_KETETAPAN_HOTEL
+                                GROUP BY NOP, TAHUN, MASAPAJAK
+                            ) A
+                            JOIN T_OP_HOTEL B ON A.NOP = B.ID_OP AND B.ID_OP = :IDOP
+                            LEFT JOIN (
+                                SELECT
+                                    MAX(TGL_SSPD) AS TGL_SSPD, FK_NOP, TAHUN_PAJAK_SSPD,
+                                    BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK, SUM(JML_DENDA) AS JML_DENDA
+                                FROM T_SSPD_HOTEL
+                                GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP = C.FK_NOP AND A.MASAPAJAK = C.BULAN_PAJAK_SSPD AND A.TAHUN = C.TAHUN_PAJAK_SSPD)
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                            break;
+                        case EPajak.JasaParkir:
+                            Query = @"
+                            SELECT
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_PARKIR
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_PARKIR B ON A.NOP = B.FK_NOP AND B.FK_NOP=:IDOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_PARKIR GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                            break;
+                        case EPajak.JasaKesenianHiburan:
+                            Query = @"
+                            SELECT
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_HIBURAN
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_HIBURAN B ON A.NOP = B.FK_NOP AND B.FK_NOP=:IDOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_HIBURAN GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                            break;
+                        case EPajak.AirTanah:
+                            Query = @"
+                              SELECT
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'SKPD ABT' AS Sistem,
+                                'SKPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                CASE
+                                WHEN A.TAHUN > 2024 OR (A.TAHUN = 2024 AND A.MASAPAJAK > 9) THEN 'SYNC SurabayaTax'
+	                                ELSE 'SIMPADA'
+	                            END AS LokasiSetoran,
+	                            CASE
+	                                WHEN A.TAHUN > 2024 OR (A.TAHUN = 2024 AND A.MASAPAJAK > 9) THEN 'SYNC SurabayaTax'
+	                                ELSE 'SIMPADA'
+	                            END AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    NOP AS NOP, MIN(NOMOR_SKPD) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, MASA_PAJAK AS MASAPAJAK, SUM(NVL(JUMLAH_PAJAK, 0)) AS PAJAK_TERUTANG,
+                                    '' AS KETERANGAN,
+                                    MIN(TGL_PENETAPAN) AS TANGGALENTRY, MIN(TGL_PENETAPAN) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_PENETAPAN) AS TANGGALJATUHTEMPO,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_ABT
+                                GROUP BY NOP, TAHUN_PAJAK, MASA_PAJAK                    
+                            ) A
+                            JOIN T_OP_ABT B ON A.NOP = B.FK_NOP AND B.FK_NOP=:IDOP
+                            LEFT JOIN (
+                                SELECT MAX(TANGGAL) AS TGL_SSPD,  NOP, TAHUN, BULAN, SUM(SKPD) AS JML_POKOK,
+	                            SUM(DENDA) AS JML_DENDA 
+	                            FROM T_SSPD_ABT GROUP BY NOP, TAHUN, BULAN
+                            ) C ON (A.NOP=C.NOP AND A.MASAPAJAK=C.BULAN AND A.TAHUN=C.TAHUN) 
+                            WHERE A.TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                            ";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    var param = new
+                    {
+                        IDOP = idop,
+                        TAHUN1 = tahun1,
+                        TAHUN2 = tahun2
+                    };
+
+                    var data = conn.Query<KartuDataData>(Query, param).ToList();
+
+                    return data;
+                }
+            }
+
+            //PENAGIHAN DATA
+            public static List<PenagihanData> GetPenagihanData(string connectionString, int tahun1, int tahun2, int jenisPajak)
+            {
+                List<PenagihanData> ret = new List<PenagihanData>();
+
+                string Query = @"";
+                EPajak pajak = (EPajak)jenisPajak;
+                switch (pajak)
+                {
+                    case EPajak.MakananMinuman:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    NOP, MIN(NO_SPTPD) AS NO_SPTPD,
+                                    TAHUN, MASAPAJAK, SUM(NVL(PAJAK_TERUTANG, 0)) AS PAJAK_TERUTANG,
+                                    MIN(KETERANGAN) AS KETERANGAN,
+                                    MIN(TANGGALENTRY) AS TANGGALENTRY, MIN(PENGENTRY) AS PENGENTRY,
+                                    MIN(NPWPD) AS NPWPD, MIN(TANGGALJATUHTEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MASAPAJAKAWAL) AS MASAPAJAKAWAL, MIN(MASAPAJAKAKHIR) AS MASAPAJAKAKHIR,
+                                    MIN(RUMUS_PROSEN) AS RUMUS_PROSEN, SUM(NVL(OMSET, 0)) AS OMSET
+                                FROM T_KETETAPAN_RESTORAN
+                                GROUP BY NOP, TAHUN, MASAPAJAK                            
+                            ) A
+                            JOIN T_OP_RESTORAN B ON A.NOP = B.ID_OP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_RESTORAN GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD)
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.TenagaListrik:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_PPJ
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_PPJ B ON A.NOP = B.FK_NOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_PPJ GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.JasaPerhotelan:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT
+                                    NOP, MIN(NO_SPTPD) AS NO_SPTPD, TAHUN, MASAPAJAK,
+                                    SUM(NVL(PAJAK_TERUTANG, 0)) AS PAJAK_TERUTANG, MIN(KETERANGAN) AS KETERANGAN,
+                                    MIN(TANGGALENTRY) AS TANGGALENTRY, MIN(PENGENTRY) AS PENGENTRY,
+                                    MIN(NPWPD) AS NPWPD, MIN(TANGGALJATUHTEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MASAPAJAKAWAL) AS MASAPAJAKAWAL, MIN(MASAPAJAKAKHIR) AS MASAPAJAKAKHIR,
+                                    MIN(RUMUS_PROSEN) AS RUMUS_PROSEN, SUM(NVL(OMSET, 0)) AS OMSET
+                                FROM T_KETETAPAN_HOTEL
+                                GROUP BY NOP, TAHUN, MASAPAJAK
+                            ) A
+                            JOIN T_OP_HOTEL B ON A.NOP = B.ID_OP
+                            LEFT JOIN (
+                                SELECT
+                                    MAX(TGL_SSPD) AS TGL_SSPD, FK_NOP, TAHUN_PAJAK_SSPD,
+                                    BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK, SUM(JML_DENDA) AS JML_DENDA
+                                FROM T_SSPD_HOTEL
+                                GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP = C.FK_NOP AND A.MASAPAJAK = C.BULAN_PAJAK_SSPD AND A.TAHUN = C.TAHUN_PAJAK_SSPD)
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.JasaParkir:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_PARKIR
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_PARKIR B ON A.NOP = B.FK_NOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_PARKIR GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.JasaKesenianHiburan:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_HIBURAN
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_HIBURAN B ON A.NOP = B.FK_NOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_HIBURAN GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    default:
+                        break;
+                }
+
+                using (var conn = new OracleConnection(connectionString))
+                {
+                    
+                    var param = new
+                    {
+                        TAHUN1 = tahun1,
+                        TAHUN2 = tahun2
+                    };
+
+                    ret = conn.Query<PenagihanData>(Query, param).ToList();
+                }
+
+                return ret;
+            }
+            public static List<PenagihanData> GetPenagihanData(string connectionString, int tahun1, int tahun2, int jenisPajak, string nop)
+            {
+                List<PenagihanData> ret = new List<PenagihanData>();
+                string Query = @"";
+                EPajak pajak = (EPajak)jenisPajak;
+                switch (pajak)
+                {
+                    case EPajak.MakananMinuman:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    NOP, MIN(NO_SPTPD) AS NO_SPTPD,
+                                    TAHUN, MASAPAJAK, SUM(NVL(PAJAK_TERUTANG, 0)) AS PAJAK_TERUTANG,
+                                    MIN(KETERANGAN) AS KETERANGAN,
+                                    MIN(TANGGALENTRY) AS TANGGALENTRY, MIN(PENGENTRY) AS PENGENTRY,
+                                    MIN(NPWPD) AS NPWPD, MIN(TANGGALJATUHTEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MASAPAJAKAWAL) AS MASAPAJAKAWAL, MIN(MASAPAJAKAKHIR) AS MASAPAJAKAKHIR,
+                                    MIN(RUMUS_PROSEN) AS RUMUS_PROSEN, SUM(NVL(OMSET, 0)) AS OMSET
+                                FROM T_KETETAPAN_RESTORAN
+                                GROUP BY NOP, TAHUN, MASAPAJAK                            
+                            ) A
+                            JOIN T_OP_RESTORAN B ON A.NOP = B.ID_OP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_RESTORAN GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD)
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' AND NOP = :NOP ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.TenagaListrik:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_PPJ
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_PPJ B ON A.NOP = B.FK_NOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_PPJ GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' AND NOP = :NOP ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.JasaPerhotelan:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT
+                                    NOP, MIN(NO_SPTPD) AS NO_SPTPD, TAHUN, MASAPAJAK,
+                                    SUM(NVL(PAJAK_TERUTANG, 0)) AS PAJAK_TERUTANG, MIN(KETERANGAN) AS KETERANGAN,
+                                    MIN(TANGGALENTRY) AS TANGGALENTRY, MIN(PENGENTRY) AS PENGENTRY,
+                                    MIN(NPWPD) AS NPWPD, MIN(TANGGALJATUHTEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MASAPAJAKAWAL) AS MASAPAJAKAWAL, MIN(MASAPAJAKAKHIR) AS MASAPAJAKAKHIR,
+                                    MIN(RUMUS_PROSEN) AS RUMUS_PROSEN, SUM(NVL(OMSET, 0)) AS OMSET
+                                FROM T_KETETAPAN_HOTEL
+                                GROUP BY NOP, TAHUN, MASAPAJAK
+                            ) A
+                            JOIN T_OP_HOTEL B ON A.NOP = B.ID_OP
+                            LEFT JOIN (
+                                SELECT
+                                    MAX(TGL_SSPD) AS TGL_SSPD, FK_NOP, TAHUN_PAJAK_SSPD,
+                                    BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK, SUM(JML_DENDA) AS JML_DENDA
+                                FROM T_SSPD_HOTEL
+                                GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP = C.FK_NOP AND A.MASAPAJAK = C.BULAN_PAJAK_SSPD AND A.TAHUN = C.TAHUN_PAJAK_SSPD)
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' AND NOP = :NOP ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.JasaParkir:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_PARKIR
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_PARKIR B ON A.NOP = B.FK_NOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_PARKIR GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' AND NOP = :NOP ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    case EPajak.JasaKesenianHiburan:
+                        Query = @"
+                            SELECT
+                                A.NOP,
+                                A.TAHUN,
+                                CASE
+                                    WHEN A.MASAPAJAK = 1 THEN 'JANUARI'
+                                    WHEN A.MASAPAJAK = 2 THEN 'FEBRUARI'
+                                    WHEN A.MASAPAJAK = 3 THEN 'MARET'
+                                    WHEN A.MASAPAJAK = 4 THEN 'APRIL'
+                                    WHEN A.MASAPAJAK = 5 THEN 'MEI'
+                                    WHEN A.MASAPAJAK = 6 THEN 'JUNI'
+                                    WHEN A.MASAPAJAK = 7 THEN 'JULI'
+                                    WHEN A.MASAPAJAK = 8 THEN 'AGUSTUS'
+                                    WHEN A.MASAPAJAK = 9 THEN 'SEPTEMBER'
+                                    WHEN A.MASAPAJAK = 10 THEN 'OKTOBER'
+                                    WHEN A.MASAPAJAK = 11 THEN 'NOVEMBER'
+                                    WHEN A.MASAPAJAK = 12 THEN 'DESEMBER'
+                                END AS Bulan,
+                                'MPS' AS Sistem,
+                                'SPTPD' AS Surat,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanPokok,
+                                0 AS KetetapanSanksiSK,
+                                NVL(A.PAJAK_TERUTANG, -1) AS KetetapanTotal, -- PajakTerutang = KetetapanTotal
+                                NVL(C.JML_POKOK, 0) AS SetoranPokok,
+                                NVL(C.JML_DENDA, 0) AS SetoranDenda,
+                                (NVL(C.JML_POKOK, 0) + NVL(C.JML_DENDA, 0)) AS SetoranTotal,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanPokok,
+                                0 AS TunggakanSanksiSK,
+                                0 AS TunggakanPersen,
+                                0 AS TunggakanDenda,
+                                CASE
+                                    WHEN NVL(C.JML_POKOK, 0) > 0 THEN 0
+                                    ELSE NVL(A.PAJAK_TERUTANG, -1)
+                                END AS TunggakanTotal,
+                                C.TGL_SSPD AS TglSetoran,
+                                'SIMPADA' AS LokasiSetoran,
+                                'SIMPADA' AS OperatorSetoran,
+                                0 AS Restitusi,
+                                NVL(C.JML_POKOK, 0) AS RestitusiTotal
+                            FROM (
+                                SELECT 
+                                    FK_NOP AS NOP, MIN(ID_KETETAPAN) AS NO_SPTPD,
+                                    TAHUN_PAJAK AS TAHUN, BULAN_PAJAK AS MASAPAJAK, SUM(NVL(KETETAPAN_TOTAL, 0)) AS PAJAK_TERUTANG,
+                                    MIN(CATATAN) AS KETERANGAN,
+                                    MIN(TGL_SPTPD_DISETOR) AS TANGGALENTRY, MIN(TGL_SPTPD_DISETOR) AS PENGENTRY,
+                                    '' AS NPWPD, MIN(TGL_JATUH_TEMPO) AS TANGGALJATUHTEMPO,
+                                    MIN(MP_AWAL) AS MASAPAJAKAWAL, MIN(MP_AKHIR) AS MASAPAJAKAKHIR,
+                                    10 AS RUMUS_PROSEN,  0 AS OMSET
+                                FROM T_KETETAPAN_HIBURAN
+                                GROUP BY FK_NOP, TAHUN_PAJAK, BULAN_PAJAK                    
+                            ) A
+                            JOIN T_OP_HIBURAN B ON A.NOP = B.FK_NOP
+                            LEFT JOIN (
+                                SELECT MAX(TGL_SSPD) AS TGL_SSPD,  FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD, SUM(JML_POKOK) AS JML_POKOK,
+                                SUM(JML_DENDA) AS JML_DENDA 
+                                FROM T_SSPD_HIBURAN GROUP BY FK_NOP, TAHUN_PAJAK_SSPD, BULAN_PAJAK_SSPD
+                            ) C ON (A.NOP=C.FK_NOP AND A.MASAPAJAK=C.BULAN_PAJAK_SSPD AND A.TAHUN=C.TAHUN_PAJAK_SSPD) 
+                            WHERE TAHUN BETWEEN :TAHUN1 AND :TAHUN2
+                              AND B.KATEGORI_PAJAK NOT LIKE 'OBJEK TESTING' AND NOP = :NOP ORDER BY A.TAHUN,A.MASAPAJAK
+                        ";
+                        break;
+                    default:
+                        break;
+                }
+
+                using (var conn = new OracleConnection(connectionString))
+                {
+                    var param = new
+                    {
+                        TAHUN1 = tahun1,
+                        TAHUN2 = tahun2,
+                        NOP = nop
+                    };
+
+                    ret = conn.Query<PenagihanData>(Query, param).ToList();
+                }
+
+                return ret;
+            }
+
+        }
+
+        //PENAGIHAN
+        public class PenagihanData
+        {
+            public string NOP { get; set; }
+            public int Tahun { get; set; }
+            public string Bulan { get; set; } = string.Empty;
+            public string Sistem { get; set; } = string.Empty;
+            public string Surat { get; set; } = string.Empty;
+            public decimal KetetapanPokok { get; set; }
+            public decimal KetetapanSanksiSK { get; set; }
+            public decimal KetetapanTotal { get; set; }
+            public decimal SetoranPokok { get; set; }
+            public decimal SetoranDenda { get; set; }
+            public decimal SetoranTotal { get; set; }
+            public decimal TunggakanPokok { get; set; }
+            public decimal TunggakanSanksiSK { get; set; }
+            public decimal TunggakanPersen { get; set; }
+            public decimal TunggakanDenda { get; set; }
+            public decimal TunggakanTotal { get; set; }
+            public string TglSetoran { get; set; } = string.Empty;
+            public string LokasiSetoran { get; set; } = string.Empty;
+            public string OperatorSetoran { get; set; } = string.Empty;
+            public decimal Restitusi { get; set; }
+            public decimal RestitusiTotal { get; set; }
+        }
+        //KARTU DATA
+        public class KartuDataData
+        {
+            public int Tahun { get; set; }
+            public string Bulan { get; set; } = string.Empty;
+            public string Sistem { get; set; } = string.Empty;
+            public string Surat { get; set; } = string.Empty;
+            public decimal KetetapanPokok { get; set; }
+            public decimal KetetapanSanksiSK { get; set; }
+            public decimal KetetapanTotal { get; set; }
+            public decimal SetoranPokok { get; set; }
+            public decimal SetoranDenda { get; set; }
+            public decimal SetoranTotal { get; set; }
+            public decimal TunggakanPokok { get; set; }
+            public decimal TunggakanSanksiSK { get; set; }
+            public decimal TunggakanPersen { get; set; }
+            public decimal TunggakanDenda { get; set; }
+            public decimal TunggakanTotal { get; set; }
+            public string TglSetoran { get; set; } = string.Empty;
+            public string LokasiSetoran { get; set; } = string.Empty;
+            public string OperatorSetoran { get; set; } = string.Empty;
+            public decimal Restitusi { get; set; }
+            public decimal RestitusiTotal { get; set; }
         }
         /// DAILY REPORT VIEW
         public class DailyReportView
