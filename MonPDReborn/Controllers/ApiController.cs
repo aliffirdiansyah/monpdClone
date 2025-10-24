@@ -8,7 +8,14 @@ namespace MonPDReborn.Controllers
 {
     public class ApiController : Controller
     {
+        private readonly string _connectionString;
+
         ResponseBase response = new ResponseBase();
+        public ApiController(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("MONPEDE") ?? "";
+        }
+
         [HttpGet]
         public IActionResult GetRealisasiPajak(string nop)
         {
@@ -44,6 +51,100 @@ namespace MonPDReborn.Controllers
                     return Json(getData);
                 }
 
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetDataTSAPI(string nop, int tahun, string masa, string username, string password)
+        {
+            try
+            {
+                if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+                {
+                    //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+                    //DateTime tglCutOff = new DateTime(tahun, 1, 1);
+                    //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+                    var json = Models.ApiVM.Method.GetTSData(_connectionString, nop, tahun, masa);
+                    return Json(json);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetDataTBAPI(string nop, int tahun, string masa, string username, string password)
+        {
+            try
+            {
+
+                if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+                {
+                    //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+                    //DateTime tglCutOff = new DateTime(tahun, 1, 1);
+                    //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+                    var json = Models.ApiVM.Method.GetTBData(_connectionString, nop, tahun, masa);
+                    return Json(json);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetDataSBAPI(string nop, int tahun, string masa, string username, string password)
+        {
+            try
+            {
+                if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
+                {
+                    //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
+                    //DateTime tglCutOff = new DateTime(tahun, 1, 1);
+                    //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
+                    var json = Models.ApiVM.Method.GetSBData(_connectionString, nop, tahun, masa);
+                    return Json(json);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             catch (ArgumentException e)
             {

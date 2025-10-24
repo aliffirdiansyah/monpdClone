@@ -3,6 +3,8 @@ using MonPDLib;
 using MonPDLib.General;
 using static MonPDReborn.Models.DataOP.ProfilePembayaranOPVM;
 using System.Globalization;
+using Oracle.ManagedDataAccess.Client;
+using Dapper;
 
 namespace MonPDReborn.Models
 {
@@ -656,7 +658,100 @@ namespace MonPDReborn.Models
 
                 return result;
             }
+            public static List<TSData> GetTSData(string connectionString, string nop, int tahun, string masa)
+            {
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"
+                        SELECT 
+                            nop,
+                            TO_CHAR(tanggal, 'yyyy-MM-dd') AS tanggal,
+                            pajak_terutang,
+                            masapajak,
+                            tahun,
+                            is_generate
+                        FROM rekap_perekaman_all@LIHATSURVEILLANCE
+                        WHERE  
+                            NOP = :nop 
+                            AND TAHUN = :tahun 
+                            AND MASAPAJAK = :masa
+                        ORDER BY tanggal
+                    ";
+
+                    return connection.Query<TSData>(query, new { nop, tahun, masa }).ToList();
+                }
+            }
+
+            public static List<TBData> GetTBData(string connectionString, string nop, int tahun, string masa)
+            {
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"
+                        SELECT * 
+                        FROM VW_TB_DATA 
+                        WHERE  
+                            NOP = :nop 
+                            AND TAHUN = :tahun
+                            AND MASAPAJAK = :masa
+                        ORDER BY TANGGAL
+                    ";
+
+                    return connection.Query<TBData>(query, new { nop, tahun, masa }).ToList();
+                }
+            }
+
+            public static List<SBData> GetSBData(string connectionString, string nop, int tahun, string masa)
+            {
+                using (var connection = new OracleConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"
+                        SELECT *
+                        FROM VW_SB_DATA 
+                        WHERE  
+                            NOP = :nop 
+                            AND TAHUN = :tahun 
+                            AND MASAPAJAK = :masa
+                        ORDER BY TANGGAL
+                    ";
+
+                    return connection.Query<SBData>(query, new { nop, tahun, masa }).ToList();
+                }
+            }
         }
+
+        ///TARIKAN DATA TS TB SB
+        public class TSData
+        {
+            public string NOP { get; set; }
+            public string TANGGAL { get; set; }
+            public decimal PAJAK_TERUTANG { get; set; }
+            public string MASAPAJAK { get; set; }
+            public int TAHUN { get; set; }
+            public int IS_GENERATE { get; set; }
+        }
+        public class TBData
+        {
+            public string NOP { get; set; }
+            public string TANGGAL { get; set; }
+            public decimal JUMLAH_SETOR { get; set; }
+            public string MASAPAJAK { get; set; }
+            public int TAHUN { get; set; }
+        }
+        public class SBData
+        {
+            public string NOP { get; set; }
+            public string TANGGAL { get; set; }
+            public decimal PAJAK_TERUTANG { get; set; }
+            public string MASAPAJAK { get; set; }
+            public int TAHUN { get; set; }
+        }
+
         public class RealisasiPajak
         {
             public string NOP { get; set; } = string.Empty;
