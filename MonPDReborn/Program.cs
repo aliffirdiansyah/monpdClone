@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Localization;
+﻿using DevExpress.AspNetCore;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
@@ -80,6 +81,9 @@ builder.Services.AddReverseProxy()
         }
     );
 
+builder.Services.AddDevExpressControls();
+builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -104,6 +108,11 @@ app.MapReverseProxy();
 app.UseAuthorization();
 
 app.UseSession();
+
+app.UseDevExpressControls();
+app.UseStaticFiles();
+app.UseRouting();
+
 app.UseStatusCodePagesWithReExecute("/Home/Error", "?message='Error'&?statusCode={404}");
 app.MapControllerRoute(
     name: "default",

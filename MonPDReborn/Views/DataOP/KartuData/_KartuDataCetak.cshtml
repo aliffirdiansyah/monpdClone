@@ -1,0 +1,11 @@
+﻿@using DevExpress.AspNetCore
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.Web.WebDocumentViewer
+@{
+    ViewData["Title"] = "Cetak Kartu Data";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/css/reporting.viewer.part.bundle.css" />
+<script src="~/js/reporting.viewer.part.bundle.js"></script>
+
+@Html.DevExpress().WebDocumentViewer("DocumentViewer").Height("1000px").Bind(Model)﻿

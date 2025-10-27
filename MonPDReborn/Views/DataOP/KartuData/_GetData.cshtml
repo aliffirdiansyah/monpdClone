@@ -1,0 +1,157 @@
+﻿@model MonPDReborn.Models.DataOP.KartuDataVM.GetData
+<style>
+    .WrappedColumnClass {
+        white-space: normal;
+        word-wrap: break-word;
+    }
+</style>
+<div class="card">
+    <div class="card-header">
+        <h6 class="card-title mb-0">Hasil Pencarian</h6>
+        <hr />
+        <div class="card-header align-items-center d-flex">
+            <div class="card-title mb-0 flex-grow-1 mb-0 fs-15">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="nameInput" class="form-label fs-12 fw-bold">NOP</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <label for="nameInput" class="form-label fs-12 fw-bold text-secondary">: @Model.KartuData.NOP</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="nameInput" class="form-label fs-12 fw-bold">Nama OP</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <label for="nameInput" class="form-label fs-12 fw-bold text-secondary">: @Model.KartuData.NamaOP</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="nameInput" class="form-label fs-12 fw-bold">Alamat OP</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <label for="nameInput" class="form-label fs-12 fw-bold text-secondary">: @Model.KartuData.AlamatOP</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="nameInput" class="form-label fs-12 fw-bold">NPWPD</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <label for="nameInput" class="form-label fs-12 fw-bold text-secondary">: @Model.KartuData.NPWPD</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="nameInput" class="form-label fs-12 fw-bold">Nama WP</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <label for="nameInput" class="form-label fs-12 fw-bold text-secondary">: @Model.KartuData.NamaWP</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="nameInput" class="form-label fs-12 fw-bold">Alamat WP</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <label for="nameInput" class="form-label fs-12 fw-bold text-secondary">: @Model.KartuData.AlamatWP</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-shrink-0">
+                <div class="text-info fs-16 ms-1">
+                    <button type="button" class="btn btn-success w-100" onclick="CetakDokumen()" title="Cetak Kartu Data">
+                        <i class="bx bx-printer me-1 align-bottom"></i>
+                        Cetak
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                @(
+                    Html.DevExtreme().DataGrid<MonPDReborn.Models.DataOP.KartuDataVM.KartuDataList>()
+                    .ID("dgPencarian")
+                    .KeyExpr("Seq")
+                    .Export(export =>
+                    {
+                        export.Enabled(true);
+                        export.AllowExportSelectedData(true);
+                        export.Formats(new[] { "xlsx" });
+                        export.Texts(texts =>
+                        texts.ExportAll("Export Data")
+                        );
+                    })
+                    .Selection(s => s.Mode(SelectionMode.Multiple))
+                    .OnExporting("exporting")
+                    .DataSource(Model.KartuData.KartuDataList)
+                    .HeaderFilter(headerFilter => headerFilter.Visible(true))
+                    .SearchPanel(searchPanel => searchPanel
+                    .Width(240)
+                    .Placeholder("Search...")
+                    .Visible(true)
+                    )
+                    .Paging(p => p.PageSize(100))
+                    .Pager(p => p
+                    .ShowPageSizeSelector(true)
+                    .AllowedPageSizes(new[] { 10, 25, 50, 100 })
+                    )
+                    .ShowBorders(true)
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    .ColumnAutoWidth(true)
+                    .Columns(c =>
+                    {
+                        c.AddFor(x => x.Tahun).DataType(GridColumnDataType.String).Caption("TAHUN");
+                        c.AddFor(x => x.Bulan).DataType(GridColumnDataType.String).Caption("NAMA OP");
+                        c.AddFor(x => x.Sistem).DataType(GridColumnDataType.String).Caption("SISTEM");
+                        c.AddFor(x => x.Surat).DataType(GridColumnDataType.String).Caption("SURAT");
+                        c.Add().Caption("KETETAPAN PAJAK").Alignment(HorizontalAlignment.Center).Columns(c =>
+                        {
+                            c.AddFor(x => x.KetetapanPokok).DataType(GridColumnDataType.Number).Caption("POKOK").Format("0,###");
+                            c.AddFor(x => x.KetetapanSanksiSK).DataType(GridColumnDataType.Number).Caption("SANKSI").Format("0,###");
+                            c.AddFor(x => x.KetetapanTotal).DataType(GridColumnDataType.Number).Caption("Pokok").Format("0,###");
+                        });
+                        c.Add().Caption("SETORAN").Alignment(HorizontalAlignment.Center).Columns(c =>
+                        {
+                            c.AddFor(x => x.SetoranPokok).DataType(GridColumnDataType.Number).Caption("POKOK").Format("0,###");
+                            c.AddFor(x => x.SetoranDenda).DataType(GridColumnDataType.Number).Caption("SANKSI").Format("0,###");
+                            c.AddFor(x => x.SetoranTotal).DataType(GridColumnDataType.Number).Caption("TOTAL").Format("0,###");
+                        });
+                        c.Add().Caption("TUNGGAKAN").Alignment(HorizontalAlignment.Center).Columns(c =>
+                        {
+                            c.AddFor(x => x.TunggakanPokok).DataType(GridColumnDataType.Number).Caption("POKOK").Format("0,###");
+                            c.AddFor(x => x.TunggakanSanksiSK).DataType(GridColumnDataType.Number).Caption("SANKSI").Format("0,###");
+                            c.AddFor(x => x.TunggakanTotal).DataType(GridColumnDataType.Number).Caption("TOTAL").Format("0,###");
+                        });
+                        c.Add().Caption("HISTORY SETORAN").Alignment(HorizontalAlignment.Center).Columns(c =>
+                        {
+                            c.AddFor(x => x.TglSetoran).DataType(GridColumnDataType.String).Caption("TGL SETORAN");
+                            c.AddFor(x => x.LokasiSetoran).DataType(GridColumnDataType.String).Caption("LOKASI");
+                            c.AddFor(x => x.OperatorSetoran).DataType(GridColumnDataType.String).Caption("OPERATOR");
+                        });
+                        c.AddFor(x => x.Restitusi).DataType(GridColumnDataType.Number).Caption("RESTITUSI").Format("0,###");
+                        c.AddFor(x => x.RestitusiTotal).DataType(GridColumnDataType.Number).Caption("TOTAL").Format("0,###");
+
+                    })
+                    .Summary(summary =>
+                    {
+                        summary.TotalItems(items =>
+                        {
+                            items.Add().Column("SumLapor").SummaryType(SummaryType.Sum).ValueFormat("0,###").DisplayFormat("Total: {0}");
+                            items.Add().Column("SumBayar").SummaryType(SummaryType.Sum).ValueFormat("0,###").DisplayFormat("Total: {0}");
+                        });
+                    })
+                    )
+            </div>
+        </div>
+    </div>
+</div>

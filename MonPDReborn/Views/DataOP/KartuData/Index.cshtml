@@ -1,0 +1,171 @@
+﻿@model MonPDReborn.Models.DataOP.KartuDataVM.Index
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Kartu Data";
+}
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <a class="btn btn-title-box w-100">
+                <h4 class="mt-sm-2">KARTU DATA</h4>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+        <div class="accordion custom-accordionwithicon custom-accordion-border accordion-border-box accordion-secondary" id="accordionBordered">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="accordionborderedExample1">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accor_borderedExamplecollapse1" aria-expanded="true" aria-controls="accor_borderedExamplecollapse1">
+                        <i class="ri-filter-2-line align-middle me-1 lh-1"></i>&nbsp;Filter Pencarian
+                    </button>
+                </h2>
+                <div id="accor_borderedExamplecollapse1" class="accordion-collapse collapse show" aria-labelledby="accordionborderedExample1" data-bs-parent="#accordionBordered">
+                    <div class="accordion-body">
+                        <form id="Form_D">
+                            <div class="row g-3">
+
+                                <div class="col-xxl-10 col-sm-10">
+                                    @* <label class="form-label">OBJEK PAJAK</label>
+                                    @* @(Html.DevExtreme().SelectBoxFor(m => m.SelectedNPWPD)
+                                    .ID("cbNpwpd")
+                                    .ValueExpr("NpwpdNo")
+                                    .DisplayExpr("Nama")
+                                    .DataSource(Model.NPWPDList)
+                                    .OnValueChanged("fnReloadNop")
+                                    .SearchEnabled(true)
+                                    .MinSearchLength(3)
+                                    ) 
+                                    @(Html.DevExtreme().SelectBoxFor(m => m.SelectedNOP)
+                                        .ID("cbNop")
+                                        .ValueExpr("NOP")
+                                        .DisplayExpr("NAMA")
+                                        .DataSource(d => d.Mvc().Controller("KartuData").LoadAction("GetDataList").Key("filter"))
+                                        .SearchExpr("NAMA")
+                                        .Placeholder("Cari NOP")
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        ) *@
+                                        <hr />
+                                    @(Html.DevExtreme().TextBoxFor(m => m.SelectedNOP)
+                                        .ID("tbNop")
+                                        .Placeholder("Input NOP Manual")
+                                        )
+                                </div>
+                                <div class="col-xxl-2 col-sm-4">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-primary w-100 align-middle" onclick="SearchData()">
+                                        <i class="ri-filter-line me-1 align-bottom"></i>
+                                        <span class="align-middle">Get Data</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div style="display: none" id="GetDataKartuData"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="~/assets/js/pluginaddon.js"></script>
+<script>
+    window.jsPDF = window.jspdf.jsPDF;
+</script>
+<script>
+    $(document).ready(function () {
+
+        
+    });
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Data');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'KartuData.xlsx');
+            });
+        });
+    }
+    function fnGetParamsNop() {
+        return { npwpd: function () { return $('#cbNpwpd').dxSelectBox("instance").option('value') } }
+    }
+    function fnGetParamsTahun() {
+        return { nop: function () { return $('#cbNop').dxSelectBox("instance").option('value') } }
+    }
+    function fnReloadNop() {
+        $("#cbNop").dxSelectBox("instance").option("value", null);
+        var selectBoxDataSource = $("#cbNop").dxSelectBox("instance").getDataSource();
+        selectBoxDataSource.load();
+
+    }
+    function fnReloadData() {
+        $("#cbTahun").dxSelectBox("instance").option("value", null);
+        var selectBoxDataSource = $("#cbTahun").dxSelectBox("instance").getDataSource();
+        selectBoxDataSource.load();
+
+    }
+    function SearchData() {
+        var nop = $('#tbNop').dxTextBox('instance').option('value');
+        if (nop === '') {
+            nop = $("#cbNop").dxSelectBox('instance').option('value');
+        }
+        console.log(nop);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetData", "KartuData")',
+            data: {
+                nop: nop,
+            },
+            beforeSend: function () {
+                $("#loader").show();
+            },
+            complete: function () {
+                $("#loader").hide();
+            },
+            success: function (data) {
+                if (data.Status === undefined) {
+                    $("#GetDataKartuData").show();
+                    $("#GetDataKartuData").html(data);
+                } else {
+                    swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: data.Message,
+                    });
+                }
+            }
+        });
+    }
+    function CetakDokumen() {
+        var nop = $('#tbNop').dxTextBox('instance').option('value');
+        if (nop === '') {
+            nop = $("#cbNop").dxSelectBox('instance').option('value');
+        }
+        var url = '@Url.Action("KartuReport", "KartuData")' + '?nop=' + nop;
+        var win = window.open(url, '_blank');
+        win.focus();
+    }
+</script>
