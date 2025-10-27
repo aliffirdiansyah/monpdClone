@@ -1222,7 +1222,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                 if (wilayah == EUPTB.SEMUA)
                 {
                     var targetPajak = context.DbAkunTargetBulanUptbs
-                        .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan)
+                        .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && (x.PajakId != 2 || x.SubRincian == "2"))
                         .GroupBy(x => new { x.PajakId })
                         .Select(x => new
                         {
@@ -1243,7 +1243,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                          .AsQueryable();
 
                     var jmlWpPpj = context.DbOpListriks
-                         .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear))
+                         .Where(x => x.TahunBuku == tahun && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear) && x.Sumber == 55)
                          .AsQueryable();
 
                     var jmlWpParkir = context.DbOpParkirs
