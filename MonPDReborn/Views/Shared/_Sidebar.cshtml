@@ -235,7 +235,7 @@
 
                     <li class="menu-title"><span data-key="t-objekPajak">Objek Pajak</span></li>
 
-                    <li class="nav-item">
+                    @* <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PADSummary" ? "active" : "")"
                            href="@Url.Action("Index", "PADSummary")" role="button">
                             <i class="bx bx-book-content me-1 align-middle"></i><span data-key="t-padsummary">PAD Summary</span>
@@ -246,7 +246,7 @@
                            href="@Url.Action("Index", "Penyelia")" role="button">
                             <i class="bx bx-book-content me-1 align-middle"></i><span data-key="t-penyelia">Rapot Pegawai</span>
                         </a>
-                    </li>
+                    </li> *@
                     <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PendataanObjekPajak" ? "active" : "")"
                            href="@Url.Action("Index", "PendataanObjekPajak")" role="button">

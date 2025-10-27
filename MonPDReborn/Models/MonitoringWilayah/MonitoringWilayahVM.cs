@@ -30,6 +30,15 @@ namespace MonPDReborn.Models.MonitoringWilayah
             public Index()
             {
                 SelectedBulan = DateTime.Now.Month;
+                //JenisUptbList = Enum.GetValues(typeof(EnumFactory.EUPTB))
+                //    .Cast<EnumFactory.EUPTB>()
+                //    .Where(x => (int)x != 0) // ← skip nilai 0
+                //    .Select(x => new SelectListItem
+                //    {
+                //        Value = ((int)x).ToString(),
+                //        Text = x.GetDescription()
+                //    })
+                //    .ToList();
                 JenisUptbList = Enum.GetValues(typeof(EnumFactory.EUPTB))
                     .Cast<EnumFactory.EUPTB>()
                     .Select(x => new SelectListItem
@@ -781,7 +790,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                             foreach (var uptb in uptbAllList)
                             {
                                 var totalTarget = context.DbAkunTargetBulanUptbs
-                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.Uptb == (int)uptb)
+                                    .Where(x => x.TahunBuku == tahun && x.Bulan <= bulan && x.Uptb == (int)uptb && x.PajakId != 7 && x.PajakId != 12 && x.PajakId != 20 && x.PajakId != 21 && (x.PajakId != 2 || x.SubRincian == "2"))
                                     .GroupBy(x => new { x.PajakId })
                                     .Select(x => new
                                     {
@@ -795,7 +804,7 @@ namespace MonPDReborn.Models.MonitoringWilayah
                                         .Select(x => x.Nop).Distinct().ToList();
                                 var nopListHotel = context.DbOpHotels.Where(x => x.WilayahPajak == ((int)uptb).ToString())
                                         .Select(x => x.Nop).Distinct().ToList();
-                                var nopListListrik = context.DbOpListriks.Where(x => x.WilayahPajak == ((int)uptb).ToString())
+                                var nopListListrik = context.DbOpListriks.Where(x => x.WilayahPajak == ((int)uptb).ToString() && x.Sumber == 55)
                                         .Select(x => x.Nop).Distinct().ToList();
                                 var nopListParkir = context.DbOpParkirs.Where(x => x.WilayahPajak == ((int)uptb).ToString())
                                         .Select(x => x.Nop).Distinct().ToList();
