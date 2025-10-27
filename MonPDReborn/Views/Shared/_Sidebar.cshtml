@@ -20,7 +20,7 @@
     var dataOPControllers = new[] {
         "PROFILEOP", "", "PROFILEPOTENSIOP",
         "PROFILETARGETOP", "PROFILESPASIALOP", "PELAPORANOP",
-        "PENETAPANOP", "PENCARIANOP"
+        "PENETAPANOP", "PENCARIANOP", "KARTUDATA"
     };
     var isDataOPActive = dataOPControllers.Contains(currentController);
 
@@ -290,6 +290,13 @@
                                        href="@Url.Action("Index", "ProfileOP")"
                                        data-key="t-profilOp">
                                         Profil OP
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(currentController == "KARTUDATA" ? "active" : "")"
+                                       href="@Url.Action("Index", "KartuData")"
+                                       data-key="t-kartuData">
+                                        Kartu Data
                                     </a>
                                 </li>
                                 @*  <li class="nav-item">
