@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
+using System;
 using System.Net.Http.Headers;
 using System.Security.Policy;
 using System.Text;
@@ -427,23 +428,22 @@ namespace CctvRealtimeWs
             string webClientUrl = "";
             {
                 using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
 
                 // Panggil API Jasnita untuk ambil daftar domain
-                HttpResponseMessage domainsResponse = await httpClient.GetAsync(
+                HttpResponseMessage response = await httpClient.GetAsync(
                     "https://hub.jastrak.id/api/v3/ac-backend/domains",
                     cancellationToken
                 );
 
-                if (!domainsResponse.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Gagal memanggil API Jasnita Domains. Status: {domainsResponse.StatusCode}");
+                    throw new Exception($"Gagal memanggil API Jasnita Domains. Status: {response.StatusCode}");
                 }
 
                 // Baca dan parsing hasil JSON
-                string jsonResponse = await domainsResponse.Content.ReadAsStringAsync(cancellationToken);
+                string jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
                 var jsonObject = JsonObject.Parse(jsonResponse);
 
                 // Ambil field webClientURL dari domain pertama
@@ -462,7 +462,69 @@ namespace CctvRealtimeWs
 
                 webClientUrl = rawWebClientUrl;
             }
+            if (string.IsNullOrEmpty(webClientUrl))
+            {
+                // Jika webClientUrl kosong, hentikan proses
+                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Gagal mendapatkan webClientURL dari API Jasnita Domains.");
+            }
+            if (!webClientUrl.Contains("https"))
+            {
+                // Jika webClientUrl tidak valid, hentikan proses
+                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} webClientURL tidak valid: {webClientUrl}");
+            }
+            #endregion
 
+            var eventResult = new List<EventV2.Event>();
+            #region Events
+            {
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+
+                string timestamp_start = ConvertWibToUtc(DateTime.Now.Date).ToString("yyyyMMdd'T'HHmmss.'000'");
+                string timestamp_end = ConvertWibToUtc(DateTime.Now.AddDays(1).AddTicks(-1)).ToString("yyyyMMdd'T'HHmmss.'000'");
+                string cameraId = op.DisplayId ?? "";
+                string url = $"{webClientUrl}/archive/events/detectors/{cameraId}/{timestamp_start}/{timestamp_end}";
+
+                // Panggil API Jasnita untuk ambil daftar domain
+                HttpResponseMessage response = await httpClient.GetAsync(url, cancellationToken);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Gagal memanggil API Jasnita Event. Status: {response.StatusCode}");
+                }
+
+                string jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+                var result = JsonSerializer.Deserialize<EventV2.EventV2Response>(jsonResponse);
+                if (result != null && result.Events != null && result.Events.Count > 0)
+                {
+                    eventResult.AddRange(result.Events);
+                }
+            }
+
+            if(eventResult.Count <= 0)
+            {
+                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Tidak ada event dari API Jasnita Events.");
+            }
+            #endregion
+
+
+            #region EventSnapshot
+            foreach (var item in eventResult)
+            {
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                string url = $"{webClientUrl}/archive/media/{item.Source.Replace("hosts/", "")}/{item.Timestamp}?crop_x={item.Rectangles[0].Left}&crop_y={item.Rectangles[0].Top}&crop_width=0.1&crop_height=0.1";
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Id} Gagal memanggil API Jasnita Event Snapshot. Status: {response.StatusCode}");
+                }
+
+                // Baca stream image-nya
+                byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+
+            }
             #endregion
 
         }
@@ -740,6 +802,22 @@ namespace CctvRealtimeWs
             }
 
             return sb.ToString();
+        }
+        // Konversi dari UTC (+0) ke WIB (+7)
+        public static DateTime ConvertUtcToWib(DateTime utcTime)
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.SpecifyKind(utcTime, DateTimeKind.Utc),
+                TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")
+            );
+        }
+
+        // Konversi dari WIB (+7) ke UTC (+0)
+        public static DateTime ConvertWibToUtc(DateTime wibTime)
+        {
+            return TimeZoneInfo.ConvertTimeToUtc(
+                DateTime.SpecifyKind(wibTime, DateTimeKind.Local)
+            );
         }
         #endregion
 
