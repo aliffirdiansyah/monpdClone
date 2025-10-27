@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CctvRealtimeWs
+namespace CctvRealtimeWs.TelkomModels
 {
     public class TelkomEvent
     {

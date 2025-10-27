@@ -18,6 +18,7 @@ namespace CctvRealtimeWs
             public EnumFactory.EVendorParkirCCTV Vendor { get; set; }
             public string? AccessPoint { get; set; }
             public string? CctvId { get; set; }
+            public string? DisplayId { get; set; }
         }
 
 
@@ -28,10 +29,17 @@ namespace CctvRealtimeWs
             var result = new List<DataOpCctv>();
 
             // Gunakan ToListAsync agar EF Core menjalankan query secara async
+            //var query = await context.MOpParkirCctvs
+            //    .Include(x => x.MOpParkirCctvTelkoms)
+            //    .Include(x => x.MOpParkirCctvJasnita)
+            //    .Where(x => x.IsPasang == 1)
+            //    .ToListAsync();
+
             var query = await context.MOpParkirCctvs
                 .Include(x => x.MOpParkirCctvTelkoms)
                 .Include(x => x.MOpParkirCctvJasnita)
-                .Where(x => x.IsPasang == 1)
+                .Where(x => x.IsPasang == 1 && x.Vendor == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                .Take(1)
                 .ToListAsync();
 
             foreach (var item in query)
@@ -60,7 +68,8 @@ namespace CctvRealtimeWs
                             NamaOp = item.NamaOp,
                             Vendor = (EnumFactory.EVendorParkirCCTV)item.Vendor,
                             AccessPoint = cctv.AccessPoint,
-                            CctvId = cctv.CctvId
+                            CctvId = cctv.CctvId,
+                            DisplayId = cctv.DisplayId
                         });
                     }
                 }

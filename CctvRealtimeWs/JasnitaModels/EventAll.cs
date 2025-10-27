@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace CctvRealtimeWs
+namespace CctvRealtimeWs.JasnitaModels
 {
     public class EventAll
     {
