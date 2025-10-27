@@ -200,8 +200,14 @@ namespace MonPDLib.Lib
 
                     break;
                 case EnumFactory.EModeUkur.Satuan:
-
-                    nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * 1;
+                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Peragaan))
+                    {
+                        nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
+                    }
+                    else
+                    {
+                        nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * 1;
+                    }
                     totalSebelumPajak = nsr;
                     //if (nsr <= minimDPP)
                     //{
@@ -242,15 +248,15 @@ namespace MonPDLib.Lib
                     {
                         input.JumlahSatuan = (int)(Math.Ceiling(input.JumlahSatuan / 10.0m) * 10);
                     }
-
-                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Suara))
-                    {
-                        nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
-                    }
-                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.FilmSlide))
-                    {
-                        nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * 1;
-                    }
+                    nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
+                    //if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Suara))
+                    //{
+                    //    nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
+                    //}
+                    //if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.FilmSlide))
+                    //{
+                    //    nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * 1;
+                    //}
                     ret.SatuanNominal = (njop?.SatuanNominal ?? 1);
                     ret.Nsr = nsr;
                     totalSebelumPajak = nsr;
