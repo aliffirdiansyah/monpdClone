@@ -102,7 +102,7 @@ namespace MonPDLib.Lib
             {
                 throw new Exception("Data jalan memiliki kelas jalan yang berbeda");
             }
-            
+
             kelasJalan = distinctKelasJalan.First();
 
             ret.NamaJalan = jalanData.NamaJalan;
@@ -121,7 +121,7 @@ namespace MonPDLib.Lib
 
             ret.ModeUkur = modeUkur;
             decimal minimDPP = 0m;
-            if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Baliho))
+            if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.SelebaranBrosurLeaflet))
             {
                 minimDPP = setting.MINIM_DPP_9_SELEBARAN;
             }
@@ -138,29 +138,55 @@ namespace MonPDLib.Lib
             {
                 case EnumFactory.EModeUkur.Luas:
 
-                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.StikerMelekat))
-                    {
-                        luas = (input.Panjang * input.Lebar) * 100;
-                    }
-                    else
-                    {
-                        luas = input.Panjang * input.Lebar;
-                    }
+                    //if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.StikerMelekat))
+                    //{
+                    //    luas = (input.Panjang * input.Lebar) * 100;
+                    //}
+                    //else
+                    //{
+                    //}
+                    //nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
+                    //if (nsr <= minimDPP)
+                    //{
+                    //    nsr = minimDPP;
+                    //    ret.Nsr = minimDPP;
+                    //}
+                    //else
+                    //{
+                    //nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
+                    //ret.Nsr = nsr;
+                    //}
+                    luas = input.Panjang * input.Lebar;
                     ret.Luas = luas;
+
                     nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
-                    if (nsr <= minimDPP)
+                    ret.Nsr = nsr;
+
+                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Baliho))
                     {
-                        nsr = minimDPP;
-                        ret.Nsr = minimDPP;
+                        totalSebelumPajak = input.JumlahSatuan * input.LamaPenyelenggaraan * nsr;
+                    }
+                    else if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.KainSpandukUmbulUmbul))
+                    {
+                        totalSebelumPajak = input.JumlahSatuan * input.LamaPenyelenggaraan * nsr;
                     }
                     else
                     {
-                        nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
-                        ret.Nsr = nsr;
+                        totalSebelumPajak = input.JumlahSatuan * 1 * nsr;
                     }
 
-                    totalSebelumPajak = input.JumlahSatuan * input.LamaPenyelenggaraan * nsr;
+
                     ret.PokokPajak = totalSebelumPajak * (setting.PERSEN_PAJAK);
+
+                    if (ret.PokokPajak <= minimDPP)
+                    {
+                        ret.PokokPajak = minimDPP;
+                    }
+                    else
+                    {
+                        ret.PokokPajak = totalSebelumPajak * setting.PERSEN_PAJAK;
+                    }
+
                     if (input.JenisProduk == EnumFactory.ProdukReklame.Rokok)
                     {
                         ret.ProdukRokok = ret.PokokPajak * (setting.PERSEN_ROKOK);
@@ -169,26 +195,36 @@ namespace MonPDLib.Lib
                     {
                         ret.ProdukRokok = 0;
                     }
-                    ret.TotalNilaiSewa = ret.PokokPajak + ret.ProdukRokok;
-                    ret.JaminanBongkar = (jambong?.Nilai ?? 0) * luas * input.JumlahSatuan;
+                    ret.TotalNilaiSewa = Math.Ceiling((ret.PokokPajak + ret.ProdukRokok) / 100) * 100;
+                    ret.JaminanBongkar = Math.Ceiling(((jambong?.Nilai ?? 0) * luas * input.JumlahSatuan) / 100) * 100;
 
                     break;
                 case EnumFactory.EModeUkur.Satuan:
 
-                    nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0);
+                    nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * 1;
+                    totalSebelumPajak = nsr;
+                    //if (nsr <= minimDPP)
+                    //{
+                    //    nsr = minimDPP;
+                    //    ret.Nsr = minimDPP;
+                    //    totalSebelumPajak = minimDPP;
+                    //}
+                    //else
+                    //{
+                    //    ret.Nsr = nsr;
+                    //    totalSebelumPajak = nsr;
+                    //}
+                    ret.PokokPajak = totalSebelumPajak * setting.PERSEN_PAJAK;
 
-                    if (nsr <= minimDPP)
+                    if (ret.PokokPajak <= minimDPP)
                     {
-                        nsr = minimDPP;
-                        ret.Nsr = minimDPP;
-                        totalSebelumPajak = minimDPP;
+                        ret.PokokPajak = minimDPP;
                     }
                     else
                     {
-                        ret.Nsr = nsr;
-                        totalSebelumPajak = nsr;
+                        ret.PokokPajak = totalSebelumPajak * setting.PERSEN_PAJAK;
                     }
-                    ret.PokokPajak = totalSebelumPajak * setting.PERSEN_PAJAK;
+
                     if (input.JenisProduk == EnumFactory.ProdukReklame.Rokok)
                     {
                         ret.ProdukRokok = ret.PokokPajak * (setting.PERSEN_ROKOK);
@@ -197,7 +233,7 @@ namespace MonPDLib.Lib
                     {
                         ret.ProdukRokok = 0;
                     }
-                    ret.TotalNilaiSewa = ret.PokokPajak + ret.ProdukRokok;
+                    ret.TotalNilaiSewa = Math.Ceiling((ret.PokokPajak + ret.ProdukRokok) / 100) * 100;
                     ret.JaminanBongkar = 0m;
 
                     break;
@@ -206,7 +242,15 @@ namespace MonPDLib.Lib
                     {
                         input.JumlahSatuan = (int)(Math.Ceiling(input.JumlahSatuan / 10.0m) * 10);
                     }
-                    nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
+
+                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Suara))
+                    {
+                        nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
+                    }
+                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.FilmSlide))
+                    {
+                        nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * 1;
+                    }
                     ret.SatuanNominal = (njop?.SatuanNominal ?? 1);
                     ret.Nsr = nsr;
                     totalSebelumPajak = nsr;
@@ -219,7 +263,7 @@ namespace MonPDLib.Lib
                     {
                         ret.ProdukRokok = 0;
                     }
-                    ret.TotalNilaiSewa = ret.PokokPajak + ret.ProdukRokok;
+                    ret.TotalNilaiSewa = Math.Ceiling((ret.PokokPajak + ret.ProdukRokok) / 100) * 100;
                     ret.JaminanBongkar = 0m;
 
                     break;
