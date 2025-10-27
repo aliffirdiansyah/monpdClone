@@ -63,4 +63,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MonPDLib\MonPDLib.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\**\*.*" CopyToOutputDirectory="Always" />
+  </ItemGroup>
 </Project>
