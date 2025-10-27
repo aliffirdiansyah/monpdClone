@@ -13,6 +13,38 @@ namespace MonPDReborn.Models
 {
     public class ApiVM
     {
+        public class KartuData
+        {
+            public List<KartuDataData> KartuDataList { get; set; } = new();
+            public KartuData(string connectionString, string idop, int tahun1, int tahun2, int jenisPajak)
+            {
+                KartuDataList = Method.GetKartuDataData(connectionString, idop, tahun1, tahun2, jenisPajak);
+            }
+        }
+        public class TS
+        {
+            public List<TSData> TSList { get; set; } = new List<TSData>();
+            public TS(string connectionString, string nop, int tahun, string masa)
+            {
+                TSList = Method.GetTSData(connectionString, nop, tahun, masa);
+            }
+        }
+        public class TB
+        {
+            public List<TBData> TBList { get; set; } = new List<TBData>();
+            public TB(string connectionString, string nop, int tahun, string masa)
+            {
+                TBList = Method.GetTBData(connectionString, nop, tahun, masa);
+            }
+        }
+        public class SB
+        {
+            public List<SBData> SBList { get; set; } = new List<SBData>();
+            public SB(string connectionString, string nop, int tahun, string masa)
+            {
+                SBList = Method.GetSBData(connectionString, nop, tahun, masa);
+            }
+        }
         public class Method
         {
             public static RealisasiPajak GetRealisasiPajak(string nop)
@@ -1486,7 +1518,7 @@ namespace MonPDReborn.Models
 
                 using (var conn = new OracleConnection(connectionString))
                 {
-                    
+
                     var param = new
                     {
                         TAHUN1 = tahun1,

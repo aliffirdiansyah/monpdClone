@@ -146,7 +146,7 @@ namespace MonPDReborn.Controllers
                     //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
                     //DateTime tglCutOff = new DateTime(tahun, 1, 1);
                     //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
-                    var json = Models.ApiVM.Method.GetTSData(_connectionString, nop, tahun, masa);
+                    var json = new Models.ApiVM.TS(_connectionString, nop, tahun, masa);
                     return Json(json);
                 }
                 else
@@ -178,7 +178,7 @@ namespace MonPDReborn.Controllers
                     //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
                     //DateTime tglCutOff = new DateTime(tahun, 1, 1);
                     //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
-                    var json = Models.ApiVM.Method.GetTBData(_connectionString, nop, tahun, masa);
+                    var json = new Models.ApiVM.TB(_connectionString, nop, tahun, masa);
                     return Json(json);
                 }
                 else
@@ -209,7 +209,7 @@ namespace MonPDReborn.Controllers
                     //int tahun = Convert.ToInt32(Convert.ToDateTime(tanggal).Year);
                     //DateTime tglCutOff = new DateTime(tahun, 1, 1);
                     //DateTime tglRealisasi = DateTime.ParseExact(tanggal, "yyyy-MM-dd", new CultureInfo("id-ID"));
-                    var json = Models.ApiVM.Method.GetSBData(_connectionString, nop, tahun, masa);
+                    var json = new Models.ApiVM.SB(_connectionString, nop, tahun, masa);
                     return Json(json);
                 }
                 else
@@ -349,7 +349,7 @@ namespace MonPDReborn.Controllers
             {
                 if (username == "SBYTAX!API22024" && password == "!SBYTAX2024!")
                 {
-                    var data = Models.ApiVM.Method.GetKartuDataData(_connectionString, nop, tahun, tahun2, jenis);
+                    var data = new Models.ApiVM.KartuData(_connectionString, nop, tahun, tahun2, jenis);
                     return Json(data);
                 }
                 else
