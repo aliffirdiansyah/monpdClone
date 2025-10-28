@@ -1,7 +1,7 @@
-﻿@model MonPDReborn.Models.AktivitasOP.RealisasiPendapatanDaerahVM.Index
+﻿@model MonPDReborn.Models.AktivitasOP.RealisasiPendapatanOPDVM.Index
 
 @{
-    ViewData["Title"] = "Realisasi Pendapatan Daerah";
+    ViewData["Title"] = "Realisasi Pendapatan Daerah per OPD";
     Layout = "_Layout";
 }
 
@@ -19,14 +19,14 @@
 
                     <div class="col-lg-3 col-md-4">
                         @(Html.DevExtreme().DateBox()
-                            .ID("selectTanggal")
-                            .Type(DateBoxType.Date)
-                            .Value(DateTime.Now)
-                            .DisplayFormat("dd/MM/yyyy")
-                            .Width(350)
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .ElementAttr("class", "form-select-lg")
-                            .Placeholder("Pilih Tanggal"))
+                                                .ID("selectTanggal")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .DisplayFormat("dd/MM/yyyy")
+                                                .Width(350)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select-lg")
+                                                .Placeholder("Pilih Tanggal"))
                     </div>
 
                     <div class="col-lg-2 col-md-3">
@@ -36,7 +36,7 @@
                     </div>
 
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -143,7 +143,7 @@
             $("#Show").hide();
 
             $.ajax({
-                url: '/RealisasiPendapatanDaerah/Show', // Ganti dengan route action kamu
+                url: '/RealisasiPendapatanOPD/Show', // Ganti dengan route action kamu
                 type: 'GET',
                 data: { tglCutoff: formattedDate },
                 success: function (response) {

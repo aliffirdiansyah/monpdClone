@@ -41,7 +41,7 @@
 
     //controkker monitoring pendapatan daerah 
     var MonitoringPendapatanDaerahController = new[] {
-        "SERIESPENDAPATANDAERAH", "SERIESPENDAPATANDAERAHSCONTRO", "SERIESPENDAPATAN", "REALISASIPENDAPATANDAERAH"
+        "SERIESPENDAPATANDAERAH", "SERIESPENDAPATANDAERAHSCONTRO", "SERIESPENDAPATAN", "REALISASIPENDAPATANDAERAH", "REALISASIPENDAPATANOPD"
     };
 
     var MonitoringPendapatanDaerahActive = MonitoringPendapatanDaerahController.Contains(currentController);
@@ -253,6 +253,12 @@
                                             <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "RealisasiPendapatanDaerah" ? "active" : "")"
                                                href="@Url.Action("Index", "RealisasiPendapatanDaerah")" target="_blank" role="button">
                                                 <span data-key="t-realisasiPendapatan">Realisasi Pedapatan Daerah Hari Ini</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "RealisasiPendapatanOPD" ? "active" : "")"
+                                               href="@Url.Action("Index", "RealisasiPendapatanOPD")" target="_blank" role="button">
+                                                <span data-key="t-realisasiPendapatanOPD">Realisasi Pedapatan Daerah Hari Ini Per OPD</span>
                                             </a>
                                         </li>
                                     </ul>

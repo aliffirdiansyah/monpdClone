@@ -1,0 +1,55 @@
+﻿@using static MonPDReborn.Models.AktivitasOP.RealisasiPendapatanOPDVM.ViewModels
+@model MonPDReborn.Models.AktivitasOP.RealisasiPendapatanOPDVM.Show
+
+<div class="table-responsive mt-3">
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light text-center align-middle">
+            <tr>
+                <th style="width: 10%;">Kode</th>
+                <th style="width: 40%;">Uraian</th>
+                <th style="width: 15%;">AKP 1 Tahun</th>
+                <th style="width: 15%;">Realisasi Hari Ini</th>
+                <th style="width: 15%;">Realisasi s.d Hari Ini</th>
+                <th style="width: 10%;">%</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Data != null && Model.Data.Any())
+            {
+                foreach (var opd in Model.Data)
+                {
+                    <!-- ===== Level 1: OPD ===== -->
+                    <tr class="table-success fw-bold">
+                        <td colspan="2">@($"{opd.Col.Kode} - {opd.Col.Nama}")</td>
+                        <td class="text-end">@opd.Col.AkpTahun.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.RealisasiHariAccrual.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.RealisasiSDHariAccrual.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.PersenAccrual.ToString("N2")%</td>
+                    </tr>
+
+                    @if (opd.RekSubRincians != null && opd.RekSubRincians.Any())
+                    {
+                        foreach (var sub in opd.RekSubRincians)
+                        {
+                            <!-- ===== Level 2: Sub Rincian ===== -->
+                            <tr>
+                                <td>@sub.Col.Kode</td>
+                                <td class="ps-4">@sub.Col.Nama</td>
+                                <td class="text-end">@sub.Col.AkpTahun.ToString("N0")</td>
+                                <td class="text-end">@sub.Col.RealisasiHariAccrual.ToString("N0")</td>
+                                <td class="text-end">@sub.Col.RealisasiSDHariAccrual.ToString("N0")</td>
+                                <td class="text-end">@sub.Col.PersenAccrual.ToString("N2")%</td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Tidak ada data</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
