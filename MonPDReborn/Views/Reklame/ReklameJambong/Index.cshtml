@@ -1,0 +1,190 @@
+﻿@model MonPDReborn.Models.Reklame.ReklameJambongVM.Index
+
+@{
+    ViewData["Title"] = "Reklame Jambong";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Reklame Jambong
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="loading2-Show" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="Show">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            fnShow();
+        });
+
+        function fnShow()
+        {
+            $.ajax({
+              url: '@(Url.Action("Show"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-Show').show();
+                 $('#Show').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-Show').hide();
+                        $('#Show').show();
+                        $('#Show').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-Show').hide();
+                 $('#Show').hide();
+                 $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+    </script>
+    <script>
+        function insidentilCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.JenisInsidentil;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                loadDetailJambong(jenis, tahun, bulan);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function permanenCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.JenisPermanen;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                loadDetailJambong(jenis, tahun, bulan);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function terbatasCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const jenis = cellInfo.data.JenisTerbatas;
+
+            const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+
+                loadDetailJambong(jenis, tahun, bulan);
+            });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function loadDetailJambong(jenis, tahun, bulan) {
+
+            $.ajax({
+                url: '/ReklameJambong/Detail',
+                type: 'GET',
+                data: { jenis, tahun, bulan },
+                beforeSend: function () {
+                    $("#loader").show();
+
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").text("");
+                    $modal.find(".modal-body").html("");
+                },
+                success: function (response) {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    if (response.Status === undefined) {
+                        $modal.find(".modal-title").html("Detail Jambong");
+                        $modal.find(".modal-body").html(response);
+                        $modal.modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    const $modal = $("#staticBackdropExtraLargeScrollableCenter");
+                    $modal.find(".modal-title").html("Error");
+                    $modal.find(".modal-body").html('<p class="text-danger text-center">Terjadi kesalahan saat memuat data.</p>');
+                    $modal.modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,65 @@
+﻿@using static MonPDReborn.Models.Reklame.ReklameJambongVM.ViewModels
+@model MonPDReborn.Models.Reklame.ReklameJambongVM.Show
+
+@{
+    var tahun = DateTime.Now.Year;
+}
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<Jambong>()
+                    .ID("jambongGrid")
+                    .DataSource(Model.Data)
+                    .ShowBorders(true)
+                    .ShowColumnLines(true)
+                    .RowAlternationEnabled(true)
+                    .ShowRowLines(true)
+                    .ShowColumnHeaders(true)
+                    .ColumnAutoWidth(true)
+                    .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+                    .OnExporting("exportGrid")
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.BulanNama).Caption("Bulan");
+                        columns.Add().Caption(tahun.ToString()).Alignment(HorizontalAlignment.Center).Columns(jt =>
+                        {
+                            jt.AddFor(m => m.Permanen).Caption("PERMANEN").Format("#,##0").CellTemplate(new JS("permanenCellTemplate"));
+                            jt.AddFor(m => m.JambongPermanen).Caption("NILAI PERMANEN").Format("#,##0");
+                            jt.AddFor(m => m.Terbatas).Caption("TERBATAS").Format("#,##0").CellTemplate(new JS("terbatasCellTemplate"));
+                            jt.AddFor(m => m.JambongTerbatas).Caption("NILAI TERBATAS").Format("#,##0");
+                            jt.AddFor(m => m.Insidentil).Caption("INSIDENTIL").Format("#,##0").CellTemplate(new JS("insidentilCellTemplate"));
+                            jt.AddFor(m => m.JambongInsidentil).Caption("NILAI INSIDENTIL").Format("#,##0");
+                        });
+                })
+                .Summary(summary =>
+                {
+                    summary.TotalItems(items =>
+                    {
+                        items.AddFor(m => m.BulanNama)
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("Total");
+                        items.AddFor(m => m.Permanen)
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("{0}");
+                        items.AddFor(m => m.JambongPermanen)
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("Rp {0}");
+                        items.AddFor(m => m.Terbatas)
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("{0}");
+                        items.AddFor(m => m.JambongTerbatas)
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("Rp {0}");
+                        items.AddFor(m => m.Insidentil)
+                    .SummaryType(SummaryType.Sum)
+                    .DisplayFormat("{0}");
+                        items.AddFor(m => m.JambongInsidentil)
+                    .SummaryType(SummaryType.Sum)
+                    .ValueFormat("#,##0")
+                    .DisplayFormat("Rp {0}");
+                    });
+                })
+        )
+</div>
