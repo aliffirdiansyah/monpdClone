@@ -1,0 +1,72 @@
+﻿@using static MonPDReborn.Models.AktivitasOP.RealisasiPendapatanDaerahVM.ViewModels
+@model MonPDReborn.Models.AktivitasOP.RealisasiPendapatanDaerahVM.Show
+
+<div class="table-responsive mt-3">
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light text-center align-middle">
+            <tr>
+                <th style="width: 10%;">Kode</th>
+                <th style="width: 40%;">Uraian</th>
+                <th style="width: 15%;">AKP 1 Tahun</th>
+                <th style="width: 15%;">Realisasi Hari Ini</th>
+                <th style="width: 15%;">Realisasi s.d Hari Ini</th>
+                <th style="width: 10%;">%</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Data != null && Model.Data.Any())
+            {
+                foreach (var kelompok in Model.Data)
+                {
+                    <!-- ===== Level 1: KELOMPOK ===== -->
+                    <tr class="table-success fw-bold">
+                        <td>@kelompok.Col.Kode</td>
+                        <td>@kelompok.Col.Nama</td>
+                        <td class="text-end">@kelompok.Col.AkpTahun.ToString("N0")</td>
+                        <td class="text-end">@kelompok.Col.RealisasiHariAccrual.ToString("N0")</td>
+                        <td class="text-end">@kelompok.Col.RealisasiSDHariAccrual.ToString("N0")</td>
+                        <td class="text-end">@kelompok.Col.Persentase.ToString("N2")%</td>
+                    </tr>
+
+                    @if (kelompok.RekJenis != null && kelompok.RekJenis.Any())
+                    {
+                        foreach (var jenis in kelompok.RekJenis)
+                        {
+                            <!-- ===== Level 2: JENIS ===== -->
+                            <tr class="table-primary">
+                                <td>@jenis.Col.Kode</td>
+                                <td class="ps-3">@jenis.Col.Nama</td>
+                                <td class="text-end">@jenis.Col.AkpTahun.ToString("N0")</td>
+                                <td class="text-end">@jenis.Col.RealisasiHariAccrual.ToString("N0")</td>
+                                <td class="text-end">@jenis.Col.RealisasiSDHariAccrual.ToString("N0")</td>
+                                <td class="text-end">@jenis.Col.Persentase.ToString("N2")%</td>
+                            </tr>
+
+                            @if (jenis.RekObyeks != null && jenis.RekObyeks.Any())
+                            {
+                                foreach (var obj in jenis.RekObyeks)
+                                {
+                                    <!-- ===== Level 3: OBJEK ===== -->
+                                    <tr>
+                                        <td>@obj.Col.Kode</td>
+                                        <td class="ps-5">@obj.Col.Nama</td>
+                                        <td class="text-end">@obj.Col.AkpTahun.ToString("N0")</td>
+                                        <td class="text-end">@obj.Col.RealisasiHariAccrual.ToString("N0")</td>
+                                        <td class="text-end">@obj.Col.RealisasiSDHariAccrual.ToString("N0")</td>
+                                        <td class="text-end">@obj.Col.Persentase.ToString("N2")%</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">Tidak ada data</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

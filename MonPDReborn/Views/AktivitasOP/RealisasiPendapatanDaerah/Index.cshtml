@@ -1,0 +1,108 @@
+﻿@model MonPDReborn.Models.AktivitasOP.RealisasiPendapatanDaerahVM.Index
+
+@{
+    ViewData["Title"] = "Realisasi Pendapatan Daerah";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center justify-content-between">
+                <h4 class="card-title text-dark fs-16 mb-0">
+                    Realisasi Pendapatan Daerah
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center mb-3">
+
+                    <div class="col-lg-3 col-md-4">
+                        @(Html.DevExtreme().DateBox()
+                            .ID("selectTanggal")
+                            .Type(DateBoxType.Date)
+                            .Value(DateTime.Now)
+                            .DisplayFormat("dd/MM/yyyy")
+                            .Width(350)
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .ElementAttr("class", "form-select-lg")
+                            .Placeholder("Pilih Tanggal"))
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <button type="button" onclick="fnShow()" class="btn btn-success w-100">
+                            <i class="ri-search-line me-1"></i> Terapkan
+                        </button>
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="loading2-Show" style="display:none;">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Inisialisasi komponen DateBox DevExtreme
+            const dateBox = $("#selectTanggal").dxDateBox("instance");
+
+            // Auto-load saat pertama kali halaman dibuka
+            fnShow();
+        });
+
+        // Fungsi utama untuk memanggil data Show
+        function fnShow() {
+            const dateBox = $("#selectTanggal").dxDateBox("instance");
+            const selectedDate = dateBox.option("value");
+
+            if (!selectedDate) {
+                DevExpress.ui.notify("Silakan pilih tanggal terlebih dahulu.", "warning", 2000);
+                return;
+            }
+
+            // Format ke yyyy-MM-dd agar cocok dengan parameter DateTime di controller
+            const formattedDate = selectedDate.toISOString().split('T')[0];
+
+            // Tampilkan loading spinner
+            $("#loading2-Show").show();
+            $("#Show").hide();
+
+            $.ajax({
+                url: '/RealisasiPendapatanDaerah/Show', // Ganti dengan route action kamu
+                type: 'GET',
+                data: { tglCutoff: formattedDate },
+                success: function (response) {
+                    // Tampilkan hasil partial view ke dalam #Show
+                    $("#Show").html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Gagal memuat data:", error);
+                    $("#Show").html("<div class='text-danger text-center'>Terjadi kesalahan saat memuat data.</div>");
+                },
+                complete: function () {
+                    // Sembunyikan spinner dan tampilkan hasil
+                    $("#loading2-Show").hide();
+                    $("#Show").show();
+                }
+            });
+        }
+    </script>
+}
