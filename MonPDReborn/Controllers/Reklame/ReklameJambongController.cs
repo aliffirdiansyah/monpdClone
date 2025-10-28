@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MonPDLib.General;
+using MonPDReborn.Controllers.AktivitasOP;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
 
-namespace MonPDReborn.Controllers.AktivitasOP
+namespace MonPDReborn.Controllers.Reklame
 {
-    public class RealisasiPendapatanOPDController : BaseController
+    public class ReklameJambongController : BaseController
     {
-        private readonly ILogger<RealisasiPendapatanOPDController> _logger;
+        private readonly ILogger<ReklameJambongController> _logger;
         ResponseBase response = new ResponseBase();
 
-        private string URLView => $"../AktivitasOP/{nameof(RealisasiPendapatanOPDController).Replace("Controller", "")}/";
+        private string URLView => $"../Reklame/{nameof(ReklameJambongController).Replace("Controller", "")}/";
 
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
 
-        public RealisasiPendapatanOPDController(ILogger<RealisasiPendapatanOPDController> logger)
+        public ReklameJambongController(ILogger<ReklameJambongController> logger)
         {
             _logger = logger;
         }
@@ -38,7 +39,7 @@ namespace MonPDReborn.Controllers.AktivitasOP
                         return RedirectToAction("Error", "Home", new { statusCode = 403 });
                     }
                 }
-                var model = new Models.AktivitasOP.RealisasiPendapatanOPDVM.Index();
+                var model = new Models.Reklame.ReklameJambongVM.Index();
                 return View($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)
@@ -54,13 +55,31 @@ namespace MonPDReborn.Controllers.AktivitasOP
                 return Json(response);
             }
         }
-
-        public IActionResult Show(DateTime TglCutOff)
+        public IActionResult Show()
         {
             try
             {
-                ViewData["Title"] = controllerName;
-                var model = new Models.AktivitasOP.RealisasiPendapatanOPDVM.Show(TglCutOff);
+                var model = new Models.Reklame.ReklameJambongVM.Show();
+                return PartialView($"{URLView}_{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
+            }
+        }
+        public IActionResult Detail(string jenis, int tahun, int bulan)
+        {
+            try
+            {
+                var model = new Models.Reklame.ReklameJambongVM.Detail(jenis, tahun, bulan);
                 return PartialView($"{URLView}_{actionName}", model);
             }
             catch (ArgumentException e)

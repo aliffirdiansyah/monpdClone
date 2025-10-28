@@ -234,16 +234,19 @@ namespace MonPDReborn.Models.AktivitasOP
                                         RealisasiHariAccrual = obj.Sum(z => z.RealisasiHariAccrual),
                                         RealisasiSDHariAccrual = obj.Sum(z => z.RealisasiSDHariAccrual)
                                     })
+                                    .OrderBy(x => x.Objek)
                                     .ToList(),
                                 AkpTahun = jen.Sum(z => z.AkpTahun),
                                 RealisasiHariAccrual = jen.Sum(z => z.RealisasiHariAccrual),
                                 RealisasiSDHariAccrual = jen.Sum(z => z.RealisasiSDHariAccrual)
                             })
+                            .OrderBy(x => x.Jenis)
                             .ToList(),
                         AkpTahun = kel.Sum(z => z.AkpTahun),
                         RealisasiHariAccrual = kel.Sum(z => z.RealisasiHariAccrual),
                         RealisasiSDHariAccrual = kel.Sum(z => z.RealisasiSDHariAccrual)
                     })
+                    .OrderBy(x => x.Kelompok)
                     .ToList();
 
                 // === 6️⃣ Mapping ke ViewModel ===
