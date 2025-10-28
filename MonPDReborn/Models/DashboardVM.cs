@@ -13,17 +13,24 @@ namespace MonPDReborn.Models
     {
         public class Index
         {
-            public ViewModel.Dashboard Data { get; set; } = new ViewModel.Dashboard();
-            public ViewModel.DashboardChart ChartData { get; set; } = new ViewModel.DashboardChart();
             public string Em { get; set; } = string.Empty;
             public Index()
             {
-                //Data = Method.GetDashboardData();
-                //ChartData = Method.GetDashboardChartData();
             }
             public Index(string em)
             {
                 Em = em;
+            }
+        }
+
+        public class ShowCard
+        {
+            public ViewModel.Dashboard Data { get; set; } = new ViewModel.Dashboard();
+            public ViewModel.DashboardChart ChartData { get; set; } = new ViewModel.DashboardChart();
+            public ShowCard()
+            {
+                Data = Method.GetDashboardData();
+                ChartData = Method.GetDashboardChartData();
             }
         }
         public class SeriesPajakDaerah

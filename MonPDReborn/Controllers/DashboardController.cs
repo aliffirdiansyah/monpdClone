@@ -57,6 +57,26 @@ namespace MonPDReborn.Controllers
                 return View($"{URLView}{actionName}", model);
             }
         }
+
+        public IActionResult ShowCard()
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var model = new Models.DashboardVM.ShowCard();
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+                return Json(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+                return Json(response.ToInternalServerError());
+            }
+        }
         public IActionResult SeriesPajakDaerah()
         {
             var response = new ResponseBase();
