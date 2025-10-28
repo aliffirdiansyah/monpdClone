@@ -18,8 +18,8 @@ namespace MonPDReborn.Models
             public string Em { get; set; } = string.Empty;
             public Index()
             {
-                Data = Method.GetDashboardData();
-                ChartData = Method.GetDashboardChartData();
+                //Data = Method.GetDashboardData();
+                //ChartData = Method.GetDashboardChartData();
             }
             public Index(string em)
             {

@@ -14,10 +14,57 @@
     .apexcharts-legend.apexcharts-align-center {
         justify-content: flex-start !important; /* Rata kiri */
         text-align: left !important;
-    }</style>
+    }
+</style>
 
 <div class="row g-2 mb-3">
+    <div class="col-lg-3 col-sm-6">
+        <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #3B82F6; height:87%; ">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3" style="cursor:pointer;" onclick="">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-info rounded-circle d-flex justify-content-center align-items-center me-2 placeholder-glow" style=" width: 35px; height: 35px; aspect-ratio: 1 / 1; flex-shrink: 0;">
+                            <span class="placeholder"><i class="text-info" style="font-size: 20px; line-height: 1;"></i></span>
+                        </div>
+                        <h6 class="mb-0 fs-16 fw-bold placeholder-glow">
+                            <span class="placeholder">Pbjt Jasa Perhotelan</span>
+                        </h6>
+                    </div>
+                    <h6 class="mb-0 fs-16 text-primary fw-bold placeholder-glow">
+                        <span class="placeholder">0%</span>
+                    </h6>
+                </div>
 
+
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: @Model.Data.PersentaseHotel.ToString("N0")%;" aria-valuenow="@Model.Data.PersentaseHotel.ToString("N0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="row text-muted mb-2" style="cursor:pointer;" onclick="fnMonitoringBulanan('@((int)EnumFactory.EPajak.JasaPerhotelan)')">
+                    <div class="col placeholder-glow">
+                        <small>Realisasi</small><br>
+                        <span class="fw-bold fs-15 text-dark placeholder">Rp @Model.Data.RealisasiHotel.ToString("n0")</span>
+                    </div>
+                    <div class="col text-end placeholder-glow">
+                        <small>Target</small><br>
+                        <span class="fw-bold fs-15 placeholder">Rp @Model.Data.TargetHotel.ToString("n0")</span>
+                    </div>
+                </div>
+
+                <div class="border-top pt-2 d-flex justify-content-between align-items-center mb-2 placeholder-glow">
+                    <span class="text-muted">Total Objek Pajak</span>
+                    <a href="">
+                        <span class="fw-bold placeholder">@Model.Data.JumlahOpHotel.ToString("n0") OP</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-2 mb-3">
+    
     <div class="col-lg-3 col-sm-6">
         <div class="card card-animate h-100 shadow-lg rounded-3" style="border-top: 6px solid #3B82F6; height:87%; " >
             <div class="card-body">
@@ -528,7 +575,7 @@
 
 </div>
 
-<div class="row">
+<div class="row" style="display:none">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
