@@ -38,6 +38,18 @@
     var MonitoringCapaianExpanded = isMonitoringCapaianActive ? "true" : "false";
     var MonitoringCapaianShowClass = isMonitoringCapaianActive ? "show" : "";
 
+
+    //controkker monitoring pendapatan daerah 
+    var MonitoringPendapatanDaerahController = new[] {
+        "SERIESPENDAPATANDAERAH", "SERIESPENDAPATANDAERAHSCONTRO", "SERIESPENDAPATAN"
+    };
+
+    var MonitoringPendapatanDaerahActive = MonitoringPendapatanDaerahController.Contains(currentController);
+    var MonitoringPendapatanDaerahActiveClass = MonitoringPendapatanDaerahActive ? "active" : "";
+    var MonitoringPendapatanDaerahExpanded = MonitoringPendapatanDaerahActive ? "true" : "false";
+    var MonitoringPendapatanDaerahShowClass = MonitoringPendapatanDaerahActive ? "show" : "";
+
+
     //controller monitoring Wilayah
     var MonitoringWilayahController = new[] {
         "KONTROLWILAYAH"
@@ -207,24 +219,40 @@
                                     <i class="bx bx-trending-up"></i><span data-key="t-analisisTren">Kalkulator Prediksi Pendapatan</span>
                                 </a>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerah" ? "active" : "")"
-                                   href="@Url.Action("Index", "SeriesPendapatanDaerah")" target="_blank" role="button">
-                                    <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerah">Detail Pendapatan Daerah</span>
+                                <a class="nav-link menu-link collapse @MonitoringPendapatanDaerahActiveClass"
+                                   href="#sidebarMonitoringPendapatanDaerah"
+                                   data-bs-toggle="collapse"
+                                   role="button"
+                                   aria-expanded="@MonitoringPendapatanDaerahExpanded"
+                                   aria-controls="#sidebarMonitoringPendapatanDaerah" style="background-color: #5EA8A4">
+                                    <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-monitoring-daerah">Monitoring Pendapatan Daerah</span>
                                 </a>
+                                <div id="sidebarMonitoringPendapatanDaerah" class="menu-dropdown collapse @MonitoringPendapatanDaerahShowClass">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerah" ? "active" : "")"
+                                               href="@Url.Action("Index", "SeriesPendapatanDaerah")" target="_blank" role="button">
+                                               <span data-key="t-seriesPendapatanDaerah">Detail Pendapatan Daerah</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerahScontro" ? "active" : "")"
+                                            href="@Url.Action("Index", "SeriesPendapatanDaerahScontro")" target="_blank" role="button">
+                                                <span data-key="t-seriesPendapatanDaerahScontro">Series Pendapatan Daerah</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatan" ? "active" : "")"
+                                            href="@Url.Action("Index", "SeriesPendapatan")" target="_blank" role="button">
+                                                <span data-key="t-sPendapatan">Series Pendapatan Per OPD </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatanDaerahScontro" ? "active" : "")"
-                                href="@Url.Action("Index", "SeriesPendapatanDaerahScontro")" target="_blank" role="button">
-                                    <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-seriesPendapatanDaerahScontro">Series Pendapatan Daerah</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SeriesPendapatan" ? "active" : "")"
-                                href="@Url.Action("Index", "SeriesPendapatan")" target="_blank" role="button">
-                                    <i class="bx bx-bar-chart-alt-2  me-1 align-middle"></i><span data-key="t-sPendapatan">Series Pendapatan</span>
-                                </a>
-                            </li>
+
                             @* <li class="nav-item">
                     <a class="nav-link menu-link" href="@Url.Action("Index","PendataanObjekPajak")" role="button">
                         <i class="bx bx-building"></i><span data-key="t-perbandinganWilayah">Perbandingan Wilayah</span>
