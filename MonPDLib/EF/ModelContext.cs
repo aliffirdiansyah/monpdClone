@@ -213,6 +213,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbPendapatanDaerah> DbPendapatanDaerahs { get; set; }
 
+    public virtual DbSet<DbPendapatanDaerahHarian> DbPendapatanDaerahHarians { get; set; }
+
     public virtual DbSet<DbPendapatanDaerahKoreksi> DbPendapatanDaerahKoreksis { get; set; }
 
     public virtual DbSet<DbPotensiAbt> DbPotensiAbts { get; set; }
@@ -1476,6 +1478,14 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<DbPendapatanDaerah>(entity =>
         {
             entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.KodeOpd, e.KodeSubOpd, e.Bulan }).HasName("DB_PENDAPATAN_DAERAH_PK");
+
+            entity.Property(e => e.Realisasi).HasDefaultValueSql("0 ");
+            entity.Property(e => e.Target).HasDefaultValueSql("0 ");
+        });
+
+        modelBuilder.Entity<DbPendapatanDaerahHarian>(entity =>
+        {
+            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.KodeOpd, e.KodeSubOpd, e.Tanggal }).HasName("DB_PENDAPATAN_DAERAH_HARIAN_PK");
 
             entity.Property(e => e.Realisasi).HasDefaultValueSql("0 ");
             entity.Property(e => e.Target).HasDefaultValueSql("0 ");
