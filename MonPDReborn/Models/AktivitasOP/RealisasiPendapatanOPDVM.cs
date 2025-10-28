@@ -211,11 +211,13 @@ namespace MonPDReborn.Models.AktivitasOP
                                 sub.RealisasiHariAccrual,
                                 sub.RealisasiSDHariAccrual
                             })
+                            .OrderBy(x => x.SubRincian)
                             .ToList(),
                         AkpTahun = opd.Sum(z => z.AkpTahun),
                         RealisasiHariAccrual = opd.Sum(z => z.RealisasiHariAccrual),
                         RealisasiSDHariAccrual = opd.Sum(z => z.RealisasiSDHariAccrual)
                     })
+                    .OrderBy(x => x.KodeOpd)
                     .ToList();
 
                 // === 6️⃣ Mapping ke ViewModel ===
