@@ -1,4 +1,4 @@
-﻿/**
+/**
 * DevExpress Analytics (dist\js\dx-analytics-core.min.js)
 * Version:  23.1.15
 * Build date: Apr 29, 2025
