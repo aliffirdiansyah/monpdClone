@@ -105,6 +105,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonHotel2> DbMonHotel2s { get; set; }
 
+    public virtual DbSet<DbMonJambong> DbMonJambongs { get; set; }
+
     public virtual DbSet<DbMonKetetapanHpp> DbMonKetetapanHpps { get; set; }
 
     public virtual DbSet<DbMonKetetapanHr> DbMonKetetapanHrs { get; set; }
@@ -577,9 +579,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
+        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1063,6 +1065,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.IsTutup).HasDefaultValueSql("1                     ");
             entity.Property(e => e.KategoriId).HasDefaultValueSql("1                     ");
             entity.Property(e => e.UpdDate).HasDefaultValueSql("sysdate               ");
+        });
+
+        modelBuilder.Entity<DbMonJambong>(entity =>
+        {
+            entity.ToView("DB_MON_JAMBONG");
         });
 
         modelBuilder.Entity<DbMonKetetapanHpp>(entity =>
