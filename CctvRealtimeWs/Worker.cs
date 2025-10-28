@@ -423,6 +423,7 @@ namespace CctvRealtimeWs
         {
             await GenerateTokenJasnita2();
 
+            var rekapJasnita = new List<RekapJasnita2>();
 
             #region Get Domains
             string webClientUrl = "";
@@ -522,9 +523,22 @@ namespace CctvRealtimeWs
 
                 // Baca stream image-nya
                 byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+                DateTime parsedTime = ConvertUtcToWib(ParseFlexibleDate(item.Timestamp));
+
+                var rekap = new RekapJasnita2();
+                rekap.Id = item.Id;
+                rekap.Nop = op.Nop;
+                rekap.CctvId = op.CctvId ?? "-";
+                rekap.VendorId = (int)op.Vendor;
+                rekap.JenisKend = (int)EnumFactory.EJenisKendParkirCCTV.Unknown;
+                rekap.PlatNo = "-";
+                rekap.WaktuMasuk = parsedTime;
+                rekap.ImageData = imageBytes;
+
+                rekapJasnita.Add(rekap);
             }
             #endregion
-
         }
         private async Task UpdateDbJasnita(
         DataCctv.DataOpCctv op,
@@ -609,6 +623,72 @@ namespace CctvRealtimeWs
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita close conenction {op.Nop}-{op.NamaOp}-{op.CctvId}");
             }
         }
+
+        private async Task UpdateDBJasnita2(
+            DataCctv.DataOpCctv op,
+            List<RekapJasnita2> dataList,
+            CancellationToken cancellationToken)
+        {
+            await using var context = DBClass.GetContext();
+
+            try
+            {
+                // === OPEN CONNECTION ===
+                await context.Database.OpenConnectionAsync(cancellationToken);
+
+                // Ambil dan hapus data lama
+                var oldData = await context.TOpParkirCctvRealtimes
+                    .Where(x => x.Nop == op.Nop && x.VendorId == (int)op.Vendor)
+                    .ToListAsync(cancellationToken);
+
+                context.TOpParkirCctvRealtimes.RemoveRange(oldData);
+
+                // Siapkan data baru
+                var result = new List<TOpParkirCctvRealtime>();
+
+                foreach (var item in dataList)
+                {
+                    var res = new TOpParkirCctvRealtime();
+                    res.TOpParkirCctvRealtimeDok = new TOpParkirCctvRealtimeDok();
+
+                    res.Id = item.Id;
+                    res.Nop = item.Nop;
+                    res.CctvId = item.CctvId;
+                    res.VendorId = item.VendorId;
+                    res.JenisKend = item.JenisKend;
+                    res.PlatNo = item.PlatNo;
+                    res.WaktuMasuk = item.WaktuMasuk;
+                    res.TOpParkirCctvRealtimeDok.ImageData = item.ImageData;
+
+                    result.Add(res);
+                }
+
+                if (result.Count > 0)
+                {
+                    await context.TOpParkirCctvRealtimes.AddRangeAsync(result, cancellationToken);
+                }
+
+                // Simpan perubahan ke database
+                await context.SaveChangesAsync(cancellationToken);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita updated untuk NOP {op.Nop}-{op.NamaOp}-{op.CctvId} ({result.Count} data)");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] Update DB Jasnita NOP {op.Nop}-{op.NamaOp}-{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.ResetColor();
+            }
+            finally
+            {
+                // === CLOSE CONNECTION ===
+                await context.Database.CloseConnectionAsync();
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita close conenction {op.Nop}-{op.NamaOp}-{op.CctvId}");
+            }
+        }
+
         private async Task GenerateTokenJasnita()
         {
             using (var client = new HttpClient())
