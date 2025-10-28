@@ -45,4 +45,7 @@ public partial class TOpParkirCctvRealtime
     [StringLength(200)]
     [Unicode(false)]
     public string? ImageUrl { get; set; }
+
+    [InverseProperty("IdNavigation")]
+    public virtual TOpParkirCctvRealtimeDok? TOpParkirCctvRealtimeDok { get; set; }
 }

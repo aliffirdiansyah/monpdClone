@@ -522,8 +522,6 @@ namespace CctvRealtimeWs
 
                 // Baca stream image-nya
                 byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-
-
             }
             #endregion
 

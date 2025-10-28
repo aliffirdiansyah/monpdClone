@@ -451,6 +451,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TOpParkirCctvRealtime> TOpParkirCctvRealtimes { get; set; }
 
+    public virtual DbSet<TOpParkirCctvRealtimeDok> TOpParkirCctvRealtimeDoks { get; set; }
+
     public virtual DbSet<TOpParkirLocation> TOpParkirLocations { get; set; }
 
     public virtual DbSet<TOpPpjLocation> TOpPpjLocations { get; set; }
@@ -504,6 +506,10 @@ public partial class ModelContext : DbContext
     public virtual DbSet<TempPerpanjangan> TempPerpanjangans { get; set; }
 
     public virtual DbSet<TempPiutang> TempPiutangs { get; set; }
+
+    public virtual DbSet<TempTargetUptb> TempTargetUptbs { get; set; }
+
+    public virtual DbSet<TempTargetUptb19> TempTargetUptb19s { get; set; }
 
     public virtual DbSet<TmpObjekPajakSkpdAbt> TmpObjekPajakSkpdAbts { get; set; }
 
@@ -839,14 +845,12 @@ public partial class ModelContext : DbContext
 
         modelBuilder.Entity<DbAkunTargetBulanUptb>(entity =>
         {
-            entity.HasKey(e => new { e.TahunBuku, e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.Tgl, e.Bulan, e.Uptb }).HasName("DB_AKUN_TARGET_BULAN_UPTB_PK");
-
-            entity.Property(e => e.Tgl).HasDefaultValueSql("0                     ");
             entity.Property(e => e.Bulan).HasDefaultValueSql("0                     ");
-            entity.Property(e => e.Uptb).HasDefaultValueSql("0                     ");
             entity.Property(e => e.Target).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.Tgl).HasDefaultValueSql("0                     ");
+            entity.Property(e => e.Uptb).HasDefaultValueSql("0                     ");
 
-            entity.HasOne(d => d.DbAkunTargetBulan).WithMany(p => p.DbAkunTargetBulanUptbs)
+            entity.HasOne(d => d.DbAkunTargetBulan).WithMany()
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("DB_AKUN_TARGET_BULAN_UPTB_R01");
         });
@@ -2499,6 +2503,15 @@ public partial class ModelContext : DbContext
         modelBuilder.Entity<TOpParkirCctvRealtime>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_T_OP_CCTV_REALTIME");
+        });
+
+        modelBuilder.Entity<TOpParkirCctvRealtimeDok>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_REALTIME_DOK");
+
+            entity.HasOne(d => d.IdNavigation).WithOne(p => p.TOpParkirCctvRealtimeDok)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_REALTIME_DOK");
         });
 
         modelBuilder.Entity<TPemeriksaan>(entity =>
