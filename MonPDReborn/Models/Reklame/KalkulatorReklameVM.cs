@@ -139,15 +139,20 @@ namespace MonPDReborn.Models.Reklame
                     if (Output.JenisReklame == EnumFactory.KategoriReklame.Suara)
                     {
                         KalkulatorInsPublic.jumlahSatuan.Text = $"{Output.JumlahSatuan} Menit";
+                        KalkulatorInsPublic.itungan1.Text = $"Jumlah Layar";
+                        KalkulatorInsPublic.hasilItung1.Text = $"{Output.JumlahLayar} Layar";
+                        KalkulatorInsPublic.itungan2.Text = $"";
+                        KalkulatorInsPublic.hasilItung2.Text = $"";
                     }
                     if (Output.JenisReklame == EnumFactory.KategoriReklame.FilmSlide)
                     {
                         KalkulatorInsPublic.jumlahSatuan.Text = $"{Output.JumlahSatuan} Detik";
+                        KalkulatorInsPublic.itungan1.Text = $"Jumlah Layar";
+                        KalkulatorInsPublic.hasilItung1.Text = $"{Output.JumlahLayar} Layar";
+                        KalkulatorInsPublic.itungan2.Text = $"Jumlah Show";
+                        KalkulatorInsPublic.hasilItung2.Text = $"{Output.JumlahPerulangan} Show";
                     }
-                    KalkulatorInsPublic.itungan1.Text = $"Jumlah Layar";
-                    KalkulatorInsPublic.hasilItung1.Text = $"{Output.JumlahLayar} Layar";
-                    KalkulatorInsPublic.itungan2.Text = $"Jumlah Show";
-                    KalkulatorInsPublic.hasilItung2.Text = $"{Output.JumlahPerulangan} Show";
+                    
                     KalkulatorInsPublic.itungan3.Visible = false;
                     KalkulatorInsPublic.hasilItung3.Visible = false;
                     KalkulatorInsPublic.itungan4.Visible = false;
