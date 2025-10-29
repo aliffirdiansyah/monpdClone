@@ -492,12 +492,12 @@
                             <i class="bx bx-search-alt  me-1 align-middle"></i><span data-key="t-pencarianReklame">Pencarian Reklame</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    @* <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ReklameJambong" ? "active" : "")"
                            href="@Url.Action("Index", "ReklameJambong")" role="button">
                             <i class="bx bx-news  me-1 align-middle"></i><span data-key="t-reklameJambong">Reklame Jambong</span>
                         </a>
-                    </li>
+                    </li> *@
                     <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "InputReklame" ? "active" : "")"
                            href="@Url.Action("Index", "InputReklame")" role="button">

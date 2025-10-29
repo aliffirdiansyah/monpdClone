@@ -22,17 +22,17 @@ namespace DBPendapatanDaerahHarianWs
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
-                DateTime nextRun = now.AddMinutes(30); // besok jam 00:00
-                TimeSpan delay = nextRun - now;
+                //var now = DateTime.Now;
+                //DateTime nextRun = now.AddMinutes(30); // besok jam 00:00
+                //TimeSpan delay = nextRun - now;
 
-                Console.WriteLine($"esidatra_api: next run at {nextRun}");
-                _logger.LogInformation("Next run scheduled at: {time}", nextRun);
+                //Console.WriteLine($"esidatra_api: next run at {nextRun}");
+                //_logger.LogInformation("Next run scheduled at: {time}", nextRun);
 
-                await Task.Delay(delay, stoppingToken);
+                //await Task.Delay(delay, stoppingToken);
 
-                if (stoppingToken.IsCancellationRequested)
-                    break;
+                //if (stoppingToken.IsCancellationRequested)
+                //    break;
 
                 // Eksekusi tugas
                 try
