@@ -204,7 +204,7 @@ namespace MonPDLib.Lib
                     {
                         nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
                     }
-                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Suara))
+                    else if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Suara))
                     {
                         nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
                     }
@@ -257,7 +257,7 @@ namespace MonPDLib.Lib
                     {
                         nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
                     }
-                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.FilmSlide))
+                    else if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.FilmSlide))
                     {
                         nsr = ((decimal)input.JumlahSatuan / (njop?.SatuanNominal ?? 1)) * (input.JumlahLayar == 0 ? 1 : input.JumlahLayar) * (input.JumlahPerulangan == 0 ? 1 : input.JumlahPerulangan) * (njop?.NilaiNjop ?? 0) * 1;
                     }
