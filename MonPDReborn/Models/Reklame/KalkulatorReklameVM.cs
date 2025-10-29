@@ -119,8 +119,8 @@ namespace MonPDReborn.Models.Reklame
                         KalkulatorInsPublic.itungan3.Text = $"Luas";
                         KalkulatorInsPublic.hasilItung3.Text = $"{KalkullatorReklameRow.Luas.ToString("N2")} m²";
                     }
-                    KalkulatorInsPublic.itungan4.Visible = false;
-                    KalkulatorInsPublic.hasilItung4.Visible = false;
+                    //KalkulatorInsPublic.itungan4.Visible = false;
+                    //KalkulatorInsPublic.hasilItung4.Visible = false;
                 }
                 else if (KalkullatorReklameRow.ModeUkur == EnumFactory.EModeUkur.Satuan)
                 {
