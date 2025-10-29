@@ -25,7 +25,7 @@
                         <td class="text-end">@kelompok.Col.AkpTahun.ToString("N0")</td>
                         <td class="text-end">@kelompok.Col.RealisasiHariAccrual.ToString("N0")</td>
                         <td class="text-end">@kelompok.Col.RealisasiSDHariAccrual.ToString("N0")</td>
-                        <td class="text-end">@kelompok.Col.Persentase.ToString("N2")%</td>
+                        <td class="text-end">@kelompok.Col.PersenAccrual.ToString("N2")%</td>
                     </tr>
 
                     @if (kelompok.RekJenis != null && kelompok.RekJenis.Any())
@@ -39,7 +39,7 @@
                                 <td class="text-end">@jenis.Col.AkpTahun.ToString("N0")</td>
                                 <td class="text-end">@jenis.Col.RealisasiHariAccrual.ToString("N0")</td>
                                 <td class="text-end">@jenis.Col.RealisasiSDHariAccrual.ToString("N0")</td>
-                                <td class="text-end">@jenis.Col.Persentase.ToString("N2")%</td>
+                                <td class="text-end">@jenis.Col.PersenAccrual.ToString("N2")%</td>
                             </tr>
 
                             @if (jenis.RekObyeks != null && jenis.RekObyeks.Any())
@@ -53,7 +53,7 @@
                                         <td class="text-end">@obj.Col.AkpTahun.ToString("N0")</td>
                                         <td class="text-end">@obj.Col.RealisasiHariAccrual.ToString("N0")</td>
                                         <td class="text-end">@obj.Col.RealisasiSDHariAccrual.ToString("N0")</td>
-                                        <td class="text-end">@obj.Col.Persentase.ToString("N2")%</td>
+                                        <td class="text-end">@obj.Col.PersenAccrual.ToString("N2")%</td>
                                     </tr>
                                 }
                             }

@@ -414,38 +414,45 @@
                                 </div>
 
                                 <!-- Bagian Mode Perulangan -->
-                                <div id="div-mode-perulangan" class="row g-3 mt-2" style="display:none">
+                                <div class="row g-3 mt-2">
+
                                     <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                                        <label for="JumlahPerulangan" class="form-label fw-semibold">Jumlah Show</label>
-                                        @(Html.DevExtreme().NumberBox()
-                                                                                .ID("JumlahPerulanganIns")
-                                                                                .Placeholder("Isi jumlah perulangan iklan")
-                                                                                .Min(1)
-                                                                                .StylingMode(EditorStylingMode.Outlined)
-                                                                                .Height(45)
-                                                                                .Format("#,##0")
-                                                                                )
-                                        <small class="form-text text-danger mt-auto">
-                                            <i class='bx bx-info-circle me-1'></i>
-                                            Untuk reklame berjalan atau berganti tayang (misal Film.Suara).
-                                        </small>
+                                        <div id="col-jumlah-layar" style="display:none;">
+                                            <label for="JumlahLayar" class="form-label fw-semibold">Jumlah Layar</label>
+                                            @(Html.DevExtreme().NumberBox()
+                                                                                        .ID("JumlahLayarIns")
+                                                                                        .Placeholder("Isi jumlah layar tampilan")
+                                                                                        .Min(1)
+                                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                                        .Height(45)
+                                                                                        .Format("#,##0")
+                                                                                        )
+                                            <small class="form-text text-danger mt-auto">
+                                                <i class='bx bx-info-circle me-1'></i>
+                                                Digunakan untuk reklame elektronik dengan beberapa sisi tampilan.
+                                            </small>
+                                        </div>
                                     </div>
 
                                     <div class="col-12 col-md-6 col-lg-3 d-flex flex-column">
-                                        <label for="JumlahLayar" class="form-label fw-semibold">Jumlah Layar</label>
-                                        @(Html.DevExtreme().NumberBox()
-                                                                                .ID("JumlahLayarIns")
-                                                                                .Placeholder("Isi jumlah layar tampilan")
-                                                                                .Min(1)
-                                                                                .StylingMode(EditorStylingMode.Outlined)
-                                                                                .Height(45)
-                                                                                .Format("#,##0")
-                                                                                )
-                                        <small class="form-text text-danger mt-auto">
-                                            <i class='bx bx-info-circle me-1'></i>
-                                            Digunakan untuk reklame elektronik dengan beberapa sisi tampilan.
-                                        </small>
+                                        <div id="col-jumlah-perulangan" style="display:none;">
+                                                    <label for="JumlahPerulangan" class="form-label fw-semibold">Jumlah Show</label>
+                                                    @(Html.DevExtreme().NumberBox()
+                                                                                                        .ID("JumlahPerulanganIns")
+                                                                                                        .Placeholder("Isi jumlah perulangan iklan")
+                                                                                                        .Min(1)
+                                                                                                        .StylingMode(EditorStylingMode.Outlined)
+                                                                                                        .Height(45)
+                                                                                                        .Format("#,##0")
+                                                                                                        )
+                                                    <small class="form-text text-danger mt-auto">
+                                                        <i class='bx bx-info-circle me-1'></i>
+                                                        Untuk reklame berjalan atau berganti tayang (misal Film.Suara).
+                                                    </small>
+                                        </div>
                                     </div>
+
+                                    
                                 </div>
 
                                 <div id="btn-hitungnsr-ins" style="display:none">
@@ -720,21 +727,39 @@
     <script>
         function onJenisReklameInsChanged(e) {
             const item = e.component.getDataSource().items().find(x => x.Value === e.value);
-            $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar, #div-mode-perulangan, #btn-hitungnsr-ins").hide();
+
+            // sembunyikan semua dulu
+                    $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar, #col-jumlah-perulangan, #col-jumlah-layar, #btn-hitungnsr-ins").hide();
+
             if (!item) return;
 
             switch (item.ModeUkur) {
                 case 1:
                     $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar, #btn-hitungnsr-ins").show();
                     break;
+
                 case 2:
                     $("#frm-jumlahsatuan, #btn-hitungnsr-ins").show();
                     break;
+
                 case 3:
-                    $("#frm-jumlahsatuan, #div-mode-perulangan, #btn-hitungnsr-ins").show();
+                    $("#frm-jumlahsatuan, #btn-hitungnsr-ins").show(); // tetap tampilkan form utama
+
+                    const text = item.Value;
+
+                    // tampilkan sesuai jenis
+                    if (text.includes("11")) {
+                        // Film/Slide → tampilkan keduanya
+                        $("#col-jumlah-perulangan, #col-jumlah-layar").show();
+                    } else if (text.includes("14")) {
+                        $("#col-jumlah-perulangan").hide();
+                        $("#col-jumlah-layar").show();
+                    }
                     break;
             }
         }
+
+
     </script>
 
 }
