@@ -104,20 +104,20 @@ namespace MonPDReborn.Models.Reklame
                     if (Output.JenisReklame == EnumFactory.KategoriReklame.StikerMelekat)
                     {
                         KalkulatorInsPublic.itungan1.Text = $"Panjang";
-                        KalkulatorInsPublic.hasilItung1.Text = $"{Output.Panjang.ToString("N0")} cm";
+                        KalkulatorInsPublic.hasilItung1.Text = $"{Output.Panjang.ToString("N2")} cm";
                         KalkulatorInsPublic.itungan2.Text = $"Lebar";
-                        KalkulatorInsPublic.hasilItung2.Text = $"{Output.Lebar.ToString("N0")} cm";
+                        KalkulatorInsPublic.hasilItung2.Text = $"{Output.Lebar.ToString("N2")} cm";
                         KalkulatorInsPublic.itungan3.Text = $"Luas";
-                        KalkulatorInsPublic.hasilItung3.Text = $"{KalkullatorReklameRow.Luas.ToString("N0")} cm²";
+                        KalkulatorInsPublic.hasilItung3.Text = $"{KalkullatorReklameRow.Luas.ToString("N2")} cm²";
                     }
                     else
                     {
                         KalkulatorInsPublic.itungan1.Text = $"Panjang";
-                        KalkulatorInsPublic.hasilItung1.Text = $"{Output.Panjang.ToString("N0")} m";
+                        KalkulatorInsPublic.hasilItung1.Text = $"{Output.Panjang.ToString("N2")} m";
                         KalkulatorInsPublic.itungan2.Text = $"Lebar";
-                        KalkulatorInsPublic.hasilItung2.Text = $"{Output.Lebar.ToString("N0")} m";
+                        KalkulatorInsPublic.hasilItung2.Text = $"{Output.Lebar.ToString("N2")} m";
                         KalkulatorInsPublic.itungan3.Text = $"Luas";
-                        KalkulatorInsPublic.hasilItung3.Text = $"{KalkullatorReklameRow.Luas.ToString("N0")} m²";
+                        KalkulatorInsPublic.hasilItung3.Text = $"{KalkullatorReklameRow.Luas.ToString("N2")} m²";
                     }
                     KalkulatorInsPublic.itungan4.Visible = false;
                     KalkulatorInsPublic.hasilItung4.Visible = false;
@@ -153,7 +153,7 @@ namespace MonPDReborn.Models.Reklame
                     KalkulatorInsPublic.itungan4.Visible = false;
                     KalkulatorInsPublic.hasilItung4.Visible = false;
                 }
-                KalkulatorInsPublic.ExportOptions.PrintPreview.DefaultFileName = "Est NSR " + Output.JenisReklame.GetDescription();
+                KalkulatorInsPublic.ExportOptions.PrintPreview.DefaultFileName = "Est NSR Ins" + Output.JenisReklame.GetDescription();
                 KalkulatorInsPublic.CreateDocument();
             }
         }
