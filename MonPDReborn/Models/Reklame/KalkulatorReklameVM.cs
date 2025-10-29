@@ -96,7 +96,7 @@ namespace MonPDReborn.Models.Reklame
                 KalkulatorInsPublic.tglBerlaku.Text = $"{Output.TglMulaiBerlaku.ToString("dd MMM yyyy", new CultureInfo("id-ID"))} s/d {Output.TglSelesaiBerlaku.ToString("dd MMM yyyy", new CultureInfo("id-ID"))}";
                 KalkulatorInsPublic.letak.Text = Output.LetakReklame.GetDescription();
                 KalkulatorInsPublic.totalNSR.Text = $"Rp. {KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")}";
-                KalkulatorInsPublic.totalJambong.Text = $"Rp. {KalkullatorReklameRow.JambongNilai.ToString("N0")}";
+                KalkulatorInsPublic.totalJambong.Text = $"Rp. {KalkullatorReklameRow.JaminanBongkar.ToString("N0")}";
 
                 if (KalkullatorReklameRow.ModeUkur == EnumFactory.EModeUkur.Luas)
                 {
