@@ -204,6 +204,10 @@ namespace MonPDLib.Lib
                     {
                         nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
                     }
+                    if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Suara))
+                    {
+                        nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * input.LamaPenyelenggaraan;
+                    }
                     else
                     {
                         nsr = input.JumlahSatuan * (njop?.NilaiNjop ?? 0) * 1;
