@@ -2554,10 +2554,16 @@ namespace MonPDReborn.Models.EvaluasiTarget
                     })
                     .ToList();
 
+                var nop = context.DbOpAbts
+                    .Where(x => x.WilayahPajak == ((int)uptb).ToString())
+                    .Select(x => x.Nop.ToString())
+                    .ToList();
+
+
                 if (uptb != EUPTB.SEMUA)
                 {
                     var kontrolPembayaranList = context.DbCtrlByrAbts
-                    .Where(x => x.Tahun == tahun && x.WilayahPajak == ((int)uptb).ToString())
+                    .Where(x => x.Tahun == tahun /*&& x.WilayahPajak == ((int)uptb).ToString()*/ && nop.Contains(x.Nop))
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
                     .Select(g => new
                     {
@@ -8003,10 +8009,16 @@ namespace MonPDReborn.Models.EvaluasiTarget
                         Nama = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.Nama.ToLower())
                     })
                     .ToList();
+
+                var nop = context.DbOpAbts
+                    .Where(x => x.WilayahPajak == ((int)uptb).ToString())
+                    .Select(x => x.Nop.ToString())
+                    .ToList();
+
                 if (uptb != EUPTB.SEMUA)
                 {
                     var kontrolPembayaranList = context.DbCtrlByrAbts
-                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0 && x.WilayahPajak == ((int)uptb).ToString())
+                    .Where(x => x.Tahun == tahun && x.StatusBayar == 0 /*&& x.WilayahPajak == ((int)uptb).ToString()*/ && nop.Contains(x.Nop))
                     .GroupBy(x => new { x.KategoriId, x.Tahun, x.Bulan })
                     .Select(g => new
                     {
