@@ -5,6 +5,7 @@ using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
 using System;
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Security.Policy;
 using System.Text;
@@ -85,7 +86,7 @@ namespace CctvRealtimeWs
             {
                 if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Jasnita)
                 {
-                    await CallApiJasnitaAsync(op, cancellationToken);
+                    await CallApiJasnitaV2EventAllAsync(op, cancellationToken);
                 }
                 else if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Telkom)
                 {
@@ -525,6 +526,284 @@ namespace CctvRealtimeWs
             }
             #endregion
         }
+        private async Task CallApiJasnitaV2EventAllAsync(DataCctv.DataOpCctv op, CancellationToken cancellationToken)
+        {
+            await GenerateTokenJasnita2();
+
+            var rekapJasnita = new List<RekapJasnita2>();
+
+            string webClientUrl = "";
+            #region Get Domains
+            {
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+
+                // Panggil API Jasnita untuk ambil daftar domain
+                HttpResponseMessage response = await httpClient.GetAsync(
+                    "https://hub.jastrak.id/api/v3/ac-backend/domains",
+                    cancellationToken
+                );
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Gagal memanggil API Jasnita Domains. Status: {response.StatusCode}");
+                }
+
+                // Baca dan parsing hasil JSON
+                string jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+                var jsonObject = JsonObject.Parse(jsonResponse);
+
+                // Ambil field webClientURL dari domain pertama
+                string rawWebClientUrl = jsonObject?["domains"]?[0]?["domain"]?["webClientURL"]?.ToString() ?? "";
+
+                // Normalisasi URL (tambahkan https jika perlu dan hapus slash di akhir)
+                if (!string.IsNullOrWhiteSpace(rawWebClientUrl))
+                {
+                    if (rawWebClientUrl.StartsWith("//"))
+                    {
+                        rawWebClientUrl = "https:" + rawWebClientUrl;
+                    }
+
+                    rawWebClientUrl = rawWebClientUrl.TrimEnd('/');
+                }
+
+                webClientUrl = rawWebClientUrl;
+            }
+            if (string.IsNullOrEmpty(webClientUrl))
+            {
+                // Jika webClientUrl kosong, hentikan proses
+                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Gagal mendapatkan webClientURL dari API Jasnita Domains.");
+            }
+            if (!webClientUrl.Contains("https"))
+            {
+                // Jika webClientUrl tidak valid, hentikan proses
+                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} webClientURL tidak valid: {webClientUrl}");
+            }
+            #endregion
+
+            var eventResult = new List<EventAll.EventAllResponse>();
+            #region Events
+            {
+                using var httpClient = new HttpClient();
+
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+
+                int totalData = 0;
+                int limit = 20;
+                int offset = 0;
+                bool hasMore = true;
+                int attempt = 0;
+                const int maxRetry = 5;
+
+                var result = new List<EventAll.EventAllResponse>();
+
+                DateTime tglAwal = DateTime.Today.AddDays(0);
+                DateTime tglAkhir = DateTime.Today.AddDays(1).AddTicks(-1);
+
+                string begin_time = ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
+                string end_time = ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
+
+                while (hasMore)
+                {
+                    try
+                    {
+                        // 🔹 cek cancel sebelum request
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        var resEvent = new EventAll.EventAllResponse();
+
+                        do
+                        {
+                            // 🔹 cek cancel di setiap iterasi retry
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            var body = new
+                            {
+                                method = "axxonsoft.bl.events.EventHistoryService.ReadEvents",
+                                data = new
+                                {
+                                    range = new
+                                    {
+                                        begin_time = begin_time,
+                                        end_time = end_time
+                                    },
+                                    filters = new
+                                    {
+                                        filters = new[]
+                                        {
+                                    new {
+                                            type = "ET_DetectorEvent",
+                                            subjects = op.AccessPoint
+                                        }
+                                    }
+                                    },
+                                    limit = limit,
+                                    offset = offset,
+                                    descending = true
+                                }
+                            };
+
+                            var jsonBody = JsonSerializer.Serialize(body);
+                            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                            // 🔹 kirim request dengan token
+                            HttpResponseMessage response = await httpClient.PostAsync($"{webClientUrl}/grpc", content, cancellationToken);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var rawResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+                                var apiResponse = ConvertSseOutputJson(rawResponse);
+                                var res = JsonSerializer.Deserialize<EventAll.EventAllResponse>(apiResponse);
+
+                                if (res == null) 
+                                { 
+                                    throw new Exception($"Response dari API tidak valid");
+                                }
+
+                                resEvent = res;
+                                break;
+                            }
+                            else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                            {
+                                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Token kadaluarsa, refresh token dan ulangi...");
+                                await GenerateTokenJasnita();
+                            }
+                            else
+                            {
+                                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Error: {response.StatusCode}");
+                            }
+
+                            attempt++;
+                            if (attempt >= maxRetry)
+                            {
+                                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Gagal setelah {maxRetry} percobaan pada offset {offset}");
+                                break;
+                            }
+
+                        } while (attempt < maxRetry);
+
+                        // 🔹 setelah selesai mencoba, cek cancel
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        if (resEvent == null || resEvent.Items == null || resEvent.Items.Count == 0)
+                        {
+                            hasMore = false;
+                        }
+                        else
+                        {
+                            eventResult.Add(resEvent);
+
+                            totalData += resEvent.Items.Count;
+                            if (resEvent.Items.Count < limit)
+                            {
+                                hasMore = false;
+                            }
+                            else
+                            {
+                                offset += limit;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                }
+            }
+
+            if (eventResult.Count <= 0)
+            {
+                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Tidak ada event dari API Jasnita Events.");
+            }
+
+            eventResult = eventResult
+                .Where(p => p.Items.Any(i => i.Body.EventType == "VehicleRecognized"))
+                .ToList();
+            #endregion
+
+            var rekapResult = new List<RekapJasnita2>();
+            #region EventSnapshot & Rekap
+            foreach (var data in eventResult)
+            {
+                int seq = 1;
+                foreach (var item in data.Items)
+                {
+                    if (item.Body?.Details?.Count > 0)
+                    {
+                        foreach (var detail in item.Body.Details)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            var ar = detail.AutoRecognitionResult;
+                            if (ar == null)
+                            {
+                                continue;
+                            }
+
+                            DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
+                            var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
+
+                            if (waktuMasuk.Date == DateTime.Now.Date)
+                            {
+                                // Ambil snapshot image dari API Jasnita
+                                using var httpClient = new HttpClient();
+                                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+
+                                // ambil access point (hapus "hosts/")
+                                string accessPoint = item.Body.OriginExt.AccessPoint.Replace("hosts/", "");
+
+                                // ambil timestamp
+                                string timestamp = item.Body.Timestamp;
+
+                                // ambil koordinat cropping
+                                var rect = item.Body.Details[0].Rectangle;
+                                string cropX = rect.X.ToString(CultureInfo.InvariantCulture);
+                                string cropY = rect.Y.ToString(CultureInfo.InvariantCulture);
+                                string cropWidth = rect.W.ToString(CultureInfo.InvariantCulture);
+                                string cropHeight = rect.H.ToString(CultureInfo.InvariantCulture);
+
+                                // bentuk URL akhir
+                                string url = $"{webClientUrl}/archive/media/{accessPoint}/{timestamp}?crop_x={cropX}&crop_y={cropY}&crop_width={cropWidth}&crop_height={cropHeight}";
+                                HttpResponseMessage response = await httpClient.GetAsync(url);
+                                if (!response.IsSuccessStatusCode)
+                                {
+                                    throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Body.Guid} Gagal memanggil API Jasnita Event Snapshot. Status: {response.StatusCode}");
+                                }
+
+                                // Baca stream image-nya
+                                byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+
+                                var res = new RekapJasnita2();
+
+                                res.Id = id.ToString();
+                                res.Nop = op.Nop;
+                                res.CctvId = op.CctvId ?? "";
+                                res.VendorId = (int)op.Vendor;
+                                res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
+                                res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
+                                res.WaktuMasuk = waktuMasuk;
+                                res.ImageData = imageBytes;
+
+                                rekapResult.Add(res);
+                            }
+                        }
+                    }
+                    seq++;
+                }
+            }
+            #endregion
+
+
+            //INSERT TO DB
+            if (rekapResult.Count > 0)
+            {
+                await UpdateDBJasnita2(op, rekapResult, cancellationToken);
+            }
+
+        }
         private async Task UpdateDbJasnita(
         DataCctv.DataOpCctv op,
         List<EventAll.EventAllResponse> dataList,
@@ -846,6 +1125,28 @@ namespace CctvRealtimeWs
                 return dtResponse;
             }
             catch (Exception ex)
+            {
+                return output;
+            }
+        }
+        private static string ConvertSseOutputJson2(string output)
+        {
+            try
+            {
+                var jsonObjects = output.Split('\n')
+                    .Where(l => l.StartsWith("data:"))
+                    .Select(l => l.Substring("data:".Length).Trim())
+                    .Where(l => !string.IsNullOrWhiteSpace(l))
+                    .Where(l => !l.Contains("\"items\":[]"))
+                    .ToList();
+
+                if (jsonObjects.Count == 0)
+                    return "[]";
+
+                var jsonArray = "[" + string.Join(",", jsonObjects) + "]";
+                return jsonArray;
+            }
+            catch (Exception)
             {
                 return output;
             }
