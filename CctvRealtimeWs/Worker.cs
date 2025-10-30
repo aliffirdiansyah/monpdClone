@@ -277,7 +277,7 @@ namespace CctvRealtimeWs
             httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
 
             int totalData = 0;
-            int limit = 1000;
+            int limit = 20;
             int offset = 0;
             bool hasMore = true;
             int attempt = 0;
@@ -285,7 +285,7 @@ namespace CctvRealtimeWs
 
             var result = new List<EventAll.EventAllResponse>();
 
-            DateTime tglAwal = DateTime.Today;
+            DateTime tglAwal = DateTime.Today.AddDays(-1);
             DateTime tglAkhir = DateTime.Today.AddDays(1).AddTicks(-1);
 
             string begin_time = ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
@@ -565,18 +565,21 @@ namespace CctvRealtimeWs
                                 DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
                                 var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
 
-                                var res = new TOpParkirCctvRealtime();
+                                if(waktuMasuk.Date == DateTime.Now.Date)
+                                {
+                                    var res = new TOpParkirCctvRealtime();
 
-                                res.Id = id.ToString();
-                                res.Nop = op.Nop;
-                                res.CctvId = op.CctvId ?? "";
-                                res.VendorId = (int)op.Vendor;
-                                res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
-                                res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
-                                res.WaktuMasuk = waktuMasuk;
-                                res.ImageUrl = "";
+                                    res.Id = id.ToString();
+                                    res.Nop = op.Nop;
+                                    res.CctvId = op.CctvId ?? "";
+                                    res.VendorId = (int)op.Vendor;
+                                    res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
+                                    res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
+                                    res.WaktuMasuk = waktuMasuk;
+                                    res.ImageUrl = "";
 
-                                result.Add(res);
+                                    result.Add(res);
+                                }
                             }
                         }
                         seq++;
