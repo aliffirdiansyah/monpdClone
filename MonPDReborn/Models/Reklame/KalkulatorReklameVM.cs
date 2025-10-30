@@ -1,6 +1,7 @@
 ﻿using MonPDLib;
 using MonPDLib.General;
 using MonPDLib.Lib;
+using MonPDReborn.Reports;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Globalization;
 using System.Web.Mvc;
@@ -69,10 +70,35 @@ namespace MonPDReborn.Models.Reklame
         {
             public KalkulatorReklamePermanen.ReklameInput Output { get; set; } = new();
             public KalkulatorReklamePermanen KalkullatorReklameRow { get; set; } = new();
+            public Reports.KalkulatorPerPublic KalkulatorPerPublic { get; set; } = new();
             public Show(KalkulatorReklamePermanen.ReklameInput input)
             {
                 Output = input;
                 KalkullatorReklameRow = KalkulatorReklamePermanen.HitungNilaiSewaReklame(input);
+
+                //Binding Reports
+                KalkulatorPerPublic.jenis.Text = Output.JenisReklame.GetDescription();
+                KalkulatorPerPublic.produk.Text = Output.JenisProduk.GetDescription();
+                KalkulatorPerPublic.statusLokasi.Text = KalkullatorReklameRow.Kawasan.GetDescription();
+                KalkulatorPerPublic.jalan.Text = KalkullatorReklameRow.NamaJalan.ToString();
+                KalkulatorPerPublic.kelas.Text = KalkullatorReklameRow.KelasJalan.ToString();
+                KalkulatorPerPublic.sudutPandang.Text = Output.SudutPandang.ToString("N0");
+                KalkulatorPerPublic.sisi.Text = $"{Output.Sisi} Sisi";
+                KalkulatorPerPublic.letak.Text = Output.LetakReklame.GetDescription();
+                KalkulatorPerPublic.totalNSR.Text = $"Rp. {KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")}";
+                KalkulatorPerPublic.totalJambong.Text = $"Rp. {KalkullatorReklameRow.JaminanBongkar.ToString("N0")}";
+
+                KalkulatorPerPublic.itungan1.Text = $"Panjang";
+                KalkulatorPerPublic.hasilItung1.Text = $"{Output.Panjang.ToString("N2")} m";
+                KalkulatorPerPublic.itungan2.Text = $"Lebar";
+                KalkulatorPerPublic.hasilItung2.Text = $"{Output.Lebar.ToString("N2")} m";
+                KalkulatorPerPublic.itungan3.Text = $"Luas";
+                KalkulatorPerPublic.hasilItung3.Text = $"{KalkullatorReklameRow.Luas.ToString("N2")} m²";
+                KalkulatorPerPublic.itungan4.Text = $"Ketinggian";
+                KalkulatorPerPublic.hasilItung4.Text = $"{Output.Tinggi.ToString("N2")} m";
+
+                KalkulatorPerPublic.ExportOptions.PrintPreview.DefaultFileName = "Est NSR Permanen_" + Output.JenisReklame.GetDescription();
+                KalkulatorPerPublic.CreateDocument();
             }
         }
 
@@ -158,7 +184,7 @@ namespace MonPDReborn.Models.Reklame
                     KalkulatorInsPublic.itungan4.Visible = false;
                     KalkulatorInsPublic.hasilItung4.Visible = false;
                 }
-                KalkulatorInsPublic.ExportOptions.PrintPreview.DefaultFileName = "Est NSR Ins" + Output.JenisReklame.GetDescription();
+                KalkulatorInsPublic.ExportOptions.PrintPreview.DefaultFileName = "Est NSR Insidentil_" + Output.JenisReklame.GetDescription();
                 KalkulatorInsPublic.CreateDocument();
             }
         }

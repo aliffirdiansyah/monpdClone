@@ -127,8 +127,8 @@ namespace MonPDLib.Lib
                 .OrderByDescending(x => x.TglAwalBerlaku)
                 .FirstOrDefault();
 
-            if (nsrTinggi == null)
-                throw new ArgumentException("NSR Tinggi tidak ditemukan atau tidak berlaku.");
+            //if (nsrTinggi == null)
+            //    throw new ArgumentException("NSR Tinggi tidak ditemukan atau tidak berlaku.");
 
             // 3️⃣ Ambil nilai satuan strategis (NSS)
             var nss = _context.MNilaiSatuanStrategis
@@ -152,7 +152,7 @@ namespace MonPDLib.Lib
 
             // 4️⃣ Hitung NJOP dasar (luas + tinggi)
             decimal njopLuas = luas * (nsrLuas.NilaiSewa);
-            decimal njopKetinggian = input.Tinggi * (nsrTinggi.NilaiKetinggian);
+            decimal njopKetinggian = input.Tinggi * (nsrTinggi?.NilaiKetinggian ?? 0m);
             decimal totalNjop = njopLuas + njopKetinggian;
 
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
@@ -257,22 +257,24 @@ namespace MonPDLib.Lib
                 skorTinggiBobot = def.Ketinggian * tinggiData.Bobot;
                 totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
             }
-            skorLokasi = lokasi.Skor;
-            skorPandang = pandang.Skor;
-            skorTinggi = tinggiData.Skor;
-            totalskor = skorLokasi + skorPandang + skorTinggi;
-
-            skorLokasiBobot = lokasi.Skor * lokasi.Bobot;
-            skorPandangBobot = pandang.Skor * pandang.Bobot;
-            skorTinggiBobot = tinggiData.Skor * tinggiData.Bobot;
-            totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
+            else
+            {
+                skorLokasi = lokasi.Skor;
+                skorPandang = pandang.Skor;
+                skorTinggi = tinggiData.Skor;
+                totalskor = skorLokasi + skorPandang + skorTinggi;
+                skorLokasiBobot = lokasi.Skor * lokasi.Bobot;
+                skorPandangBobot = pandang.Skor * pandang.Bobot;
+                skorTinggiBobot = tinggiData.Skor * tinggiData.Bobot;
+                totalStrategis = skorLokasiBobot + skorPandangBobot + skorTinggiBobot;
+            }
 
             // 7️⃣ Total Nilai Strategis (dikalikan NSS)
             decimal totalNilaiStrategis = totalStrategis * (nss.NilaiSatuan);
             decimal totalNjopStrategis = totalNjop + totalNilaiStrategis;
 
             // 8️⃣ Tambahan tinggi (jika > 15m, tiap 15m = +20%)
-            decimal tambahanPersen = setting.TAMBAH_KETINGGIAN;
+            decimal tambahanPersen = setting.NILAI_KETINGGIAN;
             decimal penambahanKetinggian = 0;
             if (input.Tinggi > setting.TAMBAH_KETINGGIAN)
             {
@@ -355,7 +357,7 @@ namespace MonPDLib.Lib
                 TotalNilaiSewa = totalNilaiSewa,
                 JaminanBongkar = jaminanBongkar,
                 NsrLuas = nsrLuas.NilaiSewa,
-                NsrKetinggian = nsrTinggi.NilaiKetinggian,
+                NsrKetinggian = nsrTinggi?.NilaiKetinggian ?? 0,
                 Nss = nss.NilaiSatuan,
                 BobotLokasiNilai = lokasi.Bobot,
                 BobotPandangNilai = pandang.Bobot,

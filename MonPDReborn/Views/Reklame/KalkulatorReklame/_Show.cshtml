@@ -5,7 +5,16 @@
     Layout = null;
 }
 
-<style>
+@using DevExpress.AspNetCore
+@using DevExpress.AspNetCore.Reporting
+@using DevExpress.XtraReports.Web.WebDocumentViewer
+
+<link rel="stylesheet" href="~/css/reporting.viewer.part.bundle.css" />
+<script src="~/js/reporting.viewer.part.bundle.js"></script>
+
+@Html.DevExpress().WebDocumentViewer("DocumentViewer").Height("1000px").Bind(Model.KalkulatorPerPublic)﻿
+
+@* <style>
     body {
         font-family: 'Times New Roman', Times, serif;
         font-size: 14px;
@@ -90,7 +99,7 @@
     <div class="section-title text-center">PERHITUNGAN</div>
     <table class="table table-bordered border-dark">
         <tbody>
-            @* <tr class="table-secondary"><td colspan="4" class="fw-bold">NJOP</td></tr>
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">NJOP</td></tr>
             <tr>
                 <td class="right">Luas</td>
                 <td class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2")</td>
@@ -150,9 +159,9 @@
                 <td class="text-end">
                     Rp. @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
                 </td>
-            </tr> *@
+            </tr>
 
-            @*  <tr>
+            <tr>
                 <td class="fw-bold right">Total NJOP + Nilai Strategis</td>
                 <td colspan="2" class="text-end">
                     @Model.KalkullatorReklameRow.TotalNjop.ToString("N0") + @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
@@ -160,9 +169,9 @@
                 <td class="text-end">
                    Rp. @Model.KalkullatorReklameRow.TotalNjopStrategis.ToString("N2")
                 </td>
-            </tr> *@
+            </tr>
 
-            @* <tr>
+            <tr>
                 <td class="fw-bold text-end">Total NJOP + Nilai Strategis</td>
                 <td colspan="2" class="fw-bold text-end">
                     @Model.KalkullatorReklameRow.TotalNjop.ToString("N0") + @Model.KalkullatorReklameRow.TotalNilaiStrategis.ToString("N0")
@@ -185,7 +194,7 @@
                 <td class="fw-bold text-end">
                     Rp. @Model.KalkullatorReklameRow.PenambahanKetinggian.ToString("N0")
                 </td>
-            </tr> *@
+            </tr>
 
             <tr class="table-secondary"><td colspan="4" class="fw-bold">POKOK PAJAK</td></tr>
             <tr>
@@ -227,7 +236,7 @@
                 <td class="right fw-bold">Rp. @Model.KalkullatorReklameRow.TotalNilaiSewa.ToString("N0")</td>
             </tr>
 
-            @* <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr> *@
+            <tr class="table-secondary"><td colspan="4" class="fw-bold">JAMINAN BONGKAR</td></tr> 
             <tr>
                 <td class="right fw-bold">Jaminan Bongkar</td>
                 <td colspan="2" class="right">@Model.KalkullatorReklameRow.Luas.ToString("N2") × 50,000 @(Model.Output.Sisi > 1 ? $" × {Model.Output.Sisi} " : "")</td>
@@ -249,4 +258,4 @@
             </li>
         </ul>
     </p>
-</div>
+</div> *@

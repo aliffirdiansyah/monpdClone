@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KalkulatorInsPublic));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KalkulatorPerPublic));
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.itungan3 = new DevExpress.XtraReports.UI.XRLabel();
             this.hasilItung3 = new DevExpress.XtraReports.UI.XRLabel();
@@ -59,11 +59,11 @@
             this.xrLabel6 = new DevExpress.XtraReports.UI.XRLabel();
             this.jenis = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel8 = new DevExpress.XtraReports.UI.XRLabel();
-            this.jumlahSatuan = new DevExpress.XtraReports.UI.XRLabel();
+            this.sudutPandang = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel10 = new DevExpress.XtraReports.UI.XRLabel();
-            this.tglBerlaku = new DevExpress.XtraReports.UI.XRLabel();
+            this.sisi = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel12 = new DevExpress.XtraReports.UI.XRLabel();
-            this.lamaHari = new DevExpress.XtraReports.UI.XRLabel();
+            this.statusLokasi = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel14 = new DevExpress.XtraReports.UI.XRLabel();
             this.produk = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel16 = new DevExpress.XtraReports.UI.XRLabel();
@@ -108,11 +108,11 @@
             this.xrLabel6,
             this.jenis,
             this.xrLabel8,
-            this.jumlahSatuan,
+            this.sudutPandang,
             this.xrLabel10,
-            this.tglBerlaku,
+            this.sisi,
             this.xrLabel12,
-            this.lamaHari,
+            this.statusLokasi,
             this.xrLabel14,
             this.produk,
             this.xrLabel16,
@@ -126,11 +126,11 @@
             // 
             // itungan3
             // 
-            this.itungan3.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.itungan3.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.itungan3.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.itungan3.LocationFloat = new DevExpress.Utils.PointFloat(104.1674F, 378.1542F);
+            this.itungan3.LocationFloat = new DevExpress.Utils.PointFloat(104.1679F, 388.5709F);
             this.itungan3.Multiline = true;
             this.itungan3.Name = "itungan3";
             this.itungan3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -143,11 +143,11 @@
             // 
             // hasilItung3
             // 
-            this.hasilItung3.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.hasilItung3.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.hasilItung3.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.hasilItung3.LocationFloat = new DevExpress.Utils.PointFloat(233.2275F, 378.1542F);
+            this.hasilItung3.LocationFloat = new DevExpress.Utils.PointFloat(233.228F, 388.5709F);
             this.hasilItung3.Multiline = true;
             this.hasilItung3.Name = "hasilItung3";
             this.hasilItung3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -160,11 +160,11 @@
             // 
             // xrLabel13
             // 
-            this.xrLabel13.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel13.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel13.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(425.3207F, 328.1544F);
+            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(425.3212F, 338.571F);
             this.xrLabel13.Multiline = true;
             this.xrLabel13.Name = "xrLabel13";
             this.xrLabel13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -178,11 +178,11 @@
             // 
             // letak
             // 
-            this.letak.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.letak.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.letak.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.letak.LocationFloat = new DevExpress.Utils.PointFloat(607.2258F, 328.1544F);
+            this.letak.LocationFloat = new DevExpress.Utils.PointFloat(607.2263F, 338.571F);
             this.letak.Multiline = true;
             this.letak.Name = "letak";
             this.letak.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -196,11 +196,11 @@
             // 
             // hasilItung2
             // 
-            this.hasilItung2.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.hasilItung2.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.hasilItung2.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.hasilItung2.LocationFloat = new DevExpress.Utils.PointFloat(607.2258F, 353.1542F);
+            this.hasilItung2.LocationFloat = new DevExpress.Utils.PointFloat(607.2263F, 363.5709F);
             this.hasilItung2.Multiline = true;
             this.hasilItung2.Name = "hasilItung2";
             this.hasilItung2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -213,11 +213,11 @@
             // 
             // itungan2
             // 
-            this.itungan2.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.itungan2.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.itungan2.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.itungan2.LocationFloat = new DevExpress.Utils.PointFloat(425.3206F, 353.1543F);
+            this.itungan2.LocationFloat = new DevExpress.Utils.PointFloat(425.3211F, 363.571F);
             this.itungan2.Multiline = true;
             this.itungan2.Name = "itungan2";
             this.itungan2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -230,11 +230,11 @@
             // 
             // hasilItung1
             // 
-            this.hasilItung1.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.hasilItung1.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.hasilItung1.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.hasilItung1.LocationFloat = new DevExpress.Utils.PointFloat(233.2266F, 353.1543F);
+            this.hasilItung1.LocationFloat = new DevExpress.Utils.PointFloat(233.2271F, 363.571F);
             this.hasilItung1.Multiline = true;
             this.hasilItung1.Name = "hasilItung1";
             this.hasilItung1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -247,11 +247,11 @@
             // 
             // itungan1
             // 
-            this.itungan1.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.itungan1.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.itungan1.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.itungan1.LocationFloat = new DevExpress.Utils.PointFloat(104.1665F, 353.1543F);
+            this.itungan1.LocationFloat = new DevExpress.Utils.PointFloat(104.167F, 363.571F);
             this.itungan1.Multiline = true;
             this.itungan1.Name = "itungan1";
             this.itungan1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -331,8 +331,8 @@
             // 
             // xrLabel15
             // 
-            this.xrLabel15.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel15.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel15.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel15.LocationFloat = new DevExpress.Utils.PointFloat(104.1674F, 477.6431F);
@@ -349,8 +349,8 @@
             // 
             // totalJambong
             // 
-            this.totalJambong.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.totalJambong.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.totalJambong.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.totalJambong.LocationFloat = new DevExpress.Utils.PointFloat(425.3205F, 477.6431F);
@@ -367,8 +367,8 @@
             // 
             // xrLabel11
             // 
-            this.xrLabel11.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel11.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel11.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel11.LocationFloat = new DevExpress.Utils.PointFloat(104.1674F, 452.6431F);
@@ -385,8 +385,8 @@
             // 
             // totalNSR
             // 
-            this.totalNSR.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.totalNSR.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.totalNSR.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.totalNSR.LocationFloat = new DevExpress.Utils.PointFloat(425.3206F, 452.6431F);
@@ -513,15 +513,15 @@
             // 
             // xrLabel6
             // 
-            this.xrLabel6.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel6.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel6.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel6.LocationFloat = new DevExpress.Utils.PointFloat(104.1667F, 253.1544F);
             this.xrLabel6.Multiline = true;
             this.xrLabel6.Name = "xrLabel6";
             this.xrLabel6.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel6.SizeF = new System.Drawing.SizeF(129.0601F, 24.99995F);
+            this.xrLabel6.SizeF = new System.Drawing.SizeF(129.0601F, 35.41664F);
             this.xrLabel6.StylePriority.UseBorders = false;
             this.xrLabel6.StylePriority.UseFont = false;
             this.xrLabel6.StylePriority.UsePadding = false;
@@ -531,15 +531,15 @@
             // 
             // jenis
             // 
-            this.jenis.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.jenis.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.jenis.Font = new DevExpress.Drawing.DXFont("Arial", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.jenis.LocationFloat = new DevExpress.Utils.PointFloat(233.2268F, 253.1544F);
             this.jenis.Multiline = true;
             this.jenis.Name = "jenis";
             this.jenis.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.jenis.SizeF = new System.Drawing.SizeF(192.0941F, 24.99995F);
+            this.jenis.SizeF = new System.Drawing.SizeF(192.0941F, 35.41664F);
             this.jenis.StylePriority.UseBorders = false;
             this.jenis.StylePriority.UseFont = false;
             this.jenis.StylePriority.UsePadding = false;
@@ -549,47 +549,47 @@
             // 
             // xrLabel8
             // 
-            this.xrLabel8.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel8.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel8.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel8.LocationFloat = new DevExpress.Utils.PointFloat(425.3208F, 253.1544F);
             this.xrLabel8.Multiline = true;
             this.xrLabel8.Name = "xrLabel8";
             this.xrLabel8.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel8.SizeF = new System.Drawing.SizeF(181.9053F, 24.99995F);
+            this.xrLabel8.SizeF = new System.Drawing.SizeF(181.9052F, 35.41664F);
             this.xrLabel8.StylePriority.UseBorders = false;
             this.xrLabel8.StylePriority.UseFont = false;
             this.xrLabel8.StylePriority.UsePadding = false;
             this.xrLabel8.StylePriority.UseTextAlignment = false;
-            this.xrLabel8.Text = "Jumlah";
+            this.xrLabel8.Text = "Sudut Pandang";
             this.xrLabel8.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
-            // jumlahSatuan
+            // sudutPandang
             // 
-            this.jumlahSatuan.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.sudutPandang.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.jumlahSatuan.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.jumlahSatuan.LocationFloat = new DevExpress.Utils.PointFloat(607.2261F, 253.1544F);
-            this.jumlahSatuan.Multiline = true;
-            this.jumlahSatuan.Name = "jumlahSatuan";
-            this.jumlahSatuan.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.jumlahSatuan.SizeF = new System.Drawing.SizeF(137.5657F, 24.99998F);
-            this.jumlahSatuan.StylePriority.UseBorders = false;
-            this.jumlahSatuan.StylePriority.UseFont = false;
-            this.jumlahSatuan.StylePriority.UsePadding = false;
-            this.jumlahSatuan.StylePriority.UseTextAlignment = false;
-            this.jumlahSatuan.Text = "SATUAN";
-            this.jumlahSatuan.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.sudutPandang.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
+            this.sudutPandang.LocationFloat = new DevExpress.Utils.PointFloat(607.2261F, 253.1544F);
+            this.sudutPandang.Multiline = true;
+            this.sudutPandang.Name = "sudutPandang";
+            this.sudutPandang.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.sudutPandang.SizeF = new System.Drawing.SizeF(137.5657F, 35.41658F);
+            this.sudutPandang.StylePriority.UseBorders = false;
+            this.sudutPandang.StylePriority.UseFont = false;
+            this.sudutPandang.StylePriority.UsePadding = false;
+            this.sudutPandang.StylePriority.UseTextAlignment = false;
+            this.sudutPandang.Text = "SUDUT";
+            this.sudutPandang.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabel10
             // 
-            this.xrLabel10.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel10.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel10.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel10.LocationFloat = new DevExpress.Utils.PointFloat(104.1667F, 278.1544F);
+            this.xrLabel10.LocationFloat = new DevExpress.Utils.PointFloat(104.1672F, 288.571F);
             this.xrLabel10.Multiline = true;
             this.xrLabel10.Name = "xrLabel10";
             this.xrLabel10.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -598,34 +598,34 @@
             this.xrLabel10.StylePriority.UseFont = false;
             this.xrLabel10.StylePriority.UsePadding = false;
             this.xrLabel10.StylePriority.UseTextAlignment = false;
-            this.xrLabel10.Text = "Tanggal Berlaku";
+            this.xrLabel10.Text = "Sisi";
             this.xrLabel10.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
-            // tglBerlaku
+            // sisi
             // 
-            this.tglBerlaku.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.sisi.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.tglBerlaku.Font = new DevExpress.Drawing.DXFont("Arial", 8F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.tglBerlaku.LocationFloat = new DevExpress.Utils.PointFloat(233.2268F, 278.1544F);
-            this.tglBerlaku.Multiline = true;
-            this.tglBerlaku.Name = "tglBerlaku";
-            this.tglBerlaku.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.tglBerlaku.SizeF = new System.Drawing.SizeF(192.0941F, 25F);
-            this.tglBerlaku.StylePriority.UseBorders = false;
-            this.tglBerlaku.StylePriority.UseFont = false;
-            this.tglBerlaku.StylePriority.UsePadding = false;
-            this.tglBerlaku.StylePriority.UseTextAlignment = false;
-            this.tglBerlaku.Text = "TGLBERLAKU";
-            this.tglBerlaku.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.sisi.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
+            this.sisi.LocationFloat = new DevExpress.Utils.PointFloat(233.2273F, 288.571F);
+            this.sisi.Multiline = true;
+            this.sisi.Name = "sisi";
+            this.sisi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.sisi.SizeF = new System.Drawing.SizeF(192.0941F, 25F);
+            this.sisi.StylePriority.UseBorders = false;
+            this.sisi.StylePriority.UseFont = false;
+            this.sisi.StylePriority.UsePadding = false;
+            this.sisi.StylePriority.UseTextAlignment = false;
+            this.sisi.Text = "SISI";
+            this.sisi.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabel12
             // 
-            this.xrLabel12.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel12.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel12.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel12.LocationFloat = new DevExpress.Utils.PointFloat(425.3208F, 278.1544F);
+            this.xrLabel12.LocationFloat = new DevExpress.Utils.PointFloat(425.3213F, 288.571F);
             this.xrLabel12.Multiline = true;
             this.xrLabel12.Name = "xrLabel12";
             this.xrLabel12.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -634,34 +634,34 @@
             this.xrLabel12.StylePriority.UseFont = false;
             this.xrLabel12.StylePriority.UsePadding = false;
             this.xrLabel12.StylePriority.UseTextAlignment = false;
-            this.xrLabel12.Text = "Lama Penyelenggaraan";
+            this.xrLabel12.Text = "Status Lokasi";
             this.xrLabel12.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
-            // lamaHari
+            // statusLokasi
             // 
-            this.lamaHari.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.statusLokasi.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.lamaHari.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.lamaHari.LocationFloat = new DevExpress.Utils.PointFloat(607.2261F, 278.1543F);
-            this.lamaHari.Multiline = true;
-            this.lamaHari.Name = "lamaHari";
-            this.lamaHari.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.lamaHari.SizeF = new System.Drawing.SizeF(137.5657F, 24.99998F);
-            this.lamaHari.StylePriority.UseBorders = false;
-            this.lamaHari.StylePriority.UseFont = false;
-            this.lamaHari.StylePriority.UsePadding = false;
-            this.lamaHari.StylePriority.UseTextAlignment = false;
-            this.lamaHari.Text = "LAMAHARI";
-            this.lamaHari.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.statusLokasi.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
+            this.statusLokasi.LocationFloat = new DevExpress.Utils.PointFloat(607.2266F, 288.571F);
+            this.statusLokasi.Multiline = true;
+            this.statusLokasi.Name = "statusLokasi";
+            this.statusLokasi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.statusLokasi.SizeF = new System.Drawing.SizeF(137.5657F, 24.99998F);
+            this.statusLokasi.StylePriority.UseBorders = false;
+            this.statusLokasi.StylePriority.UseFont = false;
+            this.statusLokasi.StylePriority.UsePadding = false;
+            this.statusLokasi.StylePriority.UseTextAlignment = false;
+            this.statusLokasi.Text = "STATUSLOKASI";
+            this.statusLokasi.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
             // xrLabel14
             // 
-            this.xrLabel14.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel14.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel14.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel14.LocationFloat = new DevExpress.Utils.PointFloat(104.1667F, 303.1544F);
+            this.xrLabel14.LocationFloat = new DevExpress.Utils.PointFloat(104.1672F, 313.571F);
             this.xrLabel14.Multiline = true;
             this.xrLabel14.Name = "xrLabel14";
             this.xrLabel14.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -675,11 +675,11 @@
             // 
             // produk
             // 
-            this.produk.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.produk.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.produk.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.produk.LocationFloat = new DevExpress.Utils.PointFloat(233.2265F, 328.1543F);
+            this.produk.LocationFloat = new DevExpress.Utils.PointFloat(233.227F, 338.571F);
             this.produk.Multiline = true;
             this.produk.Name = "produk";
             this.produk.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -693,11 +693,11 @@
             // 
             // xrLabel16
             // 
-            this.xrLabel16.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel16.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel16.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel16.LocationFloat = new DevExpress.Utils.PointFloat(425.3208F, 303.1544F);
+            this.xrLabel16.LocationFloat = new DevExpress.Utils.PointFloat(425.3213F, 313.571F);
             this.xrLabel16.Multiline = true;
             this.xrLabel16.Name = "xrLabel16";
             this.xrLabel16.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -711,11 +711,11 @@
             // 
             // kelas
             // 
-            this.kelas.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.kelas.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.kelas.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.kelas.LocationFloat = new DevExpress.Utils.PointFloat(607.2261F, 303.1544F);
+            this.kelas.LocationFloat = new DevExpress.Utils.PointFloat(607.2266F, 313.571F);
             this.kelas.Multiline = true;
             this.kelas.Name = "kelas";
             this.kelas.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -729,11 +729,11 @@
             // 
             // xrLabel18
             // 
-            this.xrLabel18.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.xrLabel18.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel18.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel18.LocationFloat = new DevExpress.Utils.PointFloat(104.1667F, 328.1543F);
+            this.xrLabel18.LocationFloat = new DevExpress.Utils.PointFloat(104.1672F, 338.571F);
             this.xrLabel18.Multiline = true;
             this.xrLabel18.Name = "xrLabel18";
             this.xrLabel18.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -747,11 +747,11 @@
             // 
             // jalan
             // 
-            this.jalan.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.jalan.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.jalan.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.jalan.LocationFloat = new DevExpress.Utils.PointFloat(233.2268F, 303.1544F);
+            this.jalan.LocationFloat = new DevExpress.Utils.PointFloat(233.2273F, 313.571F);
             this.jalan.Multiline = true;
             this.jalan.Name = "jalan";
             this.jalan.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -765,11 +765,11 @@
             // 
             // itungan4
             // 
-            this.itungan4.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.itungan4.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.itungan4.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.itungan4.LocationFloat = new DevExpress.Utils.PointFloat(425.3216F, 378.1542F);
+            this.itungan4.LocationFloat = new DevExpress.Utils.PointFloat(425.3221F, 388.5709F);
             this.itungan4.Multiline = true;
             this.itungan4.Name = "itungan4";
             this.itungan4.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -782,11 +782,11 @@
             // 
             // hasilItung4
             // 
-            this.hasilItung4.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top)
-            | DevExpress.XtraPrinting.BorderSide.Right)
+            this.hasilItung4.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.hasilItung4.Font = new DevExpress.Drawing.DXFont("Arial", 10F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.hasilItung4.LocationFloat = new DevExpress.Utils.PointFloat(607.2268F, 378.1542F);
+            this.hasilItung4.LocationFloat = new DevExpress.Utils.PointFloat(607.2273F, 388.5709F);
             this.hasilItung4.Multiline = true;
             this.hasilItung4.Name = "hasilItung4";
             this.hasilItung4.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -807,7 +807,7 @@
             this.Detail.HeightF = 0F;
             this.Detail.Name = "Detail";
             // 
-            // KalkulatorInsPublic
+            // KalkulatorPerPublic
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.TopMargin,
@@ -819,7 +819,7 @@
             this.PageWidth = 827;
             this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.Version = "23.1";
-            this.Watermark.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("KalkulatorInsPublic.Watermark.ImageSource"));
+            this.Watermark.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("KalkulatorPerPublic.Watermark.ImageSource"));
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -844,9 +844,9 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel16;
         private DevExpress.XtraReports.UI.XRLabel xrLabel18;
         public DevExpress.XtraReports.UI.XRLabel jenis;
-        public DevExpress.XtraReports.UI.XRLabel jumlahSatuan;
-        public DevExpress.XtraReports.UI.XRLabel tglBerlaku;
-        public DevExpress.XtraReports.UI.XRLabel lamaHari;
+        public DevExpress.XtraReports.UI.XRLabel sudutPandang;
+        public DevExpress.XtraReports.UI.XRLabel sisi;
+        public DevExpress.XtraReports.UI.XRLabel statusLokasi;
         public DevExpress.XtraReports.UI.XRLabel produk;
         public DevExpress.XtraReports.UI.XRLabel kelas;
         public DevExpress.XtraReports.UI.XRLabel jalan;
