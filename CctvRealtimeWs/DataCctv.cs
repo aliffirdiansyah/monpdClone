@@ -38,7 +38,7 @@ namespace CctvRealtimeWs
             var query = await context.MOpParkirCctvs
                 .Include(x => x.MOpParkirCctvTelkoms)
                 .Include(x => x.MOpParkirCctvJasnita)
-                .Where(x => x.IsPasang == 1 && x.Vendor == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                .Where(x => x.IsPasang == 1)
                 .Take(1)
                 .ToListAsync();
 
