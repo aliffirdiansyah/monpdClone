@@ -41,25 +41,11 @@ namespace CctvRealtimeWs
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var prevDataList = new List<DataCctv.DataOpCctv>();
-
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
                     var dataList = await DataCctv.GetDataOpCctvAsync();
-
-                    // Deteksi CCTV baru (opsional, untuk logging saja)
-                    var newItems = dataList
-                        .Where(d => !prevDataList.Any(p => p.CctvId == d.CctvId && p.Nop == d.Nop))
-                        .ToList();
-
-                    if (newItems.Any())
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Ada {newItems.Count} CCTV baru terdeteksi.");
-                        Console.ResetColor();
-                    }
 
                     // Selalu proses SEMUA CCTV (bukan hanya yang baru)
                     Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Memproses {dataList.Count} CCTV aktif...");
@@ -71,9 +57,6 @@ namespace CctvRealtimeWs
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Selesai memproses semua CCTV.");
                     Console.ResetColor();
-
-                    // Update cache CCTV lama
-                    prevDataList = dataList;
                 }
                 catch (TaskCanceledException)
                 {
@@ -102,8 +85,7 @@ namespace CctvRealtimeWs
             {
                 if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Jasnita)
                 {
-                    //await CallApiJasnitaAsync(op, cancellationToken);
-                    await CallApiJasnitaV2Async(op, cancellationToken);
+                    await CallApiJasnitaAsync(op, cancellationToken);
                 }
                 else if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Telkom)
                 {
@@ -303,8 +285,11 @@ namespace CctvRealtimeWs
 
             var result = new List<EventAll.EventAllResponse>();
 
-            DateTime tglAwal = DateTime.Today;
+            DateTime tglAwal = DateTime.Today.AddDays(-1);
             DateTime tglAkhir = DateTime.Today.AddDays(1).AddTicks(-1);
+
+            string begin_time = ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
+            string end_time = ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
 
             while (hasMore)
             {
@@ -327,8 +312,8 @@ namespace CctvRealtimeWs
                             {
                                 range = new
                                 {
-                                    begin_time = tglAwal.ToString("yyyyMMdd'T'HHmmss.'000'"),
-                                    end_time = tglAkhir.ToString("yyyyMMdd'T'HHmmss.'999'")
+                                    begin_time = begin_time,
+                                    end_time = end_time
                                 },
                                 filters = new
                                 {
@@ -577,21 +562,24 @@ namespace CctvRealtimeWs
                                 if (ar == null)
                                     continue;
 
-                                DateTime waktuMasuk = ParseFlexibleDate(ar.TimeBegin);
+                                DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
                                 var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
 
-                                var res = new TOpParkirCctvRealtime();
+                                if(waktuMasuk.Date == DateTime.Now.Date)
+                                {
+                                    var res = new TOpParkirCctvRealtime();
 
-                                res.Id = id.ToString();
-                                res.Nop = op.Nop;
-                                res.CctvId = op.CctvId ?? "";
-                                res.VendorId = (int)op.Vendor;
-                                res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
-                                res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
-                                res.WaktuMasuk = waktuMasuk;
-                                res.ImageUrl = "";
+                                    res.Id = id.ToString();
+                                    res.Nop = op.Nop;
+                                    res.CctvId = op.CctvId ?? "";
+                                    res.VendorId = (int)op.Vendor;
+                                    res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
+                                    res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
+                                    res.WaktuMasuk = waktuMasuk;
+                                    res.ImageUrl = "";
 
-                                result.Add(res);
+                                    result.Add(res);
+                                }
                             }
                         }
                         seq++;
