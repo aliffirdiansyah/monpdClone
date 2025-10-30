@@ -158,6 +158,7 @@ namespace MonPDLib.Lib
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
             var lokasi = _context.MNilaiStrategisLokasis
                 .Where(x => x.IsDlmRuang == letak
+                         && x.KelasJalan == kelasJalan
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
