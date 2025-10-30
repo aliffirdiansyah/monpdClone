@@ -148,7 +148,7 @@ namespace CctvRealtimeWs.JasnitaModels
             public int Direction { get; set; }
 
             [JsonPropertyName("Rectangle")]
-            public List<double> Rectangle { get; set; }
+            public List<decimal> Rectangle { get; set; }
 
             [JsonPropertyName("TimeBegin")]
             public string TimeBegin { get; set; }
@@ -160,7 +160,7 @@ namespace CctvRealtimeWs.JasnitaModels
             public List<Hypothesis> Hypotheses { get; set; }
 
             [JsonPropertyName("rectangles")]
-            public List<List<double>> Rectangles { get; set; }
+            public List<List<decimal>> Rectangles { get; set; }
 
             [JsonPropertyName("VehicleBrand")]
             public string VehicleBrand { get; set; }
@@ -250,7 +250,7 @@ namespace CctvRealtimeWs.JasnitaModels
             public string PlateCountry { get; set; }
 
             [JsonPropertyName("PlateRectangle")]
-            public List<double> PlateRectangle { get; set; }
+            public List<decimal> PlateRectangle { get; set; }
         }
 
         public class Item
@@ -310,16 +310,16 @@ namespace CctvRealtimeWs.JasnitaModels
         public class PlateRectangle
         {
             [JsonPropertyName("x")]
-            public double X { get; set; }
+            public decimal X { get; set; }
 
             [JsonPropertyName("y")]
-            public double Y { get; set; }
+            public decimal Y { get; set; }
 
             [JsonPropertyName("w")]
-            public double W { get; set; }
+            public decimal W { get; set; }
 
             [JsonPropertyName("h")]
-            public double H { get; set; }
+            public decimal H { get; set; }
 
             [JsonPropertyName("index")]
             public int Index { get; set; }
@@ -334,16 +334,16 @@ namespace CctvRealtimeWs.JasnitaModels
         public class Rectangle
         {
             [JsonPropertyName("x")]
-            public double X { get; set; }
+            public decimal X { get; set; }
 
             [JsonPropertyName("y")]
-            public double Y { get; set; }
+            public decimal Y { get; set; }
 
             [JsonPropertyName("w")]
-            public double W { get; set; }
+            public decimal W { get; set; }
 
             [JsonPropertyName("h")]
-            public double H { get; set; }
+            public decimal H { get; set; }
 
             [JsonPropertyName("index")]
             public int Index { get; set; }
