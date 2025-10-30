@@ -352,14 +352,20 @@
 
                                 <div class="col-12 col-md-4 col-lg-3 d-flex flex-column">
                                     <label for="JumlahSatuan" class="form-label fw-semibold">Jumlah</label>
-                                    @(Html.DevExtreme().NumberBox()
-                                                                            .ID("JumlahSatuanIns")
-                                                                            .Placeholder("Isi jumlah satuan reklame")
-                                                                            .Min(1)
-                                                                            .StylingMode(EditorStylingMode.Outlined)
-                                                                            .Height(45)
-                                                                            .Format("#,##0")
-                                                                            )
+
+                                    <div class="d-flex align-items-center">
+                                        @(Html.DevExtreme().NumberBox()
+                                            .ID("JumlahSatuanIns")
+                                            .Placeholder("Isi jumlah satuan reklame")
+                                            .Min(1)
+                                            .StylingMode(EditorStylingMode.Outlined)
+                                            .Height(45)
+                                            .Width("100%")
+                                            .Format("#,##0")
+                                            )
+                                        <span id="SatuanUkur" class="ms-2 fw-semibold">Unit</span>
+                                    </div>
+
                                     <small class="form-text text-danger mt-auto">
                                         <i class='bx bx-info-circle me-1'></i>
                                         Jumlah unit atau bidang atau durasi reklame yang dipasang.
@@ -736,14 +742,16 @@
             switch (item.ModeUkur) {
                 case 1:
                     $("#frm-jumlahsatuan, #frm-panjang, #frm-lebar, #btn-hitungnsr-ins").show();
+                    $("#SatuanUkur").text("Unit");
                     break;
 
                 case 2:
                     $("#frm-jumlahsatuan, #btn-hitungnsr-ins").show();
+                    $("#SatuanUkur").text("Unit");
                     break;
 
                 case 3:
-                    $("#frm-jumlahsatuan, #btn-hitungnsr-ins").show(); // tetap tampilkan form utama
+                    $("#frm-jumlahsatuan, #btn-hitungnsr-ins").show();
 
                     const text = item.Value;
 
@@ -751,9 +759,11 @@
                     if (text.includes("11")) {
                         // Film/Slide → tampilkan keduanya
                         $("#col-jumlah-perulangan, #col-jumlah-layar").show();
+                        $("#SatuanUkur").text("Detik");
                     } else if (text.includes("14")) {
                         $("#col-jumlah-perulangan").hide();
                         $("#col-jumlah-layar").show();
+                        $("#SatuanUkur").text("Menit");
                     }
                     break;
             }

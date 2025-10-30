@@ -63,4 +63,9 @@
   <ItemGroup>
     <ProjectReference Include="..\MonPDLib\MonPDLib.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Reports\KalkulatorPerPublic.cs">
+      <SubType>XtraReport</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>
