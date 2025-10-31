@@ -152,6 +152,10 @@ namespace MonPDLib.Lib
             {
                 letak = 0;
             }
+            else
+            {
+                kelasJalan = 3;
+            }
 
             // 4️⃣ Hitung NJOP dasar (luas + tinggi)
             decimal njopLuas = Math.Round(luas, 2) * (nsrLuas.NilaiSewa);
@@ -161,7 +165,6 @@ namespace MonPDLib.Lib
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
             var lokasi = _context.MNilaiStrategisLokasis
                 .Where(x => x.IsDlmRuang == letak
-                         && x.KelasJalan == kelasJalan
                          && x.TglAwalBerlaku <= today
                          && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
                 .OrderByDescending(x => x.TglAwalBerlaku)
@@ -192,6 +195,14 @@ namespace MonPDLib.Lib
                 .FirstOrDefault();
             if (letak == 0)
             {
+                lokasi = _context.MNilaiStrategisLokasis
+                .Where(x => x.IsDlmRuang == letak
+                         && x.KelasJalan == kelasJalan
+                         && x.TglAwalBerlaku <= today
+                         && (x.TglAkhirBerlaku == null || x.TglAkhirBerlaku >= today))
+                .OrderByDescending(x => x.TglAwalBerlaku)
+                .FirstOrDefault();
+
                 tinggiData = _context.MNilaiStrategisTinggis
                     .Where(x => input.Tinggi >= x.MinKetinggian
                              && x.MinKetinggian >= 0
