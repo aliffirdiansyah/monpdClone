@@ -453,6 +453,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TOpParkirCctv> TOpParkirCctvs { get; set; }
 
+    public virtual DbSet<TOpParkirCctvDok> TOpParkirCctvDoks { get; set; }
+
     public virtual DbSet<TOpParkirCctvRealtime> TOpParkirCctvRealtimes { get; set; }
 
     public virtual DbSet<TOpParkirCctvRealtimeDok> TOpParkirCctvRealtimeDoks { get; set; }
