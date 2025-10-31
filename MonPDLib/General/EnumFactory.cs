@@ -1628,5 +1628,23 @@ namespace MonPDLib.General
             Email = 4,
 
         }
+        public enum EStatusKirimInsidentil
+        {
+            Semua = -1,
+            Baru = 0,
+            Verifikasi = 1,
+            Selesai = 2
+        }
+        public enum EStatusKirimPermanenBaru
+        {
+            Pengembalian = -3,
+            Batal = -2,
+            Semua = -1,
+            Baru = 0,
+            Survey = 1,
+            HitungPajak = 2,
+            Verifikasi = 3,
+            Selesai = 4
+        }
     }
 }

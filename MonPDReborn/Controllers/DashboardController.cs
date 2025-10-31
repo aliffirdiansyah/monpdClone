@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
+using MonPDLib.EFReklameSsw;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 
@@ -7,7 +9,6 @@ namespace MonPDReborn.Controllers
     public class DashboardController : BaseController
     {
         string URLView = string.Empty;
-
         private readonly ILogger<DashboardController> _logger;
         private string controllerName => ControllerContext.RouteData.Values["controller"]?.ToString() ?? "";
         private string actionName => ControllerContext.RouteData.Values["action"]?.ToString() ?? "";
@@ -20,6 +21,7 @@ namespace MonPDReborn.Controllers
             URLView = string.Concat("../", GetType().Name.Replace("Controller", ""), "/");
             _logger = logger;
         }
+        private static ReklameSswContext _context = DBClass.GetReklameSswContext();
         public IActionResult Index()
         {
 
@@ -83,6 +85,25 @@ namespace MonPDReborn.Controllers
             try
             {
                 var model = new Models.DashboardVM.SeriesPajakDaerah();
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+                return Json(response.ToErrorInfoMessage(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+                return Json(response.ToInternalServerError());
+            }
+        }
+        public IActionResult DashboardLayanan()
+        {
+            var response = new ResponseBase();
+            try
+            {
+                var model = new Models.DashboardVM.DashboardLayanan();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException ex)
