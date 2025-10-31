@@ -156,7 +156,7 @@ namespace MonPDLib.Lib
                     //nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
                     //ret.Nsr = nsr;
                     //}
-                    luas = input.Panjang * input.Lebar;
+                    luas = Math.Round((Math.Round(input.Panjang, 2) * Math.Round(input.Lebar, 2)), 2);
                     ret.Luas = luas;
 
                     nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
