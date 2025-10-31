@@ -73,4 +73,7 @@ public partial class TOpParkirCctv
 
     [Column("VENDOR", TypeName = "NUMBER")]
     public decimal Vendor { get; set; }
+
+    [InverseProperty("TOpParkirCctv")]
+    public virtual TOpParkirCctvDok? TOpParkirCctvDok { get; set; }
 }

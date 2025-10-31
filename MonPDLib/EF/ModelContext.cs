@@ -453,6 +453,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<TOpParkirCctv> TOpParkirCctvs { get; set; }
 
+    public virtual DbSet<TOpParkirCctvDok> TOpParkirCctvDoks { get; set; }
+
     public virtual DbSet<TOpParkirCctvRealtime> TOpParkirCctvRealtimes { get; set; }
 
     public virtual DbSet<TOpParkirCctvRealtimeDok> TOpParkirCctvRealtimeDoks { get; set; }
@@ -2515,6 +2517,13 @@ public partial class ModelContext : DbContext
         {
             entity.Property(e => e.Direction).HasDefaultValueSql("0 ");
             entity.Property(e => e.JenisKend).HasDefaultValueSql("0 ");
+        });
+
+        modelBuilder.Entity<TOpParkirCctvDok>(entity =>
+        {
+            entity.HasOne(d => d.TOpParkirCctv).WithOne(p => p.TOpParkirCctvDok)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_OP_PARKIR_DOK");
         });
 
         modelBuilder.Entity<TOpParkirCctvRealtime>(entity =>

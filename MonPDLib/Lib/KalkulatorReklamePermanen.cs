@@ -67,6 +67,9 @@ namespace MonPDLib.Lib
             DateTime today = DateTime.Today;
             var setting = new SettingReklame();
 
+            input.Panjang = Math.Round(input.Panjang, 2);
+            input.Lebar = Math.Round(input.Lebar, 2);
+
             var kelasJalan = 0;
             var kawasan = EnumFactory.KawasanReklame.NonPenataan;
             var jenisReklame = input.JenisReklame;
@@ -151,8 +154,8 @@ namespace MonPDLib.Lib
             }
 
             // 4️⃣ Hitung NJOP dasar (luas + tinggi)
-            decimal njopLuas = luas * (nsrLuas.NilaiSewa);
-            decimal njopKetinggian = input.Tinggi * (nsrTinggi?.NilaiKetinggian ?? 0m);
+            decimal njopLuas = Math.Round(luas, 2) * (nsrLuas.NilaiSewa);
+            decimal njopKetinggian = Math.Round(input.Tinggi, 2) * (nsrTinggi?.NilaiKetinggian ?? 0m);
             decimal totalNjop = njopLuas + njopKetinggian;
 
             // 5️⃣ Ambil skor & bobot dari masing-masing tabel strategis (dengan tanggal berlaku)
@@ -322,13 +325,13 @@ namespace MonPDLib.Lib
             {
                 totalNilaiSewa = pokokPajak + produkRokok;
 
-                jaminanBongkar = luas * nilaiJambong;
+                jaminanBongkar = Math.Round(luas, 2) * nilaiJambong;
             }
             else
             {
                 totalNilaiSewa = (pokokPajak + produkRokok) * input.Sisi;
 
-                jaminanBongkar = (luas * nilaiJambong) * input.Sisi;
+                jaminanBongkar = (Math.Round(luas, 2) * nilaiJambong) * input.Sisi;
             }
 
             // 🧮 Pembulatan ke atas ke kelipatan Rp 100

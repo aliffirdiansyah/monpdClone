@@ -15,6 +15,8 @@ namespace CctvRealtimeWs
         {
             public string Nop { get; set; } = "";
             public string NamaOp { get; set; } = "";
+            public string AlamatOp { get; set; } = "";
+            public int WilayahPajak { get; set; }
             public EnumFactory.EVendorParkirCCTV Vendor { get; set; }
             public string? AccessPoint { get; set; }
             public string? CctvId { get; set; }
@@ -53,6 +55,8 @@ namespace CctvRealtimeWs
                         {
                             Nop = item.Nop,
                             NamaOp = item.NamaOp,
+                            AlamatOp = item.AlamatOp,
+                            WilayahPajak = item.WilayahPajak,
                             Vendor = (EnumFactory.EVendorParkirCCTV)item.Vendor,
                             AccessPoint = "",
                             CctvId = cctv.CctvId
@@ -67,6 +71,8 @@ namespace CctvRealtimeWs
                         {
                             Nop = item.Nop,
                             NamaOp = item.NamaOp,
+                            AlamatOp = item.AlamatOp,
+                            WilayahPajak = item.WilayahPajak,
                             Vendor = (EnumFactory.EVendorParkirCCTV)item.Vendor,
                             AccessPoint = cctv.AccessPoint,
                             CctvId = cctv.CctvId,
