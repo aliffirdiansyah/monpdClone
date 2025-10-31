@@ -6,15 +6,22 @@ using System.Threading.Tasks;
 
 namespace CctvRealtimeWs.JasnitaModels
 {
-    public class RekapJasnita2
+    public class RekapJasnita
     {
         public string Id { get; set; } = null!;
         public string Nop { get; set; } = null!;
         public string CctvId { get; set; } = null!;
-        public int VendorId { get; set; }
+        public string? NamaOp { get; set; }
+        public string? AlamatOp { get; set; }
+        public int? WilayahPajak { get; set; }
+        public DateTime WaktuMasuk { get; set; }
         public int JenisKend { get; set; }
         public string? PlatNo { get; set; }
-        public DateTime WaktuMasuk { get; set; }
+        public DateTime? WaktuKeluar { get; set; }
+        public int Direction { get; set; }
+        public string? Log { get; set; }
+        public string? ImageUrl { get; set; }
+        public decimal Vendor { get; set; }
         public byte[] ImageData { get; set; }
     }
 }
