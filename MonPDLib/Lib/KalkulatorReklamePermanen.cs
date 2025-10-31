@@ -325,13 +325,13 @@ namespace MonPDLib.Lib
             {
                 totalNilaiSewa = pokokPajak + produkRokok;
 
-                jaminanBongkar = luas * nilaiJambong;
+                jaminanBongkar = Math.Round(luas, 2) * nilaiJambong;
             }
             else
             {
                 totalNilaiSewa = (pokokPajak + produkRokok) * input.Sisi;
 
-                jaminanBongkar = (luas * nilaiJambong) * input.Sisi;
+                jaminanBongkar = (Math.Round(luas, 2) * nilaiJambong) * input.Sisi;
             }
 
             // 🧮 Pembulatan ke atas ke kelipatan Rp 100
