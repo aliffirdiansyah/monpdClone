@@ -122,71 +122,76 @@ namespace CctvRealtimeWs
         #region Cctv Telkomm 
         private async Task CallApiTelkomAsync(DataCctv.DataOpCctv op, DateTime tanggal, CancellationToken cancellationToken)
         {
-            await GenerateTokenTelkom();
-            using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_TELKOM);
-
-            string dateStr = tanggal.Date.ToString("yyyy-MM-dd");
-            string url = $"https://bigvision.id/api/analytics/license-plate-recognition/data-tables?date={dateStr}&id_camera={op.CctvId}";
-            var response = await httpClient.GetAsync(url, cancellationToken);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                throw new Exception($"Gagal panggil API Telkom. Status: {response.StatusCode}");
-            }
+                await GenerateTokenTelkom();
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_TELKOM);
 
-            var json = await response.Content.ReadAsStringAsync(cancellationToken);
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var data = JsonSerializer.Deserialize<TelkomEvent.TelkomEventResponse>(json, options);
-            if (data?.Result != null && data.Result.Count > 0)
-            {
-                var rekapResult = new List<RekapTelkom>();
-
-                int seq = 1;
-                foreach (var item in data.Result)
+                string dateStr = tanggal.Date.ToString("yyyy-MM-dd");
+                string url = $"https://bigvision.id/api/analytics/license-plate-recognition/data-tables?date={dateStr}&id_camera={op.CctvId}";
+                var response = await httpClient.GetAsync(url, cancellationToken);
+                if (!response.IsSuccessStatusCode)
                 {
-                    string? platNomor = item.PlatNomor?.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor?.ToUpper();
-                    DateTime waktuMasuk = ParseFlexibleDate(item.Timestamp);
-                    var id = $"{item.Id.ToString()}";
-
-                    var res = new RekapTelkom();
-
-                    res.Id = id;
-                    res.Nop = op.Nop;
-                    res.CctvId = op.CctvId ?? "";
-                    res.NamaOp = op.NamaOp;
-                    res.AlamatOp = op.AlamatOp;
-                    res.WilayahPajak = op.WilayahPajak;
-                    res.WaktuMasuk = waktuMasuk;
-                    res.JenisKend = (int)GetJenisKendaraan(item.TipeKendaraan);
-                    res.PlatNo = platNomor;
-                    res.WaktuKeluar = waktuMasuk;
-                    res.Direction = (int)EnumFactory.CctvParkirDirection.Incoming;
-                    res.Log = item.Id.ToString();
-                    res.ImageUrl = item.Image;
-                    res.Vendor = (int)EnumFactory.EVendorParkirCCTV.Telkom;
-
-
-                    rekapResult.Add(res);
-
-                    seq++;
+                    throw new Exception($"Gagal panggil API Telkom. Status: {response.StatusCode}");
                 }
 
-                if (rekapResult.Count > 0)
+                var json = await response.Content.ReadAsStringAsync(cancellationToken);
+                var options = new JsonSerializerOptions
                 {
-                    await UpdateDbTelkomRealtime(op, rekapResult, cancellationToken);
-                    await UpdateDBTelkomRekap(op, rekapResult, cancellationToken);
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var data = JsonSerializer.Deserialize<TelkomEvent.TelkomEventResponse>(json, options);
+                if (data?.Result != null && data.Result.Count > 0)
+                {
+                    var rekapResult = new List<RekapTelkom>();
+
+                    int seq = 1;
+                    foreach (var item in data.Result)
+                    {
+                        string? platNomor = item.PlatNomor?.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor?.ToUpper();
+                        DateTime waktuMasuk = ParseFlexibleDate(item.Timestamp);
+                        var id = $"{item.Id.ToString()}";
+
+                        var res = new RekapTelkom();
+
+                        res.Id = id;
+                        res.Nop = op.Nop;
+                        res.CctvId = op.CctvId ?? "";
+                        res.NamaOp = op.NamaOp;
+                        res.AlamatOp = op.AlamatOp;
+                        res.WilayahPajak = op.WilayahPajak;
+                        res.WaktuMasuk = waktuMasuk;
+                        res.JenisKend = (int)GetJenisKendaraan(item.TipeKendaraan);
+                        res.PlatNo = platNomor;
+                        res.WaktuKeluar = waktuMasuk;
+                        res.Direction = (int)EnumFactory.CctvParkirDirection.Incoming;
+                        res.Log = item.Id.ToString();
+                        res.ImageUrl = item.Image;
+                        res.Vendor = (int)EnumFactory.EVendorParkirCCTV.Telkom;
+
+
+                        rekapResult.Add(res);
+
+                        seq++;
+                    }
+
+                    if (rekapResult.Count > 0)
+                    {
+                        await UpdateDbTelkomRealtime(op, rekapResult, cancellationToken);
+                        await UpdateDBTelkomRekap(op, rekapResult, cancellationToken);
+                    }
                 }
             }
-
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiTelkomAsync NOP {op.NamaOp}-{op.AlamatOp}-{op.Nop}: {GetFullExceptionMessage(ex)}");
+                Console.ResetColor();
+            }
         }
-        private async Task UpdateDbTelkomRealtime(
-            DataCctv.DataOpCctv op,
-            List<RekapTelkom> dataList,
-            CancellationToken cancellationToken)
+        private async Task UpdateDbTelkomRealtime(DataCctv.DataOpCctv op,List<RekapTelkom> dataList,CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -250,11 +255,7 @@ namespace CctvRealtimeWs
                 Console.ResetColor();
             }
         }
-
-        private async Task UpdateDBTelkomRekap(
-    DataCctv.DataOpCctv op,
-    List<RekapTelkom> dataList,
-    CancellationToken cancellationToken)
+        private async Task UpdateDBTelkomRekap(DataCctv.DataOpCctv op,List<RekapTelkom> dataList,CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -338,8 +339,6 @@ namespace CctvRealtimeWs
                 Console.ResetColor();
             }
         }
-
-
         private async Task GenerateTokenTelkom()
         {
             using (var client = new HttpClient())
@@ -913,7 +912,7 @@ namespace CctvRealtimeWs
                                     HttpResponseMessage response = await httpClient.GetAsync(url);
                                     if (!response.IsSuccessStatusCode)
                                     {
-                                        throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Body.Guid} Gagal memanggil API Jasnita Event Snapshot. Status: {response.StatusCode}");
+                                        throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Body.Guid} Gagal memanggil API Jasnita Event Snapshot. webClientUrl : {webClientUrl}, Url : {url} Status: {response.StatusCode}");
                                     }
 
                                     // Baca stream image-nya
@@ -959,14 +958,11 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiJasnitaV2GrpcAsync NOP {op.Nop}-{op.NamaOp}-{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiJasnitaV2GrpcAsync {op.DisplayId};{op.AccessPoint};{op.NamaOp};{op.AlamatOp};{op.Nop}: {GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
         }
-        private async Task UpdateDbJasnitaRealtime(
-        DataCctv.DataOpCctv op,
-        List<EventAll.EventAllResponse> dataList,
-        CancellationToken cancellationToken)
+        private async Task UpdateDbJasnitaRealtime(DataCctv.DataOpCctv op, List<EventAll.EventAllResponse> dataList,CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -1050,10 +1046,7 @@ namespace CctvRealtimeWs
             }
         }
 
-        private async Task UpdateDBJasnitaRealtimeV2(
-            DataCctv.DataOpCctv op,
-            List<RekapJasnita> dataList,
-            CancellationToken cancellationToken)
+        private async Task UpdateDBJasnitaRealtimeV2(DataCctv.DataOpCctv op,List<RekapJasnita> dataList,CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -1127,13 +1120,7 @@ namespace CctvRealtimeWs
                 Console.ResetColor();
             }
         }
-
-
-        private async Task UpdateDBJasnitaRekap(
-                DataCctv.DataOpCctv op,
-                List<RekapJasnita> dataList,
-                CancellationToken cancellationToken
-            )
+        private async Task UpdateDBJasnitaRekap(DataCctv.DataOpCctv op,List<RekapJasnita> dataList,CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
