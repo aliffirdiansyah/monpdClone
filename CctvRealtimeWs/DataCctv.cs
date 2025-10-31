@@ -41,7 +41,7 @@ namespace CctvRealtimeWs
             //var query = await context.MOpParkirCctvs
             //    .Include(x => x.MOpParkirCctvTelkoms)
             //    .Include(x => x.MOpParkirCctvJasnita)
-            //    .Where(x => x.IsPasang == 1 && x.Nop == "357803200390703996")
+            //    .Where(x => x.IsPasang == 1 && x.Nop == "357803001190703416")
             //    .Take(1)
             //    .ToListAsync();
 

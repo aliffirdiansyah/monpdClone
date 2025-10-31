@@ -273,6 +273,22 @@ namespace CctvRealtimeWs
                 // === OPEN CONNECTION ===
                 await context.Database.OpenConnectionAsync(cancellationToken);
 
+                var backDateDataList = await context.TOpParkirCctvRealtimes
+                    .Where(x => x.Nop == op.Nop && x.VendorId == (int)op.Vendor && x.WaktuMasuk.Date < DateTime.Now.Date)
+                    .ToListAsync(cancellationToken);
+
+                // Hapus data lama beserta dok-nya
+                foreach (var item in backDateDataList)
+                {
+                    if (item.TOpParkirCctvRealtimeDok != null)
+                    {
+                        context.TOpParkirCctvRealtimeDoks.Remove(item.TOpParkirCctvRealtimeDok);
+                    }
+                    context.TOpParkirCctvRealtimes.Remove(item);
+                }
+
+                context.TOpParkirCctvRealtimes.RemoveRange(backDateDataList);
+
                 // Ambil semua ID yang sudah ada di DB untuk NOP dan Vendor yang sama
                 var existingIds = await context.TOpParkirCctvRealtimes
                     .Where(x => x.Nop == op.Nop && x.VendorId == (int)op.Vendor)
@@ -304,8 +320,7 @@ namespace CctvRealtimeWs
                 }
 
                 // Simpan perubahan ke database
-                if (insertCount > 0)
-                    await context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDbTelkomRealtime DB Telkom Realtime updated untuk NOP {op.Nop};{op.NamaOp};{op.CctvId} (insert {insertCount} data baru)");
@@ -1211,13 +1226,27 @@ namespace CctvRealtimeWs
                 // === OPEN CONNECTION ===
                 await context.Database.OpenConnectionAsync(cancellationToken);
 
-                int insertedCount = 0;
+                var backDateDataList = await context.TOpParkirCctvRealtimes
+                    .Include(x => x.TOpParkirCctvRealtimeDok)
+                    .Where(x => x.Nop == op.Nop && x.VendorId == (int)op.Vendor && x.WaktuMasuk.Date < DateTime.Now.Date)
+                    .ToListAsync(cancellationToken);
 
+                // Hapus data lama beserta dok-nya
+                foreach (var item in backDateDataList)
+                {
+                    if(item.TOpParkirCctvRealtimeDok != null)
+                    {
+                        context.TOpParkirCctvRealtimeDoks.Remove(item.TOpParkirCctvRealtimeDok);
+                    }
+                    context.TOpParkirCctvRealtimes.Remove(item);
+                }
+
+
+                int insertedCount = 0;
                 foreach (var item in dataList)
                 {
                     // Cek apakah ID sudah ada
-                    bool exists = await context.TOpParkirCctvRealtimes
-                        .AnyAsync(x => x.Id == item.Id && x.Nop == item.Nop && x.CctvId == item.CctvId, cancellationToken);
+                    bool exists = await context.TOpParkirCctvRealtimes.AnyAsync(x => x.Id == item.Id, cancellationToken);
 
                     if (!exists)
                     {
@@ -1237,10 +1266,8 @@ namespace CctvRealtimeWs
                     }
                 }
 
-                if (insertedCount > 0)
-                {
-                    await context.SaveChangesAsync(cancellationToken);
-                }
+                // Simpan perubahan ke database
+                await context.SaveChangesAsync(cancellationToken);
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDBJasnitaRealtimeV2 DB Jasnita Realtime insert-only untuk NOP {op.Nop};{op.NamaOp};{op.CctvId} ({insertedCount} data baru)");
