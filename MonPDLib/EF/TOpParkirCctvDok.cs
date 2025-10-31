@@ -30,4 +30,8 @@ public partial class TOpParkirCctvDok
 
     [Column("IMAGE_DATA", TypeName = "BLOB")]
     public byte[] ImageData { get; set; } = null!;
+
+    [ForeignKey("Id, Nop, CctvId")]
+    [InverseProperty("TOpParkirCctvDok")]
+    public virtual TOpParkirCctv TOpParkirCctv { get; set; } = null!;
 }

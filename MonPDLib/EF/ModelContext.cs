@@ -2519,6 +2519,13 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.JenisKend).HasDefaultValueSql("0 ");
         });
 
+        modelBuilder.Entity<TOpParkirCctvDok>(entity =>
+        {
+            entity.HasOne(d => d.TOpParkirCctv).WithOne(p => p.TOpParkirCctvDok)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_T_OP_PARKIR_DOK");
+        });
+
         modelBuilder.Entity<TOpParkirCctvRealtime>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_T_OP_CCTV_REALTIME");
