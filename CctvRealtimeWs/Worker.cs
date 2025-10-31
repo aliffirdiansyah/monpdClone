@@ -20,15 +20,15 @@ namespace CctvRealtimeWs
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        public string _USER_JASNITA;
-        public string _PASS_JASNITA;
-        public string _USER_JASNITA_2;
-        public string _PASS_JASNITA_2;
-        public string _TOKEN_JASNITA;
-        public string _TOKEN_JASNITA_2;
-        public string _USER_TELKOM;
-        public string _PASS_TELKOM;
-        public string _TOKEN_TELKOM;
+        public string _USER_JASNITA = null!;
+        public string _PASS_JASNITA = null!;
+        public string _USER_JASNITA_2 = null!;
+        public string _PASS_JASNITA_2 = null!;
+        public string _TOKEN_JASNITA = null!;
+        public string _TOKEN_JASNITA_2 = null!;
+        public string _USER_TELKOM = null!;
+        public string _PASS_TELKOM = null!;
+        public string _TOKEN_TELKOM = null!;
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -89,11 +89,11 @@ namespace CctvRealtimeWs
             {
                 if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Jasnita)
                 {
-                    await CallApiJasnitaV2GrpcAsync(op, cancellationToken);
+                    await CallApiJasnitaV2GrpcAsync(op, DateTime.Now, cancellationToken);
                 }
                 else if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Telkom)
                 {
-                    await CallApiTelkomAsync(op, cancellationToken);
+                    await CallApiTelkomAsync(op, DateTime.Now, cancellationToken);
                 }
                 else
                 {
@@ -120,13 +120,13 @@ namespace CctvRealtimeWs
 
 
         #region Cctv Telkomm 
-        private async Task CallApiTelkomAsync(DataCctv.DataOpCctv op, CancellationToken cancellationToken)
+        private async Task CallApiTelkomAsync(DataCctv.DataOpCctv op, DateTime tanggal, CancellationToken cancellationToken)
         {
             await GenerateTokenTelkom();
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_TELKOM);
 
-            string dateStr = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            string dateStr = tanggal.Date.ToString("yyyy-MM-dd");
             string url = $"https://bigvision.id/api/analytics/license-plate-recognition/data-tables?date={dateStr}&id_camera={op.CctvId}";
             var response = await httpClient.GetAsync(url, cancellationToken);
             if (!response.IsSuccessStatusCode)
@@ -150,7 +150,7 @@ namespace CctvRealtimeWs
                 {
                     string? platNomor = item.PlatNomor?.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor?.ToUpper();
                     DateTime waktuMasuk = ParseFlexibleDate(item.Timestamp);
-                    var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Telkom)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
+                    var id = $"{item.Id.ToString()}";
 
                     var res = new RekapTelkom();
 
@@ -245,14 +245,16 @@ namespace CctvRealtimeWs
             {
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Realtime close conenction {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                Console.ResetColor();
             }
         }
 
         private async Task UpdateDBTelkomRekap(
-            DataCctv.DataOpCctv op,
-            List<RekapTelkom> dataList,
-            CancellationToken cancellationToken)
+    DataCctv.DataOpCctv op,
+    List<RekapTelkom> dataList,
+    CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -261,34 +263,42 @@ namespace CctvRealtimeWs
                 // === OPEN CONNECTION ===
                 await context.Database.OpenConnectionAsync(cancellationToken);
 
-                // Ambil dan hapus data lama
-                var oldData = await context.TOpParkirCctvs
-                    .Where(x => x.Nop == op.Nop && x.WaktuMasuk.Date == DateTime.Now.Date && x.Vendor == (int)op.Vendor)
+                // Ambil daftar ID existing untuk NOP & Vendor hari ini
+                var existingIds = await context.TOpParkirCctvs
+                    .Where(x =>
+                        x.Nop == op.Nop &&
+                        x.WaktuMasuk.Date == DateTime.Now.Date &&
+                        x.Vendor == (int)op.Vendor)
+                    .Select(x => x.Id)
                     .ToListAsync(cancellationToken);
 
-                context.TOpParkirCctvs.RemoveRange(oldData);
+                // Filter hanya yang belum ada di database
+                var newItems = dataList
+                    .Where(item => !existingIds.Contains(item.Id))
+                    .ToList();
 
-                // Siapkan data baru
                 var result = new List<TOpParkirCctv>();
-
                 int seq = 1;
-                foreach (var item in dataList)
+
+                foreach (var item in newItems)
                 {
-                    var res = new TOpParkirCctv();
-                    
-                    res.Id = item.Id;
-                    res.Nop = item.Nop;
-                    res.CctvId = item.CctvId;
-                    res.NamaOp = op.NamaOp;
-                    res.AlamatOp = op.AlamatOp;
-                    res.WilayahPajak = op.WilayahPajak;
-                    res.WaktuMasuk = item.WaktuMasuk;
-                    res.JenisKend = item.JenisKend;
-                    res.PlatNo = item.PlatNo;
-                    res.WaktuKeluar = item.WaktuMasuk;
-                    res.Direction = item.Direction;
-                    res.Log = item.Log;
-                    res.ImageUrl = item.ImageUrl;
+                    var res = new TOpParkirCctv
+                    {
+                        Id = item.Id,
+                        Nop = item.Nop,
+                        CctvId = item.CctvId,
+                        NamaOp = op.NamaOp,
+                        AlamatOp = op.AlamatOp,
+                        WilayahPajak = op.WilayahPajak,
+                        WaktuMasuk = item.WaktuMasuk,
+                        JenisKend = item.JenisKend,
+                        PlatNo = item.PlatNo,
+                        WaktuKeluar = item.WaktuMasuk,
+                        Direction = item.Direction,
+                        Log = item.Log,
+                        ImageUrl = item.ImageUrl,
+                        Vendor = (int)op.Vendor // pastikan field ini diisi
+                    };
 
                     result.Add(res);
                     seq++;
@@ -297,13 +307,19 @@ namespace CctvRealtimeWs
                 if (result.Count > 0)
                 {
                     await context.TOpParkirCctvs.AddRangeAsync(result, cancellationToken);
+                    await context.SaveChangesAsync(cancellationToken);
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Inserted {result.Count} new Telkom Rekap data untuk NOP {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Tidak ada data baru untuk Telkom Rekap NOP {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                    Console.ResetColor();
                 }
 
-                // Simpan perubahan ke database
-                await context.SaveChangesAsync(cancellationToken);
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Rekap updated untuk NOP {op.Nop}-{op.NamaOp}-{op.CctvId} ({result.Count} data)");
                 Console.ResetColor();
             }
             catch (Exception ex)
@@ -316,9 +332,13 @@ namespace CctvRealtimeWs
             {
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Rekap close conenction {op.Nop}-{op.NamaOp}-{op.CctvId}");
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Rekap close connection {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                Console.ResetColor();
             }
         }
+
 
         private async Task GenerateTokenTelkom()
         {
@@ -598,7 +618,7 @@ namespace CctvRealtimeWs
                 }
             }
 
-            if(eventResult.Count <= 0)
+            if (eventResult.Count <= 0)
             {
                 throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Tidak ada event dari API Jasnita Events.");
             }
@@ -636,292 +656,312 @@ namespace CctvRealtimeWs
             }
             #endregion
         }
-        private async Task CallApiJasnitaV2GrpcAsync(DataCctv.DataOpCctv op, CancellationToken cancellationToken)
+        private async Task CallApiJasnitaV2GrpcAsync(DataCctv.DataOpCctv op, DateTime tanggal, CancellationToken cancellationToken)
         {
-            await GenerateTokenJasnita2();
-
-            var rekapJasnita = new List<RekapJasnita>();
-
-            string webClientUrl = "";
-            #region Get Domains
+            try
             {
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+                await GenerateTokenJasnita2();
 
-                // Panggil API Jasnita untuk ambil daftar domain
-                HttpResponseMessage response = await httpClient.GetAsync(
-                    "https://hub.jastrak.id/api/v3/ac-backend/domains",
-                    cancellationToken
-                );
+                var rekapJasnita = new List<RekapJasnita>();
 
-                if (!response.IsSuccessStatusCode)
+                string webClientUrl = "";
+                #region Get Domains
                 {
-                    throw new Exception($"Gagal memanggil API Jasnita Domains. Status: {response.StatusCode}");
-                }
+                    using var httpClient = new HttpClient();
+                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
 
-                // Baca dan parsing hasil JSON
-                string jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-                var jsonObject = JsonObject.Parse(jsonResponse);
+                    // Panggil API Jasnita untuk ambil daftar domain
+                    HttpResponseMessage response = await httpClient.GetAsync(
+                        "https://hub.jastrak.id/api/v3/ac-backend/domains",
+                        cancellationToken
+                    );
 
-                // Ambil field webClientURL dari domain pertama
-                string rawWebClientUrl = jsonObject?["domains"]?[0]?["domain"]?["webClientURL"]?.ToString() ?? "";
-
-                // Normalisasi URL (tambahkan https jika perlu dan hapus slash di akhir)
-                if (!string.IsNullOrWhiteSpace(rawWebClientUrl))
-                {
-                    if (rawWebClientUrl.StartsWith("//"))
+                    if (!response.IsSuccessStatusCode)
                     {
-                        rawWebClientUrl = "https:" + rawWebClientUrl;
+                        throw new Exception($"Gagal memanggil API Jasnita Domains. Status: {response.StatusCode}");
                     }
 
-                    rawWebClientUrl = rawWebClientUrl.TrimEnd('/');
-                }
+                    // Baca dan parsing hasil JSON
+                    string jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+                    var jsonObject = JsonObject.Parse(jsonResponse);
 
-                webClientUrl = rawWebClientUrl;
-            }
-            if (string.IsNullOrEmpty(webClientUrl))
-            {
-                // Jika webClientUrl kosong, hentikan proses
-                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Gagal mendapatkan webClientURL dari API Jasnita Domains.");
-            }
-            if (!webClientUrl.Contains("https"))
-            {
-                // Jika webClientUrl tidak valid, hentikan proses
-                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} webClientURL tidak valid: {webClientUrl}");
-            }
-            #endregion
+                    // Ambil field webClientURL dari domain pertama
+                    string rawWebClientUrl = jsonObject?["domains"]?[0]?["domain"]?["webClientURL"]?.ToString() ?? "";
 
-            var eventResult = new List<EventAll.EventAllResponse>();
-            #region Events
-            {
-                using var httpClient = new HttpClient();
-
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
-
-                int totalData = 0;
-                int limit = 20;
-                int offset = 0;
-                bool hasMore = true;
-                int attempt = 0;
-                const int maxRetry = 5;
-
-                var result = new List<EventAll.EventAllResponse>();
-
-                DateTime tglAwal = DateTime.Today.AddDays(0);
-                DateTime tglAkhir = DateTime.Today.AddDays(1).AddTicks(-1);
-
-                string begin_time = ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
-                string end_time = ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
-
-                while (hasMore)
-                {
-                    try
+                    // Normalisasi URL (tambahkan https jika perlu dan hapus slash di akhir)
+                    if (!string.IsNullOrWhiteSpace(rawWebClientUrl))
                     {
-                        // 🔹 cek cancel sebelum request
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        var resEvent = new EventAll.EventAllResponse();
-
-                        do
+                        if (rawWebClientUrl.StartsWith("//"))
                         {
-                            // 🔹 cek cancel di setiap iterasi retry
+                            rawWebClientUrl = "https:" + rawWebClientUrl;
+                        }
+
+                        rawWebClientUrl = rawWebClientUrl.TrimEnd('/');
+                    }
+
+                    webClientUrl = rawWebClientUrl;
+                }
+                if (string.IsNullOrEmpty(webClientUrl))
+                {
+                    // Jika webClientUrl kosong, hentikan proses
+                    throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Gagal mendapatkan webClientURL dari API Jasnita Domains.");
+                }
+                if (!webClientUrl.Contains("https"))
+                {
+                    // Jika webClientUrl tidak valid, hentikan proses
+                    throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} webClientURL tidak valid: {webClientUrl}");
+                }
+                #endregion
+
+                var eventResult = new List<EventAll.EventAllResponse>();
+                #region Events
+                {
+                    using var httpClient = new HttpClient();
+
+                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+
+                    int totalData = 0;
+                    int limit = 20;
+                    int offset = 0;
+                    bool hasMore = true;
+                    int attempt = 0;
+                    const int maxRetry = 5;
+
+                    var result = new List<EventAll.EventAllResponse>();
+
+                    DateTime tglAwal = tanggal.Date.AddDays(0);
+                    DateTime tglAkhir = tanggal.Date.AddDays(1).AddTicks(-1);
+
+                    string begin_time = ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
+                    string end_time = ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
+
+                    while (hasMore)
+                    {
+                        try
+                        {
+                            // 🔹 cek cancel sebelum request
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            var body = new
+                            var resEvent = new EventAll.EventAllResponse();
+
+                            do
                             {
-                                method = "axxonsoft.bl.events.EventHistoryService.ReadEvents",
-                                data = new
+                                // 🔹 cek cancel di setiap iterasi retry
+                                cancellationToken.ThrowIfCancellationRequested();
+
+                                var body = new
                                 {
-                                    range = new
+                                    method = "axxonsoft.bl.events.EventHistoryService.ReadEvents",
+                                    data = new
                                     {
-                                        begin_time = begin_time,
-                                        end_time = end_time
-                                    },
-                                    filters = new
-                                    {
-                                        filters = new[]
+                                        range = new
                                         {
+                                            begin_time = begin_time,
+                                            end_time = end_time
+                                        },
+                                        filters = new
+                                        {
+                                            filters = new[]
+                                            {
                                     new {
                                             type = "ET_DetectorEvent",
                                             subjects = op.AccessPoint
                                         }
                                     }
-                                    },
-                                    limit = limit,
-                                    offset = offset,
-                                    descending = true
+                                        },
+                                        limit = limit,
+                                        offset = offset,
+                                        descending = true
+                                    }
+                                };
+
+                                var jsonBody = JsonSerializer.Serialize(body);
+                                var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                                // 🔹 kirim request dengan token
+                                HttpResponseMessage response = await httpClient.PostAsync($"{webClientUrl}/grpc", content, cancellationToken);
+
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var rawResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+                                    var apiResponse = ConvertSseOutputJson(rawResponse);
+                                    var res = JsonSerializer.Deserialize<EventAll.EventAllResponse>(apiResponse);
+
+                                    if (res == null)
+                                    {
+                                        throw new Exception($"Response dari API tidak valid");
+                                    }
+
+                                    resEvent = res;
+                                    break;
                                 }
-                            };
-
-                            var jsonBody = JsonSerializer.Serialize(body);
-                            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                            // 🔹 kirim request dengan token
-                            HttpResponseMessage response = await httpClient.PostAsync($"{webClientUrl}/grpc", content, cancellationToken);
-
-                            if (response.IsSuccessStatusCode)
-                            {
-                                var rawResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-                                var apiResponse = ConvertSseOutputJson(rawResponse);
-                                var res = JsonSerializer.Deserialize<EventAll.EventAllResponse>(apiResponse);
-
-                                if (res == null) 
-                                { 
-                                    throw new Exception($"Response dari API tidak valid");
+                                else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                                {
+                                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Token kadaluarsa, refresh token dan ulangi...");
+                                    await GenerateTokenJasnita();
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Error: {response.StatusCode}");
                                 }
 
-                                resEvent = res;
-                                break;
-                            }
-                            else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                            {
-                                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Token kadaluarsa, refresh token dan ulangi...");
-                                await GenerateTokenJasnita();
-                            }
-                            else
-                            {
-                                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Error: {response.StatusCode}");
-                            }
+                                attempt++;
+                                if (attempt >= maxRetry)
+                                {
+                                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Gagal setelah {maxRetry} percobaan pada offset {offset}");
+                                    break;
+                                }
 
-                            attempt++;
-                            if (attempt >= maxRetry)
-                            {
-                                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Gagal setelah {maxRetry} percobaan pada offset {offset}");
-                                break;
-                            }
+                            } while (attempt < maxRetry);
 
-                        } while (attempt < maxRetry);
+                            // 🔹 setelah selesai mencoba, cek cancel
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                        // 🔹 setelah selesai mencoba, cek cancel
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        if (resEvent == null || resEvent.Items == null || resEvent.Items.Count == 0)
-                        {
-                            hasMore = false;
-                        }
-                        else
-                        {
-                            eventResult.Add(resEvent);
-
-                            totalData += resEvent.Items.Count;
-                            if (resEvent.Items.Count < limit)
+                            if (resEvent == null || resEvent.Items == null || resEvent.Items.Count == 0)
                             {
                                 hasMore = false;
                             }
                             else
                             {
-                                offset += limit;
+                                eventResult.Add(resEvent);
+
+                                totalData += resEvent.Items.Count;
+                                if (resEvent.Items.Count < limit)
+                                {
+                                    hasMore = false;
+                                }
+                                else
+                                {
+                                    offset += limit;
+                                }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error: {ex.Message}");
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
                     }
                 }
-            }
 
-            if (eventResult.Count <= 0)
-            {
-                throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Tidak ada event dari API Jasnita Events.");
-            }
-
-            eventResult = eventResult
-                .Where(p => p.Items.Any(i => i.Body.EventType == "VehicleRecognized"))
-                .ToList();
-            #endregion
-
-            var rekapResult = new List<RekapJasnita>();
-            #region EventSnapshot & Rekap
-            foreach (var data in eventResult)
-            {
-                int seq = 1;
-                foreach (var item in data.Items)
+                if (eventResult.Count <= 0)
                 {
-                    if (item.Body?.Details?.Count > 0)
+                    throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp} Tidak ada event dari API Jasnita Events.");
+                }
+
+                eventResult = eventResult
+                    .Where(p => p.Items.Any(i => i.Body.EventType == "VehicleRecognized"))
+                    .ToList();
+                #endregion
+
+                var rekapResult = new List<RekapJasnita>();
+                #region EventSnapshot & Rekap
+                foreach (var data in eventResult)
+                {
+                    int seq = 1;
+                    foreach (var item in data.Items)
                     {
-                        foreach (var detail in item.Body.Details)
+                        if (item.Body?.Details?.Count > 0)
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            var ar = detail.AutoRecognitionResult;
-                            if (ar == null)
+                            foreach (var detail in item.Body.Details)
                             {
-                                continue;
-                            }
+                                cancellationToken.ThrowIfCancellationRequested();
 
-                            DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
-                            var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
-
-                            if (waktuMasuk.Date == DateTime.Now.Date)
-                            {
-                                // Ambil snapshot image dari API Jasnita
-                                using var httpClient = new HttpClient();
-                                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
-
-                                // ambil access point (hapus "hosts/")
-                                string accessPoint = item.Body.OriginExt.AccessPoint.Replace("hosts/", "");
-
-                                // ambil timestamp
-                                string timestamp = item.Body.Timestamp;
-
-                                // ambil koordinat cropping
-                                var rect = item.Body.Details[0].Rectangle;
-                                string cropX = rect.X.ToString(CultureInfo.InvariantCulture);
-                                string cropY = rect.Y.ToString(CultureInfo.InvariantCulture);
-                                string cropWidth = rect.W.ToString(CultureInfo.InvariantCulture);
-                                string cropHeight = rect.H.ToString(CultureInfo.InvariantCulture);
-
-                                // bentuk URL akhir
-                                string url = $"{webClientUrl}/archive/media/{accessPoint}/{timestamp}?crop_x={cropX}&crop_y={cropY}&crop_width={cropWidth}&crop_height={cropHeight}";
-                                HttpResponseMessage response = await httpClient.GetAsync(url);
-                                if (!response.IsSuccessStatusCode)
+                                var ar = detail.AutoRecognitionResult;
+                                if (ar == null)
                                 {
-                                    throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Body.Guid} Gagal memanggil API Jasnita Event Snapshot. Status: {response.StatusCode}");
+                                    continue;
                                 }
 
-                                // Baca stream image-nya
-                                byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+                                DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
+                                var id = $"{item.Body.Guid}";
+
+                                if (waktuMasuk.Date == DateTime.Now.Date)
+                                {
+                                    // Ambil snapshot image dari API Jasnita
+                                    using var httpClient = new HttpClient();
+                                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+
+                                    // ambil access point (hapus "hosts/")
+                                    string accessPoint = item.Body.OriginExt.AccessPoint.Replace("hosts/", "");
+
+                                    // ambil timestamp
+                                    string timestamp = item.Body.Timestamp;
+
+                                    // ambil koordinat cropping
+                                    decimal crop_x = 0;
+                                    decimal crop_y = 0;
+                                    decimal crop_w = 0;
+                                    decimal crop_h = 0;
+                                    if (item.Body.Details[0].Rectangle != null)
+                                    {
+                                        var rect = item.Body.Details[0].Rectangle;
+                                        crop_x = rect.X;
+                                        crop_y = rect.Y;
+                                        crop_w = rect.W;
+                                        crop_h = rect.H;
+                                    }
+
+                                    string cropX = crop_x.ToString(CultureInfo.InvariantCulture);
+                                    string cropY = crop_y.ToString(CultureInfo.InvariantCulture);
+                                    string cropWidth = crop_w.ToString(CultureInfo.InvariantCulture);
+                                    string cropHeight = crop_h.ToString(CultureInfo.InvariantCulture);
+
+                                    // bentuk URL akhir
+                                    string url = $"{webClientUrl}/archive/media/{accessPoint}/{timestamp}?crop_x={cropX}&crop_y={cropY}&crop_width={cropWidth}&crop_height={cropHeight}";
+                                    HttpResponseMessage response = await httpClient.GetAsync(url);
+                                    if (!response.IsSuccessStatusCode)
+                                    {
+                                        throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Body.Guid} Gagal memanggil API Jasnita Event Snapshot. Status: {response.StatusCode}");
+                                    }
+
+                                    // Baca stream image-nya
+                                    byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
 
 
-                                var res = new RekapJasnita();
+                                    var res = new RekapJasnita();
 
-                                res.Id = id.ToString();
-                                res.Nop = op.Nop;
-                                res.CctvId = op.CctvId ?? "";
-                                res.NamaOp = op.NamaOp;
-                                res.AlamatOp = op.AlamatOp;
-                                res.WilayahPajak = op.WilayahPajak;
-                                res.WaktuMasuk = waktuMasuk;
-                                res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
-                                res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
-                                res.WaktuKeluar = waktuMasuk;
-                                res.Direction = (int)GetDirection(ar.Direction);
-                                res.Log = item.Body.Guid;
-                                res.ImageUrl = "";
-                                res.Vendor = (int)EnumFactory.EVendorParkirCCTV.Jasnita;
-                                res.ImageData = imageBytes;
+                                    res.Id = id.ToString();
+                                    res.Nop = op.Nop;
+                                    res.CctvId = op.CctvId ?? "";
+                                    res.NamaOp = op.NamaOp;
+                                    res.AlamatOp = op.AlamatOp;
+                                    res.WilayahPajak = op.WilayahPajak;
+                                    res.WaktuMasuk = waktuMasuk;
+                                    res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
+                                    res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
+                                    res.WaktuKeluar = waktuMasuk;
+                                    res.Direction = (int)GetDirection(ar.Direction);
+                                    res.Log = item.Body.Guid;
+                                    res.ImageUrl = "";
+                                    res.Vendor = (int)EnumFactory.EVendorParkirCCTV.Jasnita;
+                                    res.ImageData = imageBytes;
 
 
-                                rekapResult.Add(res);
+                                    rekapResult.Add(res);
+                                }
                             }
                         }
+                        seq++;
                     }
-                    seq++;
+                }
+                #endregion
+
+
+                //INSERT TO DB
+                if (rekapResult.Count > 0)
+                {
+                    await UpdateDBJasnitaRekap(op, rekapResult, cancellationToken);
+                    await UpdateDBJasnitaRealtimeV2(op, rekapResult, cancellationToken);
                 }
             }
-            #endregion
-
-
-            //INSERT TO DB
-            if (rekapResult.Count > 0)
+            catch (Exception ex)
             {
-                await UpdateDBJasnitaRekap(op, rekapResult, cancellationToken);
-                await UpdateDBJasnitaRealtimeV2(op, rekapResult, cancellationToken);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiJasnitaV2GrpcAsync NOP {op.Nop}-{op.NamaOp}-{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.ResetColor();
             }
-
         }
         private async Task UpdateDbJasnitaRealtime(
         DataCctv.DataOpCctv op,
@@ -963,7 +1003,7 @@ namespace CctvRealtimeWs
                                 DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
                                 var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
 
-                                if(waktuMasuk.Date == DateTime.Now.Date)
+                                if (waktuMasuk.Date == DateTime.Now.Date)
                                 {
                                     var res = new TOpParkirCctvRealtime();
 
@@ -1024,9 +1064,19 @@ namespace CctvRealtimeWs
 
                 // Ambil dan hapus data lama
                 var oldData = await context.TOpParkirCctvRealtimes
+                    .Include(x => x.TOpParkirCctvRealtimeDok)
                     .Where(x => x.Nop == op.Nop && x.VendorId == (int)op.Vendor)
                     .ToListAsync(cancellationToken);
 
+                foreach (var parent in oldData)
+                {
+                    if (parent.TOpParkirCctvRealtimeDok != null)
+                    {
+                        context.TOpParkirCctvRealtimeDoks.Remove(parent.TOpParkirCctvRealtimeDok);
+                    }
+                }
+
+                // Baru hapus data utamanya (parent)
                 context.TOpParkirCctvRealtimes.RemoveRange(oldData);
 
                 // Siapkan data baru
@@ -1071,15 +1121,18 @@ namespace CctvRealtimeWs
             {
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
+
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime close conenction {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                Console.ResetColor();
             }
         }
 
 
         private async Task UpdateDBJasnitaRekap(
-            DataCctv.DataOpCctv op,
-            List<RekapJasnita> dataList,
-            CancellationToken cancellationToken
+                DataCctv.DataOpCctv op,
+                List<RekapJasnita> dataList,
+                CancellationToken cancellationToken
             )
         {
             await using var context = DBClass.GetContext();
@@ -1089,49 +1142,86 @@ namespace CctvRealtimeWs
                 // === OPEN CONNECTION ===
                 await context.Database.OpenConnectionAsync(cancellationToken);
 
-                // Ambil dan hapus data lama
-                var oldData = await context.TOpParkirCctvs
-                    .Where(x => x.Nop == op.Nop && x.WaktuMasuk.Date == DateTime.Now.Date && x.Vendor == (int)op.Vendor)
+                // Ambil daftar ID existing untuk NOP & Vendor hari ini
+                var existingIds = await context.TOpParkirCctvs
+                    .Where(x =>
+                        x.Nop == op.Nop &&
+                        x.WaktuMasuk.Date == DateTime.Now.Date &&
+                        x.Vendor == (int)op.Vendor)
+                    .Select(x => x.Id)
                     .ToListAsync(cancellationToken);
 
-                context.TOpParkirCctvs.RemoveRange(oldData);
+                var newItems = dataList
+                    .Where(item => !existingIds.Contains(item.Id))
+                    .ToList();
 
-                // Siapkan data baru
+                // Ambil ID dok yang sudah ada untuk mencegah constraint error
+                var existingDokIds = await context.TOpParkirCctvDoks
+                    .Select(d => d.Id)
+                    .ToListAsync(cancellationToken);
+
                 var result = new List<TOpParkirCctv>();
 
                 foreach (var item in dataList)
                 {
-                    var res = new TOpParkirCctv();
-                    res.TOpParkirCctvDok = new TOpParkirCctvDok();
+                    // kalau Id CCTV belum ada → insert record baru
+                    if (!existingIds.Contains(item.Id))
+                    {
+                        var res = new TOpParkirCctv
+                        {
+                            Id = item.Id,
+                            Nop = item.Nop,
+                            CctvId = item.CctvId,
+                            NamaOp = op.NamaOp,
+                            AlamatOp = op.AlamatOp,
+                            WilayahPajak = op.WilayahPajak,
+                            WaktuMasuk = item.WaktuMasuk,
+                            JenisKend = item.JenisKend,
+                            PlatNo = item.PlatNo,
+                            WaktuKeluar = item.WaktuMasuk,
+                            Direction = item.Direction,
+                            Log = item.Log,
+                            Vendor = (int)op.Vendor,
+                            TOpParkirCctvDok = new TOpParkirCctvDok
+                            {
+                                Id = item.Id,
+                                ImageData = item.ImageData
+                            }
+                        };
+                        result.Add(res);
+                    }
+                    else
+                    {
+                        // kalau data CCTV sudah ada, pastikan dokumennya juga up-to-date
+                        var dok = await context.TOpParkirCctvDoks
+                            .FirstOrDefaultAsync(d => d.Id == item.Id, cancellationToken);
 
-                    res.Id = item.Id;
-                    res.Nop = item.Nop;
-                    res.CctvId = item.CctvId;
-                    res.NamaOp = op.NamaOp;
-                    res.AlamatOp = op.AlamatOp;
-                    res.WilayahPajak = op.WilayahPajak;
-                    res.WaktuMasuk = item.WaktuMasuk;
-                    res.JenisKend = item.JenisKend;
-                    res.PlatNo = item.PlatNo;
-                    res.WaktuKeluar = item.WaktuMasuk;
-                    res.Direction = item.Direction;
-                    res.Log = item.Log;
-                    res.TOpParkirCctvDok.ImageData = item.ImageData;
-
-                    result.Add(res);
+                        if (dok != null)
+                        {
+                            // update image data kalau berubah
+                            dok.ImageData = item.ImageData;
+                            context.TOpParkirCctvDoks.Update(dok);
+                        }
+                    }
                 }
 
                 if (result.Count > 0)
                 {
                     await context.TOpParkirCctvs.AddRangeAsync(result, cancellationToken);
+                    await context.SaveChangesAsync(cancellationToken);
+
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Inserted {result.Count} new Jasnita Rekap data untuk NOP {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                    Console.ResetColor();
                 }
+                else
+                {
 
-                // Simpan perubahan ke database
-                await context.SaveChangesAsync(cancellationToken);
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Rekap updated untuk NOP {op.Nop}-{op.NamaOp}-{op.CctvId} ({result.Count} data)");
-                Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Tidak ada data baru untuk Jasnita Rekap NOP {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                    Console.ResetColor();
+                }
             }
             catch (Exception ex)
             {
@@ -1141,11 +1231,15 @@ namespace CctvRealtimeWs
             }
             finally
             {
-                // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Rekap close conenction {op.Nop}-{op.NamaOp}-{op.CctvId}");
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Rekap close connection {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                Console.ResetColor();
             }
         }
+
+
 
         private async Task GenerateTokenJasnita()
         {
