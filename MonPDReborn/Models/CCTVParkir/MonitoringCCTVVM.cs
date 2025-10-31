@@ -918,7 +918,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.TanggalMasuk = item.WaktuMasuk;
                     res.JenisKendEnum = (EnumFactory.EJenisKendParkirCCTV)item.JenisKend;
                     res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
-                    res.PlatNo = item.PlatNo;
+                    res.PlatNo = item.PlatNo ?? "-";
                     res.Direction = ((EnumFactory.CctvParkirDirection)item.Direction).GetDescription();
                     res.Log = item.Log;
                     res.ImageUrl = item.ImageUrl;
@@ -1278,27 +1278,53 @@ namespace MonPDReborn.Models.CCTVParkir
                 var result = new List<LiveStreamingAktivitasHarian>();
                 var context = DBClass.GetContext();
 
+                //var data = context.TOpParkirCctvRealtimes
+                //    .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.JenisKend != 0).ToList();
+
+                // Ambil data realtime (include gambar kalau ada relasi)
                 var data = context.TOpParkirCctvRealtimes
-                    .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.JenisKend != 0).ToList();
+                    .Include(x => x.TOpParkirCctvRealtimeDok) 
+                    .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.JenisKend != 0)
+                    .ToList();
+
 
                 foreach (var item in data)
                 {
-                    var res = new LiveStreamingAktivitasHarian();
-                    res.Id = item.Id;
-                    res.Nop = item.Nop;
-                    res.CctvId = item.CctvId;
-                    res.TanggalMasuk = item.WaktuMasuk;
-                    res.JenisKendEnum = (EnumFactory.EJenisKendParkirCCTV)item.JenisKend;
-                    res.JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription();
-                    res.PlatNo = item.PlatNo;
-                    res.ImageUrl = item.ImageUrl;
-                    res.IsLog = false;
-                    res.IsLogText = "Record";
-                    res.IsOn = false;
-                    res.VendorId = item.VendorId;
+                    var res = new LiveStreamingAktivitasHarian
+                    {
+                        Id = item.Id,
+                        Nop = item.Nop,
+                        CctvId = item.CctvId,
+                        TanggalMasuk = item.WaktuMasuk,
+                        JenisKendEnum = (EnumFactory.EJenisKendParkirCCTV)item.JenisKend,
+                        JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription(),
+                        PlatNo = item.PlatNo ?? "-",
+                        IsLog = false,
+                        IsLogText = "Record",
+                        IsOn = false,
+                        VendorId = item.VendorId
+                    };
+
+                    if (item.VendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                    {
+                        if (item.TOpParkirCctvRealtimeDok?.ImageData != null && item.TOpParkirCctvRealtimeDok.ImageData.Length > 0)
+                        {
+                            string base64String = Convert.ToBase64String(item.TOpParkirCctvRealtimeDok.ImageData);
+                            res.ImageUrl = $"data:image/jpeg;base64,{base64String}";
+                        }
+
+                        res.GambarKendaraan = null;
+                    }
+                    else if (item.VendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
+                    {
+                        res.ImageUrl = item.ImageUrl;
+                        res.GambarKendaraan = null;
+                    }
+
                     result.Add(res);
                 }
 
+                // Tambahkan logs per vendor
                 int vendorId = data.FirstOrDefault()?.VendorId ?? 0;
                 if (vendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
                 {
@@ -1562,6 +1588,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public EnumFactory.EJenisKendParkirCCTV JenisKendEnum { get; set; }
             public string JenisKend { get; set; }
             public string? PlatNo { get; set; }
+            public byte[] GambarKendaraan { get; set; }
         }
 
         public class MonitoringCctvHarianDetail

@@ -488,7 +488,7 @@ GROUP BY NOP, MASA_PAJAK, TAHUN_PAJAK,SEQ
                             newRow.NpwpdNama = "-";
                             newRow.NpwpdAlamat = "-";
                             newRow.PajakId = KDPajak;
-                            newRow.PajakNama = "Pajak Jasa Restoran";
+                            newRow.PajakNama = "MAMIN";
                             newRow.NamaOp = "-";
                             newRow.AlamatOp = "-";
                             newRow.AlamatOpKdLurah = "-";
