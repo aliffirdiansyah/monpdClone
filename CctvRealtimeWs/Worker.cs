@@ -52,16 +52,20 @@ namespace CctvRealtimeWs
                 {
                     var dataList = await DataCctv.GetDataOpCctvAsync();
 
-                    // Selalu proses SEMUA CCTV (bukan hanya yang baru)
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Memproses {dataList.Count} CCTV aktif...");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Menjalankan proses {dataList.Count} CCTV aktif...");
 
-                    var tasks = dataList.Select(data => ProcessDataAsync(data, stoppingToken)).ToList();
+                    // Jalankan proses paralel tanpa menunggu semua selesai
+                    _ = Task.Run(async () =>
+                    {
+                        var tasks = dataList.Select(data => ProcessDataAsync(data, stoppingToken)).ToList();
+                        await Task.WhenAll(tasks);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Selesai memproses batch CCTV.");
+                        Console.ResetColor();
+                    }, stoppingToken);
 
-                    await Task.WhenAll(tasks);
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Selesai memproses semua CCTV.");
-                    Console.ResetColor();
+                    // Delay 10 detik sebelum mulai batch berikutnya (tidak menunggu proses batch sebelumnya selesai)
+                    await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
                 }
                 catch (TaskCanceledException)
                 {
@@ -74,10 +78,6 @@ namespace CctvRealtimeWs
                     Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] di ExecuteAsync: {GetFullExceptionMessage(ex)}");
                     Console.ResetColor();
                 }
-
-                // Delay 5 detik sebelum loop berikutnya
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Menunggu 5 detik sebelum pengecekan berikutnya...");
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
 
@@ -276,9 +276,9 @@ namespace CctvRealtimeWs
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Rekap close connection {op.Nop};{op.NamaOp};{op.CctvId}");
-                Console.ResetColor();
+                //Console.ForegroundColor = ConsoleColor.White;
+                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Rekap close connection {op.Nop};{op.NamaOp};{op.CctvId}");
+                //Console.ResetColor();
             }
         }
         private async Task UpdateDbTelkomRealtime(DataCctv.DataOpCctv op, List<RekapTelkom> dataList, CancellationToken cancellationToken)
@@ -338,9 +338,9 @@ namespace CctvRealtimeWs
             {
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Realtime close connection {op.Nop};{op.NamaOp};{op.CctvId}");
-                Console.ResetColor();
+                //Console.ForegroundColor = ConsoleColor.White;
+                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Realtime close connection {op.Nop};{op.NamaOp};{op.CctvId}");
+                //Console.ResetColor();
             }
         }
         private async Task GenerateTokenTelkom()
@@ -1053,9 +1053,9 @@ namespace CctvRealtimeWs
             {
                 await context.Database.CloseConnectionAsync();
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Rekap close connection {op.Nop};{op.NamaOp};{op.CctvId}");
-                Console.ResetColor();
+                //Console.ForegroundColor = ConsoleColor.White;
+                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Rekap close connection {op.Nop};{op.NamaOp};{op.CctvId}");
+                //Console.ResetColor();
             }
         }
         private async Task UpdateDBJasnitaRekapImageV2(DataCctv.DataOpCctv op, List<RekapJasnitaImage> dataList, DateTime tanggal, CancellationToken cancellationToken)
@@ -1134,9 +1134,9 @@ namespace CctvRealtimeWs
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime close conenction {op.Nop};{op.NamaOp};{op.CctvId}");
-                Console.ResetColor();
+                //Console.ForegroundColor = ConsoleColor.White;
+                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime close conenction {op.Nop};{op.NamaOp};{op.CctvId}");
+                //Console.ResetColor();
             }
         }
 
@@ -1220,7 +1220,7 @@ namespace CctvRealtimeWs
             {
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita close conenction {op.Nop};{op.NamaOp};{op.CctvId}");
+                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita close conenction {op.Nop};{op.NamaOp};{op.CctvId}");
             }
         }
         private async Task UpdateDBJasnitaRealtimeV2(DataCctv.DataOpCctv op,List<RekapJasnita> dataList,CancellationToken cancellationToken)
@@ -1278,9 +1278,9 @@ namespace CctvRealtimeWs
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime close connection {op.Nop};{op.NamaOp};{op.CctvId}");
-                Console.ResetColor();
+                //Console.ForegroundColor = ConsoleColor.White;
+                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime close connection {op.Nop};{op.NamaOp};{op.CctvId}");
+                //Console.ResetColor();
             }
         }
         private async Task UpdateDBJasnitaRealtimeImageV2(DataCctv.DataOpCctv op, List<RekapJasnitaImage> dataList, CancellationToken cancellationToken)
@@ -1366,9 +1366,9 @@ namespace CctvRealtimeWs
             {
                 await context.Database.CloseConnectionAsync();
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime Image close connection {op.Nop};{op.NamaOp};{op.CctvId}");
-                Console.ResetColor();
+                //Console.ForegroundColor = ConsoleColor.White;
+                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime Image close connection {op.Nop};{op.NamaOp};{op.CctvId}");
+                //Console.ResetColor();
             }
         }
 
