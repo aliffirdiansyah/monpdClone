@@ -67,7 +67,4 @@ public partial class DbAkunTargetBulan
     [ForeignKey("TahunBuku, Akun, Kelompok, Jenis, Objek, Rincian, SubRincian")]
     [InverseProperty("DbAkunTargetBulans")]
     public virtual DbAkunTarget DbAkunTarget { get; set; } = null!;
-
-    [InverseProperty("DbAkunTargetBulan")]
-    public virtual ICollection<DbAkunTargetBulanUptb> DbAkunTargetBulanUptbs { get; set; } = new List<DbAkunTargetBulanUptb>();
 }
