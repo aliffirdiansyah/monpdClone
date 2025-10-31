@@ -2,6 +2,7 @@
 using MonPDLib.EF;
 using MonPDLib.EFReklame;
 using MonPDLib.EFPenyelia;
+using MonPDLib.EFReklameSsw;
 using System.Text;
 using System.Text.Json;
 
@@ -12,6 +13,7 @@ namespace MonPDLib
         public static string Monpd = "";
         public static string Reklame = "";
         public static string Penyelia = "";
+        public static string ReklameSSW = "";
         public static string StV1 = "";
         public static string Hpp = "";
         public static string Phrh = "";
@@ -37,6 +39,13 @@ namespace MonPDLib
             var optionsBuilder = new DbContextOptionsBuilder<PenyeliaContext>();
             optionsBuilder.UseOracle(Penyelia, opt => opt.UseOracleSQLCompatibility("11"));
             return new PenyeliaContext(optionsBuilder.Options);
+        }
+        
+        public static ReklameSswContext GetReklameSswContext()
+        {         
+            var optionsBuilder = new DbContextOptionsBuilder<ReklameSswContext>();
+            optionsBuilder.UseOracle(ReklameSSW, opt => opt.UseOracleSQLCompatibility("11"));
+            return new ReklameSswContext(optionsBuilder.Options);
         }
 
         public static SurabayaTaxContext GetSurabayaTaxContext()

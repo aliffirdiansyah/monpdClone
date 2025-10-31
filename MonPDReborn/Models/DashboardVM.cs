@@ -1,9 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
+using MonPDLib.EFReklameSsw;
 using MonPDLib.General;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using static MonPDReborn.Models.DashboardVM.ViewModel;
 using static MonPDReborn.Models.DataOP.ProfileOPVM;
 using static MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.MonitoringTahunanViewModels;
 
@@ -41,97 +44,14 @@ namespace MonPDReborn.Models
                 Data = Method.GetSeriesPajakDaerahData();
             }
         }
-        /*public class JumlahObjekPajakTahunan
+        public class DashboardLayanan
         {
-            public List<ViewModel.JumlahObjekPajakTahunan> Data { get; set; } = new List<ViewModel.JumlahObjekPajakTahunan>();
-            public JumlahObjekPajakTahunan()
+            public List<ViewModel.DashboardReklame> Data { get; set; } = new();
+            public DashboardLayanan()
             {
-                Data = Method.GetJumlahObjekPajakTahunanData();
+                Data = Method.GetDataDashboard();
             }
         }
-        public class JumlahObjekPajakSeries
-        {
-            public List<ViewModel.JumlahObjekPajakSeries> Data { get; set; } = new List<ViewModel.JumlahObjekPajakSeries>();
-            public JumlahObjekPajakSeries()
-            {
-                Data = Method.GetJumlahObjekPajakSeriesData();
-            }
-        }
-        public class PemasanganAlatRekamDetail
-        {
-            public List<ViewModel.PemasanganAlatRekamDetail> Data { get; set; } = new List<ViewModel.PemasanganAlatRekamDetail>();
-            public PemasanganAlatRekamDetail()
-            {
-                Data = Method.GetPemasanganAlatRekamDetailData();
-            }
-        }
-        public class PemasanganAlatRekamSeries
-        {
-            public List<ViewModel.PemasanganAlatRekamSeries> Data { get; set; } = new List<ViewModel.PemasanganAlatRekamSeries>();
-            public PemasanganAlatRekamSeries()
-            {
-                Data = Method.GetPemasanganAlatRekamSeriesData();
-            }
-        }
-        public class PemeriksaanPajak
-        {
-            public List<ViewModel.PemeriksaanPajak> Data { get; set; } = new List<ViewModel.PemeriksaanPajak>();
-            public PemeriksaanPajak()
-            {
-                Data = Method.GetPemeriksaanPajakData();
-            }
-        }
-        public class PengedokanPajak
-        {
-            public List<ViewModel.PengedokanPajak> Data { get; set; } = new List<ViewModel.PengedokanPajak>();
-            public PengedokanPajak()
-            {
-                Data = Method.GetPengedokanPajakData();
-            }
-        }
-        public class DataKontrolPotensiOp
-        {
-            public List<ViewModel.DataKontrolPotensiOp> Data { get; set; } = new List<ViewModel.DataKontrolPotensiOp>();
-            public DataKontrolPotensiOp()
-            {
-                Data = Method.GetDataKontrolPotensiOp();
-            }
-        }
-        
-        //public class DataPiutang
-        //{
-        //    public List<ViewModel.DataPiutang> Data { get; set; } = new List<ViewModel.DataPiutang>();
-        //    public DataPiutang()
-        //    {
-        //        Data = Method.GetDataPiutangData();
-        //    }
-        //}
-        //public class DetailPiutang
-        //{
-        //    public List<ViewModel.DetailPiutang> Data { get; set; } = new List<ViewModel.DetailPiutang>();
-        //    public DetailPiutang(EnumFactory.EPajak jenisPajak, int tahun)
-        //    {
-        //        Data = Method.GetDetailPiutangData(jenisPajak, tahun);
-        //    }
-        //}
-        //public class DataMutasi
-        //{
-        //    public List<ViewModel.DataMutasi> Data { get; set; } = new List<ViewModel.DataMutasi>();
-        //    public DataMutasi()
-        //    {
-        //        Data = Method.GetDataMutasiData();
-        //    }
-        //}
-
-        public class JumlahObjekPajak
-        {
-            public List<ViewModel.JumlahObjekPajak> Data { get; set; } = new List<ViewModel.JumlahObjekPajak>();
-            public JumlahObjekPajak()
-            {
-                Data = Method.GetJumlahObjekPajakData();
-            }
-        }*/
-
 
         public class ViewModel
         {
@@ -263,7 +183,6 @@ namespace MonPDReborn.Models
                 public decimal Jumlah4 { get; set; }
                 public decimal Jumlah5 { get; set; }
             }
-
             public class JumlahObjekPajak
             {
                 public int EnumPajak { get; set; }
@@ -378,8 +297,24 @@ namespace MonPDReborn.Models
                 public decimal NominalMutasi4 { get; set; }
                 public decimal NominalMutasi5 { get; set; }
             }
+            public class DashboardReklame
+            {
+                public string Layanan { get; set; } = null!;
+                public int Jan { get; set; }
+                public int Feb { get; set; }
+                public int Mar { get; set; }
+                public int Apr { get; set; }
+                public int Mei { get; set; }
+                public int Jun { get; set; }
+                public int Jul { get; set; }
+                public int Aug { get; set; }
+                public int Sep { get; set; }
+                public int Okt { get; set; }
+                public int Nov { get; set; }
+                public int Des { get; set; }
+            }
         }
-
+        private static ReklameSswContext _context = DBClass.GetReklameSswContext();
         public class Method
         {
             public static ViewModel.Dashboard GetDashboardData()
@@ -2428,7 +2363,45 @@ namespace MonPDReborn.Models
                 return ret;
 
             }*/
+            public static List<ViewModel.DashboardReklame> GetDataDashboard()
+            {
+                var context = _context;
 
+                var tahun = DateTime.Now.Year;
+
+                var dashPerizinan = context.TPerizinanReklames
+                    .Include(x => x.KdPerizinanNavigation)
+                    .Where(x => x.TglDaftar.Value.Year == tahun)
+                    .ToList();
+
+                var dashboardList = new List<DashboardReklame>();
+
+                foreach (var group in dashPerizinan
+                    .GroupBy(x => new { x.KdPerizinan, x.KdPerizinanNavigation.NamaPerizinan }))
+                {
+                    var model = new DashboardReklame
+                    {
+                        Layanan = group.Key.NamaPerizinan,
+                        Jan = group.Count(x => x.TglDaftar.Value.Month == 1),
+                        Feb = group.Count(x => x.TglDaftar.Value.Month == 2),
+                        Mar = group.Count(x => x.TglDaftar.Value.Month == 3),
+                        Apr = group.Count(x => x.TglDaftar.Value.Month == 4),
+                        Mei = group.Count(x => x.TglDaftar.Value.Month == 5),
+                        Jun = group.Count(x => x.TglDaftar.Value.Month == 6),
+                        Jul = group.Count(x => x.TglDaftar.Value.Month == 7),
+                        Aug = group.Count(x => x.TglDaftar.Value.Month == 8),
+                        Sep = group.Count(x => x.TglDaftar.Value.Month == 9),
+                        Okt = group.Count(x => x.TglDaftar.Value.Month == 10),
+                        Nov = group.Count(x => x.TglDaftar.Value.Month == 11),
+                        Des = group.Count(x => x.TglDaftar.Value.Month == 12)
+                    };
+
+                    dashboardList.Add(model);
+                }
+
+
+                return dashboardList;
+            }
         }
     }
 }

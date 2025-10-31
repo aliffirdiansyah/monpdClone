@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using Oracle.ManagedDataAccess.Client;
 using System.Globalization;
-using static MonPDReborn.Models.StrukPBJT.StrukPBJTVM;
 
 namespace MonPDReborn.Models.ReklamePublic
 {

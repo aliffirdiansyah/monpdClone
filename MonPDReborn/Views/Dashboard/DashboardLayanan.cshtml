@@ -1,0 +1,111 @@
+﻿@using static MonPDReborn.Models.DashboardVM.ViewModel
+@model MonPDReborn.Models.DashboardVM.DashboardLayanan
+
+<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<DashboardReklame>()
+        .ID("dg-dashboardreklame")
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .AllowColumnResizing(true)
+        .DataSource(Model.Data)
+        .KeyExpr("ID")
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(x => x.Layanan).CssClass("fw-bold").Caption("Jenis Layanan");
+            columns.AddFor(x => x.Jan).Caption("Januari");
+            columns.AddFor(x => x.Feb).Caption("Februari");
+            columns.AddFor(x => x.Mar).Caption("Maret");
+            columns.AddFor(x => x.Apr).Caption("April");
+            columns.AddFor(x => x.Mei).Caption("Mei");
+            columns.AddFor(x => x.Jun).Caption("Juni");
+            columns.AddFor(x => x.Jul).Caption("Juli");
+            columns.AddFor(x => x.Aug).Caption("Agustus");
+            columns.AddFor(x => x.Sep).Caption("September");
+            columns.AddFor(x => x.Okt).Caption("Oktober");
+            columns.AddFor(x => x.Nov).Caption("November");
+            columns.AddFor(x => x.Des).Caption("Desember");
+
+
+        })
+        .Summary(s => s
+        .TotalItems(items =>
+        {
+            items.AddFor(x => x.Layanan)
+            .SummaryType(SummaryType.Count)
+            .DisplayFormat("TOTAL");
+
+            items.AddFor(x => x.Jan)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Feb)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Mar)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Apr)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Mei)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Jun)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Jul)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Aug)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Sep)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Okt)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Nov)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+            items.AddFor(x => x.Des)
+            .SummaryType(SummaryType.Sum)
+            .ValueFormat("#,##0")
+            .DisplayFormat("{0}");
+
+        })
+        )
+        )
+</div>
