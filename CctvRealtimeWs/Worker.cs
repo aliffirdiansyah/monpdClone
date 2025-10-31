@@ -238,13 +238,13 @@ namespace CctvRealtimeWs
                     await context.SaveChangesAsync(cancellationToken);
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Inserted {result.Count} new Telkom Rekap data untuk NOP {op.Nop};{op.NamaOp};{op.CctvId}");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDBTelkomRekap Inserted {result.Count} new Telkom Rekap data untuk NOP {op.Nop};{op.NamaOp};{op.CctvId}");
                     Console.ResetColor();
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Tidak ada data baru untuk Telkom Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDBTelkomRekap Tidak ada data baru untuk Telkom Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}");
                     Console.ResetColor();
                 }
             }
@@ -1011,21 +1011,21 @@ namespace CctvRealtimeWs
 
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Inserted {result.Count} new Jasnita Rekap data untuk NOP {op.Nop};{op.NamaOp};{op.CctvId}");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDBJasnitaRekap Inserted {result.Count} new Jasnita Rekap data untuk NOP {op.Nop};{op.NamaOp};{op.CctvId}");
                     Console.ResetColor();
                 }
                 else
                 {
 
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Tidak ada data baru untuk Jasnita Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDBJasnitaRekap Tidak ada data baru untuk Jasnita Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}");
                     Console.ResetColor();
                 }
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] Update DB Jasnita Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBJasnitaRekap Update DB Jasnita Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -1243,7 +1243,7 @@ namespace CctvRealtimeWs
                 }
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Realtime insert-only untuk NOP {op.Nop};{op.NamaOp};{op.CctvId} ({insertedCount} data baru)");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDBJasnitaRealtimeV2 DB Jasnita Realtime insert-only untuk NOP {op.Nop};{op.NamaOp};{op.CctvId} ({insertedCount} data baru)");
                 Console.ResetColor();
             }
             catch (Exception ex)
@@ -1332,7 +1332,7 @@ namespace CctvRealtimeWs
                 }
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Selesai update DB Jasnita Realtime Image NOP {op.Nop};{op.NamaOp};{op.CctvId} (Insert {insertedCount} data baru)");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] UpdateDBJasnitaRealtimeImageV2 Selesai update DB Jasnita Realtime Image NOP {op.Nop};{op.NamaOp};{op.CctvId} (Insert {insertedCount} data baru)");
                 Console.ResetColor();
             }
             catch (Exception ex)
