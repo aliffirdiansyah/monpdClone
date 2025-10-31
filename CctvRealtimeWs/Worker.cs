@@ -46,76 +46,63 @@ namespace CctvRealtimeWs
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                try
-                {
-                    var dataList = await DataCctv.GetDataOpCctvAsync();
+            var dataList = await DataCctv.GetDataOpCctvAsync();
 
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Menjalankan proses {dataList.Count} CCTV aktif...");
+            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Menjalankan proses {dataList.Count} CCTV aktif...");
 
-                    // Jalankan proses paralel tanpa menunggu semua selesai
-                    _ = Task.Run(async () =>
-                    {
-                        var tasks = dataList.Select(data => ProcessDataAsync(data, stoppingToken)).ToList();
-                        await Task.WhenAll(tasks);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Selesai memproses batch CCTV.");
-                        Console.ResetColor();
-                    }, stoppingToken);
+            // Jalankan masing-masing CCTV dalam task sendiri (loop internal)
+            var tasks = dataList.Select(data => Task.Run(() => ProcessDataAsync(data, stoppingToken), stoppingToken)).ToList();
 
-                    // Delay 10 detik sebelum mulai batch berikutnya (tidak menunggu proses batch sebelumnya selesai)
-                    await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
-                }
-                catch (TaskCanceledException)
-                {
-                    Console.WriteLine("Task dibatalkan, menghentikan service...");
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] di ExecuteAsync: {GetFullExceptionMessage(ex)}");
-                    Console.ResetColor();
-                }
-            }
+            // Tunggu sampai service dimatikan
+            await Task.WhenAll(tasks);
         }
 
 
         private async Task ProcessDataAsync(DataCctv.DataOpCctv op, CancellationToken cancellationToken)
         {
-            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [START] PROCESS: {op.Nop};{op.NamaOp};{op.CctvId}");
-
-            try
+            while (!cancellationToken.IsCancellationRequested)
             {
-                if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Jasnita)
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [START] PROCESS: {op.Nop};{op.NamaOp};{op.CctvId}");
+
+                try
                 {
-                    await CallApiJasnitaV2GrpcAsync(op, DateTime.Now, cancellationToken);
+                    if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Jasnita)
+                    {
+                        await CallApiJasnitaV2GrpcAsync(op, DateTime.Now, cancellationToken);
+                    }
+                    else if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Telkom)
+                    {
+                        await CallApiTelkomAsync(op, DateTime.Now, cancellationToken);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] Vendor tidak dikenali untuk {op.Nop};{op.NamaOp};{op.CctvId}");
+                        Console.ResetColor();
+                        return;
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] FINISHED PROCESS {op.Nop};{op.NamaOp};{op.CctvId}");
+                    Console.ResetColor();
+
+                    // Tunggu 30 detik sebelum mulai loop berikutnya
+                    await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
                 }
-                else if (op.Vendor == MonPDLib.General.EnumFactory.EVendorParkirCCTV.Telkom)
+                catch (TaskCanceledException)
                 {
-                    await CallApiTelkomAsync(op, DateTime.Now, cancellationToken);
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [STOP] Dibatalkan: {op.Nop};{op.NamaOp};{op.CctvId}");
+                    break;
                 }
-                else
+                catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] Vendor tidak dikenali untuk {op.Nop};{op.NamaOp};{op.CctvId}");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
                     Console.ResetColor();
-                    return;
+
+                    // Tunggu sebentar sebelum mencoba lagi supaya tidak spam error
+                    await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
                 }
-
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] FINISHED PROCESS {op.Nop};{op.NamaOp};{op.CctvId}");
-                Console.ResetColor();
-
-                // Delay 30 detik setelah selesai proses setiap CCTV
-                await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
-                Console.ResetColor();
             }
         }
 
