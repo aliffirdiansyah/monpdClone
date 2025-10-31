@@ -22,6 +22,6 @@ namespace CctvRealtimeWs.JasnitaModels
         public string? Log { get; set; }
         public string? ImageUrl { get; set; }
         public decimal Vendor { get; set; }
-        public byte[] ImageData { get; set; }
+        public byte[]? ImageData { get; set; }
     }
 }

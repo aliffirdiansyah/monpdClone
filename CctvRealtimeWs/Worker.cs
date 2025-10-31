@@ -97,7 +97,9 @@ namespace CctvRealtimeWs
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] Vendor tidak dikenali untuk {op.Nop}-{op.NamaOp}-{op.CctvId}");
+                    Console.ResetColor();
                     return;
                 }
 
@@ -798,18 +800,17 @@ namespace CctvRealtimeWs
                                 }
                                 else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                                 {
-                                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Token kadaluarsa, refresh token dan ulangi...");
                                     await GenerateTokenJasnita();
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Error: {response.StatusCode}");
+                                    //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Error: {response.StatusCode}");
                                 }
 
                                 attempt++;
                                 if (attempt >= maxRetry)
                                 {
-                                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Gagal setelah {maxRetry} percobaan pada offset {offset}");
+                                    //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {op.Nop}-{op.NamaOp}-{op.CctvId} Gagal setelah {maxRetry} percobaan pada offset {offset}");
                                     break;
                                 }
 
@@ -912,7 +913,7 @@ namespace CctvRealtimeWs
                                     HttpResponseMessage response = await httpClient.GetAsync(url);
                                     if (!response.IsSuccessStatusCode)
                                     {
-                                        throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Body.Guid} Gagal memanggil API Jasnita Event Snapshot. webClientUrl : {webClientUrl}, Url : {url} Status: {response.StatusCode}");
+                                        throw new Exception($"{DateTime.Now} {op.Nop}-{op.NamaOp}-{item.Body.Guid} Gagal memanggil API Jasnita Event Snapshot. Url : {url} Status: {response.StatusCode}");
                                     }
 
                                     // Baca stream image-nya
@@ -1154,27 +1155,30 @@ namespace CctvRealtimeWs
                     // kalau Id CCTV belum ada → insert record baru
                     if (!existingIds.Contains(item.Id))
                     {
-                        var res = new TOpParkirCctv
+                        var res = new TOpParkirCctv();
+                        
+                        res.Id = item.Id;
+                        res.Nop = item.Nop;
+                        res.CctvId = item.CctvId;
+                        res.NamaOp = op.NamaOp;
+                        res.AlamatOp = op.AlamatOp;
+                        res.WilayahPajak = op.WilayahPajak;
+                        res.WaktuMasuk = item.WaktuMasuk;
+                        res.JenisKend = item.JenisKend;
+                        res.PlatNo = item.PlatNo;
+                        res.WaktuKeluar = item.WaktuMasuk;
+                        res.Direction = item.Direction;
+                        res.Log = item.Log;
+                        res.Vendor = (int)op.Vendor;
+                        if(item.ImageData != null && item.ImageData.Length > 0)
                         {
-                            Id = item.Id,
-                            Nop = item.Nop,
-                            CctvId = item.CctvId,
-                            NamaOp = op.NamaOp,
-                            AlamatOp = op.AlamatOp,
-                            WilayahPajak = op.WilayahPajak,
-                            WaktuMasuk = item.WaktuMasuk,
-                            JenisKend = item.JenisKend,
-                            PlatNo = item.PlatNo,
-                            WaktuKeluar = item.WaktuMasuk,
-                            Direction = item.Direction,
-                            Log = item.Log,
-                            Vendor = (int)op.Vendor,
-                            TOpParkirCctvDok = new TOpParkirCctvDok
+                            res.TOpParkirCctvDok = new TOpParkirCctvDok
                             {
                                 Id = item.Id,
                                 ImageData = item.ImageData
-                            }
-                        };
+                            };
+                        }
+                        
                         result.Add(res);
                     }
                     else
