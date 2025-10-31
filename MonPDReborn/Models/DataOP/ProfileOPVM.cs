@@ -2196,12 +2196,12 @@ namespace MonPDReborn.Models.DataOP
                             {
                                 EnumPajak = (int)JenisPajak,
                                 Kategori_Id = (int)x.Kategori,
-                                Kategori_Nama = "hahaha",
+                                Kategori_Nama = x.KategoriNama,
                                 NOP = x.Nop,
-                                NamaOP = "hahaha",
-                                Alamat = "hahaha",
+                                NamaOP = x.NamaOp,
+                                Alamat = x.AlamatOp,
                                 JenisOP = "-",
-                                Wilayah = "SURABAYA " + "hahaha" ?? "-"
+                                Wilayah = "SURABAYA " + x.WilayahPajak ?? "-"
                             }).ToList();
                         }
                         else if (status == "JmlOpTutupPermanen")
