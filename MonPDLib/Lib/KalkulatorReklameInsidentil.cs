@@ -159,7 +159,7 @@ namespace MonPDLib.Lib
                     luas = Math.Round((Math.Round(input.Panjang, 2) * Math.Round(input.Lebar, 2)), 2);
                     ret.Luas = luas;
 
-                    nsr = (((njop.NilaiNjop ?? 0) * luas) + ((nss?.Nilai ?? 0) * luas));
+                    nsr = (((njop.NilaiNjop ?? 0) * Math.Round(luas, 2)) + ((nss?.Nilai ?? 0) * Math.Round(luas, 2)));
                     ret.Nsr = nsr;
 
                     if (jenisReklame.IdJenisReklame == (int)(EnumFactory.KategoriReklame.Baliho))
@@ -196,7 +196,7 @@ namespace MonPDLib.Lib
                         ret.ProdukRokok = 0;
                     }
                     ret.TotalNilaiSewa = Math.Ceiling((ret.PokokPajak + ret.ProdukRokok) / 100) * 100;
-                    ret.JaminanBongkar = Math.Ceiling(((decimal)(jambong?.Nilai ?? 0) * luas * input.JumlahSatuan) / 100m) * 100m;
+                    ret.JaminanBongkar = Math.Ceiling(((decimal)(jambong?.Nilai ?? 0) * Math.Round(luas, 2) * input.JumlahSatuan) / 100m) * 100m;
 
                     break;
                 case EnumFactory.EModeUkur.Satuan:
