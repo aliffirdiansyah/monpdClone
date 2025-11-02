@@ -970,6 +970,16 @@ namespace CctvRealtimeWs
                         seq++;
                     }
                 }
+
+                rekapResult = rekapResult
+                    .GroupBy(x => x.Id)
+                    .Select(g => g.First())
+                    .ToList();
+
+                rekapImageResult = rekapImageResult
+                    .GroupBy(x => x.Id)
+                    .Select(g => g.First())
+                    .ToList();
                 #endregion
 
 
