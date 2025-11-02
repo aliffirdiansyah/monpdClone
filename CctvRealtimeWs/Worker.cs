@@ -143,7 +143,7 @@ namespace CctvRealtimeWs
                     {
                         string? platNomor = item.PlatNomor?.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor?.ToUpper();
                         DateTime waktuMasuk = ParseFlexibleDate(item.Timestamp);
-                        var id = $"{item.Id.ToString()}";
+                        var id = $"{op.Nop}/{item.Id.ToString()}";
 
                         var res = new RekapTelkom();
 
@@ -182,7 +182,7 @@ namespace CctvRealtimeWs
                 Console.ResetColor();
             }
         }
-        private async Task UpdateDBTelkomRekap(DataCctv.DataOpCctv op,List<RekapTelkom> dataList, DateTime tanggal, CancellationToken cancellationToken)
+        private async Task UpdateDBTelkomRekap(DataCctv.DataOpCctv op, List<RekapTelkom> dataList, DateTime tanggal, CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -259,9 +259,6 @@ namespace CctvRealtimeWs
                 // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
 
-                //Console.ForegroundColor = ConsoleColor.White;
-                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Telkom Rekap close connection {op.Nop};{op.NamaOp};{op.CctvId}");
-                //Console.ResetColor();
             }
         }
         private async Task UpdateDbTelkomRealtime(DataCctv.DataOpCctv op, List<RekapTelkom> dataList, CancellationToken cancellationToken)
@@ -714,6 +711,34 @@ namespace CctvRealtimeWs
                 }
                 #endregion
 
+                string accessPoint = "";
+                #region Cameras
+                {
+                    using var httpClient = new HttpClient();
+                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
+                    // Panggil API Jasnita untuk ambil daftar kamera
+                    HttpResponseMessage response = await httpClient.GetAsync($"{webClientUrl}/camera/list", cancellationToken);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new Exception($"Gagal memanggil API Jasnita Cameras. Status: {response.StatusCode}");
+                    }
+                    // Baca dan parsing hasil JSON
+                    string jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
+                    var deserialize = JsonSerializer.Deserialize<CameraJasnita.CameraJasnitaResponse>(jsonResponse);
+
+                    if (deserialize != null)
+                    {
+                        accessPoint = deserialize.Cameras.FirstOrDefault(x => x.DisplayName == op.DisplayId)?.AccessPoint ?? "";
+                    }
+
+                    if (string.IsNullOrEmpty(accessPoint))
+                    {
+                        throw new Exception($"{DateTime.Now} {op.Nop};{op.NamaOp} Gagal mendapatkan Access Point dari API Jasnita Cameras untuk DisplayId: {op.DisplayId}.");
+                    }
+                }
+                #endregion
+
                 var eventResult = new List<EventAll.EventAllResponse>();
                 #region Events
                 {
@@ -767,7 +792,7 @@ namespace CctvRealtimeWs
                                             {
                                     new {
                                             type = "ET_DetectorEvent",
-                                            subjects = op.AccessPoint
+                                            subjects = accessPoint
                                         }
                                     }
                                         },
@@ -875,7 +900,7 @@ namespace CctvRealtimeWs
                                 }
 
                                 DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
-                                var id = $"{item.Body.Guid}";
+                                var id = $"{op.Nop}/{item.Body.Guid}";
 
                                 if (waktuMasuk.Date == DateTime.Now.Date)
                                 {
@@ -884,7 +909,7 @@ namespace CctvRealtimeWs
                                     httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
 
                                     // ambil access point (hapus "hosts/")
-                                    string accessPoint = item.Body.OriginExt.AccessPoint.Replace("hosts/", "");
+                                    accessPoint = item.Body.OriginExt.AccessPoint.Replace("hosts/", "");
 
                                     // ambil timestamp
                                     string timestamp = item.Body.Timestamp;
@@ -965,7 +990,7 @@ namespace CctvRealtimeWs
                 Console.ResetColor();
             }
         }
-        private async Task UpdateDBJasnitaRekap(DataCctv.DataOpCctv op,List<RekapJasnita> dataList, DateTime tanggal, CancellationToken cancellationToken)
+        private async Task UpdateDBJasnitaRekap(DataCctv.DataOpCctv op, List<RekapJasnita> dataList, DateTime tanggal, CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -1000,7 +1025,7 @@ namespace CctvRealtimeWs
                     if (!existingIds.Contains(item.Id))
                     {
                         var res = new TOpParkirCctv();
-                        
+
                         res.Id = item.Id;
                         res.Nop = item.Nop;
                         res.CctvId = item.CctvId;
@@ -1014,7 +1039,7 @@ namespace CctvRealtimeWs
                         res.Direction = item.Direction;
                         res.Log = item.Log;
                         res.Vendor = (int)op.Vendor;
-                        
+
                         result.Add(res);
                     }
                 }
@@ -1047,9 +1072,6 @@ namespace CctvRealtimeWs
             {
                 await context.Database.CloseConnectionAsync();
 
-                //Console.ForegroundColor = ConsoleColor.White;
-                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita Rekap close connection {op.Nop};{op.NamaOp};{op.CctvId}");
-                //Console.ResetColor();
             }
         }
         private async Task UpdateDBJasnitaRekapImageV2(DataCctv.DataOpCctv op, List<RekapJasnitaImage> dataList, DateTime tanggal, CancellationToken cancellationToken)
@@ -1134,7 +1156,7 @@ namespace CctvRealtimeWs
             }
         }
 
-        private async Task UpdateDbJasnitaRealtime(DataCctv.DataOpCctv op, List<EventAll.EventAllResponse> dataList,CancellationToken cancellationToken)
+        private async Task UpdateDbJasnitaRealtime(DataCctv.DataOpCctv op, List<EventAll.EventAllResponse> dataList, CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -1217,7 +1239,7 @@ namespace CctvRealtimeWs
                 //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] DB Jasnita close conenction {op.Nop};{op.NamaOp};{op.CctvId}");
             }
         }
-        private async Task UpdateDBJasnitaRealtimeV2(DataCctv.DataOpCctv op,List<RekapJasnita> dataList,CancellationToken cancellationToken)
+        private async Task UpdateDBJasnitaRealtimeV2(DataCctv.DataOpCctv op, List<RekapJasnita> dataList, CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -1234,7 +1256,7 @@ namespace CctvRealtimeWs
                 // Hapus data lama beserta dok-nya
                 foreach (var item in backDateDataList)
                 {
-                    if(item.TOpParkirCctvRealtimeDok != null)
+                    if (item.TOpParkirCctvRealtimeDok != null)
                     {
                         context.TOpParkirCctvRealtimeDoks.Remove(item.TOpParkirCctvRealtimeDok);
                     }

@@ -30,18 +30,18 @@ namespace CctvRealtimeWs
 
             var result = new List<DataOpCctv>();
 
-            // Gunakan ToListAsync agar EF Core menjalankan query secara async
+            //// Gunakan ToListAsync agar EF Core menjalankan query secara async
             var query = await context.MOpParkirCctvs
                 .Include(x => x.MOpParkirCctvTelkoms)
                 .Include(x => x.MOpParkirCctvJasnita)
                 .Where(x => x.IsPasang == 1)
                 .ToListAsync();
 
-            ////for dev
+            //for dev
             //var query = await context.MOpParkirCctvs
             //    .Include(x => x.MOpParkirCctvTelkoms)
             //    .Include(x => x.MOpParkirCctvJasnita)
-            //    .Where(x => x.IsPasang == 1 && x.Nop == "357803001190703416")
+            //    .Where(x => x.IsPasang == 1 && x.Vendor == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
             //    .Take(1)
             //    .ToListAsync();
 
