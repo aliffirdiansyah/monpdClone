@@ -4,7 +4,7 @@
 <div class="table-responsive">
     @(
         Html.DevExtreme().DataGrid<DashboardLayanan>()
-        .ID("dg-dashboardreklame")
+        .ID("dg-dashboardutama")
         .ShowBorders(true)
         .ShowColumnHeaders(true)
         .ShowColumnLines(true)
@@ -179,7 +179,16 @@
             items.AddFor(x => x.Selesai12).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
 
         })
-        )
+        ).MasterDetail(md => md
+            .Enabled(true)
+            .Template(
+        @<text>
+            @{
+            ViewData["PajakId"] = new JS("data.PajakId");
+            }
+            @await Html.PartialAsync("/Views/Dashboard/DashboardLayanan.cshtml")
+        </text>)
+            )
         )
 
 </div>
