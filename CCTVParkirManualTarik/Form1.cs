@@ -70,6 +70,18 @@ namespace CCTVParkirManualTarik
                     DateTime tgl1 = date1.Value.Date;
                     DateTime tgl2 = date2.Value.Date;
 
+                    // === VALIDASI TANGGAL ===
+                    if (tgl1 > tgl2)
+                    {
+                        MessageBox.Show("Tanggal awal tidak boleh lebih besar dari tanggal akhir.","Validasi Tanggal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tgl2.Date > DateTime.Now.Date)
+                    {
+                        MessageBox.Show("Tanggal akhir tidak boleh hari ini.","Validasi Tanggal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
                     await Task.Run(async () =>
                     {
                         var dataList = dataListBox.CheckedItems.Cast<DataCctv.DataOpCctv>().ToList();
