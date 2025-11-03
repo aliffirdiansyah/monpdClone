@@ -945,9 +945,6 @@ namespace CCTVParkirManualTarik
                 {
                     dataListBox.SetItemChecked(i, newState);
                 }
-
-                string msg = newState ? "Semua CCTV dicentang." : "Semua CCTV di-uncheck.";
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] {msg}", Color.Lime);
             }
             catch (Exception ex)
             {

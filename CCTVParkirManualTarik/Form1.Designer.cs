@@ -126,6 +126,7 @@
             // 
             // dataListBox
             // 
+            dataListBox.CheckOnClick = true;
             dataListBox.FormattingEnabled = true;
             dataListBox.HorizontalScrollbar = true;
             dataListBox.Location = new Point(36, 148);
