@@ -853,7 +853,7 @@ namespace MonPDReborn.Models.CCTVParkir
                     .ToList();
 
                 var kendaraanParkir = context.TOpParkirCctvs
-                    .Where(x => x.WaktuMasuk.Year == tahunIni && x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming))
+                    .Where(x => x.WaktuMasuk.Year == tahunIni && x.Nop == nop )
                     .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Month })
                     .Select(x => new { x.Key.JenisKend, Bln = x.Key.Month, Jml = x.Count() })
                     .ToList();
@@ -974,7 +974,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 var kendaraanParkir = context.TOpParkirCctvs
                     .Where(x => x.WaktuMasuk.Year == tahunIni
                         && x.WaktuMasuk.Month == bulan
-                        && x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming)
+                        && x.Nop == nop 
                     )
                     .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Month, x.WaktuMasuk.Day })
                     .Select(x => new { x.Key.JenisKend, Bln = x.Key.Month, Hari = x.Key.Day, Jml = x.Count() })
@@ -1057,7 +1057,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 var context = DBClass.GetContext();
 
                 var data = context.TOpParkirCctvs
-                    .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming) && x.JenisKend != 0).ToList();
+                    .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl  && x.JenisKend != 0).ToList();
 
                 foreach (var item in data)
                 {
@@ -1301,7 +1301,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 // 📌 Bulanan tetap berdasarkan bulan dari tgl
                 var kendaraanParkirBulanan = context.TOpParkirCctvs
                     .Where(x => x.WaktuMasuk.Year == tgl.Year && x.WaktuMasuk.Month == tgl.Month &&
-                                x.Nop == nop && x.Direction == ((int)EnumFactory.CctvParkirDirection.Incoming))
+                                x.Nop == nop )
                     .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Day })
                     .Select(g => new
                     {

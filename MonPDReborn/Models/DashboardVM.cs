@@ -1,9 +1,11 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using Dapper;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.EFReklameSsw;
 using MonPDLib.General;
+using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using static MonPDLib.General.EnumFactory;
@@ -347,7 +349,17 @@ namespace MonPDReborn.Models
                 public int Proses12 { get; set; }
                 public int Selesai12 { get; set; }
             }
-
+            public class LayananPBB
+            {
+                public string KODE_LAYANAN { get; set; }
+                public string NO_LAYANAN { get; set; }
+                public string NOP { get; set; }
+                public string STATUS_SELESAI { get; set; }
+                public DateTime? TGL_MASUK_LAYANAN { get; set; }
+                public DateTime? TGL_TERIMA { get; set; }
+                public string SEKSI_TERIMA { get; set; }
+                public DateTime? TGL_SELESAI { get; set; }
+            }
             public class DashboardReklame
             {
                 public string Layanan { get; set; } = null!;
@@ -2518,6 +2530,54 @@ namespace MonPDReborn.Models
                 return rnd.Next(0, 50);
             }
 
+            public static List<ViewModel.LayananPBB> GetDataLayananPBB(int bulan, int tahun)
+            {
+                var ret = new List<ViewModel.LayananPBB>();
+                string connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
+
+                var query = @"
+                    SELECT 
+                        SUBSTR(X.NO_LAYANAN,4,2) AS KODE_LAYANAN, 
+                        X.NO_LAYANAN, 
+                        X.NOP, 
+                        X.STATUS_SELESAI, 
+                        X.TGL_MASUK_LAYANAN, 
+                        X.TGL_TERIMA, 
+                        X.SEKSI_TERIMA, 
+                        X.TGL_SELESAI
+                    FROM (
+                        SELECT 
+                            PB.NO_LAYANAN, 
+                            PB.NOP, 
+                            PB.STATUS_SELESAI, 
+                            PB.TGL_MASUK_LAYANAN, 
+                            TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY') AS TGL_TERIMA, 
+                            PB.SEKSI_TERIMA, 
+                            PB.TGL_SELESAI,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY PB.NO_LAYANAN 
+                                ORDER BY TO_DATE(PB.TGL_TERIMA,'DD/MM/YYYY') DESC
+                            ) AS RN
+                        FROM POSISI_BERKAS_PBB PB
+                        WHERE EXTRACT(MONTH FROM PB.TGL_MASUK_LAYANAN) = :BULAN
+                          AND EXTRACT(YEAR FROM PB.TGL_MASUK_LAYANAN) = :TAHUN
+                    ) X
+                    WHERE X.RN = 1
+                    AND (
+                        (SUBSTR(X.NO_LAYANAN,4,2) = '08') 
+                        OR 
+                        (SUBSTR(X.NO_LAYANAN,4,2) <> '08' AND X.SEKSI_TERIMA IS NOT NULL)
+                    )
+                    ORDER BY X.TGL_MASUK_LAYANAN
+                ";
+                var connection = new OracleConnection(connString);
+
+                connection.Open();
+                ret = connection.Query<ViewModel.LayananPBB>(query, new { BULAN = bulan, TAHUN = tahun }).ToList();
+                connection.Close();
+
+                return ret;
+            }
 
             public static List<ViewModel.DashboardReklame> GetDataDashboard(EnumFactory.EPajak pajakId)
             {
