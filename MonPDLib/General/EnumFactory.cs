@@ -1646,5 +1646,22 @@ namespace MonPDLib.General
             Verifikasi = 3,
             Selesai = 4
         }
+        public enum EStatusLayananPBB
+        {
+            [Description("Sedang Proses")]
+            SedangProses = 0,
+
+            [Description("Selesai")]
+            Selesai = 2,
+
+            [Description("Ditolak")]
+            Ditolak = 3,
+
+            [Description("Dibatalkan")]
+            Dibatalkan = 4,
+
+            [Description("Selesai Pemberitahuan WA")]
+            SelesaiWA = 9
+        }
     }
 }

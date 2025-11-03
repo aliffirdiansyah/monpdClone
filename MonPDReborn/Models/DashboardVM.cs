@@ -57,7 +57,7 @@ namespace MonPDReborn.Models
         }
         public class LayananHarian
         {
-            public List<ViewModel.DashboardLayanan> Data { get; set;} = new();
+            public List<ViewModel.DashboardLayanan> Data { get; set; } = new();
             public LayananHarian(DateTime tgl)
             {
                 Data = Method.GetLayananHarian(tgl);
@@ -354,7 +354,7 @@ namespace MonPDReborn.Models
                 public string KODE_LAYANAN { get; set; }
                 public string NO_LAYANAN { get; set; }
                 public string NOP { get; set; }
-                public string STATUS_SELESAI { get; set; }
+                public int STATUS_SELESAI { get; set; }
                 public DateTime? TGL_MASUK_LAYANAN { get; set; }
                 public DateTime? TGL_TERIMA { get; set; }
                 public string SEKSI_TERIMA { get; set; }
@@ -1188,7 +1188,7 @@ namespace MonPDReborn.Models
                 var targetData = context.DbAkunTargets
                     .Where(x => x.TahunBuku >= yearLast && x.TahunBuku <= year)
                     .GroupBy(x => new { x.PajakId, x.TahunBuku })
-                    .Select(x => new { TahunBuku = x.Key.TahunBuku,  PajakId = x.Key.PajakId, Target = x.Sum(q => q.Target) })
+                    .Select(x => new { TahunBuku = x.Key.TahunBuku, PajakId = x.Key.PajakId, Target = x.Sum(q => q.Target) })
                     .AsEnumerable();
 
                 //realisasi
@@ -1261,9 +1261,9 @@ namespace MonPDReborn.Models
                     .AsEnumerable();
 
                 var dataRealisasiOpsenBbnkb = context.DbMonOpsenBbnkbs
-                    .Where(x => x.TglSspd.Year >= yearLast && x.TglSspd.Year <= year )
+                    .Where(x => x.TglSspd.Year >= yearLast && x.TglSspd.Year <= year)
                     .GroupBy(x => new { x.TglSspd.Year, PajakId = (int)(EnumFactory.EPajak.OpsenBbnkb) })
-                    .Select(x => new { TahunBuku = x.Key.Year,  x.Key.PajakId, Realisasi = x.Sum(q => q.JmlPokok) })
+                    .Select(x => new { TahunBuku = x.Key.Year, x.Key.PajakId, Realisasi = x.Sum(q => q.JmlPokok) })
                     .AsEnumerable();
 
                 //isi realisasi data
@@ -1341,7 +1341,7 @@ namespace MonPDReborn.Models
 
                     result.Add(res);
                 }
-                
+
 
                 return result;
             }
@@ -2508,12 +2508,26 @@ namespace MonPDReborn.Models
                     }
                     else if (epajak == EnumFactory.EPajak.PBB)
                     {
-                        // 👉 Data dummy sementara (bisa diganti dengan data real PBB)
                         for (int bulan = 1; bulan <= 12; bulan++)
                         {
-                            typeof(ViewModel.DashboardLayanan).GetProperty($"Masuk{bulan}")?.SetValue(layanan, RandomNumber());
-                            typeof(ViewModel.DashboardLayanan).GetProperty($"Proses{bulan}")?.SetValue(layanan, RandomNumber());
-                            typeof(ViewModel.DashboardLayanan).GetProperty($"Selesai{bulan}")?.SetValue(layanan, RandomNumber());
+                            var dataBulan = GetDataLayananPBB(bulan, tahun);
+
+                            var masuk = dataBulan
+                                .Where(x =>
+                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Ditolak)
+                                .Count();
+
+                            var proses = dataBulan
+                                .Where(x =>
+                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses)
+                                .Count();
+
+                            var selesai = dataBulan
+                                .Where(x => x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai || x.STATUS_SELESAI == (int)EStatusLayananPBB.SelesaiWA)
+                                .Count();
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Masuk{bulan}")?.SetValue(layanan, masuk);
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Proses{bulan}")?.SetValue(layanan, proses);
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Selesai{bulan}")?.SetValue(layanan, selesai);
                         }
                     }
 
