@@ -1,9 +1,9 @@
 ﻿@using static MonPDReborn.Models.DashboardVM.ViewModel
-@model MonPDReborn.Models.DashboardVM.DashboardLayanan
+@model MonPDReborn.Models.DashboardVM.LayananDashboard
 
 <div class="table-responsive">
     @(
-        Html.DevExtreme().DataGrid<DashboardReklame>()
+        Html.DevExtreme().DataGrid<DashboardLayanan>()
         .ID("dg-dashboardreklame")
         .ShowBorders(true)
         .ShowColumnHeaders(true)
@@ -22,7 +22,7 @@
         .OnExporting("exportGrid")
         .Columns(columns =>
         {
-            columns.AddFor(x => x.Layanan)
+            columns.AddFor(x => x.JenisPajak)
             .CssClass("fw-bold")
             .Caption("Jenis Layanan");
 
@@ -125,7 +125,7 @@
         .Summary(s => s
         .TotalItems(items =>
         {
-            items.AddFor(x => x.Layanan)
+            items.AddFor(x => x.JenisPajak)
             .SummaryType(SummaryType.Count)
             .DisplayFormat("TOTAL");
 

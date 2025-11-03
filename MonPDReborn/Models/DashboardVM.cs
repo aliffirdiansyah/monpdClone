@@ -6,6 +6,7 @@ using MonPDLib.EFReklameSsw;
 using MonPDLib.General;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
 using static MonPDReborn.Models.DataOP.ProfileOPVM;
 using static MonPDReborn.Models.MonitoringGlobal.MonitoringTahunanVM.MonitoringTahunanViewModels;
@@ -50,6 +51,14 @@ namespace MonPDReborn.Models
             public DashboardLayanan()
             {
                 Data = Method.GetDataDashboard();
+            }
+        }
+        public class LayananDashboard
+        {
+            public List<ViewModel.DashboardLayanan> Data { get; set; } = new();
+            public LayananDashboard()
+            {
+                Data = Method.GetLayanan();
             }
         }
 
@@ -297,22 +306,89 @@ namespace MonPDReborn.Models
                 public decimal NominalMutasi4 { get; set; }
                 public decimal NominalMutasi5 { get; set; }
             }
+            public class DashboardLayanan
+            {
+                public string JenisPajak { get; set; } = null!;
+                public int PajakId { get; set; }
+                public int Masuk1 { get; set; }
+                public int Proses1 { get; set; }
+                public int Selesai1 { get; set; }
+                public int Masuk2 { get; set; }
+                public int Proses2 { get; set; }
+                public int Selesai2 { get; set; }
+                public int Masuk3 { get; set; }
+                public int Proses3 { get; set; }
+                public int Selesai3 { get; set; }
+                public int Masuk4 { get; set; }
+                public int Proses4 { get; set; }
+                public int Selesai4 { get; set; }
+                public int Masuk5 { get; set; }
+                public int Proses5 { get; set; }
+                public int Selesai5 { get; set; }
+                public int Masuk6 { get; set; }
+                public int Proses6 { get; set; }
+                public int Selesai6 { get; set; }
+                public int Masuk7 { get; set; }
+                public int Proses7 { get; set; }
+                public int Selesai7 { get; set; }
+                public int Masuk8 { get; set; }
+                public int Proses8 { get; set; }
+                public int Selesai8 { get; set; }
+                public int Masuk9 { get; set; }
+                public int Proses9 { get; set; }
+                public int Selesai9 { get; set; }
+                public int Masuk10 { get; set; }
+                public int Proses10 { get; set; }
+                public int Selesai10 { get; set; }
+                public int Masuk11 { get; set; }
+                public int Proses11 { get; set; }
+                public int Selesai11 { get; set; }
+                public int Masuk12 { get; set; }
+                public int Proses12 { get; set; }
+                public int Selesai12 { get; set; }
+            }
+
             public class DashboardReklame
             {
                 public string Layanan { get; set; } = null!;
-                public int Jan { get; set; }
-                public int Feb { get; set; }
-                public int Mar { get; set; }
-                public int Apr { get; set; }
-                public int Mei { get; set; }
-                public int Jun { get; set; }
-                public int Jul { get; set; }
-                public int Aug { get; set; }
-                public int Sep { get; set; }
-                public int Okt { get; set; }
-                public int Nov { get; set; }
-                public int Des { get; set; }
+                public int Masuk1 { get; set; }
+                public int Proses1 { get; set; }
+                public int Selesai1 { get; set; }
+                public int Masuk2 { get; set; }
+                public int Proses2 { get; set; }
+                public int Selesai2 { get; set; }
+                public int Masuk3 { get; set; }
+                public int Proses3 { get; set; }
+                public int Selesai3 { get; set; }
+                public int Masuk4 { get; set; }
+                public int Proses4 { get; set; }
+                public int Selesai4 { get; set; }
+                public int Masuk5 { get; set; }
+                public int Proses5 { get; set; }
+                public int Selesai5 { get; set; }
+                public int Masuk6 { get; set; }
+                public int Proses6 { get; set; }
+                public int Selesai6 { get; set; }
+                public int Masuk7 { get; set; }
+                public int Proses7 { get; set; }
+                public int Selesai7 { get; set; }
+                public int Masuk8 { get; set; }
+                public int Proses8 { get; set; }
+                public int Selesai8 { get; set; }
+                public int Masuk9 { get; set; }
+                public int Proses9 { get; set; }
+                public int Selesai9 { get; set; }
+                public int Masuk10 { get; set; }
+                public int Proses10 { get; set; }
+                public int Selesai10 { get; set; }
+                public int Masuk11 { get; set; }
+                public int Proses11 { get; set; }
+                public int Selesai11 { get; set; }
+                public int Masuk12 { get; set; }
+                public int Proses12 { get; set; }
+                public int Selesai12 { get; set; }
             }
+
         }
         private static ReklameSswContext _context = DBClass.GetReklameSswContext();
         public class Method
@@ -2363,14 +2439,87 @@ namespace MonPDReborn.Models
                 return ret;
 
             }*/
+            public static List<ViewModel.DashboardLayanan> GetLayanan()
+            {
+                var context = _context; // ganti sesuai DbContext kamu
+                var tahun = DateTime.Now.Year;
+
+                var list = new List<ViewModel.DashboardLayanan>();
+
+                foreach (var epajak in Enum.GetValues(typeof(EnumFactory.EPajak)).Cast<EnumFactory.EPajak>())
+                {
+                    var layanan = new ViewModel.DashboardLayanan
+                    {
+                        JenisPajak = epajak.GetDescription(),
+                        PajakId = (int)epajak
+                    };
+
+                    if (epajak == EnumFactory.EPajak.Reklame)
+                    {
+                        var data = context.TPerizinanReklames
+                            .Include(x => x.TPerizinanReklameBatals)
+                            .Where(x => x.TglDaftar.HasValue && x.TglDaftar.Value.Year == tahun)
+                            .ToList();
+
+                        for (int bulan = 1; bulan <= 12; bulan++)
+                        {
+                            var dataBulan = data.Where(x => x.TglDaftar.Value.Month == bulan);
+
+                            var masuk = dataBulan
+                                .Where(x =>
+                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
+                                    !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar))
+                                .Count();
+
+                            var proses = dataBulan
+                                .Where(x =>
+                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
+                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
+                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi)
+                                .Count();
+
+                            var selesai = dataBulan
+                                .Where(x =>
+                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai)
+                                .Count();
+
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Masuk{bulan}")?.SetValue(layanan, masuk);
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Proses{bulan}")?.SetValue(layanan, proses);
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Selesai{bulan}")?.SetValue(layanan, selesai);
+                        }
+                    }
+                    else
+                    {
+                        // Pajak lain (sementara dummy)
+                        for (int bulan = 1; bulan <= 12; bulan++)
+                        {
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Masuk{bulan}")?.SetValue(layanan, RandomNumber());
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Proses{bulan}")?.SetValue(layanan, RandomNumber());
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Selesai{bulan}")?.SetValue(layanan, RandomNumber());
+                        }
+                    }
+
+                    list.Add(layanan);
+                }
+
+                return list;
+            }
+
+            // Helper angka random sementara
+            private static int RandomNumber()
+            {
+                var rnd = new Random();
+                return rnd.Next(0, 50);
+            }
+
             public static List<ViewModel.DashboardReklame> GetDataDashboard()
             {
                 var context = _context;
-
                 var tahun = DateTime.Now.Year;
 
                 var dashPerizinan = context.TPerizinanReklames
                     .Include(x => x.KdPerizinanNavigation)
+                    .Include(x => x.TPerizinanReklameBatals)
                     .Where(x => x.TglDaftar.Value.Year == tahun)
                     .ToList();
 
@@ -2381,27 +2530,53 @@ namespace MonPDReborn.Models
                 {
                     var model = new DashboardReklame
                     {
-                        Layanan = group.Key.NamaPerizinan,
-                        Jan = group.Count(x => x.TglDaftar.Value.Month == 1),
-                        Feb = group.Count(x => x.TglDaftar.Value.Month == 2),
-                        Mar = group.Count(x => x.TglDaftar.Value.Month == 3),
-                        Apr = group.Count(x => x.TglDaftar.Value.Month == 4),
-                        Mei = group.Count(x => x.TglDaftar.Value.Month == 5),
-                        Jun = group.Count(x => x.TglDaftar.Value.Month == 6),
-                        Jul = group.Count(x => x.TglDaftar.Value.Month == 7),
-                        Aug = group.Count(x => x.TglDaftar.Value.Month == 8),
-                        Sep = group.Count(x => x.TglDaftar.Value.Month == 9),
-                        Okt = group.Count(x => x.TglDaftar.Value.Month == 10),
-                        Nov = group.Count(x => x.TglDaftar.Value.Month == 11),
-                        Des = group.Count(x => x.TglDaftar.Value.Month == 12)
+                        Layanan = group.Key.NamaPerizinan
                     };
+
+                    for (int bulan = 1; bulan <= 12; bulan++)
+                    {
+                        var dataBulan = group.Where(x => x.TglDaftar.Value.Month == bulan);
+
+                        var masuk = dataBulan
+                            .Where(x =>
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
+                                (x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar) == false))
+                            .Count();
+
+                        var proses = dataBulan
+                            .Where(x =>
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi)
+                            .Count();
+
+                        var selesai = dataBulan
+                            .Where(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai)
+                            .Count();
+
+                        switch (bulan)
+                        {
+                            case 1: model.Masuk1 = masuk; model.Proses1 = proses; model.Selesai1 = selesai; break;
+                            case 2: model.Masuk2 = masuk; model.Proses2 = proses; model.Selesai2 = selesai; break;
+                            case 3: model.Masuk3 = masuk; model.Proses3 = proses; model.Selesai3 = selesai; break;
+                            case 4: model.Masuk4 = masuk; model.Proses4 = proses; model.Selesai4 = selesai; break;
+                            case 5: model.Masuk5 = masuk; model.Proses5 = proses; model.Selesai5 = selesai; break;
+                            case 6: model.Masuk6 = masuk; model.Proses6 = proses; model.Selesai6 = selesai; break;
+                            case 7: model.Masuk7 = masuk; model.Proses7 = proses; model.Selesai7 = selesai; break;
+                            case 8: model.Masuk8 = masuk; model.Proses8 = proses; model.Selesai8 = selesai; break;
+                            case 9: model.Masuk9 = masuk; model.Proses9 = proses; model.Selesai9 = selesai; break;
+                            case 10: model.Masuk10 = masuk; model.Proses10 = proses; model.Selesai10 = selesai; break;
+                            case 11: model.Masuk11 = masuk; model.Proses11 = proses; model.Selesai11 = selesai; break;
+                            case 12: model.Masuk12 = masuk; model.Proses12 = proses; model.Selesai12 = selesai; break;
+                        }
+                    }
 
                     dashboardList.Add(model);
                 }
 
-
                 return dashboardList;
             }
+
         }
     }
 }
