@@ -818,7 +818,7 @@ namespace CCTVParkirManualTarik
                         var response = await httpClient.GetAsync(item.Url, ct);
                         if (!response.IsSuccessStatusCode)
                         {
-                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} gagal ambil snapshot {item.Id}: {response.StatusCode}");
+                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} gagal ambil snapshot {item.Id}: {response.StatusCode}", Color.Red);
                             if (response.StatusCode == HttpStatusCode.Forbidden)
                                 await GenerateTokenJasnita2(ct);
                             return;
@@ -837,7 +837,7 @@ namespace CCTVParkirManualTarik
                         }
                         else
                         {
-                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} snapshot kosong {item.Id}, dilewati.");
+                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} snapshot kosong {item.Id}, dilewati.", Color.Yellow);
                         }
                     }
                     catch (Exception ex)
