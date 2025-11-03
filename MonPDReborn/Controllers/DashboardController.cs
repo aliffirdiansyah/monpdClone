@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using MonPDLib.EFReklameSsw;
 using MonPDLib.General;
@@ -98,12 +100,37 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
-        public IActionResult DashboardLayanan()
+        //public IActionResult DashboardLayanan()
+        //{
+        //    var response = new ResponseBase();
+        //    try
+        //    {
+        //        var model = new Models.DashboardVM.DashboardLayanan();
+        //        return PartialView($"{URLView}{actionName}", model);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        TempData[INPUTPENDATAAN_ERROR_MESSAGE] = ex.Message;
+        //        return Json(response.ToErrorInfoMessage(ex.Message));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
+        //        return Json(response.ToInternalServerError());
+        //    }
+        //}
+        [HttpGet]
+        public object GetDetailLayanan(DataSourceLoadOptions load_options, int PajakId)
+        {
+            var data = Models.DashboardVM.Method.GetDataDashboard((EnumFactory.EPajak)PajakId);
+            return DataSourceLoader.Load(data, load_options);
+        }
+        public IActionResult LayananDashboard()
         {
             var response = new ResponseBase();
             try
             {
-                var model = new Models.DashboardVM.DashboardLayanan();
+                var model = new Models.DashboardVM.LayananDashboard();
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException ex)
@@ -117,12 +144,12 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
-        public IActionResult LayananDashboard()
+        public IActionResult LayananDashboardHarian(DateTime tgl)
         {
             var response = new ResponseBase();
             try
             {
-                var model = new Models.DashboardVM.LayananDashboard();
+                var model = new Models.DashboardVM.LayananHarian(tgl);
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException ex)

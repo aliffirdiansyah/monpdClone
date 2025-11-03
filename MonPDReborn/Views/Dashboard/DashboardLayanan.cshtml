@@ -1,10 +1,12 @@
-﻿@using static MonPDReborn.Models.DashboardVM.ViewModel
-@model MonPDReborn.Models.DashboardVM.DashboardLayanan
-
+﻿
 <div class="table-responsive">
     @(
-        Html.DevExtreme().DataGrid<DashboardReklame>()
-        .ID("dg-dashboardreklame")
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DashboardVM.ViewModel.DashboardReklame>()
+        .ID("dg-dashboadrdetail")
+        .DataSource(d => d.Mvc()
+        .LoadAction("GetDetailLayanan")
+        .LoadParams(new { PajakId = ViewData["PajakId"] })
+        )
         .ShowBorders(true)
         .ShowColumnHeaders(true)
         .ShowColumnLines(true)
@@ -16,8 +18,7 @@
         .HeaderFilter(h => h.Visible(true))
         .Sorting(s => s.Mode(GridSortingMode.Multiple))
         .AllowColumnResizing(true)
-        .DataSource(Model.Data)
-        .KeyExpr("Layanan")
+        @* .KeyExpr("Layanan") *@
         .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
         .OnExporting("exportGrid")
         .Columns(columns =>
