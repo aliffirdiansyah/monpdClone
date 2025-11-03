@@ -21,6 +21,12 @@ namespace CCTVParkirManualTarik
             public string? AccessPoint { get; set; }
             public string? CctvId { get; set; }
             public string? DisplayId { get; set; }
+
+            public override string ToString()
+            {
+                // Contoh tampilan: "Tunjungan Plaza - Jl. Basuki Rahmat 8"
+                return $"[{Vendor.GetDescription()}] {NamaOp} - {AlamatOp}";
+            }
         }
 
 
@@ -31,18 +37,19 @@ namespace CCTVParkirManualTarik
             var result = new List<DataOpCctv>();
 
             //// Gunakan ToListAsync agar EF Core menjalankan query secara async
-            //var query = await context.MOpParkirCctvs
-            //    .Include(x => x.MOpParkirCctvTelkoms)
-            //    .Include(x => x.MOpParkirCctvJasnita)
-            //    .Where(x => x.IsPasang == 1)
-            //    .ToListAsync();
-
-            ////for dev
             var query = await context.MOpParkirCctvs
                 .Include(x => x.MOpParkirCctvTelkoms)
                 .Include(x => x.MOpParkirCctvJasnita)
-                .Where(x => x.IsPasang == 1 && x.Vendor == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                .Where(x => x.IsPasang == 1)
+                .OrderBy(x => x.NamaOp)
                 .ToListAsync();
+
+            ////for dev
+            //var query = await context.MOpParkirCctvs
+            //    .Include(x => x.MOpParkirCctvTelkoms)
+            //    .Include(x => x.MOpParkirCctvJasnita)
+            //    .Where(x => x.IsPasang == 1 && x.Nop == "357803001190703416")
+            //    .ToListAsync();
 
             foreach (var item in query)
             {

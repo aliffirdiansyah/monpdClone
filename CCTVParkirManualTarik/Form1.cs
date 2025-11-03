@@ -44,8 +44,12 @@ namespace CCTVParkirManualTarik
             _USER_TELKOM = "pemkot_surabaya_va";
             _PASS_TELKOM = "P3mk0tSuR4b4Ya";
 
+            Load += Form1_Load;
+
             btnTarik.Click += btnTarik_Click;
             btnTarik.Text = "START";
+
+            btnSelectAll.Click += btnSelectAll_Click;
         }
 
         private async void btnTarik_Click(object sender, EventArgs e)
@@ -56,17 +60,25 @@ namespace CCTVParkirManualTarik
                 btnTarik.Text = "STOP";
                 _cts = new CancellationTokenSource();
 
+                // disable kontrol lain saat proses berjalan
+                btnRefresh.Enabled = false;
+                btnSelectAll.Enabled = false;
+                dataListBox.Enabled = false;
+
                 try
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Start Process");
-
                     DateTime tgl1 = date1.Value.Date;
                     DateTime tgl2 = date2.Value.Date;
 
-                    // Jalankan di thread background
                     await Task.Run(async () =>
                     {
-                        var dataList = await DataCctv.GetDataOpCctvAsync();
+                        var dataList = dataListBox.CheckedItems.Cast<DataCctv.DataOpCctv>().ToList();
+                        if (dataList.Count == 0)
+                        {
+                            MessageBox.Show("Pilih minimal satu CCTV.");
+                            return;
+                        }
+                        UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Start Process");
                         UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Menjalankan proses {dataList.Count} CCTV dari {tgl1:yyyy-MM-dd} sampai {tgl2:yyyy-MM-dd}");
 
                         for (DateTime tgl = tgl1; tgl <= tgl2; tgl = tgl.AddDays(1))
@@ -74,8 +86,12 @@ namespace CCTVParkirManualTarik
                             _cts.Token.ThrowIfCancellationRequested();
                             UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] === Mulai tanggal {tgl:yyyy-MM-dd} ===");
 
-                            var tasks = dataList.Select(op => ProcessDataAsync(op, tgl, _cts.Token)).ToList();
-                            await Task.WhenAll(tasks);
+                            // Sequential per CCTV
+                            foreach (var op in dataList)
+                            {
+                                _cts.Token.ThrowIfCancellationRequested();
+                                await ProcessDataAsync(op, tgl, _cts.Token);
+                            }
 
                             UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] === Selesai tanggal {tgl:yyyy-MM-dd} ===", Color.Lime);
                             await Task.Delay(TimeSpan.FromSeconds(3), _cts.Token);
@@ -98,6 +114,11 @@ namespace CCTVParkirManualTarik
                     btnTarik.Text = "START";
                     _cts?.Dispose();
                     _cts = null;
+
+                    // aktifkan lagi kontrol setelah proses selesai / dibatalkan
+                    btnRefresh.Enabled = true;
+                    btnSelectAll.Enabled = true;
+                    dataListBox.Enabled = true;
                 }
             }
             else
@@ -141,7 +162,6 @@ namespace CCTVParkirManualTarik
                 }
             }
         }
-
 
         #region Telkom
         private async Task CallApiTelkomAsync(DataCctv.DataOpCctv op, DateTime tanggal, CancellationToken cancellationToken)
@@ -773,7 +793,7 @@ namespace CCTVParkirManualTarik
 
                 using var httpClient = new HttpClient
                 {
-                    Timeout = TimeSpan.FromSeconds(120)
+                    Timeout = TimeSpan.FromSeconds(300)
                 };
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
 
@@ -898,6 +918,75 @@ namespace CCTVParkirManualTarik
             // === AUTO-SCROLL KE BAWAH ===
             consoleLog.SelectionStart = consoleLog.TextLength;
             consoleLog.ScrollToCaret();
+        }
+
+
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            await LoadCctvListAsync();
+        }
+
+        private async void btnRefresh_Click(object sender, EventArgs e)
+        {
+            await LoadCctvListAsync();
+        }
+
+        private void btnSelectAll_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                btnSelectAll.Enabled = false;
+                dataListBox.Enabled = false;
+
+                bool allChecked = dataListBox.CheckedItems.Count == dataListBox.Items.Count;
+                bool newState = !allChecked; // kalau semua sudah dicentang → uncheck all
+
+                for (int i = 0; i < dataListBox.Items.Count; i++)
+                {
+                    dataListBox.SetItemChecked(i, newState);
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ERROR SelectAll: {Utl.GetFullExceptionMessage(ex)}", Color.Red);
+            }
+            finally
+            {
+                dataListBox.Enabled = true;
+                btnSelectAll.Enabled = true;
+            }
+        }
+
+        private async Task LoadCctvListAsync()
+        {
+            try
+            {
+                btnRefresh.Enabled = false;
+                btnSelectAll.Enabled = false;
+                dataListBox.Enabled = false;
+                btnRefresh.Text = "Loading...";
+
+                var dataList = await DataCctv.GetDataOpCctvAsync();
+
+                dataListBox.Items.Clear();
+                foreach (var op in dataList)
+                {
+                    dataListBox.Items.Add(op, false); // otomatis tampil NamaOp - AlamatOp
+                }
+
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Loaded {dataList.Count} CCTV ke daftar.", Color.Lime);
+            }
+            catch (Exception ex)
+            {
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ERROR Load CCTV: {Utl.GetFullExceptionMessage(ex)}", Color.Red);
+            }
+            finally
+            {
+                btnRefresh.Enabled = true;
+                btnSelectAll.Enabled = true;
+                dataListBox.Enabled = true;
+                btnRefresh.Text = "Refresh";
+            }
         }
     }
 }

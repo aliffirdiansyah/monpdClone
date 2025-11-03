@@ -36,6 +36,9 @@
             label4 = new Label();
             btnTarik = new Button();
             consoleLog = new RichTextBox();
+            dataListBox = new CheckedListBox();
+            btnRefresh = new Button();
+            btnSelectAll = new Button();
             SuspendLayout();
             // 
             // date1
@@ -115,17 +118,51 @@
             // consoleLog
             // 
             consoleLog.BackColor = Color.Black;
-            consoleLog.Location = new Point(36, 112);
+            consoleLog.Location = new Point(289, 112);
             consoleLog.Name = "consoleLog";
-            consoleLog.Size = new Size(717, 326);
+            consoleLog.Size = new Size(464, 326);
             consoleLog.TabIndex = 8;
             consoleLog.Text = "";
+            // 
+            // dataListBox
+            // 
+            dataListBox.CheckOnClick = true;
+            dataListBox.FormattingEnabled = true;
+            dataListBox.HorizontalScrollbar = true;
+            dataListBox.Location = new Point(36, 148);
+            dataListBox.Name = "dataListBox";
+            dataListBox.ScrollAlwaysVisible = true;
+            dataListBox.Size = new Size(247, 292);
+            dataListBox.TabIndex = 9;
+            // 
+            // btnRefresh
+            // 
+            btnRefresh.Cursor = Cursors.Hand;
+            btnRefresh.Location = new Point(208, 119);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(75, 23);
+            btnRefresh.TabIndex = 10;
+            btnRefresh.Text = "REFRESH";
+            btnRefresh.UseVisualStyleBackColor = true;
+            // 
+            // btnSelectAll
+            // 
+            btnSelectAll.Cursor = Cursors.Hand;
+            btnSelectAll.Location = new Point(36, 119);
+            btnSelectAll.Name = "btnSelectAll";
+            btnSelectAll.Size = new Size(95, 23);
+            btnSelectAll.TabIndex = 11;
+            btnSelectAll.Text = "SELECT ALL";
+            btnSelectAll.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnSelectAll);
+            Controls.Add(btnRefresh);
+            Controls.Add(dataListBox);
             Controls.Add(consoleLog);
             Controls.Add(btnTarik);
             Controls.Add(label4);
@@ -153,5 +190,8 @@
         private Label label4;
         private Button btnTarik;
         private RichTextBox consoleLog;
+        private CheckedListBox dataListBox;
+        private Button btnRefresh;
+        private Button btnSelectAll;
     }
 }
