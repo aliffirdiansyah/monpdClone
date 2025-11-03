@@ -105,6 +105,7 @@
             consoleLog.Location = new Point(36, 132);
             consoleLog.Multiline = true;
             consoleLog.Name = "consoleLog";
+            consoleLog.ScrollBars = ScrollBars.Both;
             consoleLog.Size = new Size(726, 288);
             consoleLog.TabIndex = 6;
             // 

@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
+using System.Collections.Concurrent;
 using System.Globalization;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Policy;
 using System.Text;
@@ -145,73 +147,86 @@ namespace CCTVParkirManualTarik
             try
             {
                 await GenerateTokenTelkom();
+
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_TELKOM);
 
                 string dateStr = tanggal.Date.ToString("yyyy-MM-dd");
                 string url = $"https://bigvision.id/api/analytics/license-plate-recognition/data-tables?date={dateStr}&id_camera={op.CctvId}";
-                var response = await httpClient.GetAsync(url, cancellationToken);
+
+                // 🔹 Panggil API utama
+                HttpResponseMessage response = await httpClient.GetAsync(url, cancellationToken);
+                if (response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    // Token kadaluarsa, regenerate & ulangi
+                    await GenerateTokenTelkom();
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_TELKOM);
+                    response = await httpClient.GetAsync(url, cancellationToken);
+                }
+
                 if (!response.IsSuccessStatusCode)
-                {
                     throw new Exception($"Gagal panggil API Telkom. Status: {response.StatusCode}");
-                }
 
-                var json = await response.Content.ReadAsStringAsync(cancellationToken);
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-
+                // 🔹 Parsing response JSON
+                string json = await response.Content.ReadAsStringAsync(cancellationToken);
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var data = JsonSerializer.Deserialize<TelkomEvent.TelkomEventResponse>(json, options);
-                if (data?.Result != null && data.Result.Count > 0)
+
+                if (data?.Result == null || data.Result.Count == 0)
                 {
-                    var rekapResult = new List<RekapTelkom>();
-
-                    int seq = 1;
-                    foreach (var item in data.Result)
-                    {
-                        string? platNomor = item.PlatNomor?.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor?.ToUpper();
-                        DateTime waktuMasuk = Utl.ParseFlexibleDate(item.Timestamp);
-                        var id = $"{op.Nop}/{item.Id.ToString()}";
-
-                        var res = new RekapTelkom();
-
-                        res.Id = id;
-                        res.Nop = op.Nop;
-                        res.CctvId = op.CctvId ?? "";
-                        res.NamaOp = op.NamaOp;
-                        res.AlamatOp = op.AlamatOp;
-                        res.WilayahPajak = op.WilayahPajak;
-                        res.WaktuMasuk = waktuMasuk;
-                        res.JenisKend = (int)Utl.GetJenisKendaraan(item.TipeKendaraan);
-                        res.PlatNo = platNomor;
-                        res.WaktuKeluar = waktuMasuk;
-                        res.Direction = (int)EnumFactory.CctvParkirDirection.Incoming;
-                        res.Log = item.Id.ToString();
-                        res.ImageUrl = item.Image;
-                        res.Vendor = (int)EnumFactory.EVendorParkirCCTV.Telkom;
-
-
-                        rekapResult.Add(res);
-
-                        seq++;
-                    }
-
-                    if (rekapResult.Count > 0)
-                    {
-                        await UpdateDBTelkomRekap(op, rekapResult, tanggal, cancellationToken);
-                    }
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada event dari API Telkom untuk {op.Nop} ({op.NamaOp})");
+                    return;
                 }
+
+                var rekapResult = new List<RekapTelkom>();
+
+                foreach (var item in data.Result)
+                {
+                    cancellationToken.ThrowIfCancellationRequested(); // <== 🔹 cancel cepat di setiap iterasi
+
+                    string? platNomor = item.PlatNomor?.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor?.ToUpper();
+                    DateTime waktuMasuk = Utl.ParseFlexibleDate(item.Timestamp);
+                    string id = $"{op.Nop}/{item.Id}";
+
+                    rekapResult.Add(new RekapTelkom
+                    {
+                        Id = id,
+                        Nop = op.Nop,
+                        CctvId = op.CctvId ?? "",
+                        NamaOp = op.NamaOp,
+                        AlamatOp = op.AlamatOp,
+                        WilayahPajak = op.WilayahPajak,
+                        WaktuMasuk = waktuMasuk,
+                        JenisKend = (int)Utl.GetJenisKendaraan(item.TipeKendaraan),
+                        PlatNo = platNomor,
+                        WaktuKeluar = waktuMasuk,
+                        Direction = (int)EnumFactory.CctvParkirDirection.Incoming,
+                        Log = item.Id.ToString(),
+                        ImageUrl = item.Image,
+                        Vendor = (int)EnumFactory.EVendorParkirCCTV.Telkom
+                    });
+                }
+
+                if (rekapResult.Count > 0)
+                {
+                    await UpdateDBTelkomRekap(op, rekapResult, tanggal, cancellationToken);
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Telkom — {rekapResult.Count} data berhasil diproses untuk {op.Nop} ({op.NamaOp})");
+                }
+                else
+                {
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data valid Telkom untuk {op.Nop}");
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🛑 Dibatalkan: CallApiTelkomAsync {op.Nop}; {op.NamaOp}");
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiTelkomAsync {op.NamaOp};{op.AlamatOp};{op.Nop}: {Utl.GetFullExceptionMessage(ex)}");
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] CallApiTelkomAsync {op.Nop};{op.NamaOp};{op.CctvId} {ex.Message}");
-
-                Console.ResetColor();
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ❌ [ERROR] CallApiTelkomAsync {op.Nop};{op.NamaOp};{op.CctvId} — {ex.Message}");
             }
         }
+
         private async Task UpdateDBTelkomRekap(DataCctv.DataOpCctv op, List<RekapTelkom> dataList, DateTime tanggal, CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
@@ -220,28 +235,32 @@ namespace CCTVParkirManualTarik
             {
                 await context.Database.OpenConnectionAsync(cancellationToken);
 
-                // === HAPUS DATA LAMA BERDASARKAN NOP, TANGGAL, DAN VENDOR ===
-                var oldData = await context.TOpParkirCctvs
+                // === HAPUS DATA LAMA (langsung lewat SQL, tanpa load ke memory) ===
+                int deletedCount = await context.TOpParkirCctvs
                     .Where(x =>
                         x.Nop == op.Nop &&
                         x.Vendor == (int)op.Vendor &&
                         x.WaktuMasuk.Date == tanggal.Date)
-                    .ToListAsync(cancellationToken);
+                    .ExecuteDeleteAsync(cancellationToken);
 
-                if (oldData.Count > 0)
+                if (deletedCount > 0)
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Hapus {deletedCount} data lama Telkom Rekap untuk {op.Nop};{op.NamaOp} tanggal {tanggal:yyyy-MM-dd}");
+
+                // === CEK DATA BARU ===
+                if (dataList == null || dataList.Count == 0)
                 {
-                    context.TOpParkirCctvs.RemoveRange(oldData);
-                    await context.SaveChangesAsync(cancellationToken);
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Hapus {oldData.Count} data lama Telkom Rekap untuk {op.Nop};{op.NamaOp} tanggal {tanggal:yyyy-MM-dd}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Tidak ada data baru untuk Telkom Rekap {op.Nop};{op.NamaOp} tanggal {tanggal:yyyy-MM-dd}");
+                    return;
                 }
 
                 // === PERSIAPAN DATA BARU ===
-                var result = new List<TOpParkirCctv>();
-                int seq = 1;
+                var result = new List<TOpParkirCctv>(dataList.Count);
 
                 foreach (var item in dataList)
                 {
-                    var res = new TOpParkirCctv
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    result.Add(new TOpParkirCctv
                     {
                         Id = item.Id,
                         Nop = item.Nop,
@@ -257,24 +276,18 @@ namespace CCTVParkirManualTarik
                         Log = item.Log,
                         ImageUrl = item.ImageUrl,
                         Vendor = (int)op.Vendor
-                    };
-
-                    result.Add(res);
-                    seq++;
+                    });
                 }
 
                 // === INSERT DATA BARU ===
-                if (result.Count > 0)
-                {
-                    await context.TOpParkirCctvs.AddRangeAsync(result, cancellationToken);
-                    await context.SaveChangesAsync(cancellationToken);
+                await context.TOpParkirCctvs.AddRangeAsync(result, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
 
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Insert {result.Count} data baru Telkom Rekap untuk {op.Nop};{op.NamaOp} tanggal {tanggal:yyyy-MM-dd}");
-                }
-                else
-                {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Tidak ada data baru untuk Telkom Rekap {op.Nop};{op.NamaOp} tanggal {tanggal:yyyy-MM-dd}");
-                }
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Insert {result.Count} data baru Telkom Rekap untuk {op.Nop};{op.NamaOp} tanggal {tanggal:yyyy-MM-dd}");
+            }
+            catch (OperationCanceledException)
+            {
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [STOP] UpdateDBTelkomRekap dibatalkan untuk {op.Nop};{op.NamaOp}");
             }
             catch (Exception ex)
             {
@@ -285,6 +298,7 @@ namespace CCTVParkirManualTarik
                 await context.Database.CloseConnectionAsync();
             }
         }
+
 
         private async Task GenerateTokenTelkom()
         {
@@ -347,17 +361,16 @@ namespace CCTVParkirManualTarik
         {
             try
             {
-                await GenerateTokenJasnita2();
+                await GenerateTokenJasnita2(cancellationToken);
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
 
                 var rekapJasnita = new List<RekapJasnita>();
 
                 string webClientUrl = "";
                 #region Get Domains
                 {
-                    using var httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
-                    httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
-
                     // Panggil API Jasnita untuk ambil daftar domain
                     HttpResponseMessage response = await httpClient.GetAsync(
                         "https://hub.jastrak.id/api/v3/ac-backend/domains",
@@ -404,9 +417,6 @@ namespace CCTVParkirManualTarik
                 string accessPoint = "";
                 #region Cameras
                 {
-                    using var httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
-                    httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
                     // Panggil API Jasnita untuk ambil daftar kamera
                     HttpResponseMessage response = await httpClient.GetAsync($"{webClientUrl}/camera/list", cancellationToken);
                     if (!response.IsSuccessStatusCode)
@@ -432,11 +442,6 @@ namespace CCTVParkirManualTarik
                 var eventResult = new List<EventAll.EventAllResponse>();
                 #region Events
                 {
-                    using var httpClient = new HttpClient();
-
-                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
-                    httpClient.DefaultRequestHeaders.Add("User-Agent", "insomnia/9.3.3");
-
                     int totalData = 0;
                     int limit = 20;
                     int offset = 0;
@@ -514,7 +519,7 @@ namespace CCTVParkirManualTarik
                                 }
                                 else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                                 {
-                                    await GenerateTokenJasnita2();
+                                    await GenerateTokenJasnita2(cancellationToken);
                                 }
                                 else
                                 {
@@ -556,6 +561,9 @@ namespace CCTVParkirManualTarik
                         {
                             //Console.WriteLine($"Error: {ex.Message}");
                         }
+
+                        // jeda singkat untuk memberi kesempatan pembatalan
+                        await Task.Delay(300, cancellationToken);
                     }
                 }
 
@@ -594,10 +602,6 @@ namespace CCTVParkirManualTarik
 
                                 if (waktuMasuk.Date == DateTime.Now.Date)
                                 {
-                                    // Ambil snapshot image dari API Jasnita
-                                    using var httpClient = new HttpClient();
-                                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
-
                                     // ambil access point (hapus "hosts/")
                                     accessPoint = item.Body.OriginExt.AccessPoint.Replace("hosts/", "");
 
@@ -698,13 +702,10 @@ namespace CCTVParkirManualTarik
 
             try
             {
-                // === OPEN CONNECTION ===
                 await context.Database.OpenConnectionAsync(cancellationToken);
-
-                // === BEGIN TRANSACTION ===
                 await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 
-                // 1️⃣ Hapus data lama (parent + child)
+                // 1️⃣ Hapus data lama
                 var oldParents = await context.TOpParkirCctvs
                     .Include(x => x.TOpParkirCctvDok)
                     .Where(x =>
@@ -717,13 +718,10 @@ namespace CCTVParkirManualTarik
                 {
                     context.TOpParkirCctvs.RemoveRange(oldParents);
                     await context.SaveChangesAsync(cancellationToken);
-
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Hapus {oldParents.Count} data lama Jasnita (NOP {op.Nop})");
-                    Console.ResetColor();
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldParents.Count} data lama Jasnita (NOP {op.Nop})");
                 }
 
-                // 2️⃣ Insert data baru (parent)
+                // 2️⃣ Insert parent baru
                 var newParents = rekapList.Select(item => new TOpParkirCctv
                 {
                     Id = item.Id,
@@ -745,97 +743,96 @@ namespace CCTVParkirManualTarik
                 {
                     await context.TOpParkirCctvs.AddRangeAsync(newParents, cancellationToken);
                     await context.SaveChangesAsync(cancellationToken);
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Insert {newParents.Count} data parent Jasnita (NOP {op.Nop})");
-                    Console.ResetColor();
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {newParents.Count} data parent Jasnita (NOP {op.Nop})");
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Tidak ada data parent baru Jasnita untuk NOP {op.Nop}");
-                    Console.ResetColor();
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data parent baru Jasnita untuk NOP {op.Nop}");
                 }
 
-                // 3️⃣ Insert data image (child)
-                var dokList = new List<TOpParkirCctvDok>();
+                // 3️⃣ Ambil data image paralel
+                var dokList = new ConcurrentBag<TOpParkirCctvDok>();
 
-                foreach (var item in imageList)
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+
+                await Parallel.ForEachAsync(imageList, cancellationToken, async (item, ct) =>
                 {
-                    using var httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                    if (ct.IsCancellationRequested) return;
 
-                    HttpResponseMessage response = await httpClient.GetAsync(item.Url, cancellationToken);
-
-                    if (!response.IsSuccessStatusCode)
+                    try
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"{DateTime.Now:HH:mm:ss} {op.Nop} Gagal ambil snapshot {item.Id}: {response.StatusCode}");
-                        Console.ResetColor();
+                        HttpResponseMessage response = await httpClient.GetAsync(item.Url, ct);
 
-                        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                            await GenerateTokenJasnita2();
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} gagal ambil snapshot {item.Id}: {response.StatusCode}");
 
-                        continue;
+                            if (response.StatusCode == HttpStatusCode.Forbidden)
+                                await GenerateTokenJasnita2(ct);
+
+                            return;
+                        }
+
+                        byte[] imgData = await response.Content.ReadAsByteArrayAsync(ct);
+                        if (imgData?.Length > 0)
+                        {
+                            dokList.Add(new TOpParkirCctvDok
+                            {
+                                Id = item.Id,
+                                Nop = item.Nop,
+                                CctvId = item.CctvId,
+                                ImageData = imgData
+                            });
+                        }
+                        else
+                        {
+                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} snapshot kosong {item.Id}, dilewati.");
+                        }
                     }
-
-                    byte[] imgData = await response.Content.ReadAsByteArrayAsync(cancellationToken);
-
-                    // Skip jika kosong
-                    if (imgData == null || imgData.Length == 0)
+                    catch (OperationCanceledException)
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"{DateTime.Now:HH:mm:ss} {op.Nop} Snapshot kosong {item.Id}, dilewati.");
-                        Console.ResetColor();
-                        continue;
+                        // Langsung keluar dari loop
                     }
-
-                    dokList.Add(new TOpParkirCctvDok
+                    catch (Exception ex)
                     {
-                        Id = item.Id,
-                        Nop = item.Nop,
-                        CctvId = item.CctvId,
-                        ImageData = imgData
-                    });
-                }
+                        UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} error ambil snapshot {item.Id}: {ex.Message}");
+                    }
+                });
 
+                // 4️⃣ Insert data image
                 if (dokList.Any())
                 {
                     await context.TOpParkirCctvDoks.AddRangeAsync(dokList, cancellationToken);
                     await context.SaveChangesAsync(cancellationToken);
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Insert {dokList.Count} data image Jasnita (NOP {op.Nop})");
-                    Console.ResetColor();
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {dokList.Count} data image Jasnita (NOP {op.Nop})");
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Tidak ada data image baru Jasnita untuk NOP {op.Nop}");
-                    Console.ResetColor();
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data image baru Jasnita untuk NOP {op.Nop}");
                 }
 
-                // 4️⃣ Commit transaksi
+                // 5️⃣ Commit transaksi
                 await transaction.CommitAsync(cancellationToken);
 
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] ✅ Update Jasnita Rekap FULL sukses (NOP {op.Nop}; {op.NamaOp}) — {newParents.Count} parent, {dokList.Count} image");
-                Console.ResetColor();
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🎯 Update Jasnita Rekap FULL sukses (NOP {op.Nop}; {op.NamaOp}) — {newParents.Count} parent, {dokList.Count} image");
+            }
+            catch (OperationCanceledException)
+            {
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🛑 Dibatalkan: Update Jasnita Rekap FULL untuk {op.Nop}");
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] UpdateDBJasnitaRekapFull {op.Nop};{op.NamaOp}: {ex.Message}");
-                Console.ResetColor();
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ❌ ERROR UpdateDBJasnitaRekapFull {op.Nop};{op.NamaOp}: {ex.Message}");
             }
             finally
             {
-                // === CLOSE CONNECTION ===
                 await context.Database.CloseConnectionAsync();
             }
         }
-        private async Task GenerateTokenJasnita2()
+
+        private async Task GenerateTokenJasnita2(CancellationToken cancellationToken)
         {
             using (var client = new HttpClient())
             {
@@ -852,7 +849,7 @@ namespace CCTVParkirManualTarik
                 var jsonBody = JsonSerializer.Serialize(body);
                 var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PostAsync("https://hub.jastrak.id/api/v3/ac-backend/users/login", content);
+                HttpResponseMessage response = await client.PostAsync("https://hub.jastrak.id/api/v3/ac-backend/users/login", content, cancellationToken);
 
                 if (response.IsSuccessStatusCode)
                 {
