@@ -5,16 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.General;
-using System;
 using System.Globalization;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Numerics;
-using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading;
+using Utl = CctvRealtimeWs.Utility.Utility;
 
 namespace CctvRealtimeWs
 {
@@ -97,7 +93,7 @@ namespace CctvRealtimeWs
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [ERROR] {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                     Console.ResetColor();
 
                     // Tunggu sebentar sebelum mencoba lagi supaya tidak spam error
@@ -142,7 +138,7 @@ namespace CctvRealtimeWs
                     foreach (var item in data.Result)
                     {
                         string? platNomor = item.PlatNomor?.ToUpper() == "UNRECOGNIZED" ? null : item.PlatNomor?.ToUpper();
-                        DateTime waktuMasuk = ParseFlexibleDate(item.Timestamp);
+                        DateTime waktuMasuk = Utl.ParseFlexibleDate(item.Timestamp);
                         var id = $"{op.Nop}/{item.Id.ToString()}";
 
                         var res = new RekapTelkom();
@@ -154,7 +150,7 @@ namespace CctvRealtimeWs
                         res.AlamatOp = op.AlamatOp;
                         res.WilayahPajak = op.WilayahPajak;
                         res.WaktuMasuk = waktuMasuk;
-                        res.JenisKend = (int)GetJenisKendaraan(item.TipeKendaraan);
+                        res.JenisKend = (int)Utl.GetJenisKendaraan(item.TipeKendaraan);
                         res.PlatNo = platNomor;
                         res.WaktuKeluar = waktuMasuk;
                         res.Direction = (int)EnumFactory.CctvParkirDirection.Incoming;
@@ -178,7 +174,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiTelkomAsync {op.NamaOp};{op.AlamatOp};{op.Nop}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiTelkomAsync {op.NamaOp};{op.AlamatOp};{op.Nop}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
         }
@@ -251,7 +247,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBTelkomRekap Update DB Telkom Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBTelkomRekap Update DB Telkom Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -326,7 +322,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDbTelkomRealtime Update DB Telkom Realtime NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDbTelkomRealtime Update DB Telkom Realtime NOP {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -417,8 +413,8 @@ namespace CctvRealtimeWs
             DateTime tglAwal = DateTime.Today.AddDays(-1);
             DateTime tglAkhir = DateTime.Today.AddDays(1).AddTicks(-1);
 
-            string begin_time = ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
-            string end_time = ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
+            string begin_time = Utl.ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
+            string end_time = Utl.ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
 
             while (hasMore)
             {
@@ -470,7 +466,7 @@ namespace CctvRealtimeWs
                         if (response.IsSuccessStatusCode)
                         {
                             var rawResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-                            var apiResponse = ConvertSseOutputJson(rawResponse);
+                            var apiResponse = Utl.ConvertSseOutputJson(rawResponse);
                             var res = JsonSerializer.Deserialize<EventAll.EventAllResponse>(apiResponse);
 
                             if (res == null)
@@ -595,8 +591,8 @@ namespace CctvRealtimeWs
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
 
-                string timestamp_start = ConvertWibToUtc(DateTime.Now.Date).ToString("yyyyMMdd'T'HHmmss.'000'");
-                string timestamp_end = ConvertWibToUtc(DateTime.Now.AddDays(1).AddTicks(-1)).ToString("yyyyMMdd'T'HHmmss.'000'");
+                string timestamp_start = Utl.ConvertWibToUtc(DateTime.Now.Date).ToString("yyyyMMdd'T'HHmmss.'000'");
+                string timestamp_end = Utl.ConvertWibToUtc(DateTime.Now.AddDays(1).AddTicks(-1)).ToString("yyyyMMdd'T'HHmmss.'000'");
                 string cameraId = op.DisplayId ?? "";
                 string url = $"{webClientUrl}/archive/events/detectors/{cameraId}/{timestamp_start}/{timestamp_end}";
 
@@ -638,7 +634,7 @@ namespace CctvRealtimeWs
                 // Baca stream image-nya
                 byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
 
-                DateTime parsedTime = ConvertUtcToWib(ParseFlexibleDate(item.Timestamp));
+                DateTime parsedTime = Utl.ConvertUtcToWib(Utl.ParseFlexibleDate(item.Timestamp));
 
                 var rekap = new RekapJasnita();
                 rekap.Id = item.Id;
@@ -759,8 +755,8 @@ namespace CctvRealtimeWs
                     DateTime tglAwal = tanggal.Date.AddDays(0);
                     DateTime tglAkhir = tanggal.Date.AddDays(1).AddTicks(-1);
 
-                    string begin_time = ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
-                    string end_time = ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
+                    string begin_time = Utl.ConvertWibToUtc(tglAwal).ToString("yyyyMMdd'T'HHmmss.'000'");
+                    string end_time = Utl.ConvertWibToUtc(tglAkhir).ToString("yyyyMMdd'T'HHmmss.'999'");
 
                     while (hasMore)
                     {
@@ -811,7 +807,7 @@ namespace CctvRealtimeWs
                                 if (response.IsSuccessStatusCode)
                                 {
                                     var rawResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-                                    var apiResponse = ConvertSseOutputJson(rawResponse);
+                                    var apiResponse = Utl.ConvertSseOutputJson(rawResponse);
                                     var res = JsonSerializer.Deserialize<EventAll.EventAllResponse>(apiResponse);
 
                                     if (res == null)
@@ -824,7 +820,7 @@ namespace CctvRealtimeWs
                                 }
                                 else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                                 {
-                                    await GenerateTokenJasnita();
+                                    await GenerateTokenJasnita2();
                                 }
                                 else
                                 {
@@ -899,7 +895,7 @@ namespace CctvRealtimeWs
                                     continue;
                                 }
 
-                                DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
+                                DateTime waktuMasuk = Utl.ConvertUtcToWib(Utl.ParseFlexibleDate(ar.TimeBegin));
                                 var id = $"{op.Nop}/{item.Body.Guid}";
 
                                 if (waktuMasuk.Date == DateTime.Now.Date)
@@ -943,10 +939,10 @@ namespace CctvRealtimeWs
                                     res.AlamatOp = op.AlamatOp;
                                     res.WilayahPajak = op.WilayahPajak;
                                     res.WaktuMasuk = waktuMasuk;
-                                    res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
+                                    res.JenisKend = (int)Utl.GetJenisKendaraan(ar.VehicleClass);
                                     res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
                                     res.WaktuKeluar = waktuMasuk;
-                                    res.Direction = (int)GetDirection(ar.Direction);
+                                    res.Direction = (int)Utl.GetDirection(ar.Direction);
                                     res.Log = item.Body.Guid;
                                     res.ImageUrl = "";
                                     res.Vendor = (int)EnumFactory.EVendorParkirCCTV.Jasnita;
@@ -996,7 +992,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiJasnitaV2GrpcAsync {op.DisplayId};{op.AccessPoint};{op.NamaOp};{op.AlamatOp};{op.Nop}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiJasnitaV2GrpcAsync {op.DisplayId};{op.AccessPoint};{op.NamaOp};{op.AlamatOp};{op.Nop}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
         }
@@ -1075,7 +1071,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBJasnitaRekap Update DB Jasnita Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBJasnitaRekap Update DB Jasnita Rekap NOP {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -1121,7 +1117,7 @@ namespace CctvRealtimeWs
 
                         if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                         {
-                            await GenerateTokenJasnita();
+                            await GenerateTokenJasnita2();
                         }
 
                         continue;
@@ -1152,7 +1148,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] Update DB Jasnita Realtime NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] Update DB Jasnita Realtime NOP {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -1200,7 +1196,7 @@ namespace CctvRealtimeWs
                                 if (ar == null)
                                     continue;
 
-                                DateTime waktuMasuk = ConvertUtcToWib(ParseFlexibleDate(ar.TimeBegin));
+                                DateTime waktuMasuk = Utl.ConvertUtcToWib(Utl.ParseFlexibleDate(ar.TimeBegin));
                                 var id = $"{seq}{(int)(EnumFactory.EVendorParkirCCTV.Jasnita)}{op.Nop}{waktuMasuk.ToString("yyyyMMddHHmmss")}";
 
                                 if (waktuMasuk.Date == DateTime.Now.Date)
@@ -1211,7 +1207,7 @@ namespace CctvRealtimeWs
                                     res.Nop = op.Nop;
                                     res.CctvId = op.CctvId ?? "";
                                     res.VendorId = (int)op.Vendor;
-                                    res.JenisKend = (int)GetJenisKendaraan(ar.VehicleClass);
+                                    res.JenisKend = (int)Utl.GetJenisKendaraan(ar.VehicleClass);
                                     res.PlatNo = ar.Hypotheses?.FirstOrDefault()?.PlateFull ?? "";
                                     res.WaktuMasuk = waktuMasuk;
                                     res.ImageUrl = "";
@@ -1239,7 +1235,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDbJasnitaRealtime Update DB Jasnita NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDbJasnitaRealtime Update DB Jasnita NOP {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -1308,7 +1304,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBJasnitaRealtimeV2 Update DB Jasnita Realtime NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBJasnitaRealtimeV2 Update DB Jasnita Realtime NOP {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -1385,7 +1381,7 @@ namespace CctvRealtimeWs
                     catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Error insert UpdateDBJasnitaRealtimeImageV2 {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Error insert UpdateDBJasnitaRealtimeImageV2 {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                         Console.ResetColor();
                     }
                 }
@@ -1397,7 +1393,7 @@ namespace CctvRealtimeWs
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBJasnitaRealtimeImageV2 Update DB Jasnita Realtime Image NOP {op.Nop};{op.NamaOp};{op.CctvId}: {GetFullExceptionMessage(ex)}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] UpdateDBJasnitaRealtimeImageV2 Update DB Jasnita Realtime Image NOP {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}");
                 Console.ResetColor();
             }
             finally
@@ -1487,177 +1483,6 @@ namespace CctvRealtimeWs
 
 
 
-
-        #region Utility
-        public EnumFactory.EJenisKendParkirCCTV GetJenisKendaraan(string input)
-        {
-            input = input.ToUpper().Trim();
-            switch (input)
-            {
-                case "CAR":
-                    return EnumFactory.EJenisKendParkirCCTV.Mobil;
-                case "MOTORCYCLE":
-                    return EnumFactory.EJenisKendParkirCCTV.Motor;
-                case "TRUCK":
-                    return EnumFactory.EJenisKendParkirCCTV.Truck;
-                case "BUS":
-                    return EnumFactory.EJenisKendParkirCCTV.Bus;
-                default:
-                    return EnumFactory.EJenisKendParkirCCTV.Unknown;
-            }
-        }
-        public EnumFactory.CctvParkirDirection GetDirection(string input)
-        {
-            input = input.ToUpper().Trim();
-            switch (input)
-            {
-                case "INCOMING":
-                    return EnumFactory.CctvParkirDirection.Incoming;
-                case "OUTGOING":
-                    return EnumFactory.CctvParkirDirection.Outgoing;
-                default:
-                    return EnumFactory.CctvParkirDirection.Unknown;
-            }
-        }
-        public EnumFactory.EStatusCCTV GetStatusCctv(string input)
-        {
-            input = input.ToUpper().Trim();
-            switch (input)
-            {
-                case "IPDS_SIGNAL_RESTORED":
-                    return EnumFactory.EStatusCCTV.Aktif;
-                default:
-                    return EnumFactory.EStatusCCTV.NonAktif;
-            }
-        }
-        public static DateTime ParseFlexibleDate(string timeStr)
-        {
-            if (string.IsNullOrWhiteSpace(timeStr))
-            {
-                throw new ArgumentException("timeStr tidak boleh kosong");
-            }
-
-            var formats = new[]
-            {
-        "yyyyMMdd'T'HHmmss.ffffff",  // 20250924T083638.867000
-        "yyyyMMdd'T'HHmmss.fff",     // 20250924T083638.867
-        "yyyyMMdd'T'HHmmss",         // ✅ 20250925T073926 (kasus kamu)
-        "yyyy-MM-dd'T'HH:mm:ss.ffffff",
-        "yyyy-MM-dd'T'HH:mm:ss.fff",
-        "yyyy-MM-dd'T'HH:mm:ss",
-        "yyyyMMddHHmmss",            // 20250925073926 (tanpa 'T')
-        "yyyy-MM-dd HH:mm:ss",       // 2025-09-25 07:39:26
-        "yyyy/MM/dd HH:mm:ss",       // 2025/09/25 07:39:26
-        "yyyyMMdd'T'HHmmssZ",        // 20250925T073926Z
-        "yyyy-MM-dd'T'HH:mm:ssZ",    // 2025-09-25T07:39:26Z
-        "yyyy-MM-dd'T'HH:mm:ssK"     // 2025-09-25T07:39:26+07:00
-    };
-
-            foreach (var fmt in formats)
-            {
-                if (DateTime.TryParseExact(
-                    timeStr,
-                    fmt,
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    System.Globalization.DateTimeStyles.AdjustToUniversal,
-                    out DateTime result))
-                {
-                    return result;
-                }
-            }
-
-            throw new Exception(timeStr + " tidak sesuai format yang dikenali.");
-        }
-        private static string ConvertSseOutputJson(string output)
-        {
-            try
-            {
-                var lines = output.Split('\n')
-                            .Where(l => l.StartsWith("data:"))
-                            .Select(l => l.Substring("data:".Length).Trim())
-                            .ToList();
-                var dtResponse = lines[0];
-
-                return dtResponse;
-            }
-            catch (Exception ex)
-            {
-                return output;
-            }
-        }
-        private static string ConvertSseOutputJson2(string output)
-        {
-            try
-            {
-                var jsonObjects = output.Split('\n')
-                    .Where(l => l.StartsWith("data:"))
-                    .Select(l => l.Substring("data:".Length).Trim())
-                    .Where(l => !string.IsNullOrWhiteSpace(l))
-                    .Where(l => !l.Contains("\"items\":[]"))
-                    .ToList();
-
-                if (jsonObjects.Count == 0)
-                    return "[]";
-
-                var jsonArray = "[" + string.Join(",", jsonObjects) + "]";
-                return jsonArray;
-            }
-            catch (Exception)
-            {
-                return output;
-            }
-        }
-        private static string GetFullExceptionMessage(Exception ex)
-        {
-            var sb = new StringBuilder();
-            int level = 0;
-
-            while (ex != null)
-            {
-                // Pilih warna berdasarkan level
-                var color = level switch
-                {
-                    0 => ConsoleColor.Red,
-                    1 => ConsoleColor.Yellow,
-                    2 => ConsoleColor.Cyan,
-                    _ => ConsoleColor.Gray
-                };
-
-                // Tulis ke console langsung (lebih interaktif)
-                Console.ForegroundColor = color;
-                Console.WriteLine($"[Level {level}] {ex.GetType().Name}: {ex.Message}");
-                Console.ResetColor();
-
-                // Simpan juga di string builder kalau mau di-log ke file
-                sb.AppendLine($"[Level {level}] {ex.GetType().Name}: {ex.Message}");
-                if (!string.IsNullOrEmpty(ex.StackTrace))
-                {
-                    sb.AppendLine(ex.StackTrace);
-                }
-
-                ex = ex.InnerException;
-                level++;
-            }
-
-            return sb.ToString();
-        }
-        // Konversi dari UTC (+0) ke WIB (+7)
-        public static DateTime ConvertUtcToWib(DateTime utcTime)
-        {
-            return TimeZoneInfo.ConvertTimeFromUtc(
-                DateTime.SpecifyKind(utcTime, DateTimeKind.Utc),
-                TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")
-            );
-        }
-
-        // Konversi dari WIB (+7) ke UTC (+0)
-        public static DateTime ConvertWibToUtc(DateTime wibTime)
-        {
-            return TimeZoneInfo.ConvertTimeToUtc(
-                DateTime.SpecifyKind(wibTime, DateTimeKind.Local)
-            );
-        }
-        #endregion
 
 
 
