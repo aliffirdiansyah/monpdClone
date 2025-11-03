@@ -34,8 +34,8 @@
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
-            consoleLog = new TextBox();
             btnTarik = new Button();
+            consoleLog = new RichTextBox();
             SuspendLayout();
             // 
             // date1
@@ -97,18 +97,6 @@
             label4.TabIndex = 5;
             label4.Text = "TARIKAN MANUAL CCTV PARKIR";
             // 
-            // consoleLog
-            // 
-            consoleLog.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            consoleLog.BackColor = SystemColors.InfoText;
-            consoleLog.ForeColor = Color.Lime;
-            consoleLog.Location = new Point(36, 132);
-            consoleLog.Multiline = true;
-            consoleLog.Name = "consoleLog";
-            consoleLog.ScrollBars = ScrollBars.Both;
-            consoleLog.Size = new Size(726, 288);
-            consoleLog.TabIndex = 6;
-            // 
             // btnTarik
             // 
             btnTarik.BackColor = Color.SteelBlue;
@@ -124,13 +112,22 @@
             btnTarik.Text = "TARIK";
             btnTarik.UseVisualStyleBackColor = false;
             // 
+            // consoleLog
+            // 
+            consoleLog.BackColor = Color.Black;
+            consoleLog.Location = new Point(36, 112);
+            consoleLog.Name = "consoleLog";
+            consoleLog.Size = new Size(717, 326);
+            consoleLog.TabIndex = 8;
+            consoleLog.Text = "";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnTarik);
             Controls.Add(consoleLog);
+            Controls.Add(btnTarik);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -154,7 +151,7 @@
         private Label label2;
         private Label label3;
         private Label label4;
-        private TextBox consoleLog;
         private Button btnTarik;
+        private RichTextBox consoleLog;
     }
 }

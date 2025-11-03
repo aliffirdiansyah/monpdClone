@@ -58,6 +58,8 @@ namespace CCTVParkirManualTarik
 
                 try
                 {
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Start Process");
+
                     DateTime tgl1 = date1.Value.Date;
                     DateTime tgl2 = date2.Value.Date;
 
@@ -75,20 +77,20 @@ namespace CCTVParkirManualTarik
                             var tasks = dataList.Select(op => ProcessDataAsync(op, tgl, _cts.Token)).ToList();
                             await Task.WhenAll(tasks);
 
-                            UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] === Selesai tanggal {tgl:yyyy-MM-dd} ===");
+                            UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] === Selesai tanggal {tgl:yyyy-MM-dd} ===", Color.Lime);
                             await Task.Delay(TimeSpan.FromSeconds(3), _cts.Token);
                         }
 
-                        UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Proses selesai untuk semua tanggal.");
+                        UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Proses selesai untuk semua tanggal.", Color.Lime);
                     }, _cts.Token);
                 }
                 catch (OperationCanceledException)
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Proses dibatalkan oleh pengguna.");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Proses dibatalkan oleh pengguna.", Color.Red);
                 }
                 catch (Exception ex)
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ERROR: {ex.Message}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ERROR: {Utl.GetFullExceptionMessage(ex)}", Color.Red);
                 }
                 finally
                 {
@@ -101,7 +103,7 @@ namespace CCTVParkirManualTarik
             else
             {
                 _cts?.Cancel();
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Membatalkan proses...");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Membatalkan proses...", Color.Red);
             }
         }
 
@@ -124,17 +126,17 @@ namespace CCTVParkirManualTarik
                         return;
                     }
 
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Selesai proses {tanggal:yyyy-MM-dd}: {op.Nop};{op.NamaOp};{op.CctvId}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] Selesai proses {tanggal:yyyy-MM-dd}: {op.Nop};{op.NamaOp};{op.CctvId}", Color.Lime);
                     break; // keluar dari while kalau sudah selesai per tanggal
                 }
                 catch (TaskCanceledException)
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [STOP] Dibatalkan: {op.Nop};{op.NamaOp}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [STOP] Dibatalkan: {op.Nop};{op.NamaOp}", Color.Red);
                     break;
                 }
                 catch (Exception ex)
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] {op.Nop};{op.NamaOp}: {ex.Message}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] {op.Nop};{op.NamaOp}: {Utl.GetFullExceptionMessage(ex)}", Color.Red);
                     await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
                 }
             }
@@ -174,7 +176,7 @@ namespace CCTVParkirManualTarik
 
                 if (data?.Result == null || data.Result.Count == 0)
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada event dari API Telkom untuk {op.Nop} ({op.NamaOp})");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada event dari API Telkom untuk {op.Nop} ({op.NamaOp})", Color.Yellow);
                     return;
                 }
 
@@ -219,11 +221,11 @@ namespace CCTVParkirManualTarik
             }
             catch (OperationCanceledException)
             {
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🛑 Dibatalkan: CallApiTelkomAsync {op.Nop}; {op.NamaOp}");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🛑 Dibatalkan: CallApiTelkomAsync {op.Nop}; {op.NamaOp}", Color.Red);
             }
             catch (Exception ex)
             {
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ❌ [ERROR] CallApiTelkomAsync {op.Nop};{op.NamaOp};{op.CctvId} — {ex.Message}");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ❌ [ERROR] CallApiTelkomAsync {op.Nop};{op.NamaOp};{op.CctvId} — {Utl.GetFullExceptionMessage(ex)}", Color.Red);
             }
         }
 
@@ -287,11 +289,11 @@ namespace CCTVParkirManualTarik
             }
             catch (OperationCanceledException)
             {
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [STOP] UpdateDBTelkomRekap dibatalkan untuk {op.Nop};{op.NamaOp}");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [STOP] UpdateDBTelkomRekap dibatalkan untuk {op.Nop};{op.NamaOp}", Color.Red);
             }
             catch (Exception ex)
             {
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] UpdateDBTelkomRekap {op.Nop};{op.NamaOp};{op.CctvId}: {ex.Message}");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] UpdateDBTelkomRekap {op.Nop};{op.NamaOp};{op.CctvId}: {Utl.GetFullExceptionMessage(ex)}", Color.Red);
             }
             finally
             {
@@ -341,15 +343,15 @@ namespace CCTVParkirManualTarik
                 }
                 catch (HttpRequestException ex)
                 {
-                    //Console.WriteLine($"Gagal menghubungi server Telkom: {ex.Message}");
+                    //Console.WriteLine($"Gagal menghubungi server Telkom: {Utl.GetFullExceptionMessage(ex)}");
                 }
                 catch (JsonException ex)
                 {
-                    //Console.WriteLine($"Gagal parsing respon login Telkom: {ex.Message}");
+                    //Console.WriteLine($"Gagal parsing respon login Telkom: {Utl.GetFullExceptionMessage(ex)}");
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine($"Error tidak terduga: {ex.Message}");
+                    //Console.WriteLine($"Error tidak terduga: {Utl.GetFullExceptionMessage(ex)}");
                 }
             }
         }
@@ -559,7 +561,7 @@ namespace CCTVParkirManualTarik
                         }
                         catch (Exception ex)
                         {
-                            //Console.WriteLine($"Error: {ex.Message}");
+                            //Console.WriteLine($"Error: {Utl.GetFullExceptionMessage(ex)}");
                         }
 
                         // jeda singkat untuk memberi kesempatan pembatalan
@@ -569,7 +571,8 @@ namespace CCTVParkirManualTarik
 
                 if (eventResult.Count <= 0)
                 {
-                    throw new Exception($"{DateTime.Now} {op.Nop};{op.NamaOp} Tidak ada event dari API Jasnita Events.");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada event dari API Jasnita untuk {op.Nop} ({op.NamaOp})", Color.Yellow);
+                    return;
                 }
 
                 eventResult = eventResult
@@ -600,7 +603,7 @@ namespace CCTVParkirManualTarik
                                 DateTime waktuMasuk = Utl.ConvertUtcToWib(Utl.ParseFlexibleDate(ar.TimeBegin));
                                 var id = $"{op.Nop}/{item.Body.Guid}";
 
-                                if (waktuMasuk.Date == DateTime.Now.Date)
+                                if (waktuMasuk.Date == tanggal.Date)
                                 {
                                     // ambil access point (hapus "hosts/")
                                     accessPoint = item.Body.OriginExt.AccessPoint.Replace("hosts/", "");
@@ -687,16 +690,11 @@ namespace CCTVParkirManualTarik
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 //Console.WriteLine($"[{DateTime.Now:HH:mm:ss}][Error] CallApiJasnitaV2GrpcAsync {op.DisplayId};{op.AccessPoint};{op.NamaOp};{op.AlamatOp};{op.Nop}: {Utl.GetFullExceptionMessage(ex)}");
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] CallApiJasnitaV2GrpcAsync {op.Nop};{op.NamaOp};{op.CctvId} {ex.Message}");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] [ERROR] CallApiJasnitaV2GrpcAsync {op.Nop};{op.NamaOp};{op.CctvId} {Utl.GetFullExceptionMessage(ex)}", Color.Red);
                 Console.ResetColor();
             }
         }
-        private async Task UpdateDBJasnitaRekapFull(
-    DataCctv.DataOpCctv op,
-    List<RekapJasnita> rekapList,
-    List<RekapJasnitaImage> imageList,
-    DateTime tanggal,
-    CancellationToken cancellationToken)
+        private async Task UpdateDBJasnitaRekapFull(DataCctv.DataOpCctv op,List<RekapJasnita> rekapList,List<RekapJasnitaImage> imageList,DateTime tanggal,CancellationToken cancellationToken)
         {
             await using var context = DBClass.GetContext();
 
@@ -705,9 +703,8 @@ namespace CCTVParkirManualTarik
                 await context.Database.OpenConnectionAsync(cancellationToken);
                 await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 
-                // 1️⃣ Hapus data lama
+                // 1️⃣ Hapus data lama (anak dulu, karena relasi 1-1)
                 var oldParents = await context.TOpParkirCctvs
-                    .Include(x => x.TOpParkirCctvDok)
                     .Where(x =>
                         x.Nop == op.Nop &&
                         x.Vendor == (int)op.Vendor &&
@@ -716,9 +713,24 @@ namespace CCTVParkirManualTarik
 
                 if (oldParents.Any())
                 {
+                    var parentIds = oldParents.Select(p => p.Id).ToList();
+
+                    // Hapus anak (dok) dulu
+                    var oldChildren = await context.TOpParkirCctvDoks
+                        .Where(d => parentIds.Contains(d.Id))
+                        .ToListAsync(cancellationToken);
+
+                    if (oldChildren.Any())
+                    {
+                        context.TOpParkirCctvDoks.RemoveRange(oldChildren);
+                        await context.SaveChangesAsync(cancellationToken);
+                        UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldChildren.Count} dokumen lama Jasnita (NOP {op.Nop})");
+                    }
+
+                    // Baru hapus parent
                     context.TOpParkirCctvs.RemoveRange(oldParents);
                     await context.SaveChangesAsync(cancellationToken);
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldParents.Count} data lama Jasnita (NOP {op.Nop})");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldParents.Count} data parent lama Jasnita (NOP {op.Nop})");
                 }
 
                 // 2️⃣ Insert parent baru
@@ -750,37 +762,42 @@ namespace CCTVParkirManualTarik
                     UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data parent baru Jasnita untuk NOP {op.Nop}");
                 }
 
-                // 3️⃣ Ambil data image paralel
+                // 3️ Ambil data image paralel
                 var dokList = new ConcurrentBag<TOpParkirCctvDok>();
 
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+                var parallelOptions = new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = 3,
+                    CancellationToken = cancellationToken
+                };
 
-                await Parallel.ForEachAsync(imageList, cancellationToken, async (item, ct) =>
+                using var httpClient = new HttpClient
+                {
+                    Timeout = TimeSpan.FromSeconds(120)
+                };
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _TOKEN_JASNITA_2);
+
+                await Parallel.ForEachAsync(imageList, parallelOptions, async (item, ct) =>
                 {
                     if (ct.IsCancellationRequested) return;
 
                     try
                     {
-                        HttpResponseMessage response = await httpClient.GetAsync(item.Url, ct);
-
+                        var response = await httpClient.GetAsync(item.Url, ct);
                         if (!response.IsSuccessStatusCode)
                         {
                             UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} gagal ambil snapshot {item.Id}: {response.StatusCode}");
-
                             if (response.StatusCode == HttpStatusCode.Forbidden)
                                 await GenerateTokenJasnita2(ct);
-
                             return;
                         }
 
-                        byte[] imgData = await response.Content.ReadAsByteArrayAsync(ct);
+                        var imgData = await response.Content.ReadAsByteArrayAsync(ct);
                         if (imgData?.Length > 0)
                         {
                             dokList.Add(new TOpParkirCctvDok
                             {
-                                Id = item.Id,
+                                Id = item.Id,        // sama dengan parent.Id karena 1–1
                                 Nop = item.Nop,
                                 CctvId = item.CctvId,
                                 ImageData = imgData
@@ -791,46 +808,34 @@ namespace CCTVParkirManualTarik
                             UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} snapshot kosong {item.Id}, dilewati.");
                         }
                     }
-                    catch (OperationCanceledException)
-                    {
-                        // Langsung keluar dari loop
-                    }
                     catch (Exception ex)
                     {
-                        UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} error ambil snapshot {item.Id}: {ex.Message}");
+                        UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} error ambil snapshot {item.Id}: {Utl.GetFullExceptionMessage(ex)}", Color.Red);
                     }
                 });
 
-                // 4️⃣ Insert data image
+                // 4️⃣ Insert data dokumen baru
                 if (dokList.Any())
                 {
                     await context.TOpParkirCctvDoks.AddRangeAsync(dokList, cancellationToken);
                     await context.SaveChangesAsync(cancellationToken);
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {dokList.Count} data image Jasnita (NOP {op.Nop})");
-                }
-                else
-                {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data image baru Jasnita untuk NOP {op.Nop}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {dokList.Count} data dokumen Jasnita (NOP {op.Nop})");
                 }
 
-                // 5️⃣ Commit transaksi
+                // 5️⃣ Commit
                 await transaction.CommitAsync(cancellationToken);
-
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🎯 Update Jasnita Rekap FULL sukses (NOP {op.Nop}; {op.NamaOp}) — {newParents.Count} parent, {dokList.Count} image");
-            }
-            catch (OperationCanceledException)
-            {
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🛑 Dibatalkan: Update Jasnita Rekap FULL untuk {op.Nop}");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🎯 Update Jasnita Rekap FULL sukses (NOP {op.Nop}; {op.NamaOp}) — {newParents.Count} parent, {dokList.Count} dokumen");
             }
             catch (Exception ex)
             {
-                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ❌ ERROR UpdateDBJasnitaRekapFull {op.Nop};{op.NamaOp}: {ex.Message}");
+                UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ❌ ERROR UpdateDBJasnitaRekapFull {op.Nop};{op.NamaOp}: {Utl.GetFullExceptionMessage(ex)}", Color.Red);
             }
             finally
             {
                 await context.Database.CloseConnectionAsync();
             }
         }
+
 
         private async Task GenerateTokenJasnita2(CancellationToken cancellationToken)
         {
@@ -868,15 +873,31 @@ namespace CCTVParkirManualTarik
 
 
 
-        private void UpdateConsoleLog(string message)
+        private void UpdateConsoleLog(string message, Color? color = null)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action(() => UpdateConsoleLog(message)));
+                Invoke(new Action(() => UpdateConsoleLog(message, color)));
                 return;
             }
 
+            // Gunakan warna default putih jika tidak ditentukan
+            Color textColor = color ?? Color.White;
+
+            // Pindahkan caret ke akhir teks sebelum menulis
+            consoleLog.SelectionStart = consoleLog.TextLength;
+            consoleLog.SelectionLength = 0;
+
+            // Tulis teks berwarna
+            consoleLog.SelectionColor = textColor;
             consoleLog.AppendText(message + Environment.NewLine);
+
+            // Reset warna ke default
+            consoleLog.SelectionColor = consoleLog.ForeColor;
+
+            // === AUTO-SCROLL KE BAWAH ===
+            consoleLog.SelectionStart = consoleLog.TextLength;
+            consoleLog.ScrollToCaret();
         }
     }
 }
