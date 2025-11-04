@@ -47,7 +47,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" onclick="fnDashoardHarian()">
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" onclick="fnDashboardLayananHarian()">
                             Harian
                         </a>
                     </li>
@@ -64,7 +64,31 @@
                     </div>
 
                     <div class="tab-pane" id="op-series" role="tabpanel">
-                        
+                        <div class="row g-3 align-items-center mb-3">
+                            <div class="col-lg-3 col-md-4">
+                                @(Html.DevExtreme().DateBox()
+                                                                .ID("selectTanggal")
+                                                                .Type(DateBoxType.Date)
+                                                                .Value(DateTime.Now)
+                                                                .DisplayFormat("dd/MM/yyyy")
+                                                                .Width(350)
+                                                                .StylingMode(EditorStylingMode.Outlined)
+                                                                .ElementAttr("class", "form-select-lg")
+                                                                .Placeholder("Pilih Tanggal"))
+                            </div>
+
+                            <div class="col-lg-2 col-md-3">
+                                <button type="button" onclick="fnDashboardLayananHarian()" class="btn btn-success w-100">
+                                    <i class="ri-search-line me-1"></i> Terapkan
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div id="loading2-DashboardLayananHarian" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="DashboardLayananHarian"></div>
                     </div>
                 </div>
                 
@@ -267,6 +291,46 @@
             }
         }
     </script>
+    <script>
+        $(document).ready(function () {
+            // Saat halaman pertama kali dimuat, tampilkan data hari ini
+            fnShow();
+        });
+
+        function fnDashboardLayananHarian() {
+            // Ambil nilai tanggal dari DateBox DevExtreme
+            var tanggal = $("#selectTanggal").dxDateBox("instance").option("value");
+
+            if (!tanggal) {
+                DevExpress.ui.notify("Silakan pilih tanggal terlebih dahulu.", "warning", 2000);
+                return;
+            }
+
+            // Tampilkan loading spinner
+            $("#loading2-DashboardLayananHarian").show();
+
+            // Format tanggal ke yyyy-MM-dd
+            var tglStr = new Date(tanggal).toISOString().split('T')[0];
+
+            // Panggil endpoint controller ASP.NET MVC (misal Dashboard/GetLayananHarian)
+            $.ajax({
+                url: '/Dashboard/LayananDashboardHarian',  // ubah sesuai route kamu
+                type: 'GET',
+                data: { tgl: tglStr },
+                success: function (data) {
+                    // Tampilkan hasil ke dalam div DashboardLayananHarian
+                    $("#DashboardLayananHarian").html(data);
+                },
+                error: function () {
+                    DevExpress.ui.notify("Gagal memuat data.", "error", 2000);
+                },
+                complete: function () {
+                    $("#loading2-DashboardLayananHarian").hide();
+                }
+            });
+        }
+    </script>
+
     <script>
 
         $(document).ready(function () {

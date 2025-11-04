@@ -2,6 +2,7 @@
 using MonPDLib.EF;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
@@ -230,6 +231,7 @@ namespace MonPDLib.General
 
             return jenis;
         }
+        
     }
 
 
