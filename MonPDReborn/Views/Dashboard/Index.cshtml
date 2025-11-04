@@ -43,27 +43,17 @@
                 <ul class="nav nav-tabs nav-border-top nav-border-top-primary mb-3" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" href="#op-rekap" role="tab">
-                            Bulanan
+                            Harian
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" onclick="fnDashboardLayananHarian()">
-                            Harian
+                        <a class="nav-link" data-bs-toggle="tab" href="#op-series" role="tab" onclick="fnDashboardLayanan()">
+                            Bulanan
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content text-muted">
                     <div class="tab-pane active" id="op-rekap" role="tabpanel">
-
-                        <div class="text-center">
-                            <div id="loading2-DashboardLayanan" class="spinner-border text-primary" style="display: none">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                        <div id="DashboardLayanan"></div>
-                    </div>
-
-                    <div class="tab-pane" id="op-series" role="tabpanel">
                         <div class="row g-3 align-items-center mb-3">
                             <div class="col-lg-3 col-md-4">
                                 @(Html.DevExtreme().DateBox()
@@ -89,6 +79,17 @@
                             </div>
                         </div>
                         <div id="DashboardLayananHarian"></div>
+                        
+                    </div>
+
+                    <div class="tab-pane" id="op-series" role="tabpanel">
+                        <div class="text-center">
+                            <div id="loading2-DashboardLayanan" class="spinner-border text-primary" style="display: none">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="DashboardLayanan"></div>
+                        
                     </div>
                 </div>
                 
@@ -294,7 +295,7 @@
     <script>
         $(document).ready(function () {
             // Saat halaman pertama kali dimuat, tampilkan data hari ini
-            fnShow();
+            fnDashboardLayananHarian();
         });
 
         function fnDashboardLayananHarian() {

@@ -141,9 +141,12 @@ namespace MonPDLib.Lib
                     {
                         kawasan = EnumFactory.KawasanReklame.Penataan;
                     }
-                    else if (luas > 8)
+                    else
                     {
-                        kawasan = EnumFactory.KawasanReklame.Penataan;
+                        if (luas > 8)
+                        {
+                            kawasan = EnumFactory.KawasanReklame.Penataan;
+                        }
                     }
                 }
             }

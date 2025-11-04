@@ -2832,20 +2832,9 @@ namespace MonPDReborn.Models
                         }
 
                         // Mapping kode layanan ke nama layanan (master)
-                        var mapLayanan = new Dictionary<string, string>
-            {
-                { "01", "Pendaftaran" },
-                { "02", "Mutasi" },
-                { "03", "Pemecahan" },
-                { "04", "Penggabungan" },
-                { "05", "Pembetulan" },
-                { "06", "Keberatan" },
-                { "07", "Penghapusan" },
-                { "08", "Lainnya" }
-            };
-
-                        foreach (var kode in mapLayanan.Keys)
+                        foreach (EJenisPBB kodeEnum in Enum.GetValues(typeof(EJenisPBB)))
                         {
+                            string kode = ((int)kodeEnum).ToString("D2"); // Format jadi "01", "02", dst.
                             var groupData = ret.Where(x => x.KODE_LAYANAN == kode).ToList();
 
                             var masuk = groupData.Count(x =>
@@ -2860,7 +2849,7 @@ namespace MonPDReborn.Models
 
                             var layanan = new ViewModel.DashboardLayanan
                             {
-                                JenisPajak = $"{epajak.GetDescription()} - {mapLayanan[kode]}",
+                                JenisPajak = $"{epajak.GetDescription()} - {kodeEnum.GetDescription()}",
                                 PajakId = (int)epajak,
                                 Masuk1 = masuk,
                                 Proses1 = proses,
