@@ -131,17 +131,17 @@ namespace MonPDLib.Lib
             kelasJalan = distinctKelasJalan.First();
             if (kelasJalan == 1)
             {
-                if (jenisReklame == EnumFactory.KategoriReklame.Megatron)
-                {
-                    kawasan = EnumFactory.KawasanReklame.Penataan;
-                }
-                else if (IdJalanPenataan.Contains(jalanData.IdJalan))
+                if (IdJalanPenataan.Contains(jalanData.IdJalan))
                 {
                     kawasan = EnumFactory.KawasanReklame.Penataan;
                 }
                 else if (IdJalanIrisan.Contains(jalanData.IdJalan))
                 {
-                    if (luas > 8)
+                    if (jenisReklame == EnumFactory.KategoriReklame.Megatron)
+                    {
+                        kawasan = EnumFactory.KawasanReklame.Penataan;
+                    }
+                    else if (luas > 8)
                     {
                         kawasan = EnumFactory.KawasanReklame.Penataan;
                     }
