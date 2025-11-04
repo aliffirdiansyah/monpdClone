@@ -162,7 +162,7 @@
 
         <div class="col-lg-auto col-md-12 text-lg-end">
             <div class="p-2 mt-">
-                <h4 id="currentTime" class="text-white mb-0 fw-semibold"></h4>
+                <h2 id="currentTime" class="text-white mb-0 fw-semibold"></h2>
             </div>
         </div>
     </div>
@@ -211,12 +211,12 @@
                                 <div id="mobileCardAktivitasHarianDekstop" class="card-body d-none d-lg-block">
                                     <div class="card-header align-items-center d-flex">
                                         <i class="ri-calendar-event-line text-primary mb-0 me-2"></i>
-                                        <h5 class="card-title mb-0 me-2">Aktivitas Hari Ini</h5>
+                                        <h5 class="card-title mb-0 me-2">Aktivitas Hari Ini | <span id="currentDate"></span></h5> 
                                     </div>
                                     <!-- DataGrid Section -->
                                     <div class="card">
                                         <div class="card-body p-0">
-                                            <div style="height: 360px;">
+                                            <div style="height: 500px;">
                                                 @(Html.DevExtreme().DataGrid<MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.LiveStreamingAktivitasHarian>()
                                                     .ID("gridLiveStreamingAktivitas")
                                                     .KeyExpr("Id")
@@ -410,7 +410,7 @@
     </script>
 
     <script>
-        function updateTime() {
+       function updateTime(targetId, mode) {
             const now = new Date();
 
             const hh = now.getHours().toString().padStart(2, '0');
@@ -424,12 +424,18 @@
                 year: 'numeric'
             });
 
-            const formatted = `${formattedTime} | ${formattedDate}`;
-            document.getElementById('currentTime').textContent = formatted;
+            // pilih output berdasarkan mode
+            const formatted = mode === "time" ? formattedTime : formattedDate;
+
+            document.getElementById(targetId).textContent = formatted;
         }
 
-        updateTime();
-        setInterval(updateTime, 1000);
+        // jalankan pertama kali
+        updateTime('currentTime', 'time');
+        updateTime('currentDate', 'date');
+
+        // update tiap detik hanya untuk waktu
+        setInterval(() => updateTime('currentTime', 'time'), 1000);
     </script>
 
 
