@@ -13,6 +13,7 @@ using System.Numerics;
 using System.Web.Mvc;
 using static MonPDReborn.Models.AktivitasOP.PendataanObjekPajakVM;
 using static MonPDReborn.Models.CCTVParkir.MonitoringCCTVVM.ViewModel.KapasitasChart;
+using static MonPDReborn.Models.KontrolPBB.PencarianPBBVM.ViewModels.DataPBB;
 using static System.Net.WebRequestMethods;
 
 namespace MonPDReborn.Models.CCTVParkir
@@ -254,9 +255,13 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 KapasitasChartDetail = Method.GetKapasitasChart(AktivitasHarianList, tgl);
 
-                VendorId = AktivitasHarianList.FirstOrDefault()?.VendorId ?? 0;
-
-                Nop = AktivitasHarianList.FirstOrDefault()?.Nop ?? "" ;
+                var context = DBClass.GetContext();
+                var query = context.MOpParkirCctvs.FirstOrDefault(m => m.Nop == nop);
+                if (query != null)
+                {
+                    Nop = nop;
+                    VendorId = query.Vendor;
+                }
             }
         }
 
@@ -903,7 +908,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 var result = new List<MonitoringCctvHarianDetail>();
                 var context = DBClass.GetContext();
 
-                var data = context.TOpParkirCctvs
+                var data = context.TOpParkirCctvs.Include(x => x.TOpParkirCctvDok)
                     .Where(x => x.Nop == nop && x.WaktuMasuk.Date == tgl && x.JenisKend != 0).ToList();
 
                 foreach (var item in data)
@@ -921,10 +926,23 @@ namespace MonPDReborn.Models.CCTVParkir
                     res.PlatNo = item.PlatNo ?? "-";
                     res.Direction = ((EnumFactory.CctvParkirDirection)item.Direction).GetDescription();
                     res.Log = item.Log;
-                    res.ImageUrl = item.ImageUrl;
                     res.IsLog = false;
                     res.IsLogText = "Record";
                     res.IsOn = false;
+                    result.Add(res);
+
+                    if (item.Vendor == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                    {
+                        if (item.TOpParkirCctvDok?.ImageData != null && item.TOpParkirCctvDok.ImageData.Length > 0)
+                        {
+                            string base64String = Convert.ToBase64String(item.TOpParkirCctvDok.ImageData);
+                            res.ImageUrl = $"data:image/jpeg;base64,{base64String}";
+                        }
+                    }
+                    else if (item.Vendor == (int)EnumFactory.EVendorParkirCCTV.Telkom)
+                    {
+                        res.ImageUrl = item.ImageUrl;
+                    }
                     result.Add(res);
                 }
 
@@ -1147,8 +1165,9 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 // 📌 Bulanan tetap berdasarkan bulan dari tgl
                 var kendaraanParkirBulanan = context.TOpParkirCctvs
-                    .Where(x => x.WaktuMasuk.Year == tgl.Year && x.WaktuMasuk.Month == tgl.Month &&
-                                x.Nop == nop )
+                    .Where(x => x.WaktuMasuk.Year == tgl.Year 
+                             && x.WaktuMasuk.Month == tgl.Month 
+                             && x.Nop == nop )
                     .GroupBy(x => new { x.JenisKend, x.WaktuMasuk.Day })
                     .Select(g => new
                     {
@@ -1228,6 +1247,7 @@ namespace MonPDReborn.Models.CCTVParkir
 
                 /* Menentukan Informasi Data Pajak OP */
                 var estimasiPajak = 0m;
+                var estimasiPajakHarian = 0m;
                 var tahunKemarinTotal = parkirTahunKemarin.Sum(x => x.NominalPokokBayar) ?? 0;
                 var tahunIniTotal = parkirTahunSekarang.Sum(x => x.NominalPokokBayar) ?? 0;
 
@@ -1244,21 +1264,36 @@ namespace MonPDReborn.Models.CCTVParkir
                 var mobilBulanan = kendaraanParkirBulanan.Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Mobil).Sum(q => q.JumlahKendaraanTerparkir);
                 var truckBulanan = kendaraanParkirBulanan.Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Truck).Sum(q => q.JumlahKendaraanTerparkir);
                 var unknownBulanan = kendaraanParkirBulanan.Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Unknown).Sum(q => q.JumlahKendaraanTerparkir);
+                var mobildantruckbulanan = mobilBulanan + truckBulanan;
 
-                /* Hitung omet masing masing kendaraan 
+                /*Perhitungan jumlah kendaraan harian dan omsetnya
+                */
+                var motorHarian = kendaraanParkirHarian.Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Motor).Sum(q => q.JumlahKendaraanTerparkir);
+                var mobilHarian = kendaraanParkirHarian.Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Mobil).Sum(q => q.JumlahKendaraanTerparkir);
+                var truckHarian = kendaraanParkirHarian.Where(x => x.JenisKendaraan == (int)EnumFactory.EJenisKendParkirCCTV.Unknown).Sum(q => q.JumlahKendaraanTerparkir);
+               
+                /* Hitung omset Bulanan masing masing kendaraan 
                 */
                 var omsetMotor = 2000 * motorBulanan;
                 var omsetMobil = 4000 * (mobilBulanan + truckBulanan);
                 var omsetUnknown = 2000 * unknownBulanan;
-                //** exclude uknown dari perhitungan pajak **//
+                //** exclude uknown dari perhitungan pajak bulanan **//
                 var omsetTotal = omsetMotor + omsetMobil;
+                
+                var omsetMotorHarian = 2000 * motorHarian;
+                var omsetMobilHarian = 4000 * (mobilHarian + truckHarian);
+                //** exclude uknown dari perhitungan pajak harian **//
+                var omsetTotalHarian = omsetMotorHarian + omsetMobilHarian;
 
                 estimasiPajak = omsetTotal * 0.1m;
-
+                estimasiPajakHarian = omsetTotalHarian * 0.1m;
 
                 return new LiveStreamingAnalysis
                 {
                     EstimasiPajak = estimasiPajak,
+                    EstimasiPajakHarian = estimasiPajakHarian,
+                    OmsetHarian = omsetTotalHarian,
+                    OmsetBulanan = omsetTotal,
                     TahunKemarin = tahunKemarinTotal,
                     TahunIni = tahunIniTotal,
                     Motor = motor,
@@ -1271,6 +1306,8 @@ namespace MonPDReborn.Models.CCTVParkir
                     LastUpdate = lastUpdate,
                     bulanIni= bulanIni,
                     bulanLalu = bulanLalu,
+                    MotorBulanan = motorBulanan,
+                    MobilBulanan = mobildantruckbulanan,
                 };
             }
             public static List<LiveStreamingAktivitasHarian> GetAktivitasHarian(string nop, DateTime tgl)
@@ -1553,14 +1590,20 @@ namespace MonPDReborn.Models.CCTVParkir
 
         public class LiveStreamingAnalysis
         {
+            public int MotorBulanan { get; set; }
+            public int MobilBulanan { get; set; }
             public string bulanIni { get; set; }
             public string bulanLalu { get; set; }
+
             //Cek dari function yang bulanan
             public decimal EstimasiPajak { get; set; }
+            public decimal OmsetBulanan { get; set; }
             public decimal TahunKemarin { get; set; }
             public decimal TahunIni { get; set; }
 
             //cek dari function yang harian
+            public decimal OmsetHarian { get; set; }
+            public decimal EstimasiPajakHarian { get; set; }
             public int Motor { get; set; }
             public int Mobil { get; set; }
             public int Unknown { get; set; }
