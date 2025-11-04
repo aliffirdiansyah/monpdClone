@@ -1421,6 +1421,7 @@ namespace MonPDReborn.Models.CCTVParkir
                 // A. Query data Realtime (TOpParkirCctvRealtimes)
                 // ===================================================
                 var newRealtimeData = context.TOpParkirCctvRealtimes
+                    .Include(x => x.TOpParkirCctvRealtimeDok)
                     .Where(x => x.Nop == nop
                              // Pastikan query TIDAK TERBATAS oleh .Date, karena ini adalah data LIVE
                              && x.WaktuMasuk >= startTimeSafe
@@ -1438,12 +1439,24 @@ namespace MonPDReborn.Models.CCTVParkir
                         JenisKendEnum = (EnumFactory.EJenisKendParkirCCTV)item.JenisKend,
                         JenisKend = ((EnumFactory.EJenisKendParkirCCTV)item.JenisKend).GetDescription(),
                         PlatNo = item.PlatNo,
-                        ImageUrl = item.ImageUrl,
+                        //ImageUrl = item.ImageUrl,
                         IsLog = false,
                         IsLogText = "Record",
                         IsOn = false,
                         VendorId = item.VendorId
                     };
+                    if (item.VendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
+                    {
+                        if (item.TOpParkirCctvRealtimeDok?.ImageData != null && item.TOpParkirCctvRealtimeDok.ImageData.Length > 0)
+                        {
+                            string base64String = Convert.ToBase64String(item.TOpParkirCctvRealtimeDok.ImageData);
+                            res.ImageUrl = $"data:image/jpeg;base64,{base64String}";
+                        }
+                    }
+                    else if (item.VendorId == (int)EnumFactory.EVendorParkirCCTV.Telkom)
+                    {
+                        res.ImageUrl = item.ImageUrl;
+                    }
                     result.Add(res);
                 }
 
