@@ -1445,6 +1445,7 @@ namespace MonPDReborn.Models.CCTVParkir
                         IsOn = false,
                         VendorId = item.VendorId
                     };
+
                     if (item.VendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
                     {
                         if (item.TOpParkirCctvRealtimeDok?.ImageData != null && item.TOpParkirCctvRealtimeDok.ImageData.Length > 0)
