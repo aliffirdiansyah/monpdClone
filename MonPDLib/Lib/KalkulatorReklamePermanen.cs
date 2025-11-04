@@ -93,6 +93,41 @@ namespace MonPDLib.Lib
                 throw new Exception("Data jalan memiliki kelas jalan yang berbeda");
             }
 
+            var IdJalanPenataan = new List<int>
+            {
+                7,
+                1536,
+                1177,
+                110,
+                374,
+                23,
+                1109
+            };
+            var IdJalanIrisan = new List<int>
+            {
+                853,
+                854,
+                6,
+                1504,
+                88,
+                293,
+                115,
+                1111,
+                1494,
+                375,
+                1560,
+                1000,
+                1352,
+                645,
+                982,
+                817,
+                1179,
+                1129,
+                244,
+                253
+            };
+
+
             kelasJalan = distinctKelasJalan.First();
             if (kelasJalan == 1)
             {
@@ -100,7 +135,11 @@ namespace MonPDLib.Lib
                 {
                     kawasan = EnumFactory.KawasanReklame.Penataan;
                 }
-                else
+                else if (IdJalanPenataan.Contains(jalanData.IdJalan))
+                {
+                    kawasan = EnumFactory.KawasanReklame.Penataan;
+                }
+                else if (IdJalanIrisan.Contains(jalanData.IdJalan))
                 {
                     if (luas > 8)
                     {
