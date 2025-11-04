@@ -70,6 +70,18 @@ namespace CCTVParkirManualTarik
                     DateTime tgl1 = date1.Value.Date;
                     DateTime tgl2 = date2.Value.Date;
 
+                    // === VALIDASI TANGGAL ===
+                    if (tgl1 > tgl2)
+                    {
+                        MessageBox.Show("Tanggal awal tidak boleh lebih besar dari tanggal akhir.","Validasi Tanggal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tgl2.Date > DateTime.Now.Date)
+                    {
+                        MessageBox.Show("Tanggal akhir tidak boleh hari ini.","Validasi Tanggal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
                     await Task.Run(async () =>
                     {
                         var dataList = dataListBox.CheckedItems.Cast<DataCctv.DataOpCctv>().ToList();
@@ -236,7 +248,7 @@ namespace CCTVParkirManualTarik
                 }
                 else
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data valid Telkom untuk {op.Nop}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data valid Telkom untuk {op.Nop};{op.NamaOp}");
                 }
             }
             catch (OperationCanceledException)
@@ -744,13 +756,13 @@ namespace CCTVParkirManualTarik
                     {
                         context.TOpParkirCctvDoks.RemoveRange(oldChildren);
                         await context.SaveChangesAsync(cancellationToken);
-                        UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldChildren.Count} dokumen lama Jasnita (NOP {op.Nop})");
+                        UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldChildren.Count} dokumen lama Jasnita (NOP {op.Nop};{op.NamaOp})");
                     }
 
                     // Baru hapus parent
                     context.TOpParkirCctvs.RemoveRange(oldParents);
                     await context.SaveChangesAsync(cancellationToken);
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldParents.Count} data parent lama Jasnita (NOP {op.Nop})");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] 🧹 Hapus {oldParents.Count} data parent lama Jasnita (NOP {op.Nop};{op.NamaOp})");
                 }
 
                 // 2️⃣ Insert parent baru
@@ -775,11 +787,11 @@ namespace CCTVParkirManualTarik
                 {
                     await context.TOpParkirCctvs.AddRangeAsync(newParents, cancellationToken);
                     await context.SaveChangesAsync(cancellationToken);
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {newParents.Count} data parent Jasnita (NOP {op.Nop})");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {newParents.Count} data parent Jasnita (NOP {op.Nop};{op.NamaOp})");
                 }
                 else
                 {
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data parent baru Jasnita untuk NOP {op.Nop}");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ⚠️ Tidak ada data parent baru Jasnita untuk NOP {op.Nop};{op.NamaOp}");
                 }
 
                 // 3️ Ambil data image paralel
@@ -806,7 +818,7 @@ namespace CCTVParkirManualTarik
                         var response = await httpClient.GetAsync(item.Url, ct);
                         if (!response.IsSuccessStatusCode)
                         {
-                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} gagal ambil snapshot {item.Id}: {response.StatusCode}");
+                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} gagal ambil snapshot {item.Id}: {response.StatusCode}", Color.Red);
                             if (response.StatusCode == HttpStatusCode.Forbidden)
                                 await GenerateTokenJasnita2(ct);
                             return;
@@ -825,7 +837,7 @@ namespace CCTVParkirManualTarik
                         }
                         else
                         {
-                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} snapshot kosong {item.Id}, dilewati.");
+                            UpdateConsoleLog($"{DateTime.Now:HH:mm:ss} ⚠️ {op.Nop} snapshot kosong {item.Id}, dilewati.", Color.Yellow);
                         }
                     }
                     catch (Exception ex)
@@ -839,7 +851,7 @@ namespace CCTVParkirManualTarik
                 {
                     await context.TOpParkirCctvDoks.AddRangeAsync(dokList, cancellationToken);
                     await context.SaveChangesAsync(cancellationToken);
-                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {dokList.Count} data dokumen Jasnita (NOP {op.Nop})");
+                    UpdateConsoleLog($"[{DateTime.Now:HH:mm:ss}] ✅ Insert {dokList.Count} data dokumen Jasnita (NOP {op.Nop};{op.NamaOp})");
                 }
 
                 // 5️⃣ Commit

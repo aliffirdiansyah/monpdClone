@@ -1,8 +1,8 @@
-﻿
+﻿@model MonPDReborn.Models.DashboardVM.LayananDashboard
 <div class="table-responsive">
     @(
         Html.DevExtreme().DataGrid<MonPDReborn.Models.DashboardVM.ViewModel.DashboardReklame>()
-        .ID("dg-dashboadrdetail")
+        .ID("dg-dashboadrdetail" + Model.Data.First().PajakId)
         .DataSource(d => d.Mvc()
         .LoadAction("GetDetailLayanan")
         .LoadParams(new { PajakId = ViewData["PajakId"] })

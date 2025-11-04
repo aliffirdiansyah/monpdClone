@@ -1663,5 +1663,71 @@ namespace MonPDLib.General
             [Description("Selesai Pemberitahuan WA")]
             SelesaiWA = 9
         }
+        public enum EJenisPBB
+        {
+            [Description("Pendaftaran OP Baru")]
+            PendaftaranOPB = 1,
+
+            [Description("Mutasi")]
+            Mutasi = 2,
+
+            [Description("Pembetulan SPPT")]
+            PembetulanSPPT = 3,
+
+            [Description("Pembatalan SPPT")]
+            PembatalanSPPT = 4,
+
+            [Description("Salinan SPPT / SKP")]
+            SalinanSPPT_SPK = 5,
+
+            [Description("Pengurangan Pajak Terhutang")]
+            PenguranganPajakTerhutang = 8,
+
+            [Description("Legalisir SPPT")]
+            LegalisirSPPT = 17,
+
+            [Description("Pemecahan Objek Pajak")]
+            PemecahanObjekPajak = 18,
+
+            [Description("Penggabungan Objek Pajak")]
+            PenggabunganObjekPajak = 19,
+
+            [Description("Informasi Data NJOP")]
+            InformasiDataNJOP = 22,
+
+            [Description("Keterangan Lunas")]
+            KeteranganLunas = 24,
+
+            //[Description("Keterangan Lunas")]
+            //KeteranganLunas = 25,
+
+            [Description("Rekam Data")]
+            RekamData = 99,
+
+            [Description("Pembatalan SPPT Veteran")]
+            PembatalanSPPTVeteran = 33,
+
+            [Description("Registrasi Pengurangan")]
+            RegistrasiPengurangan = 98,
+
+            [Description("Keterangan Bebas Pajak Veteran")]
+            KeteranganBebasPajakVeteran = 35
+        }
+
+        public static string GetEnumDescription(Enum value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            var type = value.GetType();
+            var field = type.GetField(value.ToString());
+
+            if (field == null)
+                return value.ToString(); // fallback jika tidak ditemukan
+
+            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+            return attribute != null ? attribute.Description : value.ToString();
+        }
+
     }
 }

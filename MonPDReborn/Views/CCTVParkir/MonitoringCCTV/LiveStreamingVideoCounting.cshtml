@@ -6,47 +6,82 @@
 
 <div class="card-body">
     <h5 class="card-title mb-3">
-        <i class="ri-video-line me-2 text-primary"></i>Analysis Result
+        <i class="ri-video-line me-2 text-primary"></i>Analysis Result Hari Ini [ <span id="currentDate"></span> ]
     </h5>
 
 
     <div class="row text-center mb-4">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-3 mb-3">
             <div class="p-3 border rounded">
                 <i class="ri-car-line fs-2 text-primary mb-2"></i>
-                <h6 class="text-muted mb-1">Mobil Masuk</h6>
-                <h3 id="mobilMasuk" class="fw-bold text-primary">@Model.AnalysisResult.Mobil</h3>
+                <h6 class="text-muted mb-1">Mobil Masuk <br/>Hari Ini</h6>
+                <h5 id="mobilMasuk" class="fw-bold text-primary">@Model.AnalysisResult.Mobil</h5>
             </div>
         </div>
-        <div class="col-md-6 mb-3">
+        <div class="col-md-3 mb-3">
             <div class="p-3 border rounded">
                 <i class="ri-motorbike-line fs-2 text-success mb-2"></i>
-                <h6 class="text-muted mb-1">Motor Masuk</h6>
-                <h3 id="motorMasuk" class="fw-bold text-success">@Model.AnalysisResult.Motor</h3>
+                <h6 class="text-muted mb-1">Motor Masuk <br />Hari Ini</h6>
+                <h5 id="motorMasuk" class="fw-bold text-success">@Model.AnalysisResult.Motor</h5>
             </div>
         </div>
-        <!-- ### JANGAN DIHAPUS ###-->
-        @* <div class="col-md-4 mb-3">
+
+        <div class="col-md-3 mb-3">
             <div class="p-3 border rounded">
-                <i class="ri-question-line fs-2 text-warning mb-2"></i>
-                <h6 class="text-muted mb-1">Unknown</h6>
-                <h3 class="fw-bold text-warning">@Model.AnalysisResult.Unknown</h3>
+                <i class=" ri-award-line fs-2 text-info mb-2"></i>
+                <h6 class="text-muted mb-1">Omset <br />Hari Ini</h6>
+                <h5 class="fw-bold text-info">Rp @Model.AnalysisResult.OmsetHarian.ToString("N0")</h5>
             </div>
-        </div> *@
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="p-3 border rounded">
+                <i class="ri-line-chart-line fs-2 text-info mb-2"></i>
+                <h6 class="text-muted mb-1">Estimasi Pajak <br />Hari Ini</h6>
+                <h5 class="fw-bold text-secondary">Rp @Model.AnalysisResult.EstimasiPajakHarian.ToString("N0")</h5>
+            </div>
+        </div>
     </div>
 
 
     <div class="border-top mt-4 pt-3">
         <h5 class="card-title mb-3">
-            <i class="ri-coins-line me-2 text-success"></i>Data Pajak
+            <i class="ri-coins-line me-2 text-success"></i>Data Pajak Bulan Ini [ <span id="currentMonth"></span> ]
         </h5>
+
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <div class="p-3 border rounded">
+                    <i class="ri-car-line fs-2 text-primary mb-2"></i>
+                    <h6 class="text-muted mb-1">Total Mobil Bulan Ini</h6>
+                    <h4 id="mobilMasuk" class="fw-bold text-primary">@Model.AnalysisResult.MobilBulanan</h4>
+                </div>
+            </div>
+          
+            <div class="col-md-4 mb-3">
+                <div class="p-3 border rounded">
+                    <i class="ri-motorbike-line fs-2 text-success mb-2"></i>
+                    <h6 class="text-muted mb-1">Motor Masuk Bulan Ini</h6>
+                    <h4 id="motorMasuk" class="fw-bold text-success">@Model.AnalysisResult.MotorBulanan</h4>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="p-3 border rounded">
+                    <i class="bx bx-award fs-2 text-success mb-2"></i>
+                    <h6 class="text-muted mb-1">Omset Bulan Ini</h6>
+                    <h4 id="motorMasuk" class="fw-bold text-success">Rp @Model.AnalysisResult.OmsetBulanan.ToString("N0")</h4>
+                </div>
+            </div>
+        </div>
 
         <div class="row text-center">
             <div class="col-md-4 mb-3" title="Cek Detail Estimasi">
                 <a href="/MonitoringCCTV/Kapasitas?nop=@Model.Nop&vendorId=@Model.VendorId" style="cursor: pointer">
                     <div class="p-3 border rounded bg-light">
                         <h6 class="text-muted mb-1">
-                            <i class="ri-line-chart-line text-info me-1"></i>Estimasi Pajak 
+                            <i class="ri-line-chart-line text-info me-1"></i>Estimasi Pajak @DateTime.Now.Year
+
                         </h6>
                         <h6 class="text-muted mb-1">
                             Bulan @Model.AnalysisResult.bulanIni
@@ -54,12 +89,14 @@
                         <h4 class="fw-bold text-success mb-0">Rp @Model.AnalysisResult.EstimasiPajak.ToString("N0")</h4>
                     </div>
                 </a>
+
             </div>
-          
+
             <div class="col-md-4 mb-3">
                 <div class="p-3 border rounded bg-light">
                     <h6 class="text-muted mb-1">
-                        <i class="ri-calendar-2-line text-secondary me-1"></i>Realisasi 2024
+                        <i class="ri-calendar-2-line text-secondary me-1"></i>Realisasi @(DateTime.Now.Year - 1)
+
                     </h6>
                     <h6 class="text-muted mb-1">
                         Bulan @Model.AnalysisResult.bulanIni
@@ -71,7 +108,7 @@
             <div class="col-md-4 mb-3">
                 <div class="p-3 border rounded bg-light">
                     <h6 class="text-muted mb-1">
-                        <i class="ri-calendar-check-line text-primary me-1"></i>Realisasi 2025
+                        <i class="ri-calendar-check-line text-primary me-1"></i>Realisasi @DateTime.Now.Year
                     </h6>
                     <h6 class="text-muted mb-1">
                         Bulan @Model.AnalysisResult.bulanLalu
