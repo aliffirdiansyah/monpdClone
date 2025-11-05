@@ -25,6 +25,53 @@
 </div>
 
 <div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h5 class="card-title text-dark fs-16 mb-0">
+                        <i class="mdi mdi-file-chart align-middle me-1"></i> REALISASI HARI INI
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi hari ini" onclick="fnRealisasiHari()">
+                        <i class="mdi mdi-refresh align-middle"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-lg-3 col-md-4">
+                        @(Html.DevExtreme().DateBoxFor(m => m.TanggalCutOff)
+                            .ID("date-cutoff")
+                            .Type(DateBoxType.Date) // Menentukan tipe input adalah tanggal
+                            .DisplayFormat("yyyy-MM-dd") // Format tanggal yang ditampilkan
+                            .Placeholder("Pilih Tanggal Cut Off...")
+                            .Value(DateTime.Now) // Mengatur tanggal default ke hari ini
+
+                            // 3. Terapkan styling yang sama dengan SelectBox
+                            .StylingMode(EditorStylingMode.Outlined)
+                            .ElementAttr("class", "form-select") // Gunakan kelas yang sama jika perlu
+                            )
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <button type="button" onclick="fnRealisasiHari()" class="btn btn-success w-100">
+                            <i class="ri-search-line me-1"></i> Terapkan
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div id="loading2-RealisasiHari" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="RealisasiHari"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
@@ -98,7 +145,7 @@
     </div>
 </div>
 
-<div class="row">
+@* <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex bg-header-color align-items-center">
@@ -123,7 +170,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> *@
 
 <div class="row">
     @* <div class="col-lg-12">
@@ -294,6 +341,42 @@
     </script>
     <script>
         $(document).ready(function () {
+            fnRealisasiHari();
+        });
+        function fnRealisasiHari() {
+            var tglCutOff = $("#TanggalCutOff").val();
+            $.ajax({
+                url: '@Url.Action("RealisasiHari")',
+                type: 'GET',
+                data: {tglCutOff },
+                beforeSend: function () {
+                    $("#card-RealisasiHari").hide();
+                    $("#loading2-RealisasiHari").show();
+                },
+                success: function (response) {
+                    if(response.Status === undefined){
+                        $("#card-RealisasiHari").show();
+                        $("#RealisasiHari").html(response);
+                    } else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#RealisasiHari').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                },
+                complete: function () {
+                    $("#loading2-RealisasiHari").hide();
+                }
+            });
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
             // Saat halaman pertama kali dimuat, tampilkan data hari ini
             fnDashboardLayananHarian();
         });
@@ -336,7 +419,7 @@
 
         $(document).ready(function () {
             fnShowCard();
-            fnSeriesPajakDaerah();
+            // fnSeriesPajakDaerah();
             fnDashboardLayanan();
             // fnDataPiutang();
             // fnDataMutasi();
@@ -347,36 +430,36 @@
         function fnMonitoringBulanan(jenisPajak) {
             window.location.href = `/MonitoringBulanan?jenisPajak=${jenisPajak}`;
         }
-        function fnSeriesPajakDaerah()
-        {
-            $.ajax({
-              url: '@(Url.Action("SeriesPajakDaerah"))',
-              type: 'GET',
-              beforeSend: function () {
-                 $('#loading2-SeriesPajakDaerah').show();
-                 $('#SeriesPajakDaerah').hide();
-              },
-              success: function (response) {
-                    if (response.Status === undefined) {
-                        $('#loading2-SeriesPajakDaerah').hide();
-                        $('#SeriesPajakDaerah').show();
-                        $('#SeriesPajakDaerah').html(response);
-                    }
-                    else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
-              },
-              error: function (xhr, status, error) {
-                 $('#loading2-SeriesPajakDaerah').hide();
-                 $('#SeriesPajakDaerah').hide();
-                 $('#SeriesPajakDaerah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
-              }
-           });
-        }
+        // function fnSeriesPajakDaerah()
+        // {
+        //     $.ajax({
+        //       url: '@(Url.Action("SeriesPajakDaerah"))',
+        //       type: 'GET',
+        //       beforeSend: function () {
+        //          $('#loading2-SeriesPajakDaerah').show();
+        //          $('#SeriesPajakDaerah').hide();
+        //       },
+        //       success: function (response) {
+        //             if (response.Status === undefined) {
+        //                 $('#loading2-SeriesPajakDaerah').hide();
+        //                 $('#SeriesPajakDaerah').show();
+        //                 $('#SeriesPajakDaerah').html(response);
+        //             }
+        //             else {
+        //                 swal.fire({
+        //                     icon: 'warning',
+        //                     title: '<b style="color:orange">Peringatan</b>',
+        //                     text: response.Message
+        //                 })
+        //             }
+        //       },
+        //       error: function (xhr, status, error) {
+        //          $('#loading2-SeriesPajakDaerah').hide();
+        //          $('#SeriesPajakDaerah').hide();
+        //          $('#SeriesPajakDaerah').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+        //       }
+        //    });
+        // }
         function fnDashboardLayanan()
         {
             $.ajax({
