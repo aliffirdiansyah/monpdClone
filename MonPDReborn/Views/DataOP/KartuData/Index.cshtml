@@ -171,10 +171,7 @@
         });
     }
     function CetakDokumen() {
-        var nop = $('#tbNop').dxTextBox('instance').option('value');
-        if (nop === '') {
-            nop = $("#cbNop").dxSelectBox('instance').option('value');
-        }
+        nop = $("#cbNop").dxSelectBox('instance').option('value');
         var url = '@Url.Action("KartuReport", "KartuData")' + '?nop=' + nop;
         var win = window.open(url, '_blank');
         win.focus();

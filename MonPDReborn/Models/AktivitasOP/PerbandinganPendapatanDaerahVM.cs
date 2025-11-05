@@ -340,6 +340,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 {
                     var opdVm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
                     opdVm.Col.Kode = opd.KodeOpd;
+                    opdVm.Col.Bulan = new DateTime(DateTime.Now.Year, month, 1).ToString("MMMM", new CultureInfo("id-ID"));
                     opdVm.Col.Nama = opd.NamaOpd;
                     opdVm.Col.Target = opd.Target;
                     opdVm.Col.RealisasiNow = opd.RealisasiNow;
