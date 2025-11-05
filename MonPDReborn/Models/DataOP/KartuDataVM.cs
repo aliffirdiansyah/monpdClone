@@ -1,4 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using MonPDLib;
+using MonPDLib.General;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System.Text.Json.Serialization;
+using System.Web.Mvc;
 
 namespace MonPDReborn.Models.DataOP
 {
@@ -74,6 +78,51 @@ namespace MonPDReborn.Models.DataOP
                         throw new Exception("Gagal parsing JSON dari API: " + jex.Message + ". JSON: " + json, jex);
                     }
                 }
+            }
+        }
+        public class Method
+        {
+            public static List<SelectListItem> GetOpList(string nop)
+            {
+                var context = DBClass.GetContext();
+                var ret = new List<SelectListItem>();
+                nop = nop.Replace(".", "").Trim();
+                var currentYear = DateTime.Now.Year;
+
+                var opResto = context.DbOpRestos
+                    .Where(x => x.TahunBuku == currentYear && x.PajakNama != "MAMIN" && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.MakananMinuman).GetDescription()}]" })
+                    .ToList();
+                var OpHotel = context.DbOpHotels
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaPerhotelan).GetDescription()}]" })
+                    .ToList();
+                var opParkir = context.DbOpParkirs
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaParkir).GetDescription()}]" })
+                    .ToList();
+                var opListrik = context.DbOpListriks
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.TenagaListrik).GetDescription()}]" })
+                    .ToList();
+                var opHiburan = context.DbOpHiburans
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaKesenianHiburan).GetDescription()}]" })
+                    .ToList();
+                var opAirTanah = context.DbOpAbts
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.AirTanah).GetDescription()}]" })
+                    .ToList();
+
+                ret.AddRange(opResto);
+                ret.AddRange(OpHotel);
+                ret.AddRange(opParkir);
+                ret.AddRange(opListrik);
+                ret.AddRange(opHiburan);
+                ret.AddRange(opAirTanah);
+
+                return ret;
+
             }
         }
         public class KartuDataList
