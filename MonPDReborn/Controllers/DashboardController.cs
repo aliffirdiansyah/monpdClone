@@ -166,11 +166,11 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
-        public IActionResult RealisasiHari(DateTime tglCutOff)
+        public IActionResult RealisasiHari(DateTime TglCutOff)
         {
             try
             {
-                var model = new Models.DashboardVM.RealisasiHari(tglCutOff);
+                var model = new Models.DashboardVM.RealisasiHari(TglCutOff);
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException e)

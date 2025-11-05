@@ -67,11 +67,11 @@ namespace MonPDReborn.Models
 
         public class RealisasiHari
         {
-            public List<ViewModel.MonitoringRealisasiHari> Data { get; set; } = new();
+            public List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok> Data { get; set; } = new();
             public DateTime tgl { get; set; }
             public RealisasiHari(DateTime TanggalCutOff)
             {
-                Data = Method.GetTahunanPajak(TanggalCutOff);
+                Data = Method.GetSudutPandangRekeningJenisObjekOpdData(TanggalCutOff);
                 tgl = TanggalCutOff;
             }
         }
@@ -415,13 +415,90 @@ namespace MonPDReborn.Models
                 public int Proses12 { get; set; }
                 public int Selesai12 { get; set; }
             }
-            public class MonitoringRealisasiHari
+            public class ShowSeriesSudutPandangRekeningJenisObjekOpd
             {
-                public string JenisPajak { get; set; } = null!;
-                public decimal AkpTahun { get; set; } = 0;
-                public decimal RealisasiHariAccrual { get; set; } = 0;
-                public decimal RealisasiSDHariAccrual { get; set; } = 0;
-                public decimal PersenAccrual { get; set; } = 0;
+                public class Jenis
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Obyek> RekObyeks { get; set; } = new List<Obyek>();
+                }
+                public class Kelompok
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Jenis> RekJenis { get; set; } = new();
+                }
+                public class Obyek
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<Opd> RekOpds { get; set; } = new List<Opd>();
+                }
+                public class Opd
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                    public List<SubRincian> RekSubRincians { get; set; } = new List<SubRincian>();
+                }
+                public class SubRincian
+                {
+                    public FormatColumn.ColumnA Col { get; set; } = new();
+                }
+            }
+            public class FormatColumn
+            {
+                public class ColumnA
+                {
+                    public string Kode { get; set; } = "";
+                    public string Nama { get; set; } = "";
+                    public decimal Target { get; set; } = 0;
+                    public decimal Realisasi { get; set; } = 0;
+                    public decimal Persentase { get; set; } = 0;
+                    public decimal AkpTahun { get; set; } = 0;
+                    public decimal RealisasiHariAccrual { get; set; } = 0;
+                    public decimal RealisasiSDHariAccrual { get; set; } = 0;
+                    public decimal PersenAccrual { get; set; } = 0;
+                }
+
+                public class ReportColumnA
+                {
+                    public string Nama { get; set; } = "";
+                    public decimal TargetTotal { get; set; } = 0;
+                    public decimal TargetSampaiDengan { get; set; } = 0;
+                    public decimal RealisasiSampaiDengan { get; set; } = 0;
+                    public decimal SelisihSampaiDengan => RealisasiSampaiDengan - TargetSampaiDengan;
+                    public decimal PersentaseSampaiDengan => TargetSampaiDengan > 0
+                        ? Math.Round((RealisasiSampaiDengan / TargetSampaiDengan) * 100, 2)
+                        : 0;
+                    public decimal TargetBulanIni { get; set; } = 0;
+                    public decimal RealisasiBulanIni { get; set; } = 0;
+                    public decimal SelisihBulanIni => RealisasiBulanIni - TargetBulanIni;
+                    public decimal PersentaseBulanIni => TargetBulanIni > 0
+                       ? Math.Round((RealisasiBulanIni / TargetBulanIni) * 100, 2)
+                       : 0;
+                    public decimal PersentaseTotal => TargetTotal > 0
+                       ? Math.Round((RealisasiSampaiDengan / TargetTotal) * 100, 2)
+                       : 0;
+                }
+
+                public class ReportColumnB
+                {
+                    public string Nama { get; set; } = "";
+                    public decimal TargetTotal { get; set; } = 0;
+                    public decimal TargetSampaiDengan { get; set; } = 0;
+                    public decimal RealisasiSampaiDengan { get; set; } = 0;
+                    public decimal SelisihSampaiDengan => RealisasiSampaiDengan - TargetSampaiDengan;
+                    public decimal PersentaseSampaiDengan => TargetSampaiDengan > 0
+                        ? Math.Round((RealisasiSampaiDengan / TargetSampaiDengan) * 100, 2)
+                        : 0;
+                    public decimal TargetBulanIni { get; set; } = 0;
+                    public decimal RealisasiBulanIni { get; set; } = 0;
+                    public decimal SelisihBulanIni => RealisasiBulanIni - TargetBulanIni;
+                    public decimal PersentaseBulanIni => TargetBulanIni > 0
+                       ? Math.Round((RealisasiBulanIni / TargetBulanIni) * 100, 2)
+                       : 0;
+                    public decimal PersentaseTotal => TargetTotal > 0
+                       ? Math.Round((RealisasiSampaiDengan / TargetTotal) * 100, 2)
+                       : 0;
+                    public int Status { get; set; } = 0;
+                }
             }
         }
         private static ReklameSswContext _context = DBClass.GetReklameSswContext();
@@ -2879,168 +2956,202 @@ namespace MonPDReborn.Models
 
                 return list;
             }
-            public static List<ViewModel.MonitoringRealisasiHari> GetTahunanPajak(DateTime TanggalCutOff)
+            public static List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok> GetSudutPandangRekeningJenisObjekOpdData(DateTime TglCutOff)
             {
-                var ret = new List<ViewModel.MonitoringRealisasiHari>();
-
+                var result = new List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok>();
                 var context = DBClass.GetContext();
-                //var currentYear = DateTime.Now.Year;
 
-                // Target
-                var dataTargetMamin = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
-                var dataTargetHotel = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Target);
-                var dataTargetHiburan = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Target);
-                var dataTargetParkir = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.JasaParkir).Sum(x => x.Target);
-                var dataTargetListrik = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.TenagaListrik).Sum(x => x.Target);
-                var dataTargetReklame = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.Reklame).Sum(x => x.Target);
-                var dataTargetPbb = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.PBB).Sum(x => x.Target);
-                var dataTargetBphtb = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.BPHTB).Sum(x => x.Target);
-                var dataTargetAbt = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.AirTanah).Sum(x => x.Target);
-                var dataTargetOpsenPkb = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.OpsenPkb).Sum(x => x.Target);
-                var dataTargetOpsenBbnkb = context.DbAkunTargets.Where(x => x.TahunBuku == TanggalCutOff.Year && x.PajakId == (int)EnumFactory.EPajak.OpsenBbnkb).Sum(x => x.Target);
+                // === 1️⃣ Ambil target tahunan (AkpTahun) ===
+                var akpTahunQuery = context.DbPendapatanDaerahHarians
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        AkpTahun = x.Sum(y => y.Target)
+                    })
+                    .ToList();
 
-                // RealisasiSD
-                var dataRealisasiMamin = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiHotel = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiHiburan = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiParkir = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiListrik = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiReklame = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiPbb = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayar.Value <= TanggalCutOff).Sum(x => x.JumlahBayarPokok) ?? 0;
-                var dataRealisasiBphtb = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayar.Value <= TanggalCutOff).Sum(x => x.Pokok) ?? 0;
-                var dataRealisasiAbt = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglBayarPokok.Value <= TanggalCutOff && x.TahunBuku == TanggalCutOff.Year).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiOpsenPkb = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglSspd <= TanggalCutOff).Sum(x => x.JmlPokok);
-                var dataRealisasiOpsenBbnkb = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd >= new DateTime(TanggalCutOff.Year, 1, 1) && x.TglSspd <= TanggalCutOff).Sum(x => x.JmlPokok);
-                // RealisasiHariIni
-                var dataRealisasiMaminHari = context.DbMonRestos.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiHotelHari = context.DbMonHotels.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiHiburanHari = context.DbMonHiburans.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiParkirHari = context.DbMonParkirs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiListrikHari = context.DbMonPpjs.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiReklameHari = context.DbMonReklames.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiPbbHari = context.DbMonPbbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value == TanggalCutOff && x.TahunBuku == TanggalCutOff.Year && x.JumlahBayarPokok > 0).Sum(x => x.JumlahBayarPokok) ?? 0;
-                var dataRealisasiBphtbHari = context.DbMonBphtbs.Where(x => x.TglBayar.Value.Year == TanggalCutOff.Year && x.TglBayar.Value == TanggalCutOff).Sum(x => x.Pokok) ?? 0;
-                var dataRealisasiAbtHari = context.DbMonAbts.Where(x => x.TglBayarPokok.Value.Year == TanggalCutOff.Year && x.TglBayarPokok.Value == TanggalCutOff).Sum(x => x.NominalPokokBayar) ?? 0;
-                var dataRealisasiOpsenPkbHari = context.DbMonOpsenPkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd == TanggalCutOff).Sum(x => x.JmlPokok);
-                var dataRealisasiOpsenBbnkbHari = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == TanggalCutOff.Year && x.TglSspd == TanggalCutOff).Sum(x => x.JmlPokok);
+                // === 2️⃣ Ambil realisasi per hari (tgl cutoff) ===
+                var realisasiHariQuery = context.DbPendapatanDaerahHarians
+                    .Where(x => x.Tanggal.Date == TglCutOff.Date)
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        RealisasiHariAccrual = x.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
 
-                var listTahunan = new List<MonitoringRealisasiHari>
+                // === 3️⃣ Ambil realisasi sampai tgl cutoff ===
+                var realisasiSdQuery = context.DbPendapatanDaerahHarians
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        RealisasiSDHariAccrual = x.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
+                // === 4️⃣ Gabungkan semua data ===
+                var merged = (from a in akpTahunQuery
+                              join b in realisasiHariQuery
+                                  on new { a.Kelompok, a.Jenis, a.Objek }
+                                  equals new { b.Kelompok, b.Jenis, b.Objek } into gj1
+                              from b in gj1.DefaultIfEmpty()
+                              join c in realisasiSdQuery
+                                  on new { a.Kelompok, a.Jenis, a.Objek }
+                                  equals new { c.Kelompok, c.Jenis, c.Objek } into gj2
+                              from c in gj2.DefaultIfEmpty()
+                              select new
+                              {
+                                  a.Kelompok,
+                                  a.NamaKelompok,
+                                  a.Jenis,
+                                  a.NamaJenis,
+                                  a.Objek,
+                                  a.NamaObjek,
+                                  AkpTahun = a.AkpTahun,
+                                  RealisasiHariAccrual = b?.RealisasiHariAccrual ?? 0,
+                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0
+                              })
+                              .ToList();
+
+                // === 5️⃣ Grouping sesuai hierarki ===
+                var groupByKelompok = merged
+                    .GroupBy(k => new { k.Kelompok, k.NamaKelompok })
+                    .Select(kel => new
+                    {
+                        kel.Key.Kelompok,
+                        kel.Key.NamaKelompok,
+                        JenisList = kel
+                            .GroupBy(j => new { j.Jenis, j.NamaJenis })
+                            .Select(jen => new
+                            {
+                                jen.Key.Jenis,
+                                jen.Key.NamaJenis,
+                                ObjekList = jen
+                                    .GroupBy(o => new { o.Objek, o.NamaObjek })
+                                    .Select(obj => new
+                                    {
+                                        obj.Key.Objek,
+                                        obj.Key.NamaObjek,
+                                        AkpTahun = obj.Sum(z => z.AkpTahun),
+                                        RealisasiHariAccrual = obj.Sum(z => z.RealisasiHariAccrual),
+                                        RealisasiSDHariAccrual = obj.Sum(z => z.RealisasiSDHariAccrual)
+                                    })
+                                    .OrderBy(x => x.Objek)
+                                    .ToList(),
+                                AkpTahun = jen.Sum(z => z.AkpTahun),
+                                RealisasiHariAccrual = jen.Sum(z => z.RealisasiHariAccrual),
+                                RealisasiSDHariAccrual = jen.Sum(z => z.RealisasiSDHariAccrual)
+                            })
+                            .OrderBy(x => x.Jenis)
+                            .ToList(),
+                        AkpTahun = kel.Sum(z => z.AkpTahun),
+                        RealisasiHariAccrual = kel.Sum(z => z.RealisasiHariAccrual),
+                        RealisasiSDHariAccrual = kel.Sum(z => z.RealisasiSDHariAccrual)
+                    })
+                    .OrderBy(x => x.Kelompok)
+                    .ToList();
+
+                // === 6️⃣ Mapping ke ViewModel ===
+                decimal totalAkp = 0, totalHari = 0, totalSd = 0;
+
+                foreach (var kel in groupByKelompok)
                 {
-                    new()
+                    var resKel = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok();
+                    resKel.Col.Kode = kel.Kelompok;
+                    resKel.Col.Nama = kel.NamaKelompok;
+                    resKel.Col.AkpTahun = kel.AkpTahun;
+                    resKel.Col.RealisasiHariAccrual = kel.RealisasiHariAccrual;
+                    resKel.Col.RealisasiSDHariAccrual = kel.RealisasiSDHariAccrual;
+                    resKel.Col.PersenAccrual = kel.AkpTahun > 0 ? Math.Round((kel.RealisasiSDHariAccrual / kel.AkpTahun) * 100, 2) : 0;
+
+                    totalAkp += kel.AkpTahun;
+                    totalHari += kel.RealisasiHariAccrual;
+                    totalSd += kel.RealisasiSDHariAccrual;
+
+                    foreach (var jen in kel.JenisList)
                     {
-                        JenisPajak = EPajak.MakananMinuman.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiMaminHari,
-                        AkpTahun = dataTargetMamin,
-                        RealisasiSDHariAccrual = dataRealisasiMamin,
-                        PersenAccrual = dataTargetMamin > 0
-                            ? Math.Round((decimal)dataRealisasiMamin / dataTargetMamin * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.TenagaListrik.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiListrikHari,
-                        AkpTahun = dataTargetListrik,
-                        RealisasiSDHariAccrual = dataRealisasiListrik,
-                        PersenAccrual = dataTargetListrik > 0
-                            ? Math.Round((decimal)dataRealisasiListrik / dataTargetListrik * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.JasaPerhotelan.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiHotelHari,
-                        AkpTahun = dataTargetHotel,
-                        RealisasiSDHariAccrual = dataRealisasiHotel,
-                        PersenAccrual = dataTargetHotel > 0
-                            ? Math.Round((decimal)dataRealisasiHotel / dataTargetHotel * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.JasaKesenianHiburan.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiHiburanHari,
-                        AkpTahun = dataTargetHiburan,
-                        RealisasiSDHariAccrual = dataRealisasiHiburan,
-                        PersenAccrual = dataTargetHiburan > 0
-                            ? Math.Round((decimal)dataRealisasiHiburan / dataTargetHiburan * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.JasaParkir.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiParkirHari,
-                        AkpTahun = dataTargetParkir,
-                        RealisasiSDHariAccrual = dataRealisasiParkir,
-                        PersenAccrual = dataTargetParkir > 0
-                            ? Math.Round((decimal)dataRealisasiParkir / dataTargetParkir * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.Reklame.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiReklameHari,
-                        AkpTahun = dataTargetReklame,
-                        RealisasiSDHariAccrual = dataRealisasiReklame,
-                        PersenAccrual = dataTargetReklame > 0
-                            ? Math.Round((decimal)dataRealisasiReklame / dataTargetReklame * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.PBB.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiPbbHari,
-                        AkpTahun = dataTargetPbb,
-                        RealisasiSDHariAccrual = dataRealisasiPbb,
-                        PersenAccrual = dataTargetPbb > 0
-                            ? Math.Round((decimal)dataRealisasiPbb / dataTargetPbb * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.BPHTB.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiBphtbHari,
-                        AkpTahun = dataTargetBphtb,
-                        RealisasiSDHariAccrual = dataRealisasiBphtb,
-                        PersenAccrual = dataTargetBphtb > 0
-                            ? Math.Round((decimal)dataRealisasiBphtb / dataTargetBphtb * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.AirTanah.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiAbtHari,
-                        AkpTahun = dataTargetAbt,
-                        RealisasiSDHariAccrual = dataRealisasiAbt,
-                        PersenAccrual = dataTargetAbt > 0
-                            ? Math.Round((decimal)dataRealisasiAbt / dataTargetAbt * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.OpsenPkb.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiOpsenPkbHari,
-                        AkpTahun = dataTargetOpsenPkb,
-                        RealisasiSDHariAccrual = dataRealisasiOpsenPkb,
-                        PersenAccrual = dataTargetOpsenPkb > 0
-                            ? Math.Round((decimal)dataRealisasiOpsenPkb / dataTargetOpsenPkb * 100, 2)
-                            : 0
-                    },
-                    new()
-                    {
-                        JenisPajak = EPajak.OpsenBbnkb.GetDescription(),
-                        RealisasiHariAccrual = dataRealisasiOpsenBbnkbHari,
-                        AkpTahun = dataTargetOpsenBbnkb,
-                        RealisasiSDHariAccrual = dataRealisasiOpsenBbnkb,
-                        PersenAccrual = dataTargetOpsenBbnkb > 0
-                            ? Math.Round((decimal)dataRealisasiOpsenBbnkb / dataTargetOpsenBbnkb * 100, 2)
-                            : 0
+                        var resJen = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis();
+                        resJen.Col.Kode = jen.Jenis;
+                        resJen.Col.Nama = jen.NamaJenis;
+                        resJen.Col.AkpTahun = jen.AkpTahun;
+                        resJen.Col.RealisasiHariAccrual = jen.RealisasiHariAccrual;
+                        resJen.Col.RealisasiSDHariAccrual = jen.RealisasiSDHariAccrual;
+                        resJen.Col.PersenAccrual = jen.AkpTahun > 0 ? Math.Round((jen.RealisasiSDHariAccrual / jen.AkpTahun) * 100, 2) : 0;
+
+                        foreach (var obj in jen.ObjekList)
+                        {
+                            var resObj = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Obyek();
+                            resObj.Col.Kode = obj.Objek;
+                            resObj.Col.Nama = obj.NamaObjek;
+                            resObj.Col.AkpTahun = obj.AkpTahun;
+                            resObj.Col.RealisasiHariAccrual = obj.RealisasiHariAccrual;
+                            resObj.Col.RealisasiSDHariAccrual = obj.RealisasiSDHariAccrual;
+                            resObj.Col.PersenAccrual = obj.AkpTahun > 0 ? Math.Round((obj.RealisasiSDHariAccrual / obj.AkpTahun) * 100, 2) : 0;
+
+                            resJen.RekObyeks.Add(resObj);
+                        }
+
+                        resKel.RekJenis.Add(resJen);
                     }
-                };
 
+                    result.Add(resKel);
+                }
 
-                ret.AddRange(listTahunan);
-                return ret;
+                // === 7️⃣ Total keseluruhan ===
+                var totalKel = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok();
+                totalKel.Col.Kode = "";
+                totalKel.Col.Nama = "TOTAL SEMUA KELOMPOK";
+                totalKel.Col.AkpTahun = totalAkp;
+                totalKel.Col.RealisasiHariAccrual = totalHari;
+                totalKel.Col.RealisasiSDHariAccrual = totalSd;
+                totalKel.Col.PersenAccrual = totalAkp > 0 ? Math.Round((totalSd / totalAkp) * 100, 2) : 0;
+
+                result.Insert(0, totalKel);
+
+                return result;
             }
 
 

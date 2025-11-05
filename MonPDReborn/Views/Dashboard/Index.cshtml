@@ -42,18 +42,17 @@
             </div>
             <div class="card-body">
                 <div class="row g-3 align-items-center mb-3">
-                    <div class="col-lg-3 col-md-4">
-                        @(Html.DevExtreme().DateBoxFor(m => m.TanggalCutOff)
-                            .ID("date-cutoff")
-                            .Type(DateBoxType.Date) // Menentukan tipe input adalah tanggal
-                            .DisplayFormat("yyyy-MM-dd") // Format tanggal yang ditampilkan
-                            .Placeholder("Pilih Tanggal Cut Off...")
-                            .Value(DateTime.Now) // Mengatur tanggal default ke hari ini
 
-                            // 3. Terapkan styling yang sama dengan SelectBox
-                            .StylingMode(EditorStylingMode.Outlined)
-                            .ElementAttr("class", "form-select") // Gunakan kelas yang sama jika perlu
-                            )
+                    <div class="col-lg-3 col-md-4">
+                        @(Html.DevExtreme().DateBox()
+                                                .ID("selectTanggalbaru")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .DisplayFormat("dd/MM/yyyy")
+                                                .Width(350)
+                                                .StylingMode(EditorStylingMode.Outlined)
+                                                .ElementAttr("class", "form-select-lg")
+                                                .Placeholder("Pilih Tanggal"))
                     </div>
 
                     <div class="col-lg-2 col-md-3">
@@ -61,6 +60,16 @@
                             <i class="ri-search-line me-1"></i> Terapkan
                         </button>
                     </div>
+
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownCetak" data-bs-toggle="dropdown" aria-expanded="false">
+                        Cetak
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownCetak">
+                        <li><a class="dropdown-item" href="#" onclick="printAsPDF()">📄 Cetak PDF</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="exportToExcel()">📊 Export Excel</a></li>
+                    </ul>
                 </div>
                 <div class="text-center">
                     <div id="loading2-RealisasiHari" class="spinner-border text-primary" style="display: none">
@@ -339,37 +348,96 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function printReport() {
+            Swal.fire({
+                title: 'Pilih Format Cetak',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'PDF',
+                denyButtonText: 'Excel',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#3085d6',
+                denyButtonColor: '#28a745',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    printAsPDF();
+                } else if (result.isDenied) {
+                    exportToExcel();
+                }
+            });
+        }
+
+        // CETAK SEBAGAI PDF (langsung print area)
+        function printAsPDF() {
+            var printContents = document.getElementById('RealisasiHari').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+
+        // EKSPOR KE EXCEL (dengan format tabel)
+        function exportToExcel() {
+            var content = document.getElementById('RealisasiHari').outerHTML;
+            var blob = new Blob(['\ufeff' + content], {
+                type: 'application/vnd.ms-excel;charset=utf-8;'
+            });
+
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Laporan_' + new Date().toISOString().slice(0,10) + '.xls';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
     <script>
         $(document).ready(function () {
+            // Inisialisasi komponen DateBox DevExtreme
+            const dateBox = $("#selectTanggalbaru").dxDateBox("instance");
+
+            // Auto-load saat pertama kali halaman dibuka
             fnRealisasiHari();
         });
+
+        // Fungsi utama untuk memanggil data Show
         function fnRealisasiHari() {
-            var tglCutOff = $("#TanggalCutOff").val();
+            const dateBox = $("#selectTanggalbaru").dxDateBox("instance");
+            const selectedDate = dateBox.option("value");
+
+            if (!selectedDate) {
+                DevExpress.ui.notify("Silakan pilih tanggal terlebih dahulu.", "warning", 2000);
+                return;
+            }
+
+            // Format ke yyyy-MM-dd agar cocok dengan parameter DateTime di controller
+            const formattedDate = selectedDate.toISOString().split('T')[0];
+
+            // Tampilkan loading spinner
+            $("#loading2-RealisasiHari").show();
+            $("#RealisasiHari").hide();
+
             $.ajax({
-                url: '@Url.Action("RealisasiHari")',
+                url: '/Dashboard/RealisasiHari', // Ganti dengan route action kamu
                 type: 'GET',
-                data: {tglCutOff },
-                beforeSend: function () {
-                    $("#card-RealisasiHari").hide();
-                    $("#loading2-RealisasiHari").show();
-                },
+                data: { tglCutoff: formattedDate },
                 success: function (response) {
-                    if(response.Status === undefined){
-                        $("#card-RealisasiHari").show();
-                        $("#RealisasiHari").html(response);
-                    } else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
+                    // Tampilkan hasil partial view ke dalam #Show
+                    $("#RealisasiHari").html(response);
                 },
                 error: function (xhr, status, error) {
-                    $('#RealisasiHari').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    console.error("Gagal memuat data:", error);
+                    $("#RealisasiHari").html("<div class='text-danger text-center'>Terjadi kesalahan saat memuat data.</div>");
                 },
                 complete: function () {
+                    // Sembunyikan spinner dan tampilkan hasil
                     $("#loading2-RealisasiHari").hide();
+                    $("#RealisasiHari").show();
                 }
             });
         }

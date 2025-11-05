@@ -304,7 +304,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 totalKel.Col.RealisasiSDHariAccrual = totalSd;
                 totalKel.Col.PersenAccrual = totalAkp > 0 ? Math.Round((totalSd / totalAkp) * 100, 2) : 0;
 
-                result.Add(totalKel);
+                result.Insert(0, totalKel);
 
                 return result;
             }

@@ -182,7 +182,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     ? Math.Round((totalRealisasiSemuaOpd / totalTargetSemuaOpd) * 100, 2)
                     : 0;
 
-                result.Add(totalOpd);
+                result.Insert(0, totalOpd);
 
                 return result;
             }
