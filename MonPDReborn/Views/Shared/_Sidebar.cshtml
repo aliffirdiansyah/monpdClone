@@ -41,7 +41,7 @@
 
     //controkker monitoring pendapatan daerah 
     var MonitoringPendapatanDaerahController = new[] {
-        "SERIESPENDAPATANDAERAH", "SERIESPENDAPATANDAERAHSCONTRO", "SERIESPENDAPATAN", "REALISASIPENDAPATANDAERAH", "REALISASIPENDAPATANOPD"
+        "SERIESPENDAPATANDAERAH", "SERIESPENDAPATANDAERAHSCONTRO", "SERIESPENDAPATAN", "REALISASIPENDAPATANDAERAH", "REALISASIPENDAPATANOPD", "PERBANDINGANPENDAPATANDAERAH"
     };
 
     var MonitoringPendapatanDaerahActive = MonitoringPendapatanDaerahController.Contains(currentController);
@@ -261,6 +261,12 @@
                                                 <span data-key="t-realisasiPendapatanOPD">Realisasi Pedapatan Daerah Hari Ini Per OPD</span>
                                             </a>
                                         </li>
+                                        @* <li class="nav-item">
+                                            <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PerbandinganPendapatanDaerah" ? "active" : "")"
+                                               href="@Url.Action("Index", "PerbandinganPendapatanDaerah")" target="_blank" role="button">
+                                                <span data-key="t-perbandinganpendapatandaerah">Perbandingan Pendapatan Daerah</span>
+                                            </a>
+                                        </li> *@
                                     </ul>
                                 </div>
                             </li>
@@ -474,12 +480,12 @@
                             <i class=" bx bx-archive me-1 align-middle"></i><span data-key="t-reklame">Kontrol Reklame</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    @* <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ReklameLiar" ? "active" : "")"
                            href="@Url.Action("Index", "ReklameLiar")" role="button">
                             <i class="bx bx-calendar-exclamation me-1 align-middle"></i><span data-key="t-reklameLiar">Reklame Liar</span>
                         </a>
-                    </li>
+                    </li> *@
                     <li class="nav-item">
                         <a class="nav-link menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PendataanReklame" ? "active" : "")"
                            href="@Url.Action("Index", "PendataanReklame")" role="button">
