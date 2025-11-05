@@ -37,6 +37,10 @@ public partial class TPermohonanFile
     [Column("ISI_FILE", TypeName = "BLOB")]
     public byte[]? IsiFile { get; set; }
 
+    [ForeignKey("IdFile")]
+    [InverseProperty("TPermohonanFiles")]
+    public virtual MDokuman IdFileNavigation { get; set; } = null!;
+
     [ForeignKey("TahunPel, BulanPel, SeqPel")]
     [InverseProperty("TPermohonanFiles")]
     public virtual TPermohonan TPermohonan { get; set; } = null!;

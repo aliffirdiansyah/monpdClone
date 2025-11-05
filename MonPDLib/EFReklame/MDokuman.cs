@@ -39,4 +39,7 @@ public partial class MDokuman
 
     [InverseProperty("IdDokumenNavigation")]
     public virtual MDokumenTerb? MDokumenTerb { get; set; }
+
+    [InverseProperty("IdFileNavigation")]
+    public virtual ICollection<TPermohonanFile> TPermohonanFiles { get; set; } = new List<TPermohonanFile>();
 }

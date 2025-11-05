@@ -66,4 +66,8 @@ public partial class TPermohonanInsNilaiHist
     [StringLength(100)]
     [Unicode(false)]
     public string? ProsesBy { get; set; }
+
+    [ForeignKey("TahunPel, BulanPel, SeqPel, Seq, ActId, WfId, ActSeq")]
+    [InverseProperty("TPermohonanInsNilaiHists")]
+    public virtual TPermohonanInsNilaiAct TPermohonanInsNilaiAct { get; set; } = null!;
 }

@@ -65,6 +65,9 @@ public partial class TPermohonanInsNilaiAct
     [InverseProperty("TPermohonanInsNilaiActs")]
     public virtual TPermohonanInsNilai TPermohonanInsNilai { get; set; } = null!;
 
+    [InverseProperty("TPermohonanInsNilaiAct")]
+    public virtual ICollection<TPermohonanInsNilaiHist> TPermohonanInsNilaiHists { get; set; } = new List<TPermohonanInsNilaiHist>();
+
     [ForeignKey("WfId")]
     [InverseProperty("TPermohonanInsNilaiActs")]
     public virtual MWfWorkflow Wf { get; set; } = null!;
