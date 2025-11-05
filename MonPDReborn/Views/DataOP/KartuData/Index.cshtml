@@ -51,9 +51,23 @@
                                         .MinSearchLength(3)
                                         ) *@
                                         <hr />
-                                    @(Html.DevExtreme().TextBoxFor(m => m.SelectedNOP)
+                                    @* @(Html.DevExtreme().TextBoxFor(m => m.SelectedNOP)
                                         .ID("tbNop")
                                         .Placeholder("Input NOP Manual")
+
+                                        ) *@
+                                    @(Html.DevExtreme().SelectBoxFor(m => m.SelectedNOP)
+                                        .ID("cbNop")
+                                        .ValueExpr("Value")
+                                        .DisplayExpr("Text")
+                                        .DataSource(d => d.Mvc()
+                                        .Controller("KartuData")
+                                        .LoadAction("GetOP").Key("filter"))
+                                        .SearchExpr("Text")
+                                        .SearchEnabled(true)
+                                        .Placeholder("Keyword Minimal 3 Karakter")
+                                        .MinSearchLength(3)
+                                        .ShowClearButton(true)
                                         )
                                 </div>
                                 <div class="col-xxl-2 col-sm-4">
@@ -128,11 +142,8 @@
 
     }
     function SearchData() {
-        var nop = $('#tbNop').dxTextBox('instance').option('value');
-        if (nop === '') {
-            nop = $("#cbNop").dxSelectBox('instance').option('value');
-        }
-        console.log(nop);
+        var nop = $("#cbNop").dxSelectBox('instance').option('value');
+
         $.ajax({
             type: "GET",
             url: '@Url.Action("GetData", "KartuData")',

@@ -95,16 +95,17 @@ namespace MonPDLib.Lib
 
             var IdJalanPenataan = new List<int>
             {
+
+            };
+            var IdJalanIrisan = new List<int>
+            {
                 7,
                 1536,
                 1177,
                 110,
                 374,
                 23,
-                1109
-            };
-            var IdJalanIrisan = new List<int>
-            {
+                1109,
                 853,
                 854,
                 6,
@@ -127,15 +128,25 @@ namespace MonPDLib.Lib
                 253
             };
 
-
             kelasJalan = distinctKelasJalan.First();
+
+            int letak = 1; // Default indoor
+            if (input.LetakReklame == EnumFactory.LetakReklame.Outdoor)
+            {
+                letak = 0;
+            }
+            else
+            {
+                kelasJalan = 3;
+            }
             if (kelasJalan == 1)
             {
-                if (IdJalanPenataan.Contains(jalanData.IdJalan))
-                {
-                    kawasan = EnumFactory.KawasanReklame.Penataan;
-                }
-                else if (IdJalanIrisan.Contains(jalanData.IdJalan))
+                //if (IdJalanPenataan.Contains(jalanData.IdJalan))
+                //{
+                //    kawasan = EnumFactory.KawasanReklame.Penataan;
+                //}
+                //else
+                if (IdJalanIrisan.Contains(jalanData.IdJalan))
                 {
                     if (jenisReklame == EnumFactory.KategoriReklame.Megatron)
                     {
@@ -149,6 +160,10 @@ namespace MonPDLib.Lib
                         }
                     }
                 }
+            }
+            if (kelasJalan == 3)
+            {
+                kawasan = EnumFactory.KawasanReklame.NonPenataan;
             }
 
             // 1️⃣ Ambil NSR Luas (cek tanggal berlaku)
@@ -189,15 +204,7 @@ namespace MonPDLib.Lib
             if (nss == null)
                 throw new ArgumentException("Nilai Satuan Strategis tidak ditemukan atau tidak berlaku.");
 
-            int letak = 1; // Default indoor
-            if (input.LetakReklame == EnumFactory.LetakReklame.Outdoor)
-            {
-                letak = 0;
-            }
-            else
-            {
-                kelasJalan = 3;
-            }
+            
 
             // 4️⃣ Hitung NJOP dasar (luas + tinggi)
             decimal njopLuas = Math.Round(luas, 2) * (nsrLuas.NilaiSewa);

@@ -1,5 +1,7 @@
 ﻿using DevExpress.XtraReports.UI;
+using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using MonPDLib;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
 using static MonPDReborn.Lib.General.ResponseBase;
@@ -70,6 +72,12 @@ namespace MonPDReborn.Controllers.DataOP
                     return Json(response);
                 }
                 var model = new Models.DataOP.KartuDataVM.GetData(nop);
+                if (model.KartuData == null)
+                {
+                    response.Status = StatusEnum.Error;
+                    response.Message = "Data tidak ditemukan";
+                    return Json(response);
+                }
                 return PartialView(URLView + "_GetData", model);
             }
             catch (Exception ex)
@@ -78,6 +86,41 @@ namespace MonPDReborn.Controllers.DataOP
                 response.Message = ex.Message;
                 return Json(response);
             }
+        }
+        [HttpGet]
+        public async Task<object> GetOP(DataSourceLoadOptions loadOptions, string filter)
+        {
+            var context = DBClass.GetContext();
+            var dataList = new List<System.Web.Mvc.SelectListItem>();
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                try
+                {
+                    filter = filter.Replace("[[", "")
+                                   .Replace("]]", "")
+                                   .Replace("\"", "")
+                                   .ToUpper();
+
+                    string[] s = filter.Split(',');
+
+                    // Pastikan array s memiliki cukup elemen
+                    string keyword = s.Length > 2 ? s[2] : s.FirstOrDefault() ?? string.Empty;
+
+                    if (!string.IsNullOrEmpty(keyword))
+                    {
+                        dataList = Models.DataOP.KartuDataVM.Method.GetOpList(keyword);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Logging optional
+                    Console.WriteLine("Error filter: " + ex.Message);
+                }
+            }
+
+            // Jika filter kosong atau tidak valid, tetap kembalikan default kosong
+            return DevExtreme.AspNet.Data.DataSourceLoader.Load(dataList, loadOptions);
         }
         public IActionResult KartuReport(string nop)
         {
