@@ -31,12 +31,12 @@ public partial class TPermohonanPrmn
     public int Seq { get; set; }
 
     [Column("LETAK_REKLAME")]
-    [Precision(2)]
-    public byte LetakReklame { get; set; }
+    [Precision(10)]
+    public int LetakReklame { get; set; }
 
     [Column("STATUS_TANAH")]
-    [Precision(2)]
-    public byte StatusTanah { get; set; }
+    [Precision(10)]
+    public int StatusTanah { get; set; }
 
     [Column("LOK_PENYELENGGARAAN")]
     [StringLength(300)]
@@ -48,20 +48,17 @@ public partial class TPermohonanPrmn
     public int IdJenisReklame { get; set; }
 
     [Column("JENIS_PRODUK")]
-    [Precision(2)]
-    public byte JenisProduk { get; set; }
-
-    [Column("PANJANG")]
     [Precision(10)]
-    public int Panjang { get; set; }
+    public int JenisProduk { get; set; }
 
-    [Column("LEBAR")]
-    [Precision(10)]
-    public int Lebar { get; set; }
+    [Column("PANJANG", TypeName = "NUMBER(10,2)")]
+    public decimal Panjang { get; set; }
 
-    [Column("TINGGI")]
-    [Precision(10)]
-    public int Tinggi { get; set; }
+    [Column("LEBAR", TypeName = "NUMBER(10,2)")]
+    public decimal Lebar { get; set; }
+
+    [Column("TINGGI", TypeName = "NUMBER(10,2)")]
+    public decimal Tinggi { get; set; }
 
     [Column("SUDUT_PANDANG")]
     [Precision(10)]

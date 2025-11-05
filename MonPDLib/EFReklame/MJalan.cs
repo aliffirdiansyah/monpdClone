@@ -32,6 +32,10 @@ public partial class MJalan
     [Unicode(false)]
     public string InsBy { get; set; } = null!;
 
+    [Column("IS_IRISAN")]
+    [Precision(10)]
+    public int IsIrisan { get; set; }
+
     [InverseProperty("IdJalanNavigation")]
     public virtual ICollection<MJalanKawasan> MJalanKawasans { get; set; } = new List<MJalanKawasan>();
 

@@ -31,12 +31,12 @@ public partial class TPermohonanPrmnNilai
     public int Seq { get; set; }
 
     [Column("LETAK_REKLAME")]
-    [Precision(2)]
-    public byte LetakReklame { get; set; }
+    [Precision(10)]
+    public int LetakReklame { get; set; }
 
     [Column("STATUS_TANAH")]
-    [Precision(2)]
-    public byte StatusTanah { get; set; }
+    [Precision(10)]
+    public int StatusTanah { get; set; }
 
     [Column("LOK_PENYELENGGARAAN")]
     [StringLength(300)]
@@ -48,8 +48,8 @@ public partial class TPermohonanPrmnNilai
     public int IdJenisReklame { get; set; }
 
     [Column("JENIS_PRODUK")]
-    [Precision(2)]
-    public byte JenisProduk { get; set; }
+    [Precision(10)]
+    public int JenisProduk { get; set; }
 
     [Column("PANJANG")]
     [Precision(10)]

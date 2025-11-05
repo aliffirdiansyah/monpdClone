@@ -158,6 +158,7 @@ public partial class ReklameContext : DbContext
             entity.Property(e => e.IdJalan).ValueGeneratedNever();
             entity.Property(e => e.InsBy).HasDefaultValueSql("'MASTER_KEY' ");
             entity.Property(e => e.InsDate).HasDefaultValueSql("SYSDATE ");
+            entity.Property(e => e.IsIrisan).HasDefaultValueSql("0 ");
         });
 
         modelBuilder.Entity<MJalanKawasan>(entity =>
@@ -378,6 +379,10 @@ public partial class ReklameContext : DbContext
         {
             entity.HasKey(e => new { e.IdFile, e.TahunPel, e.BulanPel, e.SeqPel }).HasName("T_PERMOHONAN_FILE_PK");
 
+            entity.HasOne(d => d.IdFileNavigation).WithMany(p => p.TPermohonanFiles)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_M_DOKUMEN_FK");
+
             entity.HasOne(d => d.TPermohonan).WithMany(p => p.TPermohonanFiles)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("T_PERMOHONAN_FILE_FK");
@@ -439,6 +444,10 @@ public partial class ReklameContext : DbContext
         modelBuilder.Entity<TPermohonanInsNilaiHist>(entity =>
         {
             entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq, e.ActId, e.WfId, e.ActSeq, e.SeqHistory }).HasName("T_PERMOHONAN_INS_NILAI_HIST_PK");
+
+            entity.HasOne(d => d.TPermohonanInsNilaiAct).WithMany(p => p.TPermohonanInsNilaiHists)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_PERMOHONAN_NILAI_HIST_FK");
         });
 
         modelBuilder.Entity<TPermohonanInsPenelitian>(entity =>
@@ -530,9 +539,13 @@ public partial class ReklameContext : DbContext
         {
             entity.HasKey(e => new { e.TahunPel, e.BulanPel, e.SeqPel, e.Seq }).HasName("T_PERMOHONAN_PRMN_PENEL_PK");
 
-            entity.HasOne(d => d.IdJalanNavigation).WithMany(p => p.TPermohonanPrmnPenelitians).HasConstraintName("T_MOHON_PRMN_PEN_JALAN_FK");
+            entity.HasOne(d => d.IdJalanNavigation).WithMany(p => p.TPermohonanPrmnPenelitians)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_MOHON_PRMN_PEN_JALAN_FK");
 
-            entity.HasOne(d => d.Kd).WithMany(p => p.TPermohonanPrmnPenelitians).HasConstraintName("T_MOHON_PRMN_PEN_WILAYAH_FK");
+            entity.HasOne(d => d.Kd).WithMany(p => p.TPermohonanPrmnPenelitians)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("T_MOHON_PRMN_PEN_WILAYAH_FK");
 
             entity.HasOne(d => d.TPermohonanPrmn).WithOne(p => p.TPermohonanPrmnPenelitian)
                 .OnDelete(DeleteBehavior.ClientSetNull)

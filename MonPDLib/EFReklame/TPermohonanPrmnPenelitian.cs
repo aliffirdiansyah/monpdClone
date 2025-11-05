@@ -32,38 +32,38 @@ public partial class TPermohonanPrmnPenelitian
 
     [Column("ID_JALAN")]
     [Precision(10)]
-    public int? IdJalan { get; set; }
+    public int IdJalan { get; set; }
 
     [Column("LATITUDE")]
     [StringLength(50)]
     [Unicode(false)]
-    public string? Latitude { get; set; }
+    public string Latitude { get; set; } = null!;
 
     [Column("LONGITUDE")]
     [StringLength(50)]
     [Unicode(false)]
-    public string? Longitude { get; set; }
+    public string Longitude { get; set; } = null!;
 
     [Column("KD_CAMAT")]
     [StringLength(3)]
     [Unicode(false)]
-    public string? KdCamat { get; set; }
+    public string KdCamat { get; set; } = null!;
 
     [Column("KD_LURAH")]
     [StringLength(3)]
     [Unicode(false)]
-    public string? KdLurah { get; set; }
+    public string KdLurah { get; set; } = null!;
 
     [Column("TGL_PENELITIAN", TypeName = "DATE")]
-    public DateTime? TglPenelitian { get; set; }
+    public DateTime TglPenelitian { get; set; }
 
     [ForeignKey("IdJalan")]
     [InverseProperty("TPermohonanPrmnPenelitians")]
-    public virtual MJalan? IdJalanNavigation { get; set; }
+    public virtual MJalan IdJalanNavigation { get; set; } = null!;
 
     [ForeignKey("KdCamat, KdLurah")]
     [InverseProperty("TPermohonanPrmnPenelitians")]
-    public virtual MWilayah? Kd { get; set; }
+    public virtual MWilayah Kd { get; set; } = null!;
 
     [ForeignKey("TahunPel, BulanPel, SeqPel, Seq")]
     [InverseProperty("TPermohonanPrmnPenelitian")]
