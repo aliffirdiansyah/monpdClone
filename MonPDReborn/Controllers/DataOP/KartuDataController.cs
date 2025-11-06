@@ -211,7 +211,7 @@ namespace MonPDReborn.Controllers.DataOP
 
 
                         rptKar.xrTable1.Rows.Add(row);
-                        model.KartuData.KartuDataList.Sum(x => x.SetoranPokok).ToString("n0");
+                        //model.KartuData.KartuDataList.Sum(x => x.SetoranPokok).ToString("n0");
 
 
                         rptKar.SumTotalKet.Text = model.KartuData.KartuDataList.Sum(x => x.KetetapanTotal).ToString("n0");

@@ -128,7 +128,7 @@ namespace MonPDReborn.Models.DataOP
         public class KartuDataList
         {
             [JsonPropertyName("Tahun")]
-            public int Tahun { get; set; }
+            public decimal Tahun { get; set; }
 
             [JsonPropertyName("Bulan")]
             public string Bulan { get; set; }
@@ -140,37 +140,37 @@ namespace MonPDReborn.Models.DataOP
             public string Surat { get; set; }
 
             [JsonPropertyName("KetetapanPokok")]
-            public int KetetapanPokok { get; set; }
+            public decimal KetetapanPokok { get; set; }
 
             [JsonPropertyName("KetetapanSanksiSK")]
-            public int KetetapanSanksiSK { get; set; }
+            public decimal KetetapanSanksiSK { get; set; }
 
             [JsonPropertyName("KetetapanTotal")]
-            public int KetetapanTotal { get; set; }
+            public decimal KetetapanTotal { get; set; }
 
             [JsonPropertyName("SetoranPokok")]
-            public int SetoranPokok { get; set; }
+            public decimal SetoranPokok { get; set; }
 
             [JsonPropertyName("SetoranDenda")]
-            public int SetoranDenda { get; set; }
+            public decimal SetoranDenda { get; set; }
 
             [JsonPropertyName("SetoranTotal")]
-            public int SetoranTotal { get; set; }
+            public decimal SetoranTotal { get; set; }
 
             [JsonPropertyName("TunggakanPokok")]
-            public int TunggakanPokok { get; set; }
+            public decimal TunggakanPokok { get; set; }
 
             [JsonPropertyName("TunggakanSanksiSK")]
-            public int TunggakanSanksiSK { get; set; }
+            public decimal TunggakanSanksiSK { get; set; }
 
             [JsonPropertyName("TunggakanPersen")]
-            public int TunggakanPersen { get; set; }
+            public decimal TunggakanPersen { get; set; }
 
             [JsonPropertyName("TunggakanDenda")]
-            public int TunggakanDenda { get; set; }
+            public decimal TunggakanDenda { get; set; }
 
             [JsonPropertyName("TunggakanTotal")]
-            public int TunggakanTotal { get; set; }
+            public decimal TunggakanTotal { get; set; }
 
             [JsonPropertyName("TglSetoran")]
             public string TglSetoran { get; set; }
@@ -182,10 +182,10 @@ namespace MonPDReborn.Models.DataOP
             public string OperatorSetoran { get; set; }
 
             [JsonPropertyName("Restitusi")]
-            public int Restitusi { get; set; }
+            public decimal Restitusi { get; set; }
 
             [JsonPropertyName("RestitusiTotal")]
-            public int RestitusiTotal { get; set; }
+            public decimal RestitusiTotal { get; set; }
         }
 
         public class ResponseKartuData
