@@ -573,13 +573,13 @@
                         $('#ShowCard').show();
                         $('#ShowCard').html(response);
                     }
-                    else {
-                        swal.fire({
-                            icon: 'warning',
-                            title: '<b style="color:orange">Peringatan</b>',
-                            text: response.Message
-                        })
-                    }
+                    // else {
+                    //     swal.fire({
+                    //         icon: 'warning',
+                    //         title: '<b style="color:orange">Peringatan</b>',
+                    //         text: response.Message
+                    //     })
+                    // }
               },
               error: function (xhr, status, error) {
                  $('#loading2-ShowCard').hide();

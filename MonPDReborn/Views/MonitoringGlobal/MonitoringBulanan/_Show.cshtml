@@ -121,10 +121,17 @@
 
                                 items.Add()
                                     .Column("Pencapaian")
-                                    .SummaryType(SummaryType.Avg)
+                                    .SummaryType(SummaryType.Sum)
                                     .ValueFormat("#,##0")
-                                    .DisplayFormat("{0} %")
+                                    .DisplayFormat("Rp {0}")
                                     .Alignment(HorizontalAlignment.Right);
+
+                                @* items.Add()
+                                    .Name("PencapaianSummary")
+                                    .ShowInColumn("Pencapaian")
+                                    .SummaryType(SummaryType.Custom)
+                                    .DisplayFormat("{0} %")
+                                    .ValueFormat("#,##0.##"); *@
 
                                 items.Add()
                                     .Column("Selisih")
@@ -134,6 +141,7 @@
                                     .Alignment(HorizontalAlignment.Right);
                             });
                         })
+                        .OnContentReady("function(e) { hitungPersentase(e); }")
                     )
             </div>
 
@@ -227,6 +235,7 @@
                                     .Alignment(HorizontalAlignment.Right);
                             });
                         })
+                        .OnContentReady("function(e) { hitungPersentase(e); }")
                     )
             </div>
         </div>

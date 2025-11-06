@@ -551,7 +551,8 @@ namespace MonPDReborn.Models
                 var OpParkirAkhir = context.DbOpParkirs.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
                 var OpListrikAkhir = context.DbOpListriks.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
                 var OpAbtAkhir = context.DbOpAbts.Count(x => x.TahunBuku == currentYear && (x.TglOpTutup.HasValue == false || x.TglOpTutup.Value.Year > currentYear));
-                var OpPbbAkhir = context.DbMonPbbs.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
+                var OpPbbAkhir = context.DbOpPbbs.Select(x => x.Nop).Distinct().Count();
+                var OpBphtbAkhir = context.DbMonBphtbs.Where(x => x.Tahun == currentYear).Select(x => x.Idsspd).Distinct().Count();
                 var OpReklameAkhir = context.DbOpReklames.Count(x => x.TahunBuku == currentYear);
 
                 //var OpRestoAkhir =context.DbMonRestos.Where(x => x.TahunBuku == currentYear).Select(x => x.Nop).Distinct().Count();
@@ -605,7 +606,7 @@ namespace MonPDReborn.Models
                     TargetBphtb = dataTargetBphtb,
                     RealisasiBphtb = dataRealisasiBphtb,
                     PersentaseBphtb = dataTargetBphtb != 0 ? Math.Round((dataRealisasiBphtb / dataTargetBphtb) * 100, 2) : 0,
-                    JumlahOpBphtb = OpPbbAkhir,
+                    JumlahOpBphtb = OpBphtbAkhir,
 
                     TargetReklame = dataTargetReklame,
                     RealisasiReklame = dataRealisasiReklame,

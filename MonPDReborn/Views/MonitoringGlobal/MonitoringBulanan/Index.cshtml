@@ -127,4 +127,45 @@
             window.location.href = `/MonitoringHarian?jenisPajak=${jenisPajak}&tahun=${tahun}&bulan=${bulan}`;
         }
     </script>
+    <script>
+        function hitungPersentase(e) {
+            try {
+                const dataSource = e.component.getDataSource();
+                const items = dataSource.items();
+                if (!items || items.length === 0) return;
+
+                // Total target dan realisasi
+                let totalTarget = 0;
+                let totalRealisasi = 0;
+
+                items.forEach(item => {
+                    totalTarget += item.AkpTarget || 0;
+                    totalRealisasi += item.Realisasi || 0;
+                });
+
+                const totalPersen = totalTarget > 0 ? (totalRealisasi / totalTarget) * 100 : 0;
+
+                // Ambil kolom index berdasarkan field "Pencapaian"
+                const columns = e.component.getVisibleColumns();
+                const pencapaianIndex = columns.findIndex(c => c.dataField === "Pencapaian");
+
+                // Update footer summary
+                const $footer = $(e.element).find(".dx-datagrid-total-footer");
+                const $rows = $footer.find("tr");
+                if ($rows.length) {
+                    const $cells = $rows.last().find("td");
+                    if (pencapaianIndex >= 0 && $cells[pencapaianIndex]) {
+                        $($cells[pencapaianIndex]).text(
+                            DevExpress.localization.formatNumber(totalPersen, "#,##0.00") + " %"
+                        );
+                    }
+                }
+            } catch (err) {
+                console.error("Error hitungPersentase:", err);
+            }
+        }
+    </script>
+
+
+
 }
