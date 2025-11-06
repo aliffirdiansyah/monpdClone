@@ -1,10 +1,12 @@
-﻿using DevExtreme.AspNet.Data;
+﻿using DevExpress.DataAccess.Native.Web;
+using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using MonPDLib;
 using MonPDLib.EFReklameSsw;
 using MonPDLib.General;
 using MonPDReborn.Lib.General;
+using static MonPDReborn.Lib.General.ResponseBase;
 
 namespace MonPDReborn.Controllers
 {
@@ -18,6 +20,7 @@ namespace MonPDReborn.Controllers
         const string TD_KEY = "TD_KEY";
 
         const string INPUTPENDATAAN_ERROR_MESSAGE = "INPUTPENDATAAN_ERROR_MESSAGE";
+        ResponseBase response = new ResponseBase();
         public DashboardController(ILogger<DashboardController> logger)
         {
             URLView = string.Concat("../", GetType().Name.Replace("Controller", ""), "/");
@@ -161,6 +164,26 @@ namespace MonPDReborn.Controllers
             {
                 _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
                 return Json(response.ToInternalServerError());
+            }
+        }
+        public IActionResult RealisasiHari(DateTime TglCutOff)
+        {
+            try
+            {
+                var model = new Models.DashboardVM.RealisasiHari(TglCutOff);
+                return PartialView($"{URLView}{actionName}", model);
+            }
+            catch (ArgumentException e)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = e.InnerException == null ? e.Message : e.InnerException.Message;
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                response.Status = StatusEnum.Error;
+                response.Message = "⚠ Server Error: Internal Server Error";
+                return Json(response);
             }
         }
         /*public IActionResult JumlahObjekPajakTahunan()

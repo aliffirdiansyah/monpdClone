@@ -28,17 +28,21 @@ namespace MonPDReborn.Models.AktivitasOP
         public class Show
         {
             public List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> Data { get; set; } = new();
+            public string Bulan { get; set; } = null!;
             public Show(int bulan)
             {
                 Data = Method.GetSudutPandangRekeningJenisObjekOpdData(bulan);
+                Bulan = new DateTime(DateTime.Now.Year, bulan, 1).ToString("MMMM", new CultureInfo("id-ID"));
             }
         }
         public class Akumulasi
         {
             public List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> Data { get; set; } = new();
+            public string Bulan { get;set; } = null!;
             public Akumulasi(int bulan)
             {
                 Data = Method.GetSudutPandangRekeningJenisObjekOpdDataAkumulasi(bulan);
+                Bulan = new DateTime(DateTime.Now.Year, bulan, 1).ToString("MMMM", new CultureInfo("id-ID"));
             }
         }
 
@@ -81,6 +85,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     public decimal Target { get; set; } = 0;
                     public decimal RealisasiNow { get; set; } = 0;
                     public decimal RealisasiMinSatu { get; set; } = 0;
+                    public decimal Selisih { get; set; } = 0;
                     public decimal Persentase { get; set; } = 0;
                 }
 
@@ -215,6 +220,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     opdVm.Col.Target = opd.Target;
                     opdVm.Col.RealisasiNow = opd.RealisasiNow;
                     opdVm.Col.RealisasiMinSatu = opd.RealisasiMinSatu;
+                    opdVm.Col.Selisih = opd.RealisasiNow - opd.RealisasiMinSatu;
                     opdVm.Col.Persentase = opd.Target > 0
                         ? Math.Round((opd.RealisasiNow / opd.Target) * 100, 2)
                         : 0;
@@ -232,6 +238,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         subVm.Col.Target = sub.Target;
                         subVm.Col.RealisasiNow = sub.RealisasiNow;
                         subVm.Col.RealisasiMinSatu = sub.RealisasiMinSatu;
+                        subVm.Col.Selisih = sub.RealisasiNow - sub.RealisasiMinSatu;
                         subVm.Col.Persentase = sub.Target > 0
                             ? Math.Round((sub.RealisasiNow / sub.Target) * 100, 2)
                             : 0;
@@ -250,11 +257,12 @@ namespace MonPDReborn.Models.AktivitasOP
                 total.Col.Target = totalTarget;
                 total.Col.RealisasiNow = totalNow;
                 total.Col.RealisasiMinSatu = totalPrev;
+                total.Col.Selisih = totalNow - totalPrev; 
                 total.Col.Persentase = totalTarget > 0
                     ? Math.Round((totalNow / totalTarget) * 100, 2)
                     : 0;
 
-                result.Add(total);
+                result.Insert(0, total);
 
                 return result;
             }
@@ -345,6 +353,7 @@ namespace MonPDReborn.Models.AktivitasOP
                     opdVm.Col.Target = opd.Target;
                     opdVm.Col.RealisasiNow = opd.RealisasiNow;
                     opdVm.Col.RealisasiMinSatu = opd.RealisasiMinSatu;
+                    opdVm.Col.Selisih = opd.RealisasiNow - opd.RealisasiMinSatu;
                     opdVm.Col.Persentase = opd.Target > 0
                         ? Math.Round((opd.RealisasiNow / opd.Target) * 100, 2)
                         : 0;
@@ -362,6 +371,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         subVm.Col.Target = sub.Target;
                         subVm.Col.RealisasiNow = sub.RealisasiNow;
                         subVm.Col.RealisasiMinSatu = sub.RealisasiMinSatu;
+                        subVm.Col.Selisih = sub.RealisasiNow - sub.RealisasiMinSatu;
                         subVm.Col.Persentase = sub.Target > 0
                             ? Math.Round((sub.RealisasiNow / sub.Target) * 100, 2)
                             : 0;
@@ -379,11 +389,12 @@ namespace MonPDReborn.Models.AktivitasOP
                 total.Col.Target = totalTarget;
                 total.Col.RealisasiNow = totalNow;
                 total.Col.RealisasiMinSatu = totalPrev;
+                total.Col.Selisih = totalNow - totalPrev;
                 total.Col.Persentase = totalTarget > 0
                     ? Math.Round((totalNow / totalTarget) * 100, 2)
                     : 0;
 
-                result.Add(total);
+                result.Insert(0, total);
 
                 return result;
             }

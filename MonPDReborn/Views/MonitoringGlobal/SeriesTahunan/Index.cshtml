@@ -1,0 +1,105 @@
+﻿@model MonPDReborn.Models.MonitoringGlobal.SeriesTahunanVM.Index
+
+@{
+    ViewData["Title"] = "Series Tahunan";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h5 class="card-title text-dark fs-16 mb-0">
+                        <i class="mdi mdi-file-chart align-middle me-1"></i> SERIES TAHUNAN PAJAK DAERAH
+                    </h5>
+                </div>
+                <div class="flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-dark" title="Segarkan data realisasi pajak" onclick="fnShow()">
+                        <i class="mdi mdi-refresh align-middle"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            fnShow();
+        });
+        function fnShow()
+        {
+            $.ajax({
+              url: '@(Url.Action("Show"))',
+              type: 'GET',
+              beforeSend: function () {
+                 $('#loading2-Show').show();
+                 $('#Show').hide();
+              },
+              success: function (response) {
+                    if (response.Status === undefined) {
+                        $('#loading2-Show').hide();
+                        $('#Show').show();
+                        $('#Show').html(response);
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        })
+                    }
+              },
+              error: function (xhr, status, error) {
+                 $('#loading2-Show').hide();
+                 $('#Show').hide();
+                 $('#Show').html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+              }
+           });
+        }
+        function hitungPersentase(e) {
+            var dataSource = e.component.getDataSource();
+            var items = dataSource.items();
+
+            var $summaryCells = e.element.find(".dx-datagrid-total-footer .dx-datagrid-summary-item");
+
+             for (var i = 7; i >= 1; i--) {
+                var totalTarget = 0;
+                var totalRealisasi = 0;
+
+                // Hitung total target & realisasi dari semua row
+                items.forEach(function(item) {
+                    totalTarget += item["Target" + i] || 0;
+                    totalRealisasi += item["Realisasi" + i] || 0;
+                });
+
+                var persentase = totalTarget > 0 ? totalRealisasi / totalTarget : 0;
+
+                // mapping index (supaya tetap 1..7 walau i berjalan 7..1)
+                var order = 8 - i;
+                var persentaseIndex = (order * 3) + 2;
+
+                // eq() itu 0-based
+                var $persentaseCell = $summaryCells.eq(persentaseIndex - 1);
+
+                if ($persentaseCell.length) {
+                    $persentaseCell.text(
+                        DevExpress.localization.formatNumber(persentase, "#,##0.00%")
+                    );
+                }
+            }
+        }
+    </script>
+}

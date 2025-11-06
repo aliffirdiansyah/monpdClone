@@ -2,7 +2,7 @@
 @model MonPDReborn.Models.AktivitasOP.PerbandinganPendapatanDaerahVM.Akumulasi
 
 <h5 class="fw-bold text-center mt-4">
-    Akumulasi Pendapatan Daerah Bulan Januari - @Model.Data.First().Col.Bulan 2025
+    Akumulasi Pendapatan Daerah Bulan Januari - @Model.Bulan 2025
 </h5>
 
 <div class="table-responsive mt-3">
@@ -14,6 +14,7 @@
                 <th style="width: 15%;">AKP 2025</th>
                 <th style="width: 15%;">Realisasi 2025</th>
                 <th style="width: 15%;">Realisasi 2024</th>
+                <th style="width: 15%;">Selisih</th>
                 <th style="width: 10%;">%</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                         <td class="text-end">@opd.Col.Target.ToString("N0")</td>
                         <td class="text-end">@opd.Col.RealisasiNow.ToString("N0")</td>
                         <td class="text-end">@opd.Col.RealisasiMinSatu.ToString("N0")</td>
+                        <td class="text-end">@opd.Col.Selisih.ToString("N0")</td>
                         <td class="text-end">@opd.Col.Persentase.ToString("N2")%</td>
                     </tr>
 
@@ -42,6 +44,7 @@
                                 <td class="text-end">@sub.Col.Target.ToString("N0")</td>
                                 <td class="text-end">@sub.Col.RealisasiNow.ToString("N0")</td>
                                 <td class="text-end">@sub.Col.RealisasiMinSatu.ToString("N0")</td>
+                                <td class="text-end">@sub.Col.Selisih.ToString("N0")</td>
                                 <td class="text-end">@sub.Col.Persentase.ToString("N2")%</td>
                             </tr>
                         }
@@ -51,7 +54,7 @@
             else
             {
                 <tr>
-                    <td colspan="5" class="text-center text-muted">Tidak ada data</td>
+                    <td colspan="6" class="text-center text-muted">Tidak ada data</td>
                 </tr>
             }
         </tbody>
