@@ -90,28 +90,28 @@ namespace MonPDReborn.Models.DataOP
                 var currentYear = DateTime.Now.Year;
 
                 var opResto = context.DbOpRestos
-                    .Where(x => x.TahunBuku == currentYear && x.PajakNama != "MAMIN" && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
-                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.MakananMinuman).GetDescription()}]" })
+                    .Where(x => x.TahunBuku == currentYear && x.PajakNama != "MAMIN" && (x.Nop == nop || nop.ToUpper().Trim().Contains(x.NamaOp.ToUpper().Trim() ) || nop.ToUpper().Trim().Contains(x.AlamatOp.ToUpper().Trim())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.MakananMinuman).GetDescription()}] - [{x.AlamatOp}]" })
                     .ToList();
                 var OpHotel = context.DbOpHotels
-                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
-                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaPerhotelan).GetDescription()}]" })
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper()) || nop.ToUpper().Trim().Contains(x.AlamatOp.ToUpper().Trim())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaPerhotelan).GetDescription()}] - [{x.AlamatOp}]" })
                     .ToList();
                 var opParkir = context.DbOpParkirs
-                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
-                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaParkir).GetDescription()}]" })
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper()) || nop.ToUpper().Trim().Contains(x.AlamatOp.ToUpper().Trim())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaParkir).GetDescription()}] - [{x.AlamatOp}]" })
                     .ToList();
                 var opListrik = context.DbOpListriks
-                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
-                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.TenagaListrik).GetDescription()}]" })
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper()) || nop.ToUpper().Trim().Contains(x.AlamatOp.ToUpper().Trim())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.TenagaListrik).GetDescription()}] - [{x.AlamatOp}]" })
                     .ToList();
                 var opHiburan = context.DbOpHiburans
-                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
-                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaKesenianHiburan).GetDescription()}]" })
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper()) || nop.ToUpper().Trim().Contains(x.AlamatOp.ToUpper().Trim())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.JasaKesenianHiburan).GetDescription()}] - [{x.AlamatOp}]" })
                     .ToList();
                 var opAirTanah = context.DbOpAbts
-                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper())))
-                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.AirTanah).GetDescription()}]" })
+                    .Where(x => x.TahunBuku == currentYear && (x.Nop == nop || nop.ToUpper().Contains(x.NamaOp.ToUpper()) || nop.ToUpper().Trim().Contains(x.AlamatOp.ToUpper().Trim())))
+                    .Select(x => new SelectListItem() { Value = x.Nop, Text = $"[{Utility.GetFormattedNOP(x.Nop)}] {x.NamaOp} [{(EnumFactory.EPajak.AirTanah).GetDescription()}] - [{x.AlamatOp}]" })
                     .ToList();
 
                 ret.AddRange(opResto);

@@ -30,7 +30,7 @@
         @* columns.AddFor(m => m.No).Caption("No").Width(50); *@
         columns.AddFor(m => m.Wilayah).Caption("Wilayah");
         @* columns.AddFor(m => m.NOP).Caption("NOP"); *@
-        columns.AddFor(m => m.FormattedNOP).Caption("NOP");
+        columns.AddFor(m => m.FormattedNOP).Caption("NOP").CellTemplate(new JS("detailOPCellTemplate"));
         columns.AddFor(m => m.StatusNOP).Caption("Status")
         .CellTemplate(
             @<text>
@@ -53,7 +53,7 @@
         columns.AddFor(m => m.StatusKunci).Caption("Status Kunci");
         columns.AddFor(m => m.TerakhirAktif).Caption("Terakhir Aktif").Format("#,##0");
         columns.Add()
-            .Caption("Aksi")
+            .Caption("Kartu Data")
             .Type(GridCommandColumnType.Buttons)
             .Fixed(true) // membuat kolom ini tetap
             .Buttons(b =>
