@@ -450,7 +450,6 @@
         });
 
         function fnDashboardLayananHarian() {
-            // Ambil nilai tanggal dari DateBox DevExtreme
             var tanggal = $("#selectTanggal").dxDateBox("instance").option("value");
 
             if (!tanggal) {
@@ -458,19 +457,16 @@
                 return;
             }
 
-            // Tampilkan loading spinner
             $("#loading2-DashboardLayananHarian").show();
 
             // Format tanggal ke yyyy-MM-dd
             var tglStr = new Date(tanggal).toISOString().split('T')[0];
 
-            // Panggil endpoint controller ASP.NET MVC (misal Dashboard/GetLayananHarian)
             $.ajax({
-                url: '/Dashboard/LayananDashboardHarian',  // ubah sesuai route kamu
+                url: '/Dashboard/LayananDashboardHarian',
                 type: 'GET',
                 data: { tgl: tglStr },
                 success: function (data) {
-                    // Tampilkan hasil ke dalam div DashboardLayananHarian
                     $("#DashboardLayananHarian").html(data);
                 },
                 error: function () {
