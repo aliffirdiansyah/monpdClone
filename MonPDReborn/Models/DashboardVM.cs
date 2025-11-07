@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
@@ -2590,22 +2591,23 @@ namespace MonPDReborn.Models
 
                             // 🔹 Insidentil (KdPerizinan 1093)
                             var dataIns = dataBulan.Where(x => x.KdPerizinan == "1093");
-                            masuk += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
-                            proses += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi);
-                            selesai += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                            proses += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
+                            selesai += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi || x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                            masuk += selesai + proses;
 
                             // 🔹 Permanen (KdPerizinan 1099)
                             var dataPerm = dataBulan.Where(x => x.KdPerizinan == "1099");
-                            masuk += dataPerm.Count(x =>
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
-                                !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
+                            //masuk += dataPerm.Count(x =>
+                            //    x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
+                            //    !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
 
                             proses += dataPerm.Count(x =>
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru ||
                                 x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi);
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey);
 
-                            selesai += dataPerm.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                            selesai += dataPerm.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi || x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                            masuk += selesai + proses;
 
                             // 🔹 Set nilai ke properti bulan (Masuk1..12, Proses1..12, Selesai1..12)
                             typeof(ViewModel.DashboardLayanan).GetProperty($"Masuk{bulan}")?.SetValue(layanan, masuk);
@@ -2721,22 +2723,19 @@ namespace MonPDReborn.Models
 
                                 if (group.Key.KdPerizinan == "1093") // 🔹 Insidentil
                                 {
-                                    masuk = group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
-                                    proses = group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi);
-                                    selesai = group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                                    proses += group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
+                                    selesai += group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi || x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                                    masuk += selesai + proses;
                                 }
                                 else if (group.Key.KdPerizinan == "1099") // 🔹 Permanen
                                 {
-                                    masuk = group.Count(x =>
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
-                                        !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
-
-                                    proses = group.Count(x =>
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
+                                    proses += group.Count(x =>
+                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru ||
                                         x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi);
+                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey);
 
-                                    selesai = group.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                                    selesai += group.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi || x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                                    masuk += selesai + proses;
                                 }
 
                                 // 🔹 Cek apakah layanan ini sudah ada di list
@@ -2868,8 +2867,8 @@ namespace MonPDReborn.Models
                 }
 
                 return dashboardList
-                    .OrderByDescending(x => x.pajakId == 4) 
-                    .ThenBy(x => x.Layanan)                 
+                    .OrderByDescending(x => x.pajakId == 4)
+                    .ThenBy(x => x.Layanan)
                     .ToList();
             }
             public static List<ViewModel.DashboardLayanan> GetLayananHarian(DateTime tgl)
