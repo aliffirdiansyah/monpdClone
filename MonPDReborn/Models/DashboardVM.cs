@@ -502,7 +502,6 @@ namespace MonPDReborn.Models
                 }
             }
         }
-        private static ReklameSswContext _context = DBClass.GetReklameSswContext();
         public class Method
         {
             public static ViewModel.Dashboard GetDashboardData()
@@ -2554,7 +2553,7 @@ namespace MonPDReborn.Models
             }*/
             public static List<ViewModel.DashboardLayanan> GetLayanan()
             {
-                var context = _context;
+                using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
 
                 var list = new List<ViewModel.DashboardLayanan>();
@@ -2695,7 +2694,7 @@ namespace MonPDReborn.Models
             }
             public static List<ViewModel.DashboardReklame> GetDataDashboard(EnumFactory.EPajak pajakId)
             {
-                var context = _context;
+                using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
                 var dashboardList = new List<ViewModel.DashboardReklame>();
 
@@ -2873,7 +2872,7 @@ namespace MonPDReborn.Models
             }
             public static List<ViewModel.DashboardLayanan> GetLayananHarian(DateTime tgl)
             {
-                var context = _context;
+                using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
                 var list = new List<ViewModel.DashboardLayanan>();
 
