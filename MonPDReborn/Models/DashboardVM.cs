@@ -2611,11 +2611,15 @@ namespace MonPDReborn.Models
                             //masuk += dataPerm.Count(x =>
                             //    x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
                             //    !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
+                            List<decimal> statusProsesValid = new List<decimal>
+                                    {
+                                        (decimal)EStatusKirimPermanenBaru.Baru,
+                                        (decimal)EStatusKirimPermanenBaru.HitungPajak,
+                                        (decimal)EStatusKirimPermanenBaru.Survey,
+                                    };
 
-                            proses += dataPerm.Count(x =>
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru ||
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey);
+
+                            proses += dataPerm.Count(x => statusProsesValid.Contains(x.StatusKirim.Value));
 
                             selesai += dataPerm.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi || x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
                             masuk += selesai + proses;
@@ -2740,10 +2744,15 @@ namespace MonPDReborn.Models
                                 }
                                 else if (group.Key.KdPerizinan == "1099") // 🔹 Permanen
                                 {
-                                    proses += group.Count(x =>
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru ||
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey);
+                                    List<decimal> statusProsesValid = new List<decimal>
+                                    {
+                                        (decimal)EStatusKirimPermanenBaru.Baru,
+                                        (decimal)EStatusKirimPermanenBaru.HitungPajak,
+                                        (decimal)EStatusKirimPermanenBaru.Survey,
+                                    };
+
+
+                                    proses += group.Count(x => statusProsesValid.Contains(x.StatusKirim.Value));
 
                                     selesai += group.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi || x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
                                     masuk += selesai + proses;
