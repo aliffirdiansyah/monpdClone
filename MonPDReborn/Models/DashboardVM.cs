@@ -59,10 +59,12 @@ namespace MonPDReborn.Models
         }
         public class LayananHarian
         {
-            public List<ViewModel.DashboardLayanan> Data { get; set; } = new();
+            public List<ViewModel.LayananHarian> DataHarian { get; set; } = new();
+            public DateTime TanggalHariIni { get; set; }
             public LayananHarian(DateTime tgl)
             {
-                Data = Method.GetLayananHarian(tgl);
+                DataHarian = Method.GetLayananHarian(tgl);
+                TanggalHariIni = tgl;
             }
         }
 
@@ -416,6 +418,16 @@ namespace MonPDReborn.Models
                 public int Proses12 { get; set; }
                 public int Selesai12 { get; set; }
             }
+            public class LayananHarian
+            {
+                public string JenisPajak { get; set; } = null!;
+                public int PajakId { get; set; }
+                public string Layanan { get; set; } = null!;
+                public int Masuk { get; set; }
+                public int Proses { get; set; }
+                public int Selesai { get; set; }
+            }
+
             public class ShowSeriesSudutPandangRekeningJenisObjekOpd
             {
                 public class Jenis
@@ -2764,58 +2776,6 @@ namespace MonPDReborn.Models
                             }
                         }
                         break;
-
-
-                    //case EnumFactory.EPajak.Reklame:
-                    //    var dashPerizinan = context.TPerizinanReklames
-                    //        .Include(x => x.KdPerizinanNavigation)
-                    //        .Include(x => x.TPerizinanReklameBatals)
-                    //        .Where(x => x.Tahun == tahun && x.TglDaftar.HasValue && x.TglDaftar.Value.Year == tahun)
-                    //        .ToList();
-
-                    //    foreach (var group in dashPerizinan
-                    //        .GroupBy(x => new { x.KdPerizinan, x.KdPerizinanNavigation.NamaPerizinan }))
-                    //    {
-                    //        var model = new ViewModel.DashboardReklame
-                    //        {
-                    //            Layanan = group.Key.NamaPerizinan
-                    //        };
-
-                    //        for (int bulan = 1; bulan <= 12; bulan++)
-                    //        {
-                    //            var dataBulan = group.Where(x => x.TglDaftar.Value.Month == bulan);
-
-                    //            int masuk = 0, proses = 0, selesai = 0;
-
-                    //            if (group.Key.KdPerizinan == "1099") // permanen
-                    //            {
-                    //                masuk = dataBulan.Count(x =>
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
-                    //                    !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
-
-                    //                proses = dataBulan.Count(x =>
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi);
-
-                    //                selesai = dataBulan.Count(x =>
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
-                    //            }
-                    //            else if (group.Key.KdPerizinan == "1093") // insidentil
-                    //            {
-                    //                masuk = dataBulan.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
-                    //                proses = dataBulan.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi);
-                    //                selesai = dataBulan.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
-                    //            }
-
-                    //            typeof(ViewModel.DashboardReklame).GetProperty($"Masuk{bulan}")?.SetValue(model, masuk);
-                    //            typeof(ViewModel.DashboardReklame).GetProperty($"Proses{bulan}")?.SetValue(model, proses);
-                    //            typeof(ViewModel.DashboardReklame).GetProperty($"Selesai{bulan}")?.SetValue(model, selesai);
-                    //        }
-
-                    //        dashboardList.Add(model);
-                    //    }
-                    //    break;
                     case EnumFactory.EPajak.PBB:
                         var semuaData = new List<ViewModel.LayananPBB>();
 
@@ -2879,18 +2839,18 @@ namespace MonPDReborn.Models
                     .ThenBy(x => x.Layanan)
                     .ToList();
             }
-            public static List<ViewModel.DashboardLayanan> GetLayananHarian(DateTime tgl)
+            public static List<ViewModel.LayananHarian> GetLayananHarian(DateTime tgl)
             {
                 using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
-                var list = new List<ViewModel.DashboardLayanan>();
+                var list = new List<ViewModel.LayananHarian>();
 
                 // Ambil hanya dua jenis pajak: Reklame dan PBB
                 var pajakList = new[]
                 {
-        EnumFactory.EPajak.Reklame,
-        EnumFactory.EPajak.PBB
-    };
+                    EnumFactory.EPajak.Reklame,
+                    EnumFactory.EPajak.PBB
+                };
 
                 foreach (var epajak in pajakList)
                 {
@@ -2937,13 +2897,13 @@ namespace MonPDReborn.Models
                                 selesai = groupData.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
                             }
 
-                            var layanan = new ViewModel.DashboardLayanan
+                            var layanan = new ViewModel.LayananHarian
                             {
                                 JenisPajak = $"{epajak.GetDescription()} - {layananInfo.NamaPerizinan}",
                                 PajakId = (int)epajak,
-                                Masuk1 = masuk,
-                                Proses1 = proses,
-                                Selesai1 = selesai
+                                Masuk = masuk,
+                                Proses = proses,
+                                Selesai = selesai
                             };
 
                             list.Add(layanan);
@@ -3012,13 +2972,13 @@ namespace MonPDReborn.Models
                             var selesai = groupData.Count(x =>
                                 x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai);
 
-                            var layanan = new ViewModel.DashboardLayanan
+                            var layanan = new ViewModel.LayananHarian
                             {
                                 JenisPajak = $"{epajak.GetDescription()} - {kodeEnum.GetDescription()}",
                                 PajakId = (int)epajak,
-                                Masuk1 = masuk,
-                                Proses1 = proses,
-                                Selesai1 = selesai
+                                Masuk = masuk,
+                                Proses = proses,
+                                Selesai = selesai
                             };
 
                             list.Add(layanan);
