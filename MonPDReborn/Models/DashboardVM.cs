@@ -2893,7 +2893,7 @@ namespace MonPDReborn.Models
                                             int proses = apiResponse.data.FirstOrDefault(x => x.judul.Contains("Proses"))?.jumlah ?? 0;
                                             int selesai = apiResponse.data.FirstOrDefault(x => x.judul.Contains("Terbit"))?.jumlah ?? 0;
 
-                                            var namaLayanan = "EReklame";
+                                            var namaLayanan = "Terbatas";
                                             var existingModel = dashboardList.FirstOrDefault(x => x.Layanan == namaLayanan);
                                             if (existingModel == null)
                                             {
@@ -3079,7 +3079,7 @@ namespace MonPDReborn.Models
 
                                         list.Add(new ViewModel.LayananHarian
                                         {
-                                            JenisPajak = $"{epajak.GetDescription()} - eReklame Online",
+                                            JenisPajak = $"{epajak.GetDescription()} - Terbatas",
                                             PajakId = (int)epajak,
                                             Masuk = masuk,
                                             Proses = proses,
