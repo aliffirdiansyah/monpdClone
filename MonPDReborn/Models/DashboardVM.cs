@@ -67,18 +67,25 @@ namespace MonPDReborn.Models
                 Data = await Method.GetLayanan();
             }
         }
-
         public class LayananHarian
         {
             public List<ViewModel.LayananHarian> DataHarian { get; set; } = new();
             public DateTime TanggalHariIni { get; set; }
-            public LayananHarian(DateTime tgl)
+
+            private LayananHarian() { }
+
+            // Factory method async untuk membuat instance
+            public static async Task<LayananHarian> CreateAsync(DateTime tgl)
             {
-                DataHarian = Method.GetLayananHarian(tgl);
-                TanggalHariIni = tgl;
+                var instance = new LayananHarian
+                {
+                    TanggalHariIni = tgl,
+                    DataHarian = await Method.GetLayananHarianAsync(tgl)
+                };
+
+                return instance;
             }
         }
-
         public class RealisasiHari
         {
             public List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok> Data { get; set; } = new();
@@ -460,7 +467,17 @@ namespace MonPDReborn.Models
                 public string judul { get; set; } = null!;
                 public int jumlah { get; set; }
             }
+            public class ApiResponseReklame
+            {
+                public string Message { get; set; } = null!;
+                public List<ApiReklameItem> Data { get; set; } = new();
+            }
 
+            public class ApiReklameItem
+            {
+                public string Judul { get; set; } = null!;
+                public int Jumlah { get; set; }
+            }
 
             public class ShowSeriesSudutPandangRekeningJenisObjekOpd
             {
@@ -2963,7 +2980,7 @@ namespace MonPDReborn.Models
                     .ThenBy(x => x.Layanan)
                     .ToList();
             }
-            public static List<ViewModel.LayananHarian> GetLayananHarian(DateTime tgl)
+            public static async Task<List<ViewModel.LayananHarian>> GetLayananHarianAsync(DateTime tgl)
             {
                 using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
@@ -2980,13 +2997,12 @@ namespace MonPDReborn.Models
                 {
                     if (epajak == EnumFactory.EPajak.Reklame)
                     {
-                        // Ambil semua jenis perizinan sebagai master
+                        // === 1. Data dari Database Lokal ===
                         var allLayananReklame = context.TPerizinanReklames
                             .Select(x => new { x.KdPerizinan, x.KdPerizinanNavigation.NamaPerizinan })
                             .Distinct()
                             .ToList();
 
-                        // Ambil data per tanggal
                         var data = context.TPerizinanReklames
                             .Include(x => x.KdPerizinanNavigation)
                             .Include(x => x.TPerizinanReklameBatals)
@@ -3024,16 +3040,58 @@ namespace MonPDReborn.Models
                                 masuk += selesai + proses;
                             }
 
-                            var layanan = new ViewModel.LayananHarian
+                            list.Add(new ViewModel.LayananHarian
                             {
                                 JenisPajak = $"{epajak.GetDescription()} - {layananInfo.NamaPerizinan}",
                                 PajakId = (int)epajak,
                                 Masuk = masuk,
                                 Proses = proses,
                                 Selesai = selesai
-                            };
+                            });
+                        }
 
-                            list.Add(layanan);
+                        // === 2. Data dari API eReklame ===
+                        string startDate = tgl.ToString("yyyy-MM-dd");
+                        string endDate = tgl.ToString("yyyy-MM-dd"); // karena per hari
+
+                        string apiUrl = $"https://ereklame.dprkpp.web.id/api/rekap_reklame/{startDate}/{endDate}";
+
+                        using (var client = new HttpClient())
+                        {
+                            client.Timeout = TimeSpan.FromSeconds(30);
+
+                            try
+                            {
+                                var response = await client.GetAsync(apiUrl);
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var json = await response.Content.ReadAsStringAsync();
+
+                                    var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponseReklame>(json,
+                                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                                    if (apiResponse?.Data != null && apiResponse.Data.Any())
+                                    {
+                                        // Ambil nilai sesuai judul
+                                        int masuk = apiResponse.Data.FirstOrDefault(x => x.Judul.Contains("Masuk", StringComparison.OrdinalIgnoreCase))?.Jumlah ?? 0;
+                                        int proses = apiResponse.Data.FirstOrDefault(x => x.Judul.Contains("Proses", StringComparison.OrdinalIgnoreCase))?.Jumlah ?? 0;
+                                        int selesai = apiResponse.Data.FirstOrDefault(x => x.Judul.Contains("Terbit", StringComparison.OrdinalIgnoreCase))?.Jumlah ?? 0;
+
+                                        list.Add(new ViewModel.LayananHarian
+                                        {
+                                            JenisPajak = $"{epajak.GetDescription()} - eReklame Online",
+                                            PajakId = (int)epajak,
+                                            Masuk = masuk,
+                                            Proses = proses,
+                                            Selesai = selesai
+                                        });
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"[API Error] {ex.Message}");
+                            }
                         }
                     }
                     else if (epajak == EnumFactory.EPajak.PBB)

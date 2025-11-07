@@ -171,13 +171,13 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
-
-        public IActionResult LayananDashboardHarian(DateTime tgl)
+        public async Task<IActionResult> LayananDashboardHarian(DateTime tgl)
         {
             var response = new ResponseBase();
+
             try
             {
-                var model = new Models.DashboardVM.LayananHarian(tgl);
+                var model = await Models.DashboardVM.LayananHarian.CreateAsync(tgl);
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException ex)
@@ -191,6 +191,7 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
+
         public IActionResult RealisasiHari(DateTime TglCutOff)
         {
             try
