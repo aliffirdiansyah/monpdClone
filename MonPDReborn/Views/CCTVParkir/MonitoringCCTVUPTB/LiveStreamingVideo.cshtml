@@ -29,47 +29,12 @@
 {
 
     string displayId = Model.DisplayId ?? "";
+    var videoUrl = Url.Action("GetLiveStreamingVideo", new { displayId });
 
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
-            <h6 class="mb-0">
-                <i class="bi bi-camera-video me-2"></i> Live Streaming Kamera
-            </h6>
-        </div>
-
-        <div class="card-body p-0">
-            <div class="ratio ratio-16x9 position-relative">
-                <video id="jasnita-video"
-                       class="w-100 h-100 rounded-bottom"
-                       autoplay
-                       muted
-                       playsinline
-                       controls>
-                    <source src="@Url.Action("GetLiveStreamingVideo", new { displayId = displayId })" type="video/mp4" />
-                    Browser Anda tidak mendukung pemutaran video.
-                </video>
-
-                <div id="video-loading"
-                     class="position-absolute top-50 start-50 translate-middle text-center bg-dark bg-opacity-50 text-white p-3 rounded">
-                    <div class="spinner-border spinner-border-sm mb-2"></div>
-                    <div>Memuat video...</div>
-                </div>
-            </div>
-        </div>
+    <div class="ratio ratio-16x9 border rounded overflow-hidden">
+        <img src="@videoUrl"
+             alt="Live CCTV Stream"
+             class="w-100 h-100 object-fit-cover" />
     </div>
-
-    <script>
-        const video = document.getElementById("jasnita-video");
-        const loading = document.getElementById("video-loading");
-
-        // Tampilkan indikator loading sampai video siap diputar
-        video.addEventListener("canplay", () => {
-            loading.style.display = "none";
-        });
-
-        video.addEventListener("error", () => {
-            loading.innerHTML = "<div class='text-danger'>Gagal memuat video.</div>";
-        });
-    </script>
 }
 
