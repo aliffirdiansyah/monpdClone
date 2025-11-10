@@ -27,12 +27,14 @@
 
 @if(Model.VendorId == (int)EnumFactory.EVendorParkirCCTV.Jasnita)
 {
-@* <h2>Live Camera - WebRTC</h2> *@
-    <div class="ratio ratio-16x9">
-        <video controls autoplay muted playsinline class="w-100 h-100 rounded border">
-            <source src="@Model.JasnitaSource" type="video/mp4" />
-            Browser tidak mendukung video tag.
-        </video>
+    
+    string displayId = Model.DisplayId ?? "";
+    var videoUrl = Url.Action("GetLiveStreamingVideo", new { displayId });
+
+    <div class="ratio ratio-16x9 border rounded overflow-hidden">
+        <img src="@videoUrl"
+             alt="Live CCTV Stream"
+             class="w-100 h-100 object-fit-cover" />
     </div>
 }
 
