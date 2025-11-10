@@ -123,17 +123,41 @@ namespace MonPDReborn.Controllers
         //    }
         //}
         [HttpGet]
-        public object GetDetailLayanan(DataSourceLoadOptions load_options, int PajakId)
+        public async Task<object> GetDetailLayanan(DataSourceLoadOptions load_options, int PajakId)
         {
-            var data = Models.DashboardVM.Method.GetDataDashboard((EnumFactory.EPajak)PajakId);
-            return DataSourceLoader.Load(data, load_options);
+            try
+            {
+                var data = await Models.DashboardVM.Method.GetDataDashboard((EnumFactory.EPajak)PajakId);
+
+                return DataSourceLoader.Load(data, load_options);
+            }
+            catch (ArgumentException ex)
+            {
+                return new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di GetDetailLayanan: {ex.Message}");
+                return new
+                {
+                    success = false,
+                    message = "Terjadi kesalahan saat memuat data layanan."
+                };
+            }
         }
-        public IActionResult LayananDashboard()
+
+        public async Task<IActionResult> LayananDashboard()
         {
             var response = new ResponseBase();
+
             try
             {
                 var model = new Models.DashboardVM.LayananDashboard();
+                await model.InitAsync(); 
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException ex)
@@ -147,12 +171,13 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
-        public IActionResult LayananDashboardHarian(DateTime tgl)
+        public async Task<IActionResult> LayananDashboardHarian(DateTime tgl)
         {
             var response = new ResponseBase();
+
             try
             {
-                var model = new Models.DashboardVM.LayananHarian(tgl);
+                var model = await Models.DashboardVM.LayananHarian.CreateAsync(tgl);
                 return PartialView($"{URLView}{actionName}", model);
             }
             catch (ArgumentException ex)
@@ -166,6 +191,7 @@ namespace MonPDReborn.Controllers
                 return Json(response.ToInternalServerError());
             }
         }
+
         public IActionResult RealisasiHari(DateTime TglCutOff)
         {
             try

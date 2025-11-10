@@ -1,12 +1,16 @@
 ﻿using Dapper;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.EntityFrameworkCore;
 using MonPDLib;
 using MonPDLib.EF;
 using MonPDLib.EFReklameSsw;
 using MonPDLib.General;
+using Newtonsoft.Json;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
+using System.Text.Json;
+using Newtonsoft.Json;
 using System.Web.Mvc;
 using static MonPDLib.General.EnumFactory;
 using static MonPDReborn.Models.DashboardVM.ViewModel;
@@ -51,20 +55,37 @@ namespace MonPDReborn.Models
         public class LayananDashboard
         {
             public List<ViewModel.DashboardLayanan> Data { get; set; } = new();
+
+            // 🔹 Constructor tidak async — hanya setup awal
             public LayananDashboard()
             {
-                Data = Method.GetLayanan();
+            }
+
+            // 🔹 Async init method
+            public async Task InitAsync()
+            {
+                Data = await Method.GetLayanan();
             }
         }
         public class LayananHarian
         {
-            public List<ViewModel.DashboardLayanan> Data { get; set; } = new();
-            public LayananHarian(DateTime tgl)
+            public List<ViewModel.LayananHarian> DataHarian { get; set; } = new();
+            public DateTime TanggalHariIni { get; set; }
+
+            private LayananHarian() { }
+
+            // Factory method async untuk membuat instance
+            public static async Task<LayananHarian> CreateAsync(DateTime tgl)
             {
-                Data = Method.GetLayananHarian(tgl);
+                var instance = new LayananHarian
+                {
+                    TanggalHariIni = tgl,
+                    DataHarian = await Method.GetLayananHarianAsync(tgl)
+                };
+
+                return instance;
             }
         }
-
         public class RealisasiHari
         {
             public List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok> Data { get; set; } = new();
@@ -415,6 +436,49 @@ namespace MonPDReborn.Models
                 public int Proses12 { get; set; }
                 public int Selesai12 { get; set; }
             }
+            public class LayananHarian
+            {
+                public string JenisPajak { get; set; } = null!;
+                public int PajakId { get; set; }
+                public string Layanan { get; set; } = null!;
+                public int Masuk { get; set; }
+                public int Proses { get; set; }
+                public int Selesai { get; set; }
+            }
+            public class RekapReklameApiResponse
+            {
+                public string Message { get; set; } = null!;
+                public List<RekapReklameApiItem> Data { get; set; } = new();
+            }
+
+            public class RekapReklameApiItem
+            {
+                public string Judul { get; set; } = null!;
+                public int Jumlah { get; set; }
+            }
+            public class ApiReklameResponse
+            {
+                public string message { get; set; } = null!;
+                public List<ApiReklameData> data { get; set; } = new();
+            }
+
+            public class ApiReklameData
+            {
+                public string judul { get; set; } = null!;
+                public int jumlah { get; set; }
+            }
+            public class ApiResponseReklame
+            {
+                public string Message { get; set; } = null!;
+                public List<ApiReklameItem> Data { get; set; } = new();
+            }
+
+            public class ApiReklameItem
+            {
+                public string Judul { get; set; } = null!;
+                public int Jumlah { get; set; }
+            }
+
             public class ShowSeriesSudutPandangRekeningJenisObjekOpd
             {
                 public class Jenis
@@ -2550,7 +2614,24 @@ namespace MonPDReborn.Models
                 return ret;
 
             }*/
-            public static List<ViewModel.DashboardLayanan> GetLayanan()
+            public static async Task<RekapReklameApiResponse?> GetRekapReklameApiAsync(int tahun, int bulan)
+            {
+                using var client = new HttpClient();
+
+                var startDate = new DateTime(tahun, bulan, 1);
+                var endDate = new DateTime(tahun, bulan, DateTime.DaysInMonth(tahun, bulan));
+
+                string url = $"https://ereklame.dprkpp.web.id/api/rekap_reklame/{startDate:yyyy-MM-dd}/{endDate:yyyy-MM-dd}";
+
+                var response = await client.GetAsync(url);
+                if (!response.IsSuccessStatusCode) return null;
+
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<RekapReklameApiResponse>(json);
+
+                return result;
+            }
+            public static async Task<List<ViewModel.DashboardLayanan>> GetLayanan()
             {
                 using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
@@ -2583,35 +2664,64 @@ namespace MonPDReborn.Models
                         {
                             var dataBulan = data.Where(x => x.TglDaftar.Value.Month == bulan);
 
-                            int masuk = 0;
-                            int proses = 0;
-                            int selesai = 0;
+                            int masukins = 0;
+                            int prosesins = 0;
+                            int selesaiins = 0;
 
-                            // 🔹 Insidentil (KdPerizinan 1093)
+                            int masukper = 0;
+                            int prosesper = 0;
+                            int selesaiper = 0;
+
+                            int masukapi = 0;
+                            int prosesapi = 0;
+                            int selesaiapi = 0;
+
+                            // 🔹 Database — Insidentil
                             var dataIns = dataBulan.Where(x => x.KdPerizinan == "1093");
-                            masuk += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
-                            proses += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi);
-                            selesai += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                            prosesins += dataIns.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
+                            selesaiins += dataIns.Count(x =>
+                                x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi ||
+                                x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                            masukins += selesaiins + prosesins;
 
-                            // 🔹 Permanen (KdPerizinan 1099)
+                            // 🔹 Database — Permanen
                             var dataPerm = dataBulan.Where(x => x.KdPerizinan == "1099");
-                            masuk += dataPerm.Count(x =>
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
-                                !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
+                            List<decimal> statusProsesValid = new List<decimal>
+                            {
+                                (decimal)EStatusKirimPermanenBaru.Baru,
+                                (decimal)EStatusKirimPermanenBaru.HitungPajak,
+                                (decimal)EStatusKirimPermanenBaru.Survey,
+                            };
+                            prosesper += dataPerm.Count(x => statusProsesValid.Contains(x.StatusKirim.Value));
+                            selesaiper += dataPerm.Count(x =>
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi ||
+                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                            masukper += selesaiper + prosesper;
 
-                            proses += dataPerm.Count(x =>
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                                x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi);
+                            // 🔹 Tambahkan Data dari API
+                            var apiData = await GetRekapReklameApiAsync(tahun, bulan);
+                            if (apiData?.Data != null)
+                            {
+                                masukapi += apiData.Data
+                                    .Where(x => x.Judul.Contains("Masuk", StringComparison.OrdinalIgnoreCase))
+                                    .Sum(x => x.Jumlah);
 
-                            selesai += dataPerm.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                                prosesapi += apiData.Data
+                                    .Where(x => x.Judul.Contains("Proses", StringComparison.OrdinalIgnoreCase))
+                                    .Sum(x => x.Jumlah);
 
-                            // 🔹 Set nilai ke properti bulan (Masuk1..12, Proses1..12, Selesai1..12)
-                            typeof(ViewModel.DashboardLayanan).GetProperty($"Masuk{bulan}")?.SetValue(layanan, masuk);
-                            typeof(ViewModel.DashboardLayanan).GetProperty($"Proses{bulan}")?.SetValue(layanan, proses);
-                            typeof(ViewModel.DashboardLayanan).GetProperty($"Selesai{bulan}")?.SetValue(layanan, selesai);
+                                selesaiapi += apiData.Data
+                                    .Where(x => x.Judul.Contains("Terbit", StringComparison.OrdinalIgnoreCase))
+                                    .Sum(x => x.Jumlah);
+                            }
+
+                            // 🔹 Simpan ke ViewModel
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Masuk{bulan}")?.SetValue(layanan, masukins + masukper + masukapi);
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Proses{bulan}")?.SetValue(layanan, prosesins + prosesins + prosesapi);
+                            typeof(ViewModel.DashboardLayanan).GetProperty($"Selesai{bulan}")?.SetValue(layanan, selesaiins + selesaiper + selesaiapi);
                         }
                     }
+
                     else if (epajak == EnumFactory.EPajak.PBB)
                     {
                         for (int bulan = 1; bulan <= 12; bulan++)
@@ -2690,7 +2800,7 @@ namespace MonPDReborn.Models
 
                 return ret;
             }
-            public static List<ViewModel.DashboardReklame> GetDataDashboard(EnumFactory.EPajak pajakId)
+            public static async Task<List<ViewModel.DashboardReklame>> GetDataDashboard(EnumFactory.EPajak pajakId)
             {
                 using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
@@ -2705,6 +2815,7 @@ namespace MonPDReborn.Models
                             .Where(x => x.Tahun == tahun && x.TglDaftar.HasValue && x.TglDaftar.Value.Year == tahun)
                             .ToList();
 
+                        // 🔹 Data lokal (dari database)
                         for (int bulan = 1; bulan <= 12; bulan++)
                         {
                             var dataBulan = dashPerizinan
@@ -2720,25 +2831,28 @@ namespace MonPDReborn.Models
 
                                 if (group.Key.KdPerizinan == "1093") // 🔹 Insidentil
                                 {
-                                    masuk = group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
-                                    proses = group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi);
-                                    selesai = group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                                    proses += group.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
+                                    selesai += group.Count(x =>
+                                        x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi ||
+                                        x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                                    masuk += selesai + proses;
                                 }
                                 else if (group.Key.KdPerizinan == "1099") // 🔹 Permanen
                                 {
-                                    masuk = group.Count(x =>
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
-                                        !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
+                                    List<decimal> statusProsesValid = new List<decimal>
+                                    {
+                                        (decimal)EStatusKirimPermanenBaru.Baru,
+                                        (decimal)EStatusKirimPermanenBaru.HitungPajak,
+                                        (decimal)EStatusKirimPermanenBaru.Survey,
+                                    };
 
-                                    proses = group.Count(x =>
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi);
-
-                                    selesai = group.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                                    proses += group.Count(x => statusProsesValid.Contains(x.StatusKirim.Value));
+                                    selesai += group.Count(x =>
+                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi ||
+                                        x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                                    masuk += selesai + proses;
                                 }
 
-                                // 🔹 Cek apakah layanan ini sudah ada di list
                                 var existingModel = dashboardList.FirstOrDefault(x => x.Layanan == group.Key.NamaPerizinan);
                                 if (existingModel == null)
                                 {
@@ -2749,65 +2863,60 @@ namespace MonPDReborn.Models
                                     dashboardList.Add(existingModel);
                                 }
 
-                                // 🔹 Isi kolom bulan ke-n sesuai data
                                 typeof(ViewModel.DashboardReklame).GetProperty($"Masuk{bulan}")?.SetValue(existingModel, masuk);
                                 typeof(ViewModel.DashboardReklame).GetProperty($"Proses{bulan}")?.SetValue(existingModel, proses);
                                 typeof(ViewModel.DashboardReklame).GetProperty($"Selesai{bulan}")?.SetValue(existingModel, selesai);
                             }
                         }
+
+                        // 🔹 Data dari API eksternal (EREKLAME)
+                        for (int bulan = 1; bulan <= 12; bulan++)
+                        {
+                            try
+                            {
+                                using (var httpClient = new HttpClient())
+                                {
+                                    string startDate = new DateTime(tahun, bulan, 1).ToString("yyyy-MM-dd");
+                                    string endDate = new DateTime(tahun, bulan, DateTime.DaysInMonth(tahun, bulan)).ToString("yyyy-MM-dd");
+
+                                    string apiUrl = $"https://ereklame.dprkpp.web.id/api/rekap_reklame/{startDate}/{endDate}";
+                                    var response = await httpClient.GetAsync(apiUrl);
+
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var jsonString = await response.Content.ReadAsStringAsync();
+                                        var apiResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiReklameResponse>(jsonString);
+
+                                        if (apiResponse?.data != null)
+                                        {
+                                            int masuk = apiResponse.data.FirstOrDefault(x => x.judul.Contains("Masuk"))?.jumlah ?? 0;
+                                            int proses = apiResponse.data.FirstOrDefault(x => x.judul.Contains("Proses"))?.jumlah ?? 0;
+                                            int selesai = apiResponse.data.FirstOrDefault(x => x.judul.Contains("Terbit"))?.jumlah ?? 0;
+
+                                            var namaLayanan = "Terbatas";
+                                            var existingModel = dashboardList.FirstOrDefault(x => x.Layanan == namaLayanan);
+                                            if (existingModel == null)
+                                            {
+                                                existingModel = new ViewModel.DashboardReklame
+                                                {
+                                                    Layanan = namaLayanan
+                                                };
+                                                dashboardList.Add(existingModel);
+                                            }
+
+                                            typeof(ViewModel.DashboardReklame).GetProperty($"Masuk{bulan}")?.SetValue(existingModel, masuk);
+                                            typeof(ViewModel.DashboardReklame).GetProperty($"Proses{bulan}")?.SetValue(existingModel, proses);
+                                            typeof(ViewModel.DashboardReklame).GetProperty($"Selesai{bulan}")?.SetValue(existingModel, selesai);
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"⚠️ Gagal ambil data API Reklame bulan {bulan}: {ex.Message}");
+                            }
+                        }
                         break;
-
-
-                    //case EnumFactory.EPajak.Reklame:
-                    //    var dashPerizinan = context.TPerizinanReklames
-                    //        .Include(x => x.KdPerizinanNavigation)
-                    //        .Include(x => x.TPerizinanReklameBatals)
-                    //        .Where(x => x.Tahun == tahun && x.TglDaftar.HasValue && x.TglDaftar.Value.Year == tahun)
-                    //        .ToList();
-
-                    //    foreach (var group in dashPerizinan
-                    //        .GroupBy(x => new { x.KdPerizinan, x.KdPerizinanNavigation.NamaPerizinan }))
-                    //    {
-                    //        var model = new ViewModel.DashboardReklame
-                    //        {
-                    //            Layanan = group.Key.NamaPerizinan
-                    //        };
-
-                    //        for (int bulan = 1; bulan <= 12; bulan++)
-                    //        {
-                    //            var dataBulan = group.Where(x => x.TglDaftar.Value.Month == bulan);
-
-                    //            int masuk = 0, proses = 0, selesai = 0;
-
-                    //            if (group.Key.KdPerizinan == "1099") // permanen
-                    //            {
-                    //                masuk = dataBulan.Count(x =>
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
-                    //                    !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
-
-                    //                proses = dataBulan.Count(x =>
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi);
-
-                    //                selesai = dataBulan.Count(x =>
-                    //                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
-                    //            }
-                    //            else if (group.Key.KdPerizinan == "1093") // insidentil
-                    //            {
-                    //                masuk = dataBulan.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
-                    //                proses = dataBulan.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi);
-                    //                selesai = dataBulan.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
-                    //            }
-
-                    //            typeof(ViewModel.DashboardReklame).GetProperty($"Masuk{bulan}")?.SetValue(model, masuk);
-                    //            typeof(ViewModel.DashboardReklame).GetProperty($"Proses{bulan}")?.SetValue(model, proses);
-                    //            typeof(ViewModel.DashboardReklame).GetProperty($"Selesai{bulan}")?.SetValue(model, selesai);
-                    //        }
-
-                    //        dashboardList.Add(model);
-                    //    }
-                    //    break;
                     case EnumFactory.EPajak.PBB:
                         var semuaData = new List<ViewModel.LayananPBB>();
 
@@ -2867,34 +2976,33 @@ namespace MonPDReborn.Models
                 }
 
                 return dashboardList
-                    .OrderByDescending(x => x.pajakId == 4) 
-                    .ThenBy(x => x.Layanan)                 
+                    .OrderByDescending(x => x.pajakId == 4)
+                    .ThenBy(x => x.Layanan)
                     .ToList();
             }
-            public static List<ViewModel.DashboardLayanan> GetLayananHarian(DateTime tgl)
+            public static async Task<List<ViewModel.LayananHarian>> GetLayananHarianAsync(DateTime tgl)
             {
                 using var context = DBClass.GetReklameSswContext();
                 var tahun = DateTime.Now.Year;
-                var list = new List<ViewModel.DashboardLayanan>();
+                var list = new List<ViewModel.LayananHarian>();
 
                 // Ambil hanya dua jenis pajak: Reklame dan PBB
                 var pajakList = new[]
                 {
-        EnumFactory.EPajak.Reklame,
-        EnumFactory.EPajak.PBB
-    };
+                    EnumFactory.EPajak.Reklame,
+                    EnumFactory.EPajak.PBB
+                };
 
                 foreach (var epajak in pajakList)
                 {
                     if (epajak == EnumFactory.EPajak.Reklame)
                     {
-                        // Ambil semua jenis perizinan sebagai master
+                        // === 1. Data dari Database Lokal ===
                         var allLayananReklame = context.TPerizinanReklames
                             .Select(x => new { x.KdPerizinan, x.KdPerizinanNavigation.NamaPerizinan })
                             .Distinct()
                             .ToList();
 
-                        // Ambil data per tanggal
                         var data = context.TPerizinanReklames
                             .Include(x => x.KdPerizinanNavigation)
                             .Include(x => x.TPerizinanReklameBatals)
@@ -2911,34 +3019,79 @@ namespace MonPDReborn.Models
 
                             if (layananInfo.KdPerizinan == "1099") // permanen
                             {
-                                masuk = groupData.Count(x =>
-                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Baru &&
-                                    !x.TPerizinanReklameBatals.Any(y => y.NomorDaftar == x.NomorDaftar));
-
-                                proses = groupData.Count(x =>
-                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Survey ||
-                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.HitungPajak ||
-                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi);
-
-                                selesai = groupData.Count(x => x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                                List<decimal> statusProsesValid = new List<decimal>
+                                {
+                                    (decimal)EStatusKirimPermanenBaru.Baru,
+                                    (decimal)EStatusKirimPermanenBaru.HitungPajak,
+                                    (decimal)EStatusKirimPermanenBaru.Survey,
+                                };
+                                proses += groupData.Count(x => statusProsesValid.Contains(x.StatusKirim.Value));
+                                selesai += groupData.Count(x =>
+                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Verifikasi ||
+                                    x.StatusKirim == (int)EStatusKirimPermanenBaru.Selesai);
+                                masuk += selesai + proses;
                             }
                             else if (layananInfo.KdPerizinan == "1093") // insidentil
                             {
-                                masuk = groupData.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
-                                proses = groupData.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi);
-                                selesai = groupData.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                                proses += groupData.Count(x => x.StatusKirim == (int)EStatusKirimInsidentil.Baru);
+                                selesai += groupData.Count(x =>
+                                    x.StatusKirim == (int)EStatusKirimInsidentil.Verifikasi ||
+                                    x.StatusKirim == (int)EStatusKirimInsidentil.Selesai);
+                                masuk += selesai + proses;
                             }
 
-                            var layanan = new ViewModel.DashboardLayanan
+                            list.Add(new ViewModel.LayananHarian
                             {
                                 JenisPajak = $"{epajak.GetDescription()} - {layananInfo.NamaPerizinan}",
                                 PajakId = (int)epajak,
-                                Masuk1 = masuk,
-                                Proses1 = proses,
-                                Selesai1 = selesai
-                            };
+                                Masuk = masuk,
+                                Proses = proses,
+                                Selesai = selesai
+                            });
+                        }
 
-                            list.Add(layanan);
+                        // === 2. Data dari API eReklame ===
+                        string startDate = tgl.ToString("yyyy-MM-dd");
+                        string endDate = tgl.ToString("yyyy-MM-dd"); // karena per hari
+
+                        string apiUrl = $"https://ereklame.dprkpp.web.id/api/rekap_reklame/{startDate}/{endDate}";
+
+                        using (var client = new HttpClient())
+                        {
+                            client.Timeout = TimeSpan.FromSeconds(30);
+
+                            try
+                            {
+                                var response = await client.GetAsync(apiUrl);
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var json = await response.Content.ReadAsStringAsync();
+
+                                    var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponseReklame>(json,
+                                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                                    if (apiResponse?.Data != null && apiResponse.Data.Any())
+                                    {
+                                        // Ambil nilai sesuai judul
+                                        int masuk = apiResponse.Data.FirstOrDefault(x => x.Judul.Contains("Masuk", StringComparison.OrdinalIgnoreCase))?.Jumlah ?? 0;
+                                        int proses = apiResponse.Data.FirstOrDefault(x => x.Judul.Contains("Proses", StringComparison.OrdinalIgnoreCase))?.Jumlah ?? 0;
+                                        int selesai = apiResponse.Data.FirstOrDefault(x => x.Judul.Contains("Terbit", StringComparison.OrdinalIgnoreCase))?.Jumlah ?? 0;
+
+                                        list.Add(new ViewModel.LayananHarian
+                                        {
+                                            JenisPajak = $"{epajak.GetDescription()} - Terbatas",
+                                            PajakId = (int)epajak,
+                                            Masuk = masuk,
+                                            Proses = proses,
+                                            Selesai = selesai
+                                        });
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"[API Error] {ex.Message}");
+                            }
                         }
                     }
                     else if (epajak == EnumFactory.EPajak.PBB)
@@ -3004,13 +3157,13 @@ namespace MonPDReborn.Models
                             var selesai = groupData.Count(x =>
                                 x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai);
 
-                            var layanan = new ViewModel.DashboardLayanan
+                            var layanan = new ViewModel.LayananHarian
                             {
                                 JenisPajak = $"{epajak.GetDescription()} - {kodeEnum.GetDescription()}",
                                 PajakId = (int)epajak,
-                                Masuk1 = masuk,
-                                Proses1 = proses,
-                                Selesai1 = selesai
+                                Masuk = masuk,
+                                Proses = proses,
+                                Selesai = selesai
                             };
 
                             list.Add(layanan);

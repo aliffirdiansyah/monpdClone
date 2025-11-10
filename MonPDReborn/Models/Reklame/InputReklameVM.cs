@@ -72,6 +72,9 @@ namespace MonPDReborn.Models.Reklame
                 if (NewRowUpaya.TglUpaya == null || NewRowUpaya.TglUpaya == DateTime.MinValue)
                     throw new ArgumentException("Tanggal Upaya tidak boleh kosong.");
 
+                if (NewRowUpaya.TglUpaya.Year > DateTime.Now.Year)
+                    throw new ArgumentException("Tanggal Upaya tidak boleh lebih dari tahun ini.");
+
                 if (string.IsNullOrEmpty(NewRowUpaya.NamaPetugas))
                     throw new ArgumentException("Nama Petugas tidak boleh kosong.");
 
