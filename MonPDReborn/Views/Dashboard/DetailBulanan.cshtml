@@ -1,12 +1,9 @@
-﻿@{
-    var gridId = "dg-dashboadrdetail_" + Guid.NewGuid().ToString("N");
-}
-<div class="table-responsive">
+﻿<div class="table-responsive">
     @(
-        Html.DevExtreme().DataGrid<MonPDReborn.Models.DashboardVM.ViewModel.DashboardReklame>()
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DashboardVM.ViewModel.DetailDashboardBulanan>()
         .DataSource(d => d.Mvc()
-        .LoadAction("GetDetailLayanan")
-        .LoadParams(new { PajakId = ViewData["PajakId"] })
+        .LoadAction("GetDetailLayananBulanan")
+        .LoadParams(new { pajakId = ViewData["pajakId"], kodePerizinan = ViewData["kodePerizinan"] })
         )
         .ShowBorders(true)
         .ShowColumnHeaders(true)
@@ -19,14 +16,14 @@
         .HeaderFilter(h => h.Visible(true))
         .Sorting(s => s.Mode(GridSortingMode.Multiple))
         .AllowColumnResizing(true)
-        @* .KeyExpr("Layanan") *@
+    @* .KeyExpr("Layanan") *@
         .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
         .OnExporting("exportGrid")
         .Columns(columns =>
         {
-            columns.AddFor(x => x.Layanan)
+            columns.AddFor(x => x.WilayahPajak)
             .CssClass("fw-bold")
-            .Caption("Jenis Layanan");
+            .Caption("Wilayah Pajak");
 
             // Januari
             columns.Add().Caption("Januari").Columns(sub =>
@@ -127,7 +124,7 @@
         .Summary(s => s
         .TotalItems(items =>
         {
-            items.AddFor(x => x.Layanan)
+            items.AddFor(x => x.WilayahPajak)
             .SummaryType(SummaryType.Count)
             .DisplayFormat("TOTAL");
 
@@ -181,16 +178,6 @@
             items.AddFor(x => x.Selesai12).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
 
         })
-        ).MasterDetail(md => md
-        .Enabled(true)
-        .Template(
-        @<text>
-        @{
-            ViewData["pajakId"] = new JS("data.pajakId");
-            ViewData["kodePerizinan"] = new JS("data.kodePerizinan");
-        }
-        @await Html.PartialAsync("/Views/Dashboard/DetailBulanan.cshtml")
-    </text>)
         )
         )
 

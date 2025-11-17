@@ -29,6 +29,16 @@
             .CssClass("fw-bold")
             .Caption("Jenis Layanan");
 
+            @* columns.AddFor(x => x.PajakId)
+            .CssClass("fw-bold")
+            .Caption("pajak id");
+            columns.AddFor(x => x.Tgl)
+            .CssClass("fw-bold")
+            .Caption("tgl Layanan");
+            columns.AddFor(x => x.kodePerizinan)
+            .CssClass("fw-bold")
+            .Caption("tgl Layanan"); *@
+
             columns.Add().Caption(Model.TanggalHariIni.ToString("dd MMMM yyyy")).Columns(sub =>
             {
                 sub.AddFor(m => m.Masuk).Caption("Baru").Format("#,##0");
@@ -49,6 +59,17 @@
             items.AddFor(x => x.Selesai).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
 
         })
+        ).MasterDetail(md => md
+        .Enabled(true)
+        .Template(
+        @<text>
+        @{
+            ViewData["PajakId"] = new JS("data.PajakId");
+            ViewData["Tgl"] = new JS("data.TglString");
+            ViewData["kodePerizinan"] = new JS("data.kodePerizinan");
+        }
+        @await Html.PartialAsync("/Views/Dashboard/DetailLayananHarian.cshtml")
+    </text>)
         )
             )
 

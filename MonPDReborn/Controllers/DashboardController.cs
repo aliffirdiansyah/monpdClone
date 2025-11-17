@@ -212,6 +212,60 @@ namespace MonPDReborn.Controllers
                 return Json(response);
             }
         }
+        [HttpGet]
+        public async Task<object> GetDetailLayananHarian(DataSourceLoadOptions load_options, DateTime Tgl, string kodePerizinan, int PajakId)
+        {
+            try
+            {
+                var data = await Models.DashboardVM.Method.GetDetailLayananHarianAsync(Tgl, kodePerizinan, (EnumFactory.EPajak)PajakId);
+
+                return DataSourceLoader.Load(data, load_options);
+            }
+            catch (ArgumentException ex)
+            {
+                return new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di GetDetailLayanan: {ex.Message}");
+                return new
+                {
+                    success = false,
+                    message = "Terjadi kesalahan saat memuat data layanan."
+                };
+            }
+        }
+        [HttpGet]
+        public async Task<object> GetDetailLayananBulanan(DataSourceLoadOptions load_options,string kodePerizinan, int pajakId)
+         {
+            try
+            {
+                var data = await Models.DashboardVM.Method.GetDetailBulananAsync(kodePerizinan, (EnumFactory.EPajak)pajakId);
+
+                return DataSourceLoader.Load(data, load_options);
+            }
+            catch (ArgumentException ex)
+            {
+                return new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error di GetDetailLayanan: {ex.Message}");
+                return new
+                {
+                    success = false,
+                    message = "Terjadi kesalahan saat memuat data layanan."
+                };
+            }
+        }
         /*public IActionResult JumlahObjekPajakTahunan()
         {
             var response = new ResponseBase();
