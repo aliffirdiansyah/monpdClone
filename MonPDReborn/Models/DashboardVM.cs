@@ -3011,7 +3011,7 @@ namespace MonPDReborn.Models
                             {
                                 Layanan = EnumFactory.GetEnumDescription((EJenisPBB)Convert.ToInt32(group.Key)),
                                 pajakId = (int)EnumFactory.EPajak.PBB,
-                                kodePerizinan = groupByLayanan.ToString()
+                                kodePerizinan = group.First().KODE_LAYANAN
                             };
 
                             for (int bulan = 1; bulan <= 12; bulan++)
@@ -3020,7 +3020,9 @@ namespace MonPDReborn.Models
 
                                 var masuk = dataBulan.Count(x =>
                                     x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses ||
-                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai);
+                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai ||
+                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Ditolak ||
+                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Dibatalkan);
 
                                 var proses = dataBulan.Count(x =>
                                     x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses);
@@ -3770,7 +3772,90 @@ namespace MonPDReborn.Models
                         }
                             break;
                     case EPajak.PBB:
-                        break;
+                        var connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
+                        for (int bulan = 1; bulan <= 12; bulan++)
+                        {
+                            var model = new ViewModel.DetailDashboardBulanan
+                            {
+                                Layanan = kodePerizinan,
+                                kodePerizinan = kodePerizinan,
+                                WilayahPajak = "ALL",
+                                pajakId = (int)EnumFactory.EPajak.PBB
+                            };
+                            string query = @"
+                                                        select  A.*,substr(no_layanan,4,2) kode_layanan,
+                                       CASE
+                                       WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' 
+                                       ELSE 
+                                        'OFFLINE'
+                                        END KATEGORI_LAYANAN ,
+                                        CASE
+                                       WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS' 
+                                       ELSE 
+                                                CASE 
+                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='00' THEN 'DINAS'
+                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='01' THEN 'UPTB 1'
+                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='02' THEN 'UPTB 2'
+                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='03' THEN 'UPTB 3'
+                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='04' THEN 'UPTB 4'
+                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='05' THEN 'UPTB 5'
+                                                    END
+                                        END WILAYAH             
+                            FROM POSISI_BERKAS_PBB A                                    
+                            WHERE trunc(A.tgl_masuk_layanan) BETWEEN Trunc(:tgl_awal) AND Trunc(:tgl_akhir)
+                            ";
+                            var list = new List<dynamic>();
+                            using (var con = new OracleConnection(connString))
+                            {
+                                con.Open();
+                                using (var cmd = new OracleCommand(query, con))
+                                {
+                                    DateTime tglAwal = new DateTime(tahun, bulan, 1);
+                                    DateTime tglAkhir = new DateTime(tahun, bulan, DateTime.DaysInMonth(tahun, bulan));
+                                    cmd.Parameters.Add(new OracleParameter("tgl_awal", OracleDbType.Date) { Value = tglAwal });
+                                    cmd.Parameters.Add(new OracleParameter("tgl_akhir", OracleDbType.Date) { Value = tglAkhir });
+                                    using (var reader = cmd.ExecuteReader())
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            list.Add(new
+                                            {
+                                                WILAYAH = reader["WILAYAH"]?.ToString(),
+                                                STATUS_SELESAI = reader["STATUS_SELESAI"].ToString(),
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            var dataGroup = list
+                                .GroupBy(x => x.WILAYAH ?? "UNKNOWN")
+                                .ToList();
+
+                            int totalMasuk = 0;
+                            int totalProses = 0;
+                            int totalSelesai = 0;
+
+                            foreach (var grp in dataGroup)
+                            {
+                                totalMasuk = grp.Count(x =>
+                                x.STATUS_SELESAI == EStatusLayananPBB.SedangProses ||
+                                x.STATUS_SELESAI == EStatusLayananPBB.Selesai ||
+                                x.STATUS_SELESAI == EStatusLayananPBB.Ditolak ||
+                                x.STATUS_SELESAI == EStatusLayananPBB.Dibatalkan);
+
+                                totalProses = grp.Count(x =>
+                                    x.STATUS_SELESAI == EStatusLayananPBB.SedangProses);
+
+                                totalSelesai = grp.Count(x =>
+                                    x.STATUS_SELESAI == EStatusLayananPBB.Selesai);
+                            }
+                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
+                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
+                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
+                            ret.Add(model);
+                        }
+
+                    break;
                 }
 
                 return ret;
