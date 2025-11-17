@@ -71,11 +71,11 @@
             .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
             .OnExporting("exportGrid")
             .Sorting(s => s.Mode(GridSortingMode.Multiple))
-            .Paging(p => p.PageSize(10))
+            .Paging(p => p.PageSize(11))
             .Pager(pager =>
             {
                 pager.ShowPageSizeSelector(true);
-                pager.AllowedPageSizes(new[] { 10, 20, 50 });
+                pager.AllowedPageSizes(new[] { 11, 22, 33, 44, 55 });
                 pager.ShowInfo(true);
             })
             .Columns(columns =>

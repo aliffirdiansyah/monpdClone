@@ -1,0 +1,48 @@
+﻿<div class="table-responsive">
+    @(
+        Html.DevExtreme().DataGrid<MonPDReborn.Models.DashboardVM.ViewModel.DetailLayananHarian>()
+        .DataSource(d => d.Mvc()
+        .LoadAction("GetDetailLayananHarian")
+        .LoadParams(new { PajakId = ViewData["PajakId"], Tgl = ViewData["Tgl"], kodePerizinan = ViewData["kodePerizinan"] })
+        )
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+        .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+        .FilterRow(f => f.Visible(true))
+        .HeaderFilter(h => h.Visible(true))
+        .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .AllowColumnResizing(true)
+    @* .KeyExpr("Layanan") *@
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(x => x.WilayahPajak)
+            .CssClass("fw-bold")
+            .Caption("Wilayah Pajak");
+
+            columns.AddFor(x => x.Masuk).Caption("Baru").Format("#,##0");
+            columns.AddFor(x => x.Proses).Caption("Proses").Format("#,##0");
+            columns.AddFor(x => x.Selesai).Caption("Selesai").Format("#,##0");
+        })
+        .Summary(s => s
+        .TotalItems(items =>
+        {
+            items.AddFor(x => x.WilayahPajak)
+            .SummaryType(SummaryType.Count)
+            .DisplayFormat("TOTAL");
+
+            // Total kolom Januari - contoh, bisa lanjutkan untuk semua bulan
+            items.AddFor(x => x.Masuk).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+            items.AddFor(x => x.Proses).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+            items.AddFor(x => x.Selesai).SummaryType(SummaryType.Sum).ValueFormat("#,##0").DisplayFormat("{0}");
+
+        })
+        )
+        )
+
+</div>
