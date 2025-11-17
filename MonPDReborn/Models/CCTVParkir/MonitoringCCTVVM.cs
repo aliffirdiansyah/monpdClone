@@ -162,6 +162,7 @@ namespace MonPDReborn.Models.CCTVParkir
             public int VendorId { get; set; } = 0;
             public string TanggalPasang { get; set; } = "";
             public string WilayahUPTB { get; set; }
+            public string? DisplayId { get; set; }
             public List<SelectListItem> CctvIdList { get; set; } = new();
             public List<LiveStreamingAktivitasHarian> AktivitasHarianList { get; set; } = new();
             public LiveStreaming(string nop, int vendorId, DateTime tanggal)
@@ -183,6 +184,7 @@ namespace MonPDReborn.Models.CCTVParkir
                         var jasnita = context.MOpParkirCctvJasnita.FirstOrDefault(x => x.Nop == nop);
                         if (jasnita != null)
                         {
+                            DisplayId = jasnita.DisplayId;
                             Vendor = (EnumFactory.EVendorParkirCCTV.Jasnita).GetDescription();
                             TanggalPasang = jasnita.TglPasang.ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                             CctvIdList.Add(new SelectListItem() { Value = jasnita.CctvId, Text = jasnita.CctvId });
@@ -206,6 +208,7 @@ namespace MonPDReborn.Models.CCTVParkir
         {
             public string MediaMtxSource { get; set; } = "";
             public string JasnitaSource { get; set; } = "";
+            public string? DisplayId { get; set; }
             public int VendorId { get; set; }
             public LiveStreamingVideo(string nop, string cctvId)
             {
@@ -220,6 +223,7 @@ namespace MonPDReborn.Models.CCTVParkir
                         var jasnita = context.MOpParkirCctvJasnita.Where(x => x.Nop == nop && x.CctvId == cctvId).FirstOrDefault();
                         if (jasnita != null)
                         {
+                            DisplayId = jasnita.DisplayId;
                             JasnitaSource = jasnita.Rtsp ?? "";
                         }
                     }
