@@ -3772,39 +3772,58 @@ namespace MonPDReborn.Models
                         }
                             break;
                     case EPajak.PBB:
+
+                        var wilayahList = new List<string>
+{
+    "DINAS",
+    "UPTB 1",
+    "UPTB 2",
+    "UPTB 3",
+    "UPTB 4",
+    "UPTB 5"
+};
+
                         var connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
-                        for (int bulan = 1; bulan <= 12; bulan++)
+
+                        // siapkan ret dari awal
+                        var mapWilayah = new Dictionary<string, ViewModel.DetailDashboardBulanan>();
+
+                        // buat object kosong untuk semua wilayah (agar tidak hilang)
+                        foreach (var w in wilayahList)
                         {
-                            var model = new ViewModel.DetailDashboardBulanan
+                            mapWilayah[w] = new ViewModel.DetailDashboardBulanan
                             {
                                 Layanan = kodePerizinan,
                                 kodePerizinan = kodePerizinan,
-                                WilayahPajak = "ALL",
+                                WilayahPajak = w,
                                 pajakId = (int)EnumFactory.EPajak.PBB
                             };
-                            string query = @"
-                                                        select  A.*,substr(no_layanan,4,2) kode_layanan,
-                                       CASE
-                                       WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' 
-                                       ELSE 
-                                        'OFFLINE'
-                                        END KATEGORI_LAYANAN ,
-                                        CASE
-                                       WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS' 
-                                       ELSE 
-                                                CASE 
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='00' THEN 'DINAS'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='01' THEN 'UPTB 1'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='02' THEN 'UPTB 2'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='03' THEN 'UPTB 3'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='04' THEN 'UPTB 4'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='05' THEN 'UPTB 5'
-                                                    END
-                                        END WILAYAH             
-                            FROM POSISI_BERKAS_PBB A                                    
-                            WHERE trunc(A.tgl_masuk_layanan) BETWEEN Trunc(:tgl_awal) AND Trunc(:tgl_akhir)
-                            ";
-                            var list = new List<dynamic>();
+                        }
+
+                        // LOOP BULAN
+                        for (int bulan = 1; bulan <= 12; bulan++)
+                        {
+                            string query = @"SELECT  
+            A.*,
+            SUBSTR(no_layanan,4,2) AS kode_layanan,
+            CASE WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' ELSE 'OFFLINE' END AS KATEGORI_LAYANAN,
+            CASE
+                WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS'
+                ELSE CASE 
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='00' THEN 'DINAS'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='01' THEN 'UPTB 1'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='02' THEN 'UPTB 2'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='03' THEN 'UPTB 3'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='04' THEN 'UPTB 4'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='05' THEN 'UPTB 5'
+                END
+            END AS WILAYAH             
+        FROM POSISI_BERKAS_PBB A                                    
+        WHERE TRUNC(A.tgl_masuk_layanan) BETWEEN TRUNC(:tgl_awal) AND TRUNC(:tgl_akhir)
+    ";
+
+                            var list = new List<(string Wilayah, string kdPerizinan, int Status)>();
+
                             using (var con = new OracleConnection(connString))
                             {
                                 con.Open();
@@ -3812,53 +3831,65 @@ namespace MonPDReborn.Models
                                 {
                                     DateTime tglAwal = new DateTime(tahun, bulan, 1);
                                     DateTime tglAkhir = new DateTime(tahun, bulan, DateTime.DaysInMonth(tahun, bulan));
+
                                     cmd.Parameters.Add(new OracleParameter("tgl_awal", OracleDbType.Date) { Value = tglAwal });
                                     cmd.Parameters.Add(new OracleParameter("tgl_akhir", OracleDbType.Date) { Value = tglAkhir });
+
                                     using (var reader = cmd.ExecuteReader())
                                     {
                                         while (reader.Read())
                                         {
-                                            list.Add(new
-                                            {
-                                                WILAYAH = reader["WILAYAH"]?.ToString(),
-                                                STATUS_SELESAI = reader["STATUS_SELESAI"].ToString(),
-                                            });
+                                            var wilayah = reader["WILAYAH"]?.ToString() ?? "DINAS";
+                                            var kd = reader["kode_layanan"]?.ToString() ?? "-";
+
+                                            int status = reader["STATUS_SELESAI"] == DBNull.Value
+                                                ? -1
+                                                : Convert.ToInt32(reader["STATUS_SELESAI"]);
+
+                                            list.Add((wilayah, kd, status));
                                         }
                                     }
                                 }
                             }
-                            var dataGroup = list
-                                .GroupBy(x => x.WILAYAH ?? "UNKNOWN")
-                                .ToList();
 
-                            int totalMasuk = 0;
-                            int totalProses = 0;
-                            int totalSelesai = 0;
+                            // ambil data hanya sesuai kode perizinan
+                            var dataPerizinan = list.Where(x => x.kdPerizinan == kodePerizinan);
 
-                            foreach (var grp in dataGroup)
+                            // group wilayah
+                            var grouped = dataPerizinan
+                                .GroupBy(x => x.Wilayah)
+                                .ToDictionary(g => g.Key, g => g.ToList());
+
+                            // proses setiap wilayah
+                            foreach (var w in wilayahList)
                             {
-                                totalMasuk = grp.Count(x =>
-                                x.STATUS_SELESAI == EStatusLayananPBB.SedangProses ||
-                                x.STATUS_SELESAI == EStatusLayananPBB.Selesai ||
-                                x.STATUS_SELESAI == EStatusLayananPBB.Ditolak ||
-                                x.STATUS_SELESAI == EStatusLayananPBB.Dibatalkan);
+                                var model = mapWilayah[w];
 
-                                totalProses = grp.Count(x =>
-                                    x.STATUS_SELESAI == EStatusLayananPBB.SedangProses);
+                                var data = grouped.ContainsKey(w) ? grouped[w] : new List<(string Wilayah, string kd, int Status)>();
 
-                                totalSelesai = grp.Count(x =>
-                                    x.STATUS_SELESAI == EStatusLayananPBB.Selesai);
+                                int totalMasuk = data.Count(x =>
+                                    x.Status == (int)EStatusLayananPBB.SedangProses ||
+                                    x.Status == (int)EStatusLayananPBB.Selesai ||
+                                    x.Status == (int)EStatusLayananPBB.Ditolak ||
+                                    x.Status == (int)EStatusLayananPBB.Dibatalkan);
+
+                                int totalProses = data.Count(x => x.Status == (int)EStatusLayananPBB.SedangProses);
+                                int totalSelesai = data.Count(x => x.Status == (int)EStatusLayananPBB.Selesai);
+
+                                // set value
+                                typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
+                                typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Proses{bulan}")?.SetValue(model, totalProses);
+                                typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Selesai{bulan}")?.SetValue(model, totalSelesai);
                             }
-                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
-                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
-                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
-                            ret.Add(model);
                         }
 
-                    break;
-                }
+                        // masukkan ke ret (1 row per wilayah)
+                        ret.AddRange(mapWilayah.Values);
 
-                return ret;
+                        break;
+                        }
+
+                        return ret;
             }
 
 
