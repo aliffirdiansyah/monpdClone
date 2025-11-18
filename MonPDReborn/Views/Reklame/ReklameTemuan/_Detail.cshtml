@@ -1,0 +1,63 @@
+﻿@using static MonPDReborn.Models.Reklame.ReklameTemuanVM.ViewModel
+@model MonPDReborn.Models.Reklame.ReklameTemuanVM.Detail
+
+<div class="table-responsive">
+    @(
+    Html.DevExtreme().DataGrid<Upaya>()
+        .ID("hasilllupaayyyygrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+            @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true)) *@
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(10))
+        .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+            .Visible(true)
+            .Width(240)
+            .Placeholder("Cari...")
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.Nor).Caption("Nor");
+            columns.AddFor(m => m.NoFormulir).Caption("No Formulir");
+            columns.AddFor(m => m.Keterangan).Caption("kETERANGAN");
+            columns.AddFor(m => m.TglSkpd).Caption("Tgl Skpd");
+            columns.AddFor(m => m.Ketetapan).Caption("Ketetapan").Format("#,##0");
+            columns.AddFor(m => m.TotalBayar).Caption("Total Bayar").Format("#,##0");
+                            
+        })
+        .Summary(summary => {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.Nor)
+                        .SummaryType(SummaryType.Sum)
+                        .DisplayFormat("Total");
+
+                items.AddFor(m => m.Ketetapan)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                items.AddFor(m => m.TotalBayar)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+                                
+            });
+        })
+    )
+</div>
