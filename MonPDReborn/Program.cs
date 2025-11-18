@@ -52,6 +52,9 @@ DBClass.Penyelia = configValue ?? throw new ArgumentNullException("Connection st
 var configValueReklameSsw = builder.Configuration.GetSection("Conn:CMS").Value;
 DBClass.ReklameSSW = configValue ?? throw new ArgumentNullException("Connection string 'CMS' is not configured.");
 
+var configValuePlanning = builder.Configuration.GetSection("Conn:Planning").Value;
+DBClass.Planning = configValue ?? throw new ArgumentNullException("Connection string 'Planning' is not configured.");
+
 var supportedCultures = new[] { new CultureInfo("id-ID") };
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {

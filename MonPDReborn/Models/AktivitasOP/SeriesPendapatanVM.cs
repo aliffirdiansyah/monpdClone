@@ -109,7 +109,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 var context = DBClass.GetContext();
 
                 // Ambil data dari DbPendapatanDaerahs
-                var query = context.DbPendapatanDaerahs
+                var targetQuery = context.DbPendapatanDaerahs
                     .Where(x => x.TahunBuku == year)
                     .GroupBy(x => new
                     {
@@ -124,10 +124,52 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.Key.NamaOpd,
                         x.Key.SubRincian,
                         x.Key.NamaSubRincian,
-                        Target = x.Sum(y => y.Target),
-                        Realisasi = x.Sum(y => y.Realisasi)
+                        Target = x.Sum(y => y.Target)
+                    });
+
+                var realisasiQuery = context.DbPendapatanDaerahs
+                    .Where(x => x.TahunBuku == year &&
+                        !(x.Kelompok == "4.2" && x.TahunBuku == year) &&
+                        !(x.Jenis == "4.1.03" && x.TahunBuku == year)
+                    )
+                    .GroupBy(x => new
+                    {
+                        x.KodeOpd,
+                        x.NamaOpd,
+                        x.SubRincian,
+                        x.NamaSubRincian
                     })
+                    .Select(x => new
+                    {
+                        x.Key.KodeOpd,
+                        x.Key.NamaOpd,
+                        x.Key.SubRincian,
+                        x.Key.NamaSubRincian,
+                        Realisasi = x.Sum(y => y.Realisasi)
+                    });
+
+                var targetList = targetQuery.ToList();
+                var realisasiList = realisasiQuery.ToList();
+
+
+                var query = targetList
+                    .GroupJoin(
+                        realisasiList,
+                        t => new { t.KodeOpd, t.SubRincian },
+                        r => new { r.KodeOpd, r.SubRincian },
+                        (t, r) => new
+                        {
+                            t.KodeOpd,
+                            t.NamaOpd,
+                            t.SubRincian,
+                            t.NamaSubRincian,
+                            t.Target,
+                            Realisasi = r.Sum(x => x.Realisasi)
+                        }
+                    )
                     .ToList();
+
+
 
                 // Group berdasarkan OPD
                 var groupByOpd = query
@@ -141,6 +183,7 @@ namespace MonPDReborn.Models.AktivitasOP
                         SubRincians = x.ToList()
                     })
                     .ToList();
+
 
                 decimal totalTargetSemuaOpd = 0;
                 decimal totalRealisasiSemuaOpd = 0;

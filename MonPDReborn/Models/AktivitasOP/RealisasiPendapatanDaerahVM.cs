@@ -141,7 +141,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 // === 2️⃣ Ambil realisasi per hari (tgl cutoff) ===
                 var realisasiHariQuery = context.DbPendapatanDaerahHarians
-                    .Where(x => x.Tanggal.Date == TglCutOff.Date)
+                    .Where(x => x.Tanggal.Date == TglCutOff.Date && !(x.Kelompok == "4.2" && x.TahunBuku == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.TahunBuku == TglCutOff.Year))
                     .GroupBy(x => new
                     {
                         x.Kelompok,
@@ -165,7 +165,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 // === 3️⃣ Ambil realisasi sampai tgl cutoff ===
                 var realisasiSdQuery = context.DbPendapatanDaerahHarians
-                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && !(x.Kelompok == "4.2" && x.TahunBuku == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.TahunBuku == TglCutOff.Year))
                     .GroupBy(x => new
                     {
                         x.Kelompok,
