@@ -137,7 +137,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 // === 2️⃣ Realisasi Hari Ini ===
                 var realisasiHariQuery = context.DbPendapatanDaerahHarians
-                    .Where(x => x.Tanggal.Date == TglCutOff.Date)
+                    .Where(x => x.Tanggal.Date == TglCutOff.Date && !(x.Kelompok == "4.2" && x.TahunBuku == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.TahunBuku == TglCutOff.Year))
                     .GroupBy(x => new
                     {
                         x.KodeOpd,
@@ -157,7 +157,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 // === 3️⃣ Realisasi s/d Hari Ini ===
                 var realisasiSdQuery = context.DbPendapatanDaerahHarians
-                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && !(x.Kelompok == "4.2" && x.TahunBuku == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.TahunBuku == TglCutOff.Year))
                     .GroupBy(x => new
                     {
                         x.KodeOpd,

@@ -106,7 +106,8 @@ namespace MonPDReborn.Controllers
             {
                 _logger.LogError(ex, $"Error di {controllerName} - {actionName}: {ex.Message}");
 
-                TempData[ERROR_LOGIN] = response.InternalServerErrorMessage;
+                //TempData[ERROR_LOGIN] = response.InternalServerErrorMessage;
+                TempData[ERROR_LOGIN] = $"{ex.Message} - {ex.InnerException}";
                 return View($"{URLView}{actionName}", input);
             }
         }

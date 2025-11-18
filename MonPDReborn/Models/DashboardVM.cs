@@ -3249,6 +3249,7 @@ namespace MonPDReborn.Models
             {
                 var result = new List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok>();
                 var context = DBClass.GetContext();
+                var planningContext = DBClass.GetEPlanningContext();
 
                 // === 1️⃣ Ambil target tahunan (AkpTahun) ===
                 var akpTahunQuery = context.DbPendapatanDaerahHarians
@@ -3275,7 +3276,7 @@ namespace MonPDReborn.Models
 
                 // === 2️⃣ Ambil realisasi per hari (tgl cutoff) ===
                 var realisasiHariQuery = context.DbPendapatanDaerahHarians
-                    .Where(x => x.Tanggal.Date == TglCutOff.Date)
+                    .Where(x => x.Tanggal.Date == TglCutOff.Date && !(x.Kelompok == "4.2" && x.TahunBuku == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.TahunBuku == TglCutOff.Year))
                     .GroupBy(x => new
                     {
                         x.Kelompok,
@@ -3299,7 +3300,30 @@ namespace MonPDReborn.Models
 
                 // === 3️⃣ Ambil realisasi sampai tgl cutoff ===
                 var realisasiSdQuery = context.DbPendapatanDaerahHarians
-                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && !(x.Kelompok == "4.2" && x.TahunBuku == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.TahunBuku == TglCutOff.Year))
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        RealisasiSDHariAccrual = x.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
+                var realisasiInput = planningContext.TInputManuals
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && !(x.Kelompok == "4.2" && x.Tanggal.Year == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.Tanggal.Year == TglCutOff.Year))
                     .GroupBy(x => new
                     {
                         x.Kelompok,
@@ -3323,14 +3347,22 @@ namespace MonPDReborn.Models
 
                 // === 4️⃣ Gabungkan semua data ===
                 var merged = (from a in akpTahunQuery
+                                  // Join Realisasi per Hari
                               join b in realisasiHariQuery
                                   on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { b.Kelompok, b.Jenis, b.Objek } into gj1
+                                  equals new { b.Kelompok, b.Jenis, b.Objek }
+                                  into gj1
                               from b in gj1.DefaultIfEmpty()
-                              join c in realisasiSdQuery
+                              join c in realisasiSdQuery // Join Realisasi s/d Hari Ini
                                   on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { c.Kelompok, c.Jenis, c.Objek } into gj2
+                                  equals new { c.Kelompok, c.Jenis, c.Objek }
+                                  into gj2
                               from c in gj2.DefaultIfEmpty()
+                              join d in realisasiInput // Join Realisasi Input Manual
+                                  on new { a.Kelompok, a.Jenis, a.Objek }
+                                  equals new { d.Kelompok, d.Jenis, d.Objek }
+                                  into gj3
+                              from d in gj3.DefaultIfEmpty()
                               select new
                               {
                                   a.Kelompok,
@@ -3339,11 +3371,25 @@ namespace MonPDReborn.Models
                                   a.NamaJenis,
                                   a.Objek,
                                   a.NamaObjek,
+
+                                  // Target Tahun
                                   AkpTahun = a.AkpTahun,
+
+                                  // Realisasi Hari (Akumulasi)
                                   RealisasiHariAccrual = b?.RealisasiHariAccrual ?? 0,
-                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0
+
+                                  // Realisasi s/d Hari Ini → Akumulasi dari Table Harian
+                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0,
+
+                                  // Tambahkan realisasi dari input manual
+                                  RealisasiInputManual = d?.RealisasiSDHariAccrual ?? 0,
+
+                                  // Gabungan Final S/D Hari Ini (harian + input manual)
+                                  RealisasiSDTotal = (c?.RealisasiSDHariAccrual ?? 0)
+                                                    + (d?.RealisasiSDHariAccrual ?? 0)
                               })
-                              .ToList();
+              .ToList();
+
 
                 // === 5️⃣ Grouping sesuai hierarki ===
                 var groupByKelompok = merged
