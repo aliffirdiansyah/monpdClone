@@ -3235,7 +3235,8 @@ namespace MonPDReborn.Models
                                 Tgl = tgl,
                                 Masuk = masuk,
                                 Proses = proses,
-                                Selesai = selesai
+                                Selesai = selesai,
+                                kodePerizinan = kode
                             };
 
                             list.Add(layanan);
@@ -3604,79 +3605,95 @@ namespace MonPDReborn.Models
                         }
                         break;
                     case EPajak.PBB:
-                        var tglAwal = tgl.Date;
-                        var tglAkhir = tgl.Date;
 
-                        string connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
+                        var wilayahListDaily = new List<string>
+    {
+        "DINAS",
+        "UPTB 1",
+        "UPTB 2",
+        "UPTB 3",
+        "UPTB 4",
+        "UPTB 5"
+    };
 
-                        string sql = @"
-                        SELECT  A.*,
-                                CASE
-                                    WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' 
-                                    ELSE 'OFFLINE'
-                                END AS KATEGORI_LAYANAN,
-                                CASE
-                                    WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS' 
-                                    ELSE 
-                                        CASE 
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '00' THEN 'DINAS'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '01' THEN 'UPTB 1'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '02' THEN 'UPTB 2'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '03' THEN 'UPTB 3'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '04' THEN 'UPTB 4'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '05' THEN 'UPTB 5'
-                                        END
-                                END AS WILAYAH
-                        FROM POSISI_BERKAS_PBB A                                    
-                        WHERE TRUNC(A.TGL_MASUK_LAYANAN) BETWEEN TRUNC(:tgl_awal) AND TRUNC(:tgl_akhir)
-                          AND A.NO_LAYANAN = :kode_perizinan
-                    ";
+                        string connPbb = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
+                        var tglHarian = tgl.Date;
 
-                        var list = new List<dynamic>();
+                        string sqlDaily = @"
+        SELECT  
+            A.*,
+            SUBSTR(no_layanan,4,2) AS kode_layanan,
+            CASE WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' ELSE 'OFFLINE' END AS KATEGORI_LAYANAN,
+            CASE
+                WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS'
+                ELSE CASE 
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='00' THEN 'DINAS'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='01' THEN 'UPTB 1'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='02' THEN 'UPTB 2'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='03' THEN 'UPTB 3'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='04' THEN 'UPTB 4'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='05' THEN 'UPTB 5'
+                END
+            END AS WILAYAH,
+            NVL(STATUS_SELESAI, -1) AS STATUS_SELESAI
+        FROM POSISI_BERKAS_PBB A                                    
+        WHERE TRUNC(A.TGL_MASUK_LAYANAN) = TRUNC(:tgl_harian)
+          AND SUBSTR(no_layanan,4,2) = :kode_perizinan
+    ";
 
-                        using (var con = new OracleConnection(connString))
+                        var list = new List<(string Wilayah, string kdPerizinan, int Status)>();
+
+                        using (var con = new OracleConnection(connPbb))
                         {
                             con.Open();
 
-                            using (var cmd = new OracleCommand(sql, con))
+                            using (var cmd = new OracleCommand(sqlDaily, con))
                             {
-                                cmd.Parameters.Add(new OracleParameter("tgl_awal", OracleDbType.Date) { Value = tglAwal });
-                                cmd.Parameters.Add(new OracleParameter("tgl_akhir", OracleDbType.Date) { Value = tglAkhir });
-                                cmd.Parameters.Add(new OracleParameter("NO_LAYANAN", OracleDbType.Varchar2) { Value = kodePerizinan });
+                                cmd.Parameters.Add(new OracleParameter("tgl_harian", OracleDbType.Date) { Value = tglHarian });
+                                cmd.Parameters.Add(new OracleParameter("kode_perizinan", OracleDbType.Varchar2) { Value = kodePerizinan });
 
                                 using (var reader = cmd.ExecuteReader())
                                 {
                                     while (reader.Read())
                                     {
-                                        list.Add(new
-                                        {
-                                            WILAYAH = reader["WILAYAH"]?.ToString(),
-                                            TGL_MASUK_LAYANAN = reader["TGL_MASUK_LAYANAN"],
-                                            NO_LAYANAN = reader["NO_LAYANAN"]?.ToString(),
-                                            NO_LAYANAN_ODS = reader["NO_LAYANAN_ODS"]?.ToString()
-                                        });
+                                        string wilayah = reader["WILAYAH"]?.ToString() ?? "DINAS";
+                                        string kd = reader["kode_layanan"]?.ToString() ?? "";
+                                        int status = Convert.ToInt32(reader["STATUS_SELESAI"]);
+
+                                        list.Add((wilayah, kd, status));
                                     }
                                 }
                             }
                         }
 
-                        Console.WriteLine("Jumlah data PBB: " + list.Count);
+                        // ⬅ FIX: tidak perlu filter lagi. SQL sudah memfilter.
+                        var dataPerizinan = list;
 
-                        var dataGroup = list
-                            .GroupBy(x => x.WILAYAH ?? "UNKNOWN")
-                            .ToList();
+                        var grouped = dataPerizinan
+                            .GroupBy(x => x.Wilayah)
+                            .ToDictionary(g => g.Key, g => g.ToList());
 
-                        foreach (var grp in dataGroup)
+                        foreach (var w in wilayahListDaily)
                         {
+                            var pbb = grouped.ContainsKey(w)
+                                ? grouped[w]
+                                : new List<(string Wilayah, string kdPerizinan, int Status)>();
+
+                            int totalMasuk = pbb.Count();
+                            int totalProses = pbb.Count(x => x.Status == (int)EStatusLayananPBB.SedangProses);
+                            int totalSelesai = pbb.Count(x => x.Status == (int)EStatusLayananPBB.Selesai);
+
                             ret.Add(new ViewModel.DetailLayananHarian
                             {
-                                WilayahPajak = grp.Key,
-                                Masuk = grp.Count(),
-                                Proses = 0,
-                                Selesai = 0
+                                WilayahPajak = w,
+                                Masuk = totalMasuk,
+                                Proses = totalProses,
+                                Selesai = totalSelesai
                             });
                         }
+
                         break;
+
                 }
 
                 return ret;
@@ -3820,14 +3837,14 @@ namespace MonPDReborn.Models
                     case EPajak.PBB:
 
                         var wilayahList = new List<string>
-{
-    "DINAS",
-    "UPTB 1",
-    "UPTB 2",
-    "UPTB 3",
-    "UPTB 4",
-    "UPTB 5"
-};
+                            {
+                                "DINAS",
+                                "UPTB 1",
+                                "UPTB 2",
+                                "UPTB 3",
+                                "UPTB 4",
+                                "UPTB 5"
+                            };
 
                         var connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
 
