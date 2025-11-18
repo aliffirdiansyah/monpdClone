@@ -69,6 +69,23 @@
                                         .MinSearchLength(3)
                                         .ShowClearButton(true)
                                         )
+
+                                    @* @(Html.DevExtreme().TagBoxFor(m => m.SelectedNOP)
+                                        .ID("cbNopTag")
+                                        .ValueExpr("Value")
+                                        .DisplayExpr("Text")
+                                        .DataSource(d => d.Mvc()
+                                        .Controller("KartuData")
+                                        .LoadAction("GetOP")
+                                        .Key("filter"))
+                                        .SearchExpr("Text")
+                                        .SearchEnabled(true)
+                                        .Placeholder("Ketik minimal 3 karakter")
+                                        .MinSearchLength(3)
+                                        .ShowClearButton(true)
+                                        .ShowSelectionControls(true) // tampilkan checkbox
+                                        .ApplyValueMode(EditorApplyValueMode.UseButtons) // tombol OK/Cancel di dropdown
+                                        ) *@
                                 </div>
                                 <div class="col-xxl-2 col-sm-4">
                                     <label class="form-label">&nbsp;</label>
