@@ -2787,10 +2787,7 @@ namespace MonPDReborn.Models
                         {
                             var dataBulan = GetDataLayananPBB(bulan, tahun);
 
-                            var masuk = dataBulan
-                                .Where(x =>
-                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses || x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai)
-                                .Count();
+                            var masuk = dataBulan.Count();
 
                             var proses = dataBulan
                                 .Where(x =>
@@ -2817,39 +2814,22 @@ namespace MonPDReborn.Models
                 string connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
 
                 var query = @"
-                    SELECT 
-                        SUBSTR(X.NO_LAYANAN,4,2) AS KODE_LAYANAN, 
-                        X.NO_LAYANAN, 
-                        X.NOP, 
-                        X.STATUS_SELESAI, 
-                        X.TGL_MASUK_LAYANAN, 
-                        X.TGL_TERIMA, 
-                        X.SEKSI_TERIMA, 
-                        X.TGL_SELESAI
-                    FROM (
-                        SELECT 
-                            PB.NO_LAYANAN, 
-                            PB.NOP, 
-                            PB.STATUS_SELESAI, 
-                            PB.TGL_MASUK_LAYANAN, 
-                            TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY') AS TGL_TERIMA, 
-                            PB.SEKSI_TERIMA, 
-                            PB.TGL_SELESAI,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY PB.NO_LAYANAN 
-                                ORDER BY TO_DATE(PB.TGL_TERIMA,'DD/MM/YYYY') DESC
-                            ) AS RN
-                        FROM POSISI_BERKAS_PBB PB
-                        WHERE EXTRACT(MONTH FROM PB.TGL_MASUK_LAYANAN) = :BULAN
-                          AND EXTRACT(YEAR FROM PB.TGL_MASUK_LAYANAN) = :TAHUN
-                    ) X
-                    WHERE X.RN = 1
-                    AND (
-                        (SUBSTR(X.NO_LAYANAN,4,2) = '08') 
-                        OR 
-                        (SUBSTR(X.NO_LAYANAN,4,2) <> '08' AND X.SEKSI_TERIMA IS NOT NULL)
-                    )
-                    ORDER BY X.TGL_MASUK_LAYANAN
+                   SELECT 
+                    SUBSTR(PB.NO_LAYANAN,4,2) AS KODE_LAYANAN,
+                    PB.NO_LAYANAN,
+                    PB.NOP,
+                    NVL(PB.STATUS_SELESAI, -1) AS STATUS_SELESAI,
+                    PB.TGL_MASUK_LAYANAN,
+                    CASE
+                        WHEN PB.TGL_TERIMA IS NULL THEN NULL
+                        ELSE TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY')
+                    END AS TGL_TERIMA,
+                    PB.SEKSI_TERIMA,
+                    PB.TGL_SELESAI
+                FROM POSISI_BERKAS_PBB PB
+                WHERE EXTRACT(MONTH FROM PB.TGL_MASUK_LAYANAN) = :BULAN
+                  AND EXTRACT(YEAR  FROM PB.TGL_MASUK_LAYANAN) = :TAHUN
+                ORDER BY PB.TGL_MASUK_LAYANAN
                 ";
                 var connection = new OracleConnection(connString);
 
@@ -3001,9 +2981,12 @@ namespace MonPDReborn.Models
 
                         // Group berdasarkan kode layanan (gabungan 01 & 25 sudah diproses)
                         var groupByLayanan = semuaData
-                            .Where(x => x.KODE_LAYANAN != "07")
-                            .GroupBy(x => x.KODE_LAYANAN)
-                            .ToList();
+                        .Where(x =>
+                            int.TryParse(x.KODE_LAYANAN, out int kode) &&
+                            Enum.IsDefined(typeof(EJenisPBB), kode)
+                        )
+                        .GroupBy(x => x.KODE_LAYANAN)
+                        .ToList();
 
                         foreach (var group in groupByLayanan)
                         {
@@ -3037,6 +3020,7 @@ namespace MonPDReborn.Models
 
                             dashboardList.Add(model);
                         }
+
                         break;
 
                 }
@@ -3173,37 +3157,20 @@ namespace MonPDReborn.Models
 
                         var query = @"
                         SELECT 
-                            SUBSTR(X.NO_LAYANAN,4,2) AS KODE_LAYANAN, 
-                            X.NO_LAYANAN, 
-                            X.NOP, 
-                            X.STATUS_SELESAI, 
-                            X.TGL_MASUK_LAYANAN, 
-                            X.TGL_TERIMA, 
-                            X.SEKSI_TERIMA, 
-                            X.TGL_SELESAI
-                        FROM (
-                            SELECT 
-                                PB.NO_LAYANAN, 
-                                PB.NOP, 
-                                PB.STATUS_SELESAI, 
-                                PB.TGL_MASUK_LAYANAN, 
-                                TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY') AS TGL_TERIMA, 
-                                PB.SEKSI_TERIMA, 
-                                PB.TGL_SELESAI,
-                                ROW_NUMBER() OVER (
-                                    PARTITION BY PB.NO_LAYANAN 
-                                    ORDER BY TO_DATE(PB.TGL_TERIMA,'DD/MM/YYYY') DESC
-                                ) AS RN
-                            FROM POSISI_BERKAS_PBB PB
-                            WHERE TRUNC(PB.TGL_MASUK_LAYANAN) = :TGL
-                        ) X
-                        WHERE X.RN = 1
-                        AND (
-                            (SUBSTR(X.NO_LAYANAN,4,2) = '08') 
-                            OR 
-                            (SUBSTR(X.NO_LAYANAN,4,2) <> '08' AND X.SEKSI_TERIMA IS NOT NULL)
-                        )
-                        ORDER BY X.TGL_MASUK_LAYANAN";
+                            SUBSTR(PB.NO_LAYANAN,4,2) AS KODE_LAYANAN,
+                            PB.NO_LAYANAN,
+                            PB.NOP,
+                            NVL(PB.STATUS_SELESAI, -1) AS STATUS_SELESAI,
+                            PB.TGL_MASUK_LAYANAN,
+                            CASE
+                                WHEN PB.TGL_TERIMA IS NULL THEN NULL
+                                ELSE TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY')
+                            END AS TGL_TERIMA,
+                            PB.SEKSI_TERIMA,
+                            PB.TGL_SELESAI
+                        FROM POSISI_BERKAS_PBB PB
+                        WHERE TRUNC(PB.TGL_MASUK_LAYANAN) = :TGL
+                        ORDER BY PB.TGL_MASUK_LAYANAN";
 
                         using (var connection = new OracleConnection(connString))
                         {
@@ -3218,9 +3185,7 @@ namespace MonPDReborn.Models
                             string kode = ((int)kodeEnum).ToString("D2"); // Format jadi "01", "02", dst.
                             var groupData = ret.Where(x => x.KODE_LAYANAN == kode).ToList();
 
-                            var masuk = groupData.Count(x =>
-                                x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses ||
-                                x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai);
+                            var masuk = groupData.Count();
 
                             var proses = groupData.Count(x =>
                                 x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses);
