@@ -189,8 +189,31 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .ToList();
 
+                var realisasiInputHari = planningContext.TInputManuals
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        RealisasiHariAccrual = x.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
                 var realisasiInput = planningContext.TInputManuals
-                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && x.Kelompok == "4.2" && x.Jenis == "4.1.03")
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
                     .GroupBy(x => new
                     {
                         x.Kelompok,
@@ -223,11 +246,16 @@ namespace MonPDReborn.Models.AktivitasOP
                                   on new { a.Kelompok, a.Jenis, a.Objek }
                                   equals new { c.Kelompok, c.Jenis, c.Objek } into gj2
                               from c in gj2.DefaultIfEmpty()
-                              join d in realisasiInput
-                                   on new {a.Kelompok, a.Jenis, a.Objek}
-                                   equals new {d.Kelompok, d.Jenis, d.Objek}
+                              join d in realisasiInputHari
+                                   on new { a.Kelompok, a.Jenis, a.Objek }
+                                   equals new { d.Kelompok, d.Jenis, d.Objek }
                                    into gj3
                               from d in gj3.DefaultIfEmpty()
+                              join e in realisasiInput
+                                    on new { a.Kelompok, a.Jenis, a.Objek }
+                                    equals new { e.Kelompok, e.Jenis, e.Objek }
+                                    into gj4
+                              from e in gj4.DefaultIfEmpty()
                               select new
                               {
                                   a.Kelompok,
@@ -236,12 +264,14 @@ namespace MonPDReborn.Models.AktivitasOP
                                   a.NamaJenis,
                                   a.Objek,
                                   a.NamaObjek,
+
                                   AkpTahun = a.AkpTahun,
-                                  RealisasiHariAccrual = b?.RealisasiHariAccrual ?? 0,
-                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0,
-                                  RealisasiInputManual = d?.RealisasiSDHariAccrual ?? 0,
-                                  RealisasiSDTotal = (c?.RealisasiSDHariAccrual ?? 0)
-                                                        + (d?.RealisasiSDHariAccrual ?? 0)
+                                  RealisasiHariAccrual =
+                                     (b?.RealisasiHariAccrual ?? 0) +
+                                     (d?.RealisasiHariAccrual ?? 0),
+                                  RealisasiSDHariAccrual =
+                                     (c?.RealisasiSDHariAccrual ?? 0) +
+                                     (e?.RealisasiSDHariAccrual ?? 0),
                               })
                               .ToList();
 

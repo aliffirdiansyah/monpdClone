@@ -15,318 +15,197 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 var result = new List<ViewModel.ShowSeriesSudutPandangRekening.Akun>();
 
-                var context = DBClass.GetContext();
+                // Ambil data dari Dashboard (sudah berisi Target & Realisasi yang benar)
+                var data = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangRekening(year);
 
-                var groupRekening = context.DbPendapatanDaerahs
-                    .Where(x => x.TahunBuku == year)
-                    .GroupBy(x => new {
-                        x.Akun,
-                        x.NamaAkun,
-                        x.Kelompok,
-                        x.NamaKelompok,
-                        x.Jenis,
-                        x.NamaJenis,
-                        x.Objek,
-                        x.NamaObjek,
-                        x.Rincian,
-                        x.NamaRincian,
-                        x.SubRincian,
-                        x.NamaSubRincian
-                    })
-                    .Select(x => new {
-                        x.Key.Akun,
-                        x.Key.NamaAkun,
-                        x.Key.Kelompok,
-                        x.Key.NamaKelompok,
-                        x.Key.Jenis,
-                        x.Key.NamaJenis,
-                        x.Key.Objek,
-                        x.Key.NamaObjek,
-                        x.Key.Rincian,
-                        x.Key.NamaRincian,
-                        x.Key.SubRincian,
-                        x.Key.NamaSubRincian,
-                    })
-                    .ToList();
-
-                var akunList = groupRekening
-                    .GroupBy(x => new { x.Akun, x.NamaAkun })
-                    .Select(x => new { x.Key.Akun, x.Key.NamaAkun })
-                    .OrderBy(x => x.Akun)
-                    .ToList();
-
-                var kelompokList = groupRekening
-                    .GroupBy(x => new { x.Akun, x.Kelompok, x.NamaKelompok })
-                    .Select(x => new { x.Key.Akun, x.Key.Kelompok, x.Key.NamaKelompok })
-                    .OrderBy(x => x.Kelompok)
-                    .ToList();
-
-                var jenisList = groupRekening
-                    .GroupBy(x => new { x.Kelompok, x.Jenis, x.NamaJenis })
-                    .Select(x => new { x.Key.Kelompok, x.Key.Jenis, x.Key.NamaJenis })
-                    .OrderBy(x => x.Jenis)
-                    .ToList();
-
-                var objekList = groupRekening
-                    .GroupBy(x => new { x.Jenis, x.Objek, x.NamaObjek })
-                    .Select(x => new { x.Key.Jenis, x.Key.Objek, x.Key.NamaObjek })
-                    .OrderBy(x => x.Objek)
-                    .ToList();
-
-                var rincianList = groupRekening
-                    .GroupBy(x => new { x.Objek, x.Rincian, x.NamaRincian })
-                    .Select(x => new { x.Key.Objek, x.Key.Rincian, x.Key.NamaRincian })
-                    .OrderBy(x => x.Rincian)
-                    .ToList();
-
-                var subrincianList = groupRekening
-                    .GroupBy(x => new { x.Rincian, x.SubRincian, x.NamaSubRincian })
-                    .Select(x => new { x.Key.Rincian, x.Key.SubRincian, x.Key.NamaSubRincian })
-                    .OrderBy(x => x.SubRincian)
-                    .ToList();
-
-
-                var dataTahun1 = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangRekening(year);
-
-                int totalRekening = subrincianList.Count;
-
-                int processed = 0;
-                foreach (var akun in akunList)
+                foreach (var akun in data)
                 {
-                    decimal target1 = dataTahun1.Where(x => x.Col.Kode == akun.Akun && x.Col.Nama == akun.NamaAkun).Sum(q => q.Col.Target);
-                    decimal realisasi1 = dataTahun1.Where(x => x.Col.Kode == akun.Akun && x.Col.Nama == akun.NamaAkun).Sum(q => q.Col.Realisasi);
-                    decimal persentase1 = target1 > 0 ? Math.Round((realisasi1 / target1) * 100, 2) : 0;
+                    var vmAkun = new ViewModel.ShowSeriesSudutPandangRekening.Akun();
+                    vmAkun.Col.Kode = akun.Col.Kode;
+                    vmAkun.Col.Nama = akun.Col.Nama;
 
-                    var resAkun = new ViewModel.ShowSeriesSudutPandangRekening.Akun();
-                    resAkun.Col.Kode = akun.Akun;
-                    resAkun.Col.Nama = $"{akun.Akun}-{akun.NamaAkun}";
+                    vmAkun.Col.Tahun1 = year;
+                    vmAkun.Col.TargetTahun1 = akun.Col.Target;
+                    vmAkun.Col.RealisasiTahun1 = akun.Col.Realisasi;
+                    vmAkun.Col.PersentaseTahun1 = akun.Col.Persentase;
 
-                    resAkun.Col.Tahun1 = year;
-                    resAkun.Col.TargetTahun1 = target1;
-                    resAkun.Col.RealisasiTahun1 = realisasi1;
-                    resAkun.Col.PersentaseTahun1 = persentase1;
-
-                    foreach (var kelompok in kelompokList.Where(x => x.Akun == akun.Akun).ToList())
+                    foreach (var kelompok in akun.RekKelompoks)
                     {
-                        decimal kelompoktarget1 = dataTahun1.SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)).Sum(q => q.Col.Target);
-                        decimal kelompokrealisasi1 = dataTahun1.SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)).Sum(q => q.Col.Realisasi);
-                        decimal kelompokpersentase1 = kelompoktarget1 > 0 ? Math.Round((kelompokrealisasi1 / kelompoktarget1) * 100, 2) : 0;
+                        var vmKelompok = new ViewModel.ShowSeriesSudutPandangRekening.Kelompok();
+                        vmKelompok.Col.Kode = kelompok.Col.Kode;
+                        vmKelompok.Col.Nama = kelompok.Col.Nama;
 
+                        vmKelompok.Col.Tahun1 = year;
+                        vmKelompok.Col.TargetTahun1 = kelompok.Col.Target;
+                        vmKelompok.Col.RealisasiTahun1 = kelompok.Col.Realisasi;
+                        vmKelompok.Col.PersentaseTahun1 = kelompok.Col.Persentase;
 
-                        var resKelompok = new ViewModel.ShowSeriesSudutPandangRekening.Kelompok();
-
-                        resKelompok.Col.Kode = kelompok.Kelompok;
-                        resKelompok.Col.Nama = $"{kelompok.Kelompok}-{kelompok.NamaKelompok}";
-
-                        resKelompok.Col.Tahun1 = year;
-                        resKelompok.Col.TargetTahun1 = kelompoktarget1;
-                        resKelompok.Col.RealisasiTahun1 = kelompokrealisasi1;
-                        resKelompok.Col.PersentaseTahun1 = kelompokpersentase1;
-
-
-                        foreach (var jenis in jenisList.Where(x => x.Kelompok == kelompok.Kelompok).ToList())
+                        foreach (var jenis in kelompok.RekJeniss)
                         {
-                            decimal jenistarget1 = dataTahun1.SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok).SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))).Sum(q => q.Col.Target);
-                            decimal jenisrealisasi1 = dataTahun1.SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok).SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))).Sum(q => q.Col.Realisasi);
-                            decimal jenispersentase1 = jenistarget1 > 0 ? Math.Round((jenisrealisasi1 / jenistarget1) * 100, 2) : 0;
+                            var vmJenis = new ViewModel.ShowSeriesSudutPandangRekening.Jenis();
+                            vmJenis.Col.Kode = jenis.Col.Kode;
+                            vmJenis.Col.Nama = jenis.Col.Nama;
 
-                            var resJenis = new ViewModel.ShowSeriesSudutPandangRekening.Jenis();
+                            vmJenis.Col.Tahun1 = year;
+                            vmJenis.Col.TargetTahun1 = jenis.Col.Target;
+                            vmJenis.Col.RealisasiTahun1 = jenis.Col.Realisasi;
+                            vmJenis.Col.PersentaseTahun1 = jenis.Col.Persentase;
 
-                            resJenis.Col.Kode = jenis.Jenis;
-                            resJenis.Col.Nama = $"{jenis.Jenis} - {jenis.NamaJenis}";
-
-                            resJenis.Col.Tahun1 = year;
-                            resJenis.Col.TargetTahun1 = jenistarget1;
-                            resJenis.Col.RealisasiTahun1 = jenisrealisasi1;
-                            resJenis.Col.PersentaseTahun1 = jenispersentase1;
-
-                            foreach (var objek in objekList.Where(x => x.Jenis == jenis.Jenis).ToList())
+                            foreach (var objek in jenis.RekObjeks)
                             {
-                                decimal objektarget1 = dataTahun1
-                                    .SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)
-                                    .SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))
-                                    .SelectMany(x => x.RekObjeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek)))
-                                    .Sum(q => q.Col.Target);
-                                decimal objekrealisasi1 = dataTahun1
-                                    .SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)
-                                    .SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))
-                                    .SelectMany(x => x.RekObjeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek)))
-                                    .Sum(q => q.Col.Realisasi);
-                                decimal objekpersentase1 = objektarget1 > 0 ? Math.Round((objekrealisasi1 / objektarget1) * 100, 2) : 0;
+                                var vmObjek = new ViewModel.ShowSeriesSudutPandangRekening.Objek();
+                                vmObjek.Col.Kode = objek.Col.Kode;
+                                vmObjek.Col.Nama = objek.Col.Nama;
 
-                                var resObjek = new ViewModel.ShowSeriesSudutPandangRekening.Objek();
+                                vmObjek.Col.Tahun1 = year;
+                                vmObjek.Col.TargetTahun1 = objek.Col.Target;
+                                vmObjek.Col.RealisasiTahun1 = objek.Col.Realisasi;
+                                vmObjek.Col.PersentaseTahun1 = objek.Col.Persentase;
 
-                                resObjek.Col.Kode = objek.Objek;
-                                resObjek.Col.Nama = $"{objek.Objek} - {objek.NamaObjek}";
-
-                                resObjek.Col.Tahun1 = year;
-                                resObjek.Col.TargetTahun1 = objektarget1;
-                                resObjek.Col.RealisasiTahun1 = objekrealisasi1;
-                                resObjek.Col.PersentaseTahun1 = objekpersentase1;
-
-                                foreach (var rincian in rincianList.Where(x => x.Objek == objek.Objek).ToList())
+                                foreach (var rincian in objek.RekRincians)
                                 {
-                                    decimal rinciantarget1 = dataTahun1
-                                        .SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)
-                                        .SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))
-                                        .SelectMany(x => x.RekObjeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                        .SelectMany(x => x.RekRincians.Where(x => x.Col.Kode == rincian.Rincian && x.Col.Nama == rincian.NamaRincian))
-                                        )
-                                        .Sum(q => q.Col.Target);
-                                    decimal rincianrealisasi1 = dataTahun1
-                                        .SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)
-                                        .SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))
-                                        .SelectMany(x => x.RekObjeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                        .SelectMany(x => x.RekRincians.Where(x => x.Col.Kode == rincian.Rincian && x.Col.Nama == rincian.NamaRincian))
-                                        )
-                                        .Sum(q => q.Col.Realisasi);
-                                    decimal rincianpersentase1 = rinciantarget1 > 0 ? Math.Round((rincianrealisasi1 / rinciantarget1) * 100, 2) : 0;
+                                    var vmRincian = new ViewModel.ShowSeriesSudutPandangRekening.Rincian();
+                                    vmRincian.Col.Kode = rincian.Col.Kode;
+                                    vmRincian.Col.Nama = rincian.Col.Nama;
 
+                                    vmRincian.Col.Tahun1 = year;
+                                    vmRincian.Col.TargetTahun1 = rincian.Col.Target;
+                                    vmRincian.Col.RealisasiTahun1 = rincian.Col.Realisasi;
+                                    vmRincian.Col.PersentaseTahun1 = rincian.Col.Persentase;
 
-                                    var resRincian = new ViewModel.ShowSeriesSudutPandangRekening.Rincian();
-
-                                    resRincian.Col.Kode = rincian.Rincian;
-                                    resRincian.Col.Nama = $"{rincian.Rincian} - {rincian.NamaRincian}";
-
-                                    resRincian.Col.Tahun1 = year;
-                                    resRincian.Col.TargetTahun1 = rinciantarget1;
-                                    resRincian.Col.RealisasiTahun1 = rincianrealisasi1;
-                                    resRincian.Col.PersentaseTahun1 = rincianpersentase1;
-
-                                    foreach (var subRincian in subrincianList.Where(x => x.Rincian == rincian.Rincian).ToList())
+                                    foreach (var sub in rincian.RekSubRincians)
                                     {
-                                        decimal subrinciantarget1 = dataTahun1
-                                            .SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)
-                                            .SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))
-                                            .SelectMany(x => x.RekObjeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                            .SelectMany(x => x.RekRincians.Where(x => x.Col.Kode == rincian.Rincian && x.Col.Nama == rincian.NamaRincian))
-                                            .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
-                                            )
-                                            .Sum(q => q.Col.Target);
-                                        decimal subrincianrealisasi1 = dataTahun1
-                                            .SelectMany(x => x.RekKelompoks.Where(w => w.Col.Kode == kelompok.Kelompok && w.Col.Nama == kelompok.NamaKelompok)
-                                            .SelectMany(x => x.RekJeniss.Where(x => x.Col.Kode == jenis.Jenis && x.Col.Nama == jenis.NamaJenis))
-                                            .SelectMany(x => x.RekObjeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                            .SelectMany(x => x.RekRincians.Where(x => x.Col.Kode == rincian.Rincian && x.Col.Nama == rincian.NamaRincian))
-                                            .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
-                                            )
-                                            .Sum(q => q.Col.Realisasi);
-                                        decimal subrincianpersentase1 = subrinciantarget1 > 0 ? Math.Round((subrincianrealisasi1 / subrinciantarget1) * 100, 2) : 0;
+                                        var vmSub = new ViewModel.ShowSeriesSudutPandangRekening.SubRincian();
+                                        vmSub.Col.Kode = sub.Col.Kode;
+                                        vmSub.Col.Nama = sub.Col.Nama;
 
-                                       
+                                        vmSub.Col.Tahun1 = year;
+                                        vmSub.Col.TargetTahun1 = sub.Col.Target;
+                                        vmSub.Col.RealisasiTahun1 = sub.Col.Realisasi;
+                                        vmSub.Col.PersentaseTahun1 = sub.Col.Persentase;
 
-                                        var resSubRincian = new ViewModel.ShowSeriesSudutPandangRekening.SubRincian();
-
-                                        resSubRincian.Col.Kode = subRincian.SubRincian;
-                                        resSubRincian.Col.Nama = $"{subRincian.SubRincian} - {subRincian.NamaSubRincian}";
-
-                                        resSubRincian.Col.Tahun1 = year;
-                                        resSubRincian.Col.TargetTahun1 = subrinciantarget1;
-                                        resSubRincian.Col.RealisasiTahun1 = subrincianrealisasi1;
-                                        resSubRincian.Col.PersentaseTahun1 = subrincianpersentase1;
-
-                                        resRincian.RekSubRincians.Add(resSubRincian);
-                                        processed++;
-                                        double percent = (processed / (double)totalRekening) * 100;
-
-                                        Console.Write($"\rProgress: {percent:F2}% ({processed}/{totalRekening})");
+                                        vmRincian.RekSubRincians.Add(vmSub);
                                     }
 
-                                    resObjek.RekRincians.Add(resRincian);
+                                    vmObjek.RekRincians.Add(vmRincian);
                                 }
 
-                                resJenis.RekObjeks.Add(resObjek);
+                                vmJenis.RekObjeks.Add(vmObjek);
                             }
 
-                            resKelompok.RekJeniss.Add(resJenis);
+                            vmKelompok.RekJeniss.Add(vmJenis);
                         }
 
-                        resAkun.RekKelompoks.Add(resKelompok);
+                        vmAkun.RekKelompoks.Add(vmKelompok);
                     }
 
-                    result.Add(resAkun);
+                    result.Add(vmAkun);
                 }
 
                 return result;
             }
+
             public static List<ViewModel.ShowSeriesSudutPandangOpd.Opd> GetSudutPandangOpdData(int year)
             {
                 var result = new List<ViewModel.ShowSeriesSudutPandangOpd.Opd>();
 
                 var context = DBClass.GetContext();
+                DateTime cutOff = DateTime.Now.Date;
 
-                var groupOpd = context.DbPendapatanDaerahs
+                // --- TARGET SETAHUN ---
+                var targetData = context.DbPendapatanDaerahHarians
                     .Where(x => x.TahunBuku == year)
-                    .GroupBy(x => new {
-                        x.KodeOpd,
-                        x.NamaOpd,
-                        x.KodeSubOpd,
-                        x.NamaSubOpd,
-                    })
-                    .Select(x => new {
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        x.Key.KodeSubOpd,
-                        x.Key.NamaSubOpd,
+                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd, x.KodeSubOpd, x.NamaSubOpd })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.KodeSubOpd,
+                        g.Key.NamaSubOpd,
+                        Target = g.Sum(x => x.Target)
                     })
                     .ToList();
 
-                var opdList = groupOpd
+                // --- REALISASI S.D CUT OFF ---
+                var realisasiData = context.DbPendapatanDaerahHarians
+                    .Where(x => x.TahunBuku == year && x.Tanggal <= cutOff)
+                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd, x.KodeSubOpd, x.NamaSubOpd })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.KodeSubOpd,
+                        g.Key.NamaSubOpd,
+                        Realisasi = g.Sum(x => x.Realisasi)
+                    })
+                    .ToList();
+
+                // --- MERGE TARGET & REALISASI ---
+                var merged =
+                    from t in targetData
+                    join r in realisasiData
+                        on new { t.KodeOpd, t.KodeSubOpd } equals new { r.KodeOpd, r.KodeSubOpd }
+                        into gj
+                    from r in gj.DefaultIfEmpty()
+                    select new
+                    {
+                        t.KodeOpd,
+                        t.NamaOpd,
+                        t.KodeSubOpd,
+                        t.NamaSubOpd,
+                        Target = t.Target,
+                        Realisasi = r?.Realisasi ?? 0
+                    };
+
+                // --- LIST OPD UNIK ---
+                var opdList = merged
                     .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
                     .Select(x => new { x.Key.KodeOpd, x.Key.NamaOpd })
                     .OrderBy(x => x.KodeOpd)
                     .ToList();
 
-                var subOpdList = groupOpd
+                // --- LIST SUB OPD PER OPD ---
+                var subOpdList = merged
                     .GroupBy(x => new { x.KodeOpd, x.KodeSubOpd, x.NamaSubOpd })
                     .Select(x => new { x.Key.KodeOpd, x.Key.KodeSubOpd, x.Key.NamaSubOpd })
                     .ToList();
 
-                var dataTahun1 = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangOpd(year);
-
-                int totalData = subOpdList.Count;
-                int processed = 0;
-
+                // --- BUILD VIEWMODEL ---
                 foreach (var opd in opdList)
                 {
-                    decimal target1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd).Sum(q => q.Col.Target);
-                    decimal realisasi1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd).Sum(q => q.Col.Realisasi);
-                    decimal persentase1 = target1 > 0 ? Math.Round((realisasi1 / target1) * 100, 2) : 0;
+                    var opdTarget = merged.Where(x => x.KodeOpd == opd.KodeOpd).Sum(x => x.Target);
+                    var opdRealisasi = merged.Where(x => x.KodeOpd == opd.KodeOpd).Sum(x => x.Realisasi);
 
                     var resOpd = new ViewModel.ShowSeriesSudutPandangOpd.Opd();
                     resOpd.Col.Kode = opd.KodeOpd;
                     resOpd.Col.Nama = opd.NamaOpd;
-
                     resOpd.Col.Tahun1 = year;
-                    resOpd.Col.TargetTahun1 = target1;
-                    resOpd.Col.RealisasiTahun1 = realisasi1;
-                    resOpd.Col.PersentaseTahun1 = persentase1;
+                    resOpd.Col.TargetTahun1 = opdTarget;
+                    resOpd.Col.RealisasiTahun1 = opdRealisasi;
+                    resOpd.Col.PersentaseTahun1 = opdTarget > 0 ? Math.Round((opdRealisasi / opdTarget) * 100, 2) : 0;
 
-                    foreach (var subOpd in subOpdList.Where(x => x.KodeOpd == opd.KodeOpd).ToList())
+                    foreach (var subOpd in subOpdList.Where(x => x.KodeOpd == opd.KodeOpd))
                     {
-                        decimal subOpdtarget1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
-                            .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
-                            .Sum(q => q.Col.Target);
-                        decimal subOpdrealisasi1 = dataTahun1.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd)
-                            .SelectMany(x => x.RekSubOpds.Where(x => x.Col.Kode == subOpd.KodeSubOpd && x.Col.Nama == subOpd.NamaSubOpd))
-                            .Sum(q => q.Col.Realisasi);
-                        decimal subOpdpersentase1 = subOpdtarget1 > 0 ? Math.Round((subOpdrealisasi1 / subOpdtarget1) * 100, 2) : 0;
+                        var subTarget = merged.Where(x =>
+                                x.KodeOpd == opd.KodeOpd &&
+                                x.KodeSubOpd == subOpd.KodeSubOpd)
+                            .Sum(x => x.Target);
 
-                        var resSubOpd = new ViewModel.ShowSeriesSudutPandangOpd.SubOpd();
-                        resSubOpd.Col.Kode = subOpd.KodeSubOpd == "-" ? opd.KodeOpd : subOpd.KodeSubOpd;
-                        resSubOpd.Col.Nama = subOpd.NamaSubOpd == "-" ? opd.NamaOpd : subOpd.NamaSubOpd;
+                        var subRealisasi = merged.Where(x =>
+                                x.KodeOpd == opd.KodeOpd &&
+                                x.KodeSubOpd == subOpd.KodeSubOpd)
+                            .Sum(x => x.Realisasi);
 
-                        resSubOpd.Col.Tahun1 = year;
-                        resSubOpd.Col.TargetTahun1 = subOpdtarget1;
-                        resSubOpd.Col.RealisasiTahun1 = subOpdrealisasi1;
-                        resSubOpd.Col.PersentaseTahun1 = subOpdpersentase1;
+                        var resSub = new ViewModel.ShowSeriesSudutPandangOpd.SubOpd();
+                        resSub.Col.Kode = subOpd.KodeSubOpd == "-" ? opd.KodeOpd : subOpd.KodeSubOpd;
+                        resSub.Col.Nama = subOpd.NamaSubOpd == "-" ? opd.NamaOpd : subOpd.NamaSubOpd;
 
-                        resOpd.RekSubOpds.Add(resSubOpd);
+                        resSub.Col.Tahun1 = year;
+                        resSub.Col.TargetTahun1 = subTarget;
+                        resSub.Col.RealisasiTahun1 = subRealisasi;
+                        resSub.Col.PersentaseTahun1 = subTarget > 0 ? Math.Round((subRealisasi / subTarget) * 100, 2) : 0;
 
-                        processed++;
-                        double percent = (processed / (double)totalData) * 100;
-
-                        Console.Write($"\rProgress: {percent:F2}% ({processed}/{totalData})");
+                        resOpd.RekSubOpds.Add(resSub);
                     }
 
                     result.Add(resOpd);
@@ -334,153 +213,67 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return result;
             }
-            public static List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis> GetSudutPandangRekeningJenisObjekOpdData(int year)
+
+            public static List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis>GetSudutPandangRekeningJenisObjekOpdData(int year)
             {
                 var result = new List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis>();
 
+                // Data sudah lengkap + sudah dijumlahkan dari logic utama
+                var data = SeriesPendapatanDaerahVMLogic.Method
+                            .GetDataSudutPandangRekeningJenisObjekOpd(year);
 
-                var context = DBClass.GetContext();
-
-                var groupData = context.DbPendapatanDaerahs
-                    .Where(x => x.TahunBuku == year)
-                    .GroupBy(x => new {
-                        x.Jenis,
-                        x.NamaJenis,
-                        x.Objek,
-                        x.NamaObjek,
-                        x.KodeOpd,
-                        x.NamaOpd,
-                        x.SubRincian,
-                        x.NamaSubRincian
-                    })
-                    .Select(x => new {
-                        x.Key.Jenis,
-                        x.Key.NamaJenis,
-                        x.Key.Objek,
-                        x.Key.NamaObjek,
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        x.Key.SubRincian,
-                        x.Key.NamaSubRincian
-                    })
-                    .ToList();
-
-                var jenisList = groupData
-                    .GroupBy(x => new { x.Jenis, x.NamaJenis })
-                    .Select(x => new { x.Key.Jenis, x.Key.NamaJenis })
-                    .OrderBy(x => x.Jenis)
-                    .ToList();
-
-                var objekList = groupData
-                    .GroupBy(x => new { x.Jenis, x.Objek, x.NamaObjek })
-                    .Select(x => new { x.Key.Jenis, x.Key.Objek, x.Key.NamaObjek })
-                    .OrderBy(x => x.Objek)
-                    .ToList();
-
-                var opdList = groupData
-                    .GroupBy(x => new { x.Objek, x.KodeOpd, x.NamaOpd })
-                    .Select(x => new { x.Key.Objek, x.Key.KodeOpd, x.Key.NamaOpd })
-                    .OrderBy(x => x.KodeOpd)
-                    .ToList();
-
-                var subRincianList = groupData
-                    .GroupBy(x => new { x.Objek, x.KodeOpd, x.SubRincian, x.NamaSubRincian })
-                    .Select(x => new { x.Key.Objek, x.Key.KodeOpd, x.Key.SubRincian, x.Key.NamaSubRincian })
-                    .OrderBy(x => x.SubRincian)
-                    .ToList();
-
-                var dataTahun1 = SeriesPendapatanDaerahVMLogic.Method.GetDataSudutPandangRekeningJenisObjekOpd(year);
-
-                int totalData = subRincianList.Count;
-                int processed = 0;
-
-                foreach (var jenis in jenisList)
+                foreach (var jenis in data)
                 {
-                    decimal jenistarget1 = dataTahun1.Where(w => w.Col.Kode == jenis.Jenis && w.Col.Nama == jenis.NamaJenis).Sum(q => q.Col.Target);
-                    decimal jenisrealisasi1 = dataTahun1.Where(w => w.Col.Kode == jenis.Jenis && w.Col.Nama == jenis.NamaJenis).Sum(q => q.Col.Realisasi);
-                    decimal jenispersentase1 = jenistarget1 > 0 ? Math.Round((jenisrealisasi1 / jenistarget1) * 100, 2) : 0;
-
                     var resJenis = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis();
-
-                    resJenis.Col.Kode = jenis.Jenis;
-                    resJenis.Col.Nama = jenis.NamaJenis;
+                    resJenis.Col.Kode = jenis.Col.Kode;
+                    resJenis.Col.Nama = jenis.Col.Nama;
 
                     resJenis.Col.Tahun1 = year;
-                    resJenis.Col.TargetTahun1 = jenistarget1;
-                    resJenis.Col.RealisasiTahun1 = jenisrealisasi1;
-                    resJenis.Col.PersentaseTahun1 = jenispersentase1;
+                    resJenis.Col.TargetTahun1 = jenis.Col.Target;
+                    resJenis.Col.RealisasiTahun1 = jenis.Col.Realisasi;
+                    resJenis.Col.PersentaseTahun1 =
+                        jenis.Col.Target > 0 ? Math.Round((jenis.Col.Realisasi / jenis.Col.Target) * 100, 2) : 0;
 
-                    foreach (var objek in objekList.Where(x => x.Jenis == jenis.Jenis).ToList())
+                    // ========== LEVEL OBJEK ==========
+                    foreach (var objek in jenis.RekObyeks)
                     {
-                        decimal objektarget1 = dataTahun1
-                            .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                            .Sum(q => q.Col.Target);
-                        decimal objekrealisasi1 = dataTahun1
-                            .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                            .Sum(q => q.Col.Realisasi);
-                        decimal objekpersentase1 = objektarget1 > 0 ? Math.Round((objekrealisasi1 / objektarget1) * 100, 2) : 0;
-
                         var resObjek = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Obyek();
-
-                        resObjek.Col.Kode = objek.Objek;
-                        resObjek.Col.Nama = objek.NamaObjek;
+                        resObjek.Col.Kode = objek.Col.Kode;
+                        resObjek.Col.Nama = objek.Col.Nama;
 
                         resObjek.Col.Tahun1 = year;
-                        resObjek.Col.TargetTahun1 = objektarget1;
-                        resObjek.Col.RealisasiTahun1 = objekrealisasi1;
-                        resObjek.Col.PersentaseTahun1 = objekpersentase1;
+                        resObjek.Col.TargetTahun1 = objek.Col.Target;
+                        resObjek.Col.RealisasiTahun1 = objek.Col.Realisasi;
+                        resObjek.Col.PersentaseTahun1 =
+                            objek.Col.Target > 0 ? Math.Round((objek.Col.Realisasi / objek.Col.Target) * 100, 2) : 0;
 
-                        foreach (var opd in opdList.Where(x => x.Objek == objek.Objek).ToList())
+                        // ========== LEVEL OPD ==========
+                        foreach (var opd in objek.RekOpds)
                         {
-                            decimal target1 = dataTahun1
-                                .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                .Sum(q => q.Col.Target);
-                            decimal realisasi1 = dataTahun1
-                                .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                .Sum(q => q.Col.Realisasi);
-                            decimal persentase1 = target1 > 0 ? Math.Round((realisasi1 / target1) * 100, 2) : 0;
-
                             var resOpd = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
-                            resOpd.Col.Kode = opd.KodeOpd;
-                            resOpd.Col.Nama = opd.NamaOpd;
+                            resOpd.Col.Kode = opd.Col.Kode;
+                            resOpd.Col.Nama = opd.Col.Nama;
 
                             resOpd.Col.Tahun1 = year;
-                            resOpd.Col.TargetTahun1 = target1;
-                            resOpd.Col.RealisasiTahun1 = realisasi1;
-                            resOpd.Col.PersentaseTahun1 = persentase1;
+                            resOpd.Col.TargetTahun1 = opd.Col.Target;
+                            resOpd.Col.RealisasiTahun1 = opd.Col.Realisasi;
+                            resOpd.Col.PersentaseTahun1 =
+                                opd.Col.Target > 0 ? Math.Round((opd.Col.Realisasi / opd.Col.Target) * 100, 2) : 0;
 
-                            var subRincianList2 = subRincianList.Where(x => x.Objek == objek.Objek && x.KodeOpd == opd.KodeOpd).ToList();
-                            foreach (var subRincian in subRincianList2)
+                            // ========== LEVEL SUB RINCIAN ==========
+                            foreach (var sub in opd.RekSubRincians)
                             {
-                                decimal subRinciantarget1 = dataTahun1
-                                    .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                    .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
-                                    .Sum(q => q.Col.Target);
-                                decimal subRincianrealisasi1 = dataTahun1
-                                    .SelectMany(x => x.RekObyeks.Where(x => x.Col.Kode == objek.Objek && x.Col.Nama == objek.NamaObjek))
-                                    .SelectMany(x => x.RekOpds.Where(x => x.Col.Kode == opd.KodeOpd && x.Col.Nama == opd.NamaOpd))
-                                    .SelectMany(x => x.RekSubRincians.Where(x => x.Col.Kode == subRincian.SubRincian && x.Col.Nama == subRincian.NamaSubRincian))
-                                    .Sum(q => q.Col.Realisasi);
-                                decimal subRincianpersentase1 = subRinciantarget1 > 0 ? Math.Round((subRincianrealisasi1 / subRinciantarget1) * 100, 2) : 0;
+                                var resSub = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
+                                resSub.Col.Kode = sub.Col.Kode;
+                                resSub.Col.Nama = sub.Col.Nama;
 
-                                var resSubOpd = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
-                                resSubOpd.Col.Kode = subRincian.SubRincian;
-                                resSubOpd.Col.Nama = $"{subRincian.SubRincian} - {subRincian.NamaSubRincian}";
+                                resSub.Col.Tahun1 = year;
+                                resSub.Col.TargetTahun1 = sub.Col.Target;
+                                resSub.Col.RealisasiTahun1 = sub.Col.Realisasi;
+                                resSub.Col.PersentaseTahun1 =
+                                    sub.Col.Target > 0 ? Math.Round((sub.Col.Realisasi / sub.Col.Target) * 100, 2) : 0;
 
-                                resSubOpd.Col.Tahun1 = year;
-                                resSubOpd.Col.TargetTahun1 = subRinciantarget1;
-                                resSubOpd.Col.RealisasiTahun1 = subRincianrealisasi1;
-                                resSubOpd.Col.PersentaseTahun1 = subRincianpersentase1;
-
-                                resOpd.RekSubRincians.Add(resSubOpd);
-
-                                processed++;
-                                double percent = (processed / (double)totalData) * 100;
-
-                                Console.Write($"\rProgress: {percent:F2}% ({processed}/{totalData})");
+                                resOpd.RekSubRincians.Add(resSub);
                             }
 
                             resObjek.RekOpds.Add(resOpd);
@@ -494,6 +287,7 @@ namespace MonPDReborn.Models.AktivitasOP
 
                 return result;
             }
+
             public static ViewModel.ReportTrOpdRinci GetReportTrOpdRinci(int year, int bulan)
             {
                 var result = new ViewModel.ReportTrOpdRinci();
