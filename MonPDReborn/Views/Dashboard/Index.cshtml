@@ -398,12 +398,17 @@
     </script>
     <script>
         $(document).ready(function () {
-            // Inisialisasi komponen DateBox DevExtreme
-            const dateBox = $("#selectTanggalbaru").dxDateBox("instance");
 
-            // Auto-load saat pertama kali halaman dibuka
+            // Inisialisasi DateBox dengan default tanggal hari ini (DateTime.Now)
+            $("#selectTanggalbaru").dxDateBox({
+                type: "date",
+                displayFormat: "dd/MM/yyyy",
+                value: new Date() // <-- DateTime.Now
+            });
+
             fnRealisasiHari();
         });
+
 
         // Fungsi utama untuk memanggil data Show
         function fnRealisasiHari() {
@@ -415,19 +420,21 @@
                 return;
             }
 
-            // Format ke yyyy-MM-dd agar cocok dengan parameter DateTime di controller
-            const formattedDate = selectedDate.toISOString().split('T')[0];
+            // Format ke yyyy-MM-dd TANPA toISOString (anti mundur 1 hari)
+            const formattedDate =
+                selectedDate.getFullYear() + "-" +
+                String(selectedDate.getMonth() + 1).padStart(2, '0') + "-" +
+                String(selectedDate.getDate()).padStart(2, '0');
 
             // Tampilkan loading spinner
             $("#loading2-RealisasiHari").show();
             $("#RealisasiHari").hide();
 
             $.ajax({
-                url: '/Dashboard/RealisasiHari', // Ganti dengan route action kamu
+                url: '/Dashboard/RealisasiHari',
                 type: 'GET',
                 data: { tglCutoff: formattedDate },
                 success: function (response) {
-                    // Tampilkan hasil partial view ke dalam #Show
                     $("#RealisasiHari").html(response);
                 },
                 error: function (xhr, status, error) {
@@ -435,12 +442,12 @@
                     $("#RealisasiHari").html("<div class='text-danger text-center'>Terjadi kesalahan saat memuat data.</div>");
                 },
                 complete: function () {
-                    // Sembunyikan spinner dan tampilkan hasil
                     $("#loading2-RealisasiHari").hide();
                     $("#RealisasiHari").show();
                 }
             });
         }
+
     </script>
 
     <script>

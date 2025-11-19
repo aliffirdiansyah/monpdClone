@@ -2787,10 +2787,7 @@ namespace MonPDReborn.Models
                         {
                             var dataBulan = GetDataLayananPBB(bulan, tahun);
 
-                            var masuk = dataBulan
-                                .Where(x =>
-                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses || x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai)
-                                .Count();
+                            var masuk = dataBulan.Count();
 
                             var proses = dataBulan
                                 .Where(x =>
@@ -2817,39 +2814,22 @@ namespace MonPDReborn.Models
                 string connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
 
                 var query = @"
-                    SELECT 
-                        SUBSTR(X.NO_LAYANAN,4,2) AS KODE_LAYANAN, 
-                        X.NO_LAYANAN, 
-                        X.NOP, 
-                        X.STATUS_SELESAI, 
-                        X.TGL_MASUK_LAYANAN, 
-                        X.TGL_TERIMA, 
-                        X.SEKSI_TERIMA, 
-                        X.TGL_SELESAI
-                    FROM (
-                        SELECT 
-                            PB.NO_LAYANAN, 
-                            PB.NOP, 
-                            PB.STATUS_SELESAI, 
-                            PB.TGL_MASUK_LAYANAN, 
-                            TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY') AS TGL_TERIMA, 
-                            PB.SEKSI_TERIMA, 
-                            PB.TGL_SELESAI,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY PB.NO_LAYANAN 
-                                ORDER BY TO_DATE(PB.TGL_TERIMA,'DD/MM/YYYY') DESC
-                            ) AS RN
-                        FROM POSISI_BERKAS_PBB PB
-                        WHERE EXTRACT(MONTH FROM PB.TGL_MASUK_LAYANAN) = :BULAN
-                          AND EXTRACT(YEAR FROM PB.TGL_MASUK_LAYANAN) = :TAHUN
-                    ) X
-                    WHERE X.RN = 1
-                    AND (
-                        (SUBSTR(X.NO_LAYANAN,4,2) = '08') 
-                        OR 
-                        (SUBSTR(X.NO_LAYANAN,4,2) <> '08' AND X.SEKSI_TERIMA IS NOT NULL)
-                    )
-                    ORDER BY X.TGL_MASUK_LAYANAN
+                   SELECT 
+                    SUBSTR(PB.NO_LAYANAN,4,2) AS KODE_LAYANAN,
+                    PB.NO_LAYANAN,
+                    PB.NOP,
+                    NVL(PB.STATUS_SELESAI, -1) AS STATUS_SELESAI,
+                    PB.TGL_MASUK_LAYANAN,
+                    CASE
+                        WHEN PB.TGL_TERIMA IS NULL THEN NULL
+                        ELSE TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY')
+                    END AS TGL_TERIMA,
+                    PB.SEKSI_TERIMA,
+                    PB.TGL_SELESAI
+                FROM POSISI_BERKAS_PBB PB
+                WHERE EXTRACT(MONTH FROM PB.TGL_MASUK_LAYANAN) = :BULAN
+                  AND EXTRACT(YEAR  FROM PB.TGL_MASUK_LAYANAN) = :TAHUN
+                ORDER BY PB.TGL_MASUK_LAYANAN
                 ";
                 var connection = new OracleConnection(connString);
 
@@ -3001,9 +2981,12 @@ namespace MonPDReborn.Models
 
                         // Group berdasarkan kode layanan (gabungan 01 & 25 sudah diproses)
                         var groupByLayanan = semuaData
-                            .Where(x => x.KODE_LAYANAN != "07")
-                            .GroupBy(x => x.KODE_LAYANAN)
-                            .ToList();
+                        .Where(x =>
+                            int.TryParse(x.KODE_LAYANAN, out int kode) &&
+                            Enum.IsDefined(typeof(EJenisPBB), kode)
+                        )
+                        .GroupBy(x => x.KODE_LAYANAN)
+                        .ToList();
 
                         foreach (var group in groupByLayanan)
                         {
@@ -3037,6 +3020,7 @@ namespace MonPDReborn.Models
 
                             dashboardList.Add(model);
                         }
+
                         break;
 
                 }
@@ -3173,37 +3157,20 @@ namespace MonPDReborn.Models
 
                         var query = @"
                         SELECT 
-                            SUBSTR(X.NO_LAYANAN,4,2) AS KODE_LAYANAN, 
-                            X.NO_LAYANAN, 
-                            X.NOP, 
-                            X.STATUS_SELESAI, 
-                            X.TGL_MASUK_LAYANAN, 
-                            X.TGL_TERIMA, 
-                            X.SEKSI_TERIMA, 
-                            X.TGL_SELESAI
-                        FROM (
-                            SELECT 
-                                PB.NO_LAYANAN, 
-                                PB.NOP, 
-                                PB.STATUS_SELESAI, 
-                                PB.TGL_MASUK_LAYANAN, 
-                                TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY') AS TGL_TERIMA, 
-                                PB.SEKSI_TERIMA, 
-                                PB.TGL_SELESAI,
-                                ROW_NUMBER() OVER (
-                                    PARTITION BY PB.NO_LAYANAN 
-                                    ORDER BY TO_DATE(PB.TGL_TERIMA,'DD/MM/YYYY') DESC
-                                ) AS RN
-                            FROM POSISI_BERKAS_PBB PB
-                            WHERE TRUNC(PB.TGL_MASUK_LAYANAN) = :TGL
-                        ) X
-                        WHERE X.RN = 1
-                        AND (
-                            (SUBSTR(X.NO_LAYANAN,4,2) = '08') 
-                            OR 
-                            (SUBSTR(X.NO_LAYANAN,4,2) <> '08' AND X.SEKSI_TERIMA IS NOT NULL)
-                        )
-                        ORDER BY X.TGL_MASUK_LAYANAN";
+                            SUBSTR(PB.NO_LAYANAN,4,2) AS KODE_LAYANAN,
+                            PB.NO_LAYANAN,
+                            PB.NOP,
+                            NVL(PB.STATUS_SELESAI, -1) AS STATUS_SELESAI,
+                            PB.TGL_MASUK_LAYANAN,
+                            CASE
+                                WHEN PB.TGL_TERIMA IS NULL THEN NULL
+                                ELSE TO_DATE(PB.TGL_TERIMA, 'DD/MM/YYYY')
+                            END AS TGL_TERIMA,
+                            PB.SEKSI_TERIMA,
+                            PB.TGL_SELESAI
+                        FROM POSISI_BERKAS_PBB PB
+                        WHERE TRUNC(PB.TGL_MASUK_LAYANAN) = :TGL
+                        ORDER BY PB.TGL_MASUK_LAYANAN";
 
                         using (var connection = new OracleConnection(connString))
                         {
@@ -3218,9 +3185,7 @@ namespace MonPDReborn.Models
                             string kode = ((int)kodeEnum).ToString("D2"); // Format jadi "01", "02", dst.
                             var groupData = ret.Where(x => x.KODE_LAYANAN == kode).ToList();
 
-                            var masuk = groupData.Count(x =>
-                                x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses ||
-                                x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai);
+                            var masuk = groupData.Count();
 
                             var proses = groupData.Count(x =>
                                 x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses);
@@ -3235,7 +3200,8 @@ namespace MonPDReborn.Models
                                 Tgl = tgl,
                                 Masuk = masuk,
                                 Proses = proses,
-                                Selesai = selesai
+                                Selesai = selesai,
+                                kodePerizinan = kode
                             };
 
                             list.Add(layanan);
@@ -3250,6 +3216,7 @@ namespace MonPDReborn.Models
                 var result = new List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok>();
                 var context = DBClass.GetContext();
                 var planningContext = DBClass.GetEPlanningContext();
+
 
                 // === 1️⃣ Ambil target tahunan (AkpTahun) ===
                 var akpTahunQuery = context.DbPendapatanDaerahHarians
@@ -3322,8 +3289,31 @@ namespace MonPDReborn.Models
                     })
                     .ToList();
 
+                var realisasiInputHari = planningContext.TInputManuals
+                    .Where(x => x.Tanggal.Date == TglCutOff.Date)
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        RealisasiHariAccrual = x.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
                 var realisasiInput = planningContext.TInputManuals
-                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && !(x.Kelompok == "4.2" && x.Tanggal.Year == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.Tanggal.Year == TglCutOff.Year))
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
                     .GroupBy(x => new
                     {
                         x.Kelompok,
@@ -3346,49 +3336,57 @@ namespace MonPDReborn.Models
                     .ToList();
 
                 // === 4️⃣ Gabungkan semua data ===
-                var merged = (from a in akpTahunQuery
-                                  // Join Realisasi per Hari
-                              join b in realisasiHariQuery
-                                  on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { b.Kelompok, b.Jenis, b.Objek }
-                                  into gj1
-                              from b in gj1.DefaultIfEmpty()
-                              join c in realisasiSdQuery // Join Realisasi s/d Hari Ini
-                                  on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { c.Kelompok, c.Jenis, c.Objek }
-                                  into gj2
-                              from c in gj2.DefaultIfEmpty()
-                              join d in realisasiInput // Join Realisasi Input Manual
-                                  on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { d.Kelompok, d.Jenis, d.Objek }
-                                  into gj3
-                              from d in gj3.DefaultIfEmpty()
-                              select new
-                              {
-                                  a.Kelompok,
-                                  a.NamaKelompok,
-                                  a.Jenis,
-                                  a.NamaJenis,
-                                  a.Objek,
-                                  a.NamaObjek,
+                var merged =
+                    (from a in akpTahunQuery
 
-                                  // Target Tahun
-                                  AkpTahun = a.AkpTahun,
+                     join b in realisasiHariQuery
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { b.Kelompok, b.Jenis, b.Objek }
+                        into gj1
+                     from b in gj1.DefaultIfEmpty()
 
-                                  // Realisasi Hari (Akumulasi)
-                                  RealisasiHariAccrual = b?.RealisasiHariAccrual ?? 0,
+                     join c in realisasiSdQuery
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { c.Kelompok, c.Jenis, c.Objek }
+                        into gj2
+                     from c in gj2.DefaultIfEmpty()
 
-                                  // Realisasi s/d Hari Ini → Akumulasi dari Table Harian
-                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0,
+                     join d in realisasiInputHari
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { d.Kelompok, d.Jenis, d.Objek }
+                        into gj3
+                     from d in gj3.DefaultIfEmpty()
 
-                                  // Tambahkan realisasi dari input manual
-                                  RealisasiInputManual = d?.RealisasiSDHariAccrual ?? 0,
+                     join e in realisasiInput
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { e.Kelompok, e.Jenis, e.Objek }
+                        into gj4
+                     from e in gj4.DefaultIfEmpty()
 
-                                  // Gabungan Final S/D Hari Ini (harian + input manual)
-                                  RealisasiSDTotal = (c?.RealisasiSDHariAccrual ?? 0)
-                                                    + (d?.RealisasiSDHariAccrual ?? 0)
-                              })
-              .ToList();
+                     select new
+                     {
+                         a.Kelompok,
+                         a.NamaKelompok,
+                         a.Jenis,
+                         a.NamaJenis,
+                         a.Objek,
+                         a.NamaObjek,
+
+                         // Target Tahun
+                         AkpTahun = a.AkpTahun,
+
+                         // === Realisasi Hari Accrual (Harian + Manual) ===
+                         RealisasiHariAccrual =
+                             (b?.RealisasiHariAccrual ?? 0) +
+                             (d?.RealisasiHariAccrual ?? 0),
+
+                         // === Realisasi s/d Hari Accrual (Harian + Manual) ===
+                         RealisasiSDHariAccrual =
+                             (c?.RealisasiSDHariAccrual ?? 0) +
+                             (e?.RealisasiSDHariAccrual ?? 0),
+                     })
+                    .ToList();
+
 
 
                 // === 5️⃣ Grouping sesuai hierarki ===
@@ -3604,79 +3602,95 @@ namespace MonPDReborn.Models
                         }
                         break;
                     case EPajak.PBB:
-                        var tglAwal = tgl.Date;
-                        var tglAkhir = tgl.Date;
 
-                        string connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
+                        var wilayahListDaily = new List<string>
+    {
+        "DINAS",
+        "UPTB 1",
+        "UPTB 2",
+        "UPTB 3",
+        "UPTB 4",
+        "UPTB 5"
+    };
 
-                        string sql = @"
-                        SELECT  A.*,
-                                CASE
-                                    WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' 
-                                    ELSE 'OFFLINE'
-                                END AS KATEGORI_LAYANAN,
-                                CASE
-                                    WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS' 
-                                    ELSE 
-                                        CASE 
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '00' THEN 'DINAS'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '01' THEN 'UPTB 1'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '02' THEN 'UPTB 2'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '03' THEN 'UPTB 3'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '04' THEN 'UPTB 4'
-                                            WHEN SUBSTR(NO_LAYANAN,1,2) = '05' THEN 'UPTB 5'
-                                        END
-                                END AS WILAYAH
-                        FROM POSISI_BERKAS_PBB A                                    
-                        WHERE TRUNC(A.TGL_MASUK_LAYANAN) BETWEEN TRUNC(:tgl_awal) AND TRUNC(:tgl_akhir)
-                          AND A.NO_LAYANAN = :kode_perizinan
-                    ";
+                        string connPbb = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
+                        var tglHarian = tgl.Date;
 
-                        var list = new List<dynamic>();
+                        string sqlDaily = @"
+        SELECT  
+            A.*,
+            SUBSTR(no_layanan,4,2) AS kode_layanan,
+            CASE WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' ELSE 'OFFLINE' END AS KATEGORI_LAYANAN,
+            CASE
+                WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS'
+                ELSE CASE 
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='00' THEN 'DINAS'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='01' THEN 'UPTB 1'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='02' THEN 'UPTB 2'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='03' THEN 'UPTB 3'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='04' THEN 'UPTB 4'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='05' THEN 'UPTB 5'
+                END
+            END AS WILAYAH,
+            NVL(STATUS_SELESAI, -1) AS STATUS_SELESAI
+        FROM POSISI_BERKAS_PBB A                                    
+        WHERE TRUNC(A.TGL_MASUK_LAYANAN) = TRUNC(:tgl_harian)
+          AND SUBSTR(no_layanan,4,2) = :kode_perizinan
+    ";
 
-                        using (var con = new OracleConnection(connString))
+                        var list = new List<(string Wilayah, string kdPerizinan, int Status)>();
+
+                        using (var con = new OracleConnection(connPbb))
                         {
                             con.Open();
 
-                            using (var cmd = new OracleCommand(sql, con))
+                            using (var cmd = new OracleCommand(sqlDaily, con))
                             {
-                                cmd.Parameters.Add(new OracleParameter("tgl_awal", OracleDbType.Date) { Value = tglAwal });
-                                cmd.Parameters.Add(new OracleParameter("tgl_akhir", OracleDbType.Date) { Value = tglAkhir });
-                                cmd.Parameters.Add(new OracleParameter("NO_LAYANAN", OracleDbType.Varchar2) { Value = kodePerizinan });
+                                cmd.Parameters.Add(new OracleParameter("tgl_harian", OracleDbType.Date) { Value = tglHarian });
+                                cmd.Parameters.Add(new OracleParameter("kode_perizinan", OracleDbType.Varchar2) { Value = kodePerizinan });
 
                                 using (var reader = cmd.ExecuteReader())
                                 {
                                     while (reader.Read())
                                     {
-                                        list.Add(new
-                                        {
-                                            WILAYAH = reader["WILAYAH"]?.ToString(),
-                                            TGL_MASUK_LAYANAN = reader["TGL_MASUK_LAYANAN"],
-                                            NO_LAYANAN = reader["NO_LAYANAN"]?.ToString(),
-                                            NO_LAYANAN_ODS = reader["NO_LAYANAN_ODS"]?.ToString()
-                                        });
+                                        string wilayah = reader["WILAYAH"]?.ToString() ?? "DINAS";
+                                        string kd = reader["kode_layanan"]?.ToString() ?? "";
+                                        int status = Convert.ToInt32(reader["STATUS_SELESAI"]);
+
+                                        list.Add((wilayah, kd, status));
                                     }
                                 }
                             }
                         }
 
-                        Console.WriteLine("Jumlah data PBB: " + list.Count);
+                        // ⬅ FIX: tidak perlu filter lagi. SQL sudah memfilter.
+                        var dataPerizinan = list;
 
-                        var dataGroup = list
-                            .GroupBy(x => x.WILAYAH ?? "UNKNOWN")
-                            .ToList();
+                        var grouped = dataPerizinan
+                            .GroupBy(x => x.Wilayah)
+                            .ToDictionary(g => g.Key, g => g.ToList());
 
-                        foreach (var grp in dataGroup)
+                        foreach (var w in wilayahListDaily)
                         {
+                            var pbb = grouped.ContainsKey(w)
+                                ? grouped[w]
+                                : new List<(string Wilayah, string kdPerizinan, int Status)>();
+
+                            int totalMasuk = pbb.Count();
+                            int totalProses = pbb.Count(x => x.Status == (int)EStatusLayananPBB.SedangProses);
+                            int totalSelesai = pbb.Count(x => x.Status == (int)EStatusLayananPBB.Selesai);
+
                             ret.Add(new ViewModel.DetailLayananHarian
                             {
-                                WilayahPajak = grp.Key,
-                                Masuk = grp.Count(),
-                                Proses = 0,
-                                Selesai = 0
+                                WilayahPajak = w,
+                                Masuk = totalMasuk,
+                                Proses = totalProses,
+                                Selesai = totalSelesai
                             });
                         }
+
                         break;
+
                 }
 
                 return ret;
@@ -3818,39 +3832,58 @@ namespace MonPDReborn.Models
                         }
                             break;
                     case EPajak.PBB:
+
+                        var wilayahList = new List<string>
+                            {
+                                "DINAS",
+                                "UPTB 1",
+                                "UPTB 2",
+                                "UPTB 3",
+                                "UPTB 4",
+                                "UPTB 5"
+                            };
+
                         var connString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.21.1.231)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=dbpbb)));User Id=admin_on;Password=t0l318032017;";
-                        for (int bulan = 1; bulan <= 12; bulan++)
+
+                        // siapkan ret dari awal
+                        var mapWilayah = new Dictionary<string, ViewModel.DetailDashboardBulanan>();
+
+                        // buat object kosong untuk semua wilayah (agar tidak hilang)
+                        foreach (var w in wilayahList)
                         {
-                            var model = new ViewModel.DetailDashboardBulanan
+                            mapWilayah[w] = new ViewModel.DetailDashboardBulanan
                             {
                                 Layanan = kodePerizinan,
                                 kodePerizinan = kodePerizinan,
-                                WilayahPajak = "ALL",
+                                WilayahPajak = w,
                                 pajakId = (int)EnumFactory.EPajak.PBB
                             };
-                            string query = @"
-                                                        select  A.*,substr(no_layanan,4,2) kode_layanan,
-                                       CASE
-                                       WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' 
-                                       ELSE 
-                                        'OFFLINE'
-                                        END KATEGORI_LAYANAN ,
-                                        CASE
-                                       WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS' 
-                                       ELSE 
-                                                CASE 
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='00' THEN 'DINAS'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='01' THEN 'UPTB 1'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='02' THEN 'UPTB 2'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='03' THEN 'UPTB 3'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='04' THEN 'UPTB 4'
-                                                    WHEN SUBSTR(NO_LAYANAN,1,2) ='05' THEN 'UPTB 5'
-                                                    END
-                                        END WILAYAH             
-                            FROM POSISI_BERKAS_PBB A                                    
-                            WHERE trunc(A.tgl_masuk_layanan) BETWEEN Trunc(:tgl_awal) AND Trunc(:tgl_akhir)
-                            ";
-                            var list = new List<dynamic>();
+                        }
+
+                        // LOOP BULAN
+                        for (int bulan = 1; bulan <= 12; bulan++)
+                        {
+                            string query = @"SELECT  
+            A.*,
+            SUBSTR(no_layanan,4,2) AS kode_layanan,
+            CASE WHEN NO_LAYANAN_ODS != '....' THEN 'ONLINE' ELSE 'OFFLINE' END AS KATEGORI_LAYANAN,
+            CASE
+                WHEN NO_LAYANAN_ODS != '....' THEN 'DINAS'
+                ELSE CASE 
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='00' THEN 'DINAS'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='01' THEN 'UPTB 1'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='02' THEN 'UPTB 2'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='03' THEN 'UPTB 3'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='04' THEN 'UPTB 4'
+                    WHEN SUBSTR(NO_LAYANAN,1,2) ='05' THEN 'UPTB 5'
+                END
+            END AS WILAYAH             
+        FROM POSISI_BERKAS_PBB A                                    
+        WHERE TRUNC(A.tgl_masuk_layanan) BETWEEN TRUNC(:tgl_awal) AND TRUNC(:tgl_akhir)
+    ";
+
+                            var list = new List<(string Wilayah, string kdPerizinan, int Status)>();
+
                             using (var con = new OracleConnection(connString))
                             {
                                 con.Open();
@@ -3858,53 +3891,65 @@ namespace MonPDReborn.Models
                                 {
                                     DateTime tglAwal = new DateTime(tahun, bulan, 1);
                                     DateTime tglAkhir = new DateTime(tahun, bulan, DateTime.DaysInMonth(tahun, bulan));
+
                                     cmd.Parameters.Add(new OracleParameter("tgl_awal", OracleDbType.Date) { Value = tglAwal });
                                     cmd.Parameters.Add(new OracleParameter("tgl_akhir", OracleDbType.Date) { Value = tglAkhir });
+
                                     using (var reader = cmd.ExecuteReader())
                                     {
                                         while (reader.Read())
                                         {
-                                            list.Add(new
-                                            {
-                                                WILAYAH = reader["WILAYAH"]?.ToString(),
-                                                STATUS_SELESAI = reader["STATUS_SELESAI"].ToString(),
-                                            });
+                                            var wilayah = reader["WILAYAH"]?.ToString() ?? "DINAS";
+                                            var kd = reader["kode_layanan"]?.ToString() ?? "-";
+
+                                            int status = reader["STATUS_SELESAI"] == DBNull.Value
+                                                ? -1
+                                                : Convert.ToInt32(reader["STATUS_SELESAI"]);
+
+                                            list.Add((wilayah, kd, status));
                                         }
                                     }
                                 }
                             }
-                            var dataGroup = list
-                                .GroupBy(x => x.WILAYAH ?? "UNKNOWN")
-                                .ToList();
 
-                            int totalMasuk = 0;
-                            int totalProses = 0;
-                            int totalSelesai = 0;
+                            // ambil data hanya sesuai kode perizinan
+                            var dataPerizinan = list.Where(x => x.kdPerizinan == kodePerizinan);
 
-                            foreach (var grp in dataGroup)
+                            // group wilayah
+                            var grouped = dataPerizinan
+                                .GroupBy(x => x.Wilayah)
+                                .ToDictionary(g => g.Key, g => g.ToList());
+
+                            // proses setiap wilayah
+                            foreach (var w in wilayahList)
                             {
-                                totalMasuk = grp.Count(x =>
-                                x.STATUS_SELESAI == EStatusLayananPBB.SedangProses ||
-                                x.STATUS_SELESAI == EStatusLayananPBB.Selesai ||
-                                x.STATUS_SELESAI == EStatusLayananPBB.Ditolak ||
-                                x.STATUS_SELESAI == EStatusLayananPBB.Dibatalkan);
+                                var model = mapWilayah[w];
 
-                                totalProses = grp.Count(x =>
-                                    x.STATUS_SELESAI == EStatusLayananPBB.SedangProses);
+                                var data = grouped.ContainsKey(w) ? grouped[w] : new List<(string Wilayah, string kd, int Status)>();
 
-                                totalSelesai = grp.Count(x =>
-                                    x.STATUS_SELESAI == EStatusLayananPBB.Selesai);
+                                int totalMasuk = data.Count(x =>
+                                    x.Status == (int)EStatusLayananPBB.SedangProses ||
+                                    x.Status == (int)EStatusLayananPBB.Selesai ||
+                                    x.Status == (int)EStatusLayananPBB.Ditolak ||
+                                    x.Status == (int)EStatusLayananPBB.Dibatalkan);
+
+                                int totalProses = data.Count(x => x.Status == (int)EStatusLayananPBB.SedangProses);
+                                int totalSelesai = data.Count(x => x.Status == (int)EStatusLayananPBB.Selesai);
+
+                                // set value
+                                typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
+                                typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Proses{bulan}")?.SetValue(model, totalProses);
+                                typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Selesai{bulan}")?.SetValue(model, totalSelesai);
                             }
-                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
-                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
-                            typeof(ViewModel.DetailDashboardBulanan).GetProperty($"Masuk{bulan}")?.SetValue(model, totalMasuk);
-                            ret.Add(model);
                         }
 
-                    break;
-                }
+                        // masukkan ke ret (1 row per wilayah)
+                        ret.AddRange(mapWilayah.Values);
 
-                return ret;
+                        break;
+                        }
+
+                        return ret;
             }
 
 

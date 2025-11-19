@@ -11,7 +11,7 @@ public partial class TOpParkirCctvRealtimeDok
 {
     [Key]
     [Column("ID")]
-    [StringLength(50)]
+    [StringLength(250)]
     [Unicode(false)]
     public string Id { get; set; } = null!;
 

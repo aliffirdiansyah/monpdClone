@@ -161,6 +161,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<DbMonReklameSurvey> DbMonReklameSurveys { get; set; }
 
+    public virtual DbSet<DbMonReklameSurvey1> DbMonReklameSurvey1s { get; set; }
+
     public virtual DbSet<DbMonReklameUpaya> DbMonReklameUpayas { get; set; }
 
     public virtual DbSet<DbMonReklameUpayaDok> DbMonReklameUpayaDoks { get; set; }
@@ -535,6 +537,10 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwDataOpResto> VwDataOpRestos { get; set; }
 
+    public virtual DbSet<VwDbMonResto> VwDbMonRestos { get; set; }
+
+    public virtual DbSet<VwDbPendapatanDaerah> VwDbPendapatanDaerahs { get; set; }
+
     public virtual DbSet<VwHariFrom2025> VwHariFrom2025s { get; set; }
 
     public virtual DbSet<VwMonAbt> VwMonAbts { get; set; }
@@ -567,11 +573,19 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwMonReklame365> VwMonReklame365s { get; set; }
 
+    public virtual DbSet<VwMonReklameUpaya> VwMonReklameUpayas { get; set; }
+
     public virtual DbSet<VwMonResto> VwMonRestos { get; set; }
 
     public virtual DbSet<VwMonResto365> VwMonResto365s { get; set; }
 
+    public virtual DbSet<VwNpwpdEmail> VwNpwpdEmails { get; set; }
+
+    public virtual DbSet<VwRekapUpaya> VwRekapUpayas { get; set; }
+
     public virtual DbSet<VwReklameStatusPerpanjangan> VwReklameStatusPerpanjangans { get; set; }
+
+    public virtual DbSet<VwTManualPbp> VwTManualPbps { get; set; }
 
     public virtual DbSet<VwTahunBulan6> VwTahunBulan6s { get; set; }
 
@@ -581,9 +595,9 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<VwTargetBulanUptb6> VwTargetBulanUptb6s { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");*/
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseOracle("User Id=monpd;Password=monpd2025;Data Source=10.21.39.80:1521/DEVDB;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1262,6 +1276,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.Seq).ValueGeneratedOnAdd();
         });
 
+        modelBuilder.Entity<DbMonReklameSurvey1>(entity =>
+        {
+            entity.ToView("DB_MON_REKLAME_SURVEY1");
+        });
+
         modelBuilder.Entity<DbMonReklameUpaya>(entity =>
         {
             entity.HasKey(e => new { e.NoFormulir, e.Nor, e.TglUpaya, e.Seq }).HasName("DB_MON_REKLAME_UPAYA_PK");
@@ -1290,7 +1309,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.JenisKetetapan).IsFixedLength();
             entity.Property(e => e.JenisPokokBayar).IsFixedLength();
             entity.Property(e => e.JenisSanksiBayar).IsFixedLength();
-            entity.Property(e => e.KategoriKetetapan).IsFixedLength();
             entity.Property(e => e.Kelompok).IsFixedLength();
             entity.Property(e => e.KelompokKenaikanBayar).IsFixedLength();
             entity.Property(e => e.KelompokKetetapan).IsFixedLength();
@@ -1307,7 +1325,6 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.ObjekKetetapan).IsFixedLength();
             entity.Property(e => e.ObjekPokokBayar).IsFixedLength();
             entity.Property(e => e.ObjekSanksiBayar).IsFixedLength();
-            entity.Property(e => e.PajakNama).IsFixedLength();
             entity.Property(e => e.Rincian).IsFixedLength();
             entity.Property(e => e.RincianKenaikanBayar).IsFixedLength();
             entity.Property(e => e.RincianKetetapan).IsFixedLength();
@@ -2707,6 +2724,56 @@ public partial class ModelContext : DbContext
             entity.ToView("VW_DATA_OP_RESTO");
         });
 
+        modelBuilder.Entity<VwDbMonResto>(entity =>
+        {
+            entity.ToView("VW_DB_MON_RESTO");
+
+            entity.Property(e => e.Akun1).IsFixedLength();
+            entity.Property(e => e.AkunKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.AkunKetetapan).IsFixedLength();
+            entity.Property(e => e.AkunPokokBayar).IsFixedLength();
+            entity.Property(e => e.AkunSanksiBayar).IsFixedLength();
+            entity.Property(e => e.Jenis1).IsFixedLength();
+            entity.Property(e => e.JenisKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.JenisKetetapan).IsFixedLength();
+            entity.Property(e => e.JenisPokokBayar).IsFixedLength();
+            entity.Property(e => e.JenisSanksiBayar).IsFixedLength();
+            entity.Property(e => e.Kelompok).IsFixedLength();
+            entity.Property(e => e.KelompokKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.KelompokKetetapan).IsFixedLength();
+            entity.Property(e => e.KelompokPokokBayar).IsFixedLength();
+            entity.Property(e => e.KelompokSanksiBayar).IsFixedLength();
+            entity.Property(e => e.NamaAkun).IsFixedLength();
+            entity.Property(e => e.NamaJenis).IsFixedLength();
+            entity.Property(e => e.NamaKelompok).IsFixedLength();
+            entity.Property(e => e.NamaObjek).IsFixedLength();
+            entity.Property(e => e.NamaRincian).IsFixedLength();
+            entity.Property(e => e.NamaSubRincian).IsFixedLength();
+            entity.Property(e => e.Objek1).IsFixedLength();
+            entity.Property(e => e.ObjekKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.ObjekKetetapan).IsFixedLength();
+            entity.Property(e => e.ObjekPokokBayar).IsFixedLength();
+            entity.Property(e => e.ObjekSanksiBayar).IsFixedLength();
+            entity.Property(e => e.PajakId).IsFixedLength();
+            entity.Property(e => e.Rincian1).IsFixedLength();
+            entity.Property(e => e.RincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.RincianKetetapan).IsFixedLength();
+            entity.Property(e => e.RincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.RincianSanksiBayar).IsFixedLength();
+            entity.Property(e => e.SubRincian1).IsFixedLength();
+            entity.Property(e => e.SubRincianKenaikanBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianKetetapan).IsFixedLength();
+            entity.Property(e => e.SubRincianPokokBayar).IsFixedLength();
+            entity.Property(e => e.SubRincianSanksiBayar).IsFixedLength();
+        });
+
+        modelBuilder.Entity<VwDbPendapatanDaerah>(entity =>
+        {
+            entity.ToView("VW_DB_PENDAPATAN_DAERAH");
+
+            entity.Property(e => e.InsBy).IsFixedLength();
+        });
+
         modelBuilder.Entity<VwHariFrom2025>(entity =>
         {
             entity.ToView("VW_HARI_FROM_2025");
@@ -2807,6 +2874,11 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.JenisPajak).IsFixedLength();
         });
 
+        modelBuilder.Entity<VwMonReklameUpaya>(entity =>
+        {
+            entity.ToView("VW_MON_REKLAME_UPAYA");
+        });
+
         modelBuilder.Entity<VwMonResto>(entity =>
         {
             entity.ToView("VW_MON_RESTO");
@@ -2819,9 +2891,24 @@ public partial class ModelContext : DbContext
             entity.Property(e => e.JenisPajak).IsFixedLength();
         });
 
+        modelBuilder.Entity<VwNpwpdEmail>(entity =>
+        {
+            entity.ToView("VW_NPWPD_EMAIL");
+        });
+
+        modelBuilder.Entity<VwRekapUpaya>(entity =>
+        {
+            entity.ToView("VW_REKAP_UPAYA");
+        });
+
         modelBuilder.Entity<VwReklameStatusPerpanjangan>(entity =>
         {
             entity.ToView("VW_REKLAME_STATUS_PERPANJANGAN");
+        });
+
+        modelBuilder.Entity<VwTManualPbp>(entity =>
+        {
+            entity.ToView("VW_T_MANUAL_PBP");
         });
 
         modelBuilder.Entity<VwTahunBulan6>(entity =>
