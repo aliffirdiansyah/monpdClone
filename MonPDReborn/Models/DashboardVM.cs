@@ -3251,6 +3251,7 @@ namespace MonPDReborn.Models
                 var context = DBClass.GetContext();
                 var planningContext = DBClass.GetEPlanningContext();
 
+
                 // === 1️⃣ Ambil target tahunan (AkpTahun) ===
                 var akpTahunQuery = context.DbPendapatanDaerahHarians
                     .GroupBy(x => new
@@ -3322,8 +3323,31 @@ namespace MonPDReborn.Models
                     })
                     .ToList();
 
+                var realisasiInputHari = planningContext.TInputManuals
+                    .Where(x => x.Tanggal.Date == TglCutOff.Date)
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        RealisasiHariAccrual = x.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
                 var realisasiInput = planningContext.TInputManuals
-                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && !(x.Kelompok == "4.2" && x.Tanggal.Year == TglCutOff.Year) && !(x.Jenis == "4.1.03" && x.Tanggal.Year == TglCutOff.Year))
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date)
                     .GroupBy(x => new
                     {
                         x.Kelompok,
@@ -3346,49 +3370,57 @@ namespace MonPDReborn.Models
                     .ToList();
 
                 // === 4️⃣ Gabungkan semua data ===
-                var merged = (from a in akpTahunQuery
-                                  // Join Realisasi per Hari
-                              join b in realisasiHariQuery
-                                  on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { b.Kelompok, b.Jenis, b.Objek }
-                                  into gj1
-                              from b in gj1.DefaultIfEmpty()
-                              join c in realisasiSdQuery // Join Realisasi s/d Hari Ini
-                                  on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { c.Kelompok, c.Jenis, c.Objek }
-                                  into gj2
-                              from c in gj2.DefaultIfEmpty()
-                              join d in realisasiInput // Join Realisasi Input Manual
-                                  on new { a.Kelompok, a.Jenis, a.Objek }
-                                  equals new { d.Kelompok, d.Jenis, d.Objek }
-                                  into gj3
-                              from d in gj3.DefaultIfEmpty()
-                              select new
-                              {
-                                  a.Kelompok,
-                                  a.NamaKelompok,
-                                  a.Jenis,
-                                  a.NamaJenis,
-                                  a.Objek,
-                                  a.NamaObjek,
+                var merged =
+                    (from a in akpTahunQuery
 
-                                  // Target Tahun
-                                  AkpTahun = a.AkpTahun,
+                     join b in realisasiHariQuery
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { b.Kelompok, b.Jenis, b.Objek }
+                        into gj1
+                     from b in gj1.DefaultIfEmpty()
 
-                                  // Realisasi Hari (Akumulasi)
-                                  RealisasiHariAccrual = b?.RealisasiHariAccrual ?? 0,
+                     join c in realisasiSdQuery
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { c.Kelompok, c.Jenis, c.Objek }
+                        into gj2
+                     from c in gj2.DefaultIfEmpty()
 
-                                  // Realisasi s/d Hari Ini → Akumulasi dari Table Harian
-                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0,
+                     join d in realisasiInputHari
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { d.Kelompok, d.Jenis, d.Objek }
+                        into gj3
+                     from d in gj3.DefaultIfEmpty()
 
-                                  // Tambahkan realisasi dari input manual
-                                  RealisasiInputManual = d?.RealisasiSDHariAccrual ?? 0,
+                     join e in realisasiInput
+                        on new { a.Kelompok, a.Jenis, a.Objek }
+                        equals new { e.Kelompok, e.Jenis, e.Objek }
+                        into gj4
+                     from e in gj4.DefaultIfEmpty()
 
-                                  // Gabungan Final S/D Hari Ini (harian + input manual)
-                                  RealisasiSDTotal = (c?.RealisasiSDHariAccrual ?? 0)
-                                                    + (d?.RealisasiSDHariAccrual ?? 0)
-                              })
-              .ToList();
+                     select new
+                     {
+                         a.Kelompok,
+                         a.NamaKelompok,
+                         a.Jenis,
+                         a.NamaJenis,
+                         a.Objek,
+                         a.NamaObjek,
+
+                         // Target Tahun
+                         AkpTahun = a.AkpTahun,
+
+                         // === Realisasi Hari Accrual (Harian + Manual) ===
+                         RealisasiHariAccrual =
+                             (b?.RealisasiHariAccrual ?? 0) +
+                             (d?.RealisasiHariAccrual ?? 0),
+
+                         // === Realisasi s/d Hari Accrual (Harian + Manual) ===
+                         RealisasiSDHariAccrual =
+                             (c?.RealisasiSDHariAccrual ?? 0) +
+                             (e?.RealisasiSDHariAccrual ?? 0),
+                     })
+                    .ToList();
+
 
 
                 // === 5️⃣ Grouping sesuai hierarki ===
