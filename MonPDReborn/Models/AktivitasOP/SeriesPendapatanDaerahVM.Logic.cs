@@ -277,8 +277,14 @@ namespace MonPDReborn.Models.AktivitasOP
                 var result = new List<ViewModel.SudutPandangOpd.Opd>();
 
                 var context = DBClass.GetContext();
+                var planning = DBClass.GetEPlanningContext();
+                int tahunBerjalan = DateTime.Now.Year;
 
-                var query = context.DbPendapatanDaerahs.Where(x => x.TahunBuku == tahunBuku)
+                // ================================
+                // 1) TARGET (selalu dari DbPendapatanDaerah)
+                // ================================
+                var target = context.DbPendapatanDaerahs
+                    .Where(x => x.TahunBuku == tahunBuku)
                     .GroupBy(x => new
                     {
                         x.KodeOpd,
@@ -286,20 +292,90 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.KodeSubOpd,
                         x.NamaSubOpd
                     })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.KodeSubOpd,
+                        g.Key.NamaSubOpd,
+                        Target = g.Sum(y => y.Target)
+                    })
+                    .ToList();
+
+                // ================================
+                // 2) REALISASI (2 SUMBER)
+                // ================================
+                var realisasi =
+                    (tahunBuku == tahunBerjalan)
+                    ? planning.TInputManuals
+                        .Where(x => x.Tanggal <= DateTime.Now)
+                        .GroupBy(x => new
+                        {
+                            x.KodeOpd,
+                            x.NamaOpd,
+                            x.KodeSubOpd,
+                            x.NamaSubOpd
+                        })
+                        .Select(g => new
+                        {
+                            g.Key.KodeOpd,
+                            g.Key.NamaOpd,
+                            g.Key.KodeSubOpd,
+                            g.Key.NamaSubOpd,
+                            Realisasi = g.Sum(x => x.Realisasi.GetValueOrDefault())
+                        })
+                        .ToList()
+                    : context.DbPendapatanDaerahs
+                        .Where(x => x.TahunBuku == tahunBuku)
+                        .GroupBy(x => new
+                        {
+                            x.KodeOpd,
+                            x.NamaOpd,
+                            x.KodeSubOpd,
+                            x.NamaSubOpd
+                        })
+                        .Select(g => new
+                        {
+                            g.Key.KodeOpd,
+                            g.Key.NamaOpd,
+                            g.Key.KodeSubOpd,
+                            g.Key.NamaSubOpd,
+                            Realisasi = g.Sum(x => x.Realisasi)
+                        })
+                        .ToList();
+
+                // ================================
+                // 3) JOIN TARGET + REALISASI
+                // ================================
+                var query =
+                    (from t in target
+                     join r in realisasi
+                        on new { t.KodeOpd, t.KodeSubOpd }
+                        equals new { r.KodeOpd, r.KodeSubOpd }
+                        into jr
+                     from r in jr.DefaultIfEmpty()
+                     select new
+                     {
+                         t.KodeOpd,
+                         t.NamaOpd,
+                         t.KodeSubOpd,
+                         t.NamaSubOpd,
+                         t.Target,
+                         Realisasi = r?.Realisasi ?? 0
+                     }).ToList();
+
+                // ================================
+                // 4) GROUP OPD (Menggunakan logika asli Anda)
+                // ================================
+                var groupByOpd = query
+                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
                     .Select(x => new
                     {
                         x.Key.KodeOpd,
                         x.Key.NamaOpd,
-                        x.Key.KodeSubOpd,
-                        x.Key.NamaSubOpd,
-                        Target = x.Sum(y => y.Target),
-                        Realisasi = x.Sum(y => y.Realisasi)
+                        Target = x.Sum(q => q.Target),
+                        Realisasi = x.Sum(q => q.Realisasi)
                     })
-                    .ToList();
-
-                var groupByOpd = query
-                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
-                    .Select(x => new { x.Key.KodeOpd, x.Key.NamaOpd, Target = x.Sum(q => q.Target), Realisasi = x.Sum(q => q.Realisasi) })
                     .ToList();
 
                 foreach (var opd in groupByOpd)
@@ -309,12 +385,23 @@ namespace MonPDReborn.Models.AktivitasOP
                     resOpd.Col.Nama = opd.NamaOpd;
                     resOpd.Col.Target = opd.Target;
                     resOpd.Col.Realisasi = opd.Realisasi;
-                    resOpd.Col.Persentase = opd.Target > 0 ? Math.Round((opd.Realisasi / opd.Target) * 100, 2) : 0;
+                    resOpd.Col.Persentase = opd.Target > 0
+                        ? Math.Round((decimal)(opd.Realisasi / opd.Target) * 100, 2)
+                        : 0;
 
+                    // ================================
+                    // 5) GROUP SUB OPD (logika asli Anda)
+                    // ================================
                     var groupBySubOpd = query
                         .Where(x => x.KodeOpd == opd.KodeOpd)
                         .GroupBy(x => new { x.KodeSubOpd, x.NamaSubOpd })
-                        .Select(x => new { x.Key.KodeSubOpd, x.Key.NamaSubOpd, Target = x.Sum(q => q.Target), Realisasi = x.Sum(q => q.Realisasi) })
+                        .Select(x => new
+                        {
+                            x.Key.KodeSubOpd,
+                            x.Key.NamaSubOpd,
+                            Target = x.Sum(q => q.Target),
+                            Realisasi = x.Sum(q => q.Realisasi)
+                        })
                         .ToList();
 
                     foreach (var subopd in groupBySubOpd)
@@ -324,10 +411,13 @@ namespace MonPDReborn.Models.AktivitasOP
                         resSubOpd.Col.Nama = subopd.NamaSubOpd;
                         resSubOpd.Col.Target = subopd.Target;
                         resSubOpd.Col.Realisasi = subopd.Realisasi;
-                        resSubOpd.Col.Persentase = subopd.Target > 0 ? Math.Round((subopd.Realisasi / subopd.Target) * 100, 2) : 0;
+                        resSubOpd.Col.Persentase = subopd.Target > 0
+                            ? Math.Round((decimal)(subopd.Realisasi / subopd.Target) * 100, 2)
+                            : 0;
 
                         resOpd.RekSubOpds.Add(resSubOpd);
                     }
+
                     result.Add(resOpd);
                 }
 
