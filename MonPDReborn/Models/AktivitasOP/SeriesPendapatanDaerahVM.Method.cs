@@ -214,7 +214,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 return result;
             }
 
-            public static List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis>GetSudutPandangRekeningJenisObjekOpdData(int year)
+            public static List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis> GetSudutPandangRekeningJenisObjekOpdData(int year)
             {
                 var result = new List<ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis>();
 
