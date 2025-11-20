@@ -314,6 +314,19 @@ namespace MonPDReborn.Models.DataOP
                         seqCounter[nop]++;
 
                     // Hapus data lama jika ada (untuk tahun dan NOP ini)
+                    // Cek apakah data sudah ada
+                    //var existingData = context.TPemeriksaans
+                    //    .FirstOrDefault(x =>
+                    //        x.TahunPajak == tahun &&
+                    //        x.Nop == nop &&
+                    //        x.Seq == seqCounter[nop]
+                    //    );
+
+                    // Kalau sudah ada: LEWATI row ini
+                    //if (existingData != null)
+                    //{
+                    //    continue;
+                    //}
                     var existingData = context.TPemeriksaans
                         .FirstOrDefault(x => x.TahunPajak == tahun && x.Nop == nop && x.Seq == seqCounter[nop]);
 
@@ -339,7 +352,9 @@ namespace MonPDReborn.Models.DataOP
                         Pokok = TryDecimal(sheet.Cells[row, 5].Text) ?? 0,
                         Denda = TryDecimal(sheet.Cells[row, 6].Text) ?? 0,
                         Petugas = sheet.Cells[row, 7].Text ?? string.Empty,
-                        Ket = sheet.Cells[row, 8].Text ?? string.Empty,
+                        Ket = string.IsNullOrWhiteSpace(sheet.Cells[row, 8].Text)
+                            ? "-"
+                            : sheet.Cells[row, 8].Text.Trim(),
                         PajakId = TryDecimal(sheet.Cells[row, 9].Text) ?? 0,
 
                         JumlahKb = TryDecimal(sheet.Cells[row, 10].Text),
