@@ -1,4 +1,5 @@
 ﻿using MonPDLib;
+using MonPDLib.EFPlanning;
 
 namespace MonPDReborn.Models.AktivitasOP
 {
@@ -115,6 +116,7 @@ namespace MonPDReborn.Models.AktivitasOP
             {
                 var result = new List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>();
                 var context = DBClass.GetContext();
+                var planningContext = DBClass.GetEPlanningContext();
 
                 // === 1️⃣ Target Tahunan ===
                 var akpTahunQuery = context.DbPendapatanDaerahHarians
@@ -123,7 +125,13 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.KodeOpd,
                         x.NamaOpd,
                         x.SubRincian,
-                        x.NamaSubRincian
+                        x.NamaSubRincian,
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
                     })
                     .Select(x => new
                     {
@@ -131,6 +139,12 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.Key.NamaOpd,
                         x.Key.SubRincian,
                         x.Key.NamaSubRincian,
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
                         AkpTahun = x.Sum(y => y.Target)
                     })
                     .ToList();
@@ -175,6 +189,29 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .ToList();
 
+                var realisasiInput = planningContext.TInputManuals
+                    .Where(x => x.Tanggal.Date <= TglCutOff.Date && x.Kelompok == "4.2" && x.Jenis == "4.1.03")
+                    .GroupBy(x => new
+                    {
+                        x.Kelompok,
+                        x.NamaKelompok,
+                        x.Jenis,
+                        x.NamaJenis,
+                        x.Objek,
+                        x.NamaObjek
+                    })
+                    .Select(x => new
+                    {
+                        x.Key.Kelompok,
+                        x.Key.NamaKelompok,
+                        x.Key.Jenis,
+                        x.Key.NamaJenis,
+                        x.Key.Objek,
+                        x.Key.NamaObjek,
+                        RealisasiSDHariAccural = x.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
                 // === 4️⃣ Gabungkan Semua Data ===
                 var merged = (from a in akpTahunQuery
                               join b in realisasiHariQuery
@@ -183,6 +220,11 @@ namespace MonPDReborn.Models.AktivitasOP
                               join c in realisasiSdQuery
                                   on new { a.KodeOpd, a.SubRincian } equals new { c.KodeOpd, c.SubRincian } into gj2
                               from c in gj2.DefaultIfEmpty()
+                              join d in realisasiInput
+                                   on new {a.Kelompok, a.Jenis, a.Objek}
+                                   equals new {d.Kelompok, d.Jenis, d.Objek}
+                                   into gj3
+                              from d in gj3.DefaultIfEmpty()
                               select new
                               {
                                   a.KodeOpd,
@@ -191,7 +233,9 @@ namespace MonPDReborn.Models.AktivitasOP
                                   a.NamaSubRincian,
                                   AkpTahun = a.AkpTahun,
                                   RealisasiHariAccrual = b?.RealisasiHariAccrual ?? 0,
-                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0
+                                  RealisasiSDHariAccrual = c?.RealisasiSDHariAccrual ?? 0,
+                                  RealisasiInputManual = d?.RealisasiSDHariAccural ?? 0,
+
                               })
                               .ToList();
 
