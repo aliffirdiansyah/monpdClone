@@ -116,7 +116,7 @@ namespace MonPDReborn.Models.AktivitasOP
             }
             public static List<SeriesPendapatanDaerahVMMethod.ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis> GetSudutPandangRekeningJenisObjekOpd(int tahun)
             {
-                return SeriesPendapatanDaerahVMMethod.Method.GetSudutPandangRekeningJenisObjekOpdData(tahun);
+                return SeriesPendapatanDaerahVMMethod.Method.GetSudutPandangRekeningJenisObjekOpdData(tahun); 
             }
             public static SeriesPendapatanDaerahVMMethod.ViewModel.ReportTrOpdRinci GetReportTrOpdRinci(int tahun, int bulan)
             {
