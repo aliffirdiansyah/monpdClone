@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MonPDLib.EFPlanning;
 
-[PrimaryKey("Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian", "KodeOpd", "KodeSubOpd", "Tanggal")]
+[PrimaryKey("Akun", "Kelompok", "Jenis", "Objek", "Rincian", "SubRincian", "KodeOpd", "KodeSubOpd", "Seq", "Tanggal")]
 [Table("T_INPUT_MANUAL")]
 public partial class TInputManual
 {
@@ -104,4 +104,9 @@ public partial class TInputManual
 
     [Column("REALISASI", TypeName = "NUMBER(18,2)")]
     public decimal? Realisasi { get; set; }
+
+    [Key]
+    [Column("SEQ")]
+    [Precision(10)]
+    public int Seq { get; set; }
 }

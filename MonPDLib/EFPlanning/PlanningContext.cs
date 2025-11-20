@@ -89,7 +89,7 @@ public partial class PlanningContext : DbContext
 
         modelBuilder.Entity<TInputManual>(entity =>
         {
-            entity.HasKey(e => new { e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.KodeOpd, e.KodeSubOpd, e.Tanggal }).HasName("T_INPUT_MANUAL_PK");
+            entity.HasKey(e => new { e.Akun, e.Kelompok, e.Jenis, e.Objek, e.Rincian, e.SubRincian, e.KodeOpd, e.KodeSubOpd, e.Seq, e.Tanggal }).HasName("T_INPUT_MANUAL_PK");
         });
 
         modelBuilder.Entity<TTransaksi>(entity =>
