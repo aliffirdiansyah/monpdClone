@@ -103,13 +103,20 @@ namespace MonPDReborn.Models.AktivitasOP
         }
         public class Methods
         {
-            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> GetSudutPandangRekeningJenisObjekOpdData(int year)
+            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>
+    GetSudutPandangRekeningJenisObjekOpdData(int year)
             {
                 var result = new List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>();
-                var context = DBClass.GetContext();
 
-                // Ambil data dari DbPendapatanDaerahs
-                var targetQuery = context.DbPendapatanDaerahs
+                var context = DBClass.GetContext();
+                var planning = DBClass.GetEPlanningContext();
+
+                DateTime today = DateTime.Now.Date;
+
+                // =========================
+                // 1) TARGET
+                // =========================
+                var targetList = context.DbPendapatanDaerahs
                     .Where(x => x.TahunBuku == year)
                     .GroupBy(x => new
                     {
@@ -118,20 +125,22 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.SubRincian,
                         x.NamaSubRincian
                     })
-                    .Select(x => new
+                    .Select(g => new
                     {
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        x.Key.SubRincian,
-                        x.Key.NamaSubRincian,
-                        Target = x.Sum(y => y.Target)
-                    });
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.SubRincian,
+                        g.Key.NamaSubRincian,
+                        Target = g.Sum(y => y.Target)
+                    })
+                    .ToList();
 
-                var realisasiQuery = context.DbPendapatanDaerahs
-                    .Where(x => x.TahunBuku == year &&
-                        !(x.Kelompok == "4.2" && x.TahunBuku == year) &&
-                        !(x.Jenis == "4.1.03" && x.TahunBuku == year)
-                    )
+
+                // =========================
+                // 2) REALISASI OTOMATIS
+                // =========================
+                var realisasiDb = context.DbPendapatanDaerahs
+                    .Where(x => x.TahunBuku == year)
                     .GroupBy(x => new
                     {
                         x.KodeOpd,
@@ -139,96 +148,131 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.SubRincian,
                         x.NamaSubRincian
                     })
-                    .Select(x => new
+                    .Select(g => new
                     {
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        x.Key.SubRincian,
-                        x.Key.NamaSubRincian,
-                        Realisasi = x.Sum(y => y.Realisasi)
-                    });
-
-                var targetList = targetQuery.ToList();
-                var realisasiList = realisasiQuery.ToList();
-
-
-                var query = targetList
-                    .GroupJoin(
-                        realisasiList,
-                        t => new { t.KodeOpd, t.SubRincian },
-                        r => new { r.KodeOpd, r.SubRincian },
-                        (t, r) => new
-                        {
-                            t.KodeOpd,
-                            t.NamaOpd,
-                            t.SubRincian,
-                            t.NamaSubRincian,
-                            t.Target,
-                            Realisasi = r.Sum(x => x.Realisasi)
-                        }
-                    )
-                    .ToList();
-
-
-
-                // Group berdasarkan OPD
-                var groupByOpd = query
-                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
-                    .Select(x => new
-                    {
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        Target = x.Sum(q => q.Target),
-                        Realisasi = x.Sum(q => q.Realisasi),
-                        SubRincians = x.ToList()
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.SubRincian,
+                        g.Key.NamaSubRincian,
+                        Realisasi = g.Sum(y => y.Realisasi)
                     })
                     .ToList();
 
 
-                decimal totalTargetSemuaOpd = 0;
-                decimal totalRealisasiSemuaOpd = 0;
+                // =========================
+                // 3) REALISASI MANUAL
+                // =========================
+                var realManual = planning.TInputManuals
+                    .Where(x => x.Tanggal <= today)
+                    .GroupBy(x => new
+                    {
+                        x.KodeOpd,
+                        x.NamaOpd,
+                        x.SubRincian,
+                        x.NamaSubRincian
+                    })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.SubRincian,
+                        g.Key.NamaSubRincian,
+                        RealManual = g.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
 
-                foreach (var opd in groupByOpd)
+
+                // =========================
+                // 4) MERGE TARGET + REALISASI DB + MANUAL
+                // =========================
+                var merged = (
+                    from t in targetList
+                    join r in realisasiDb
+                        on new { t.KodeOpd, t.SubRincian }
+                        equals new { r.KodeOpd, r.SubRincian }
+                        into jr
+                    from r in jr.DefaultIfEmpty()
+
+                    join m in realManual
+                        on new { t.KodeOpd, t.SubRincian }
+                        equals new { m.KodeOpd, m.SubRincian }
+                        into jm
+                    from m in jm.DefaultIfEmpty()
+
+                    select new
+                    {
+                        t.KodeOpd,
+                        t.NamaOpd,
+                        t.SubRincian,
+                        t.NamaSubRincian,
+                        Target = t.Target,
+                        Realisasi = (r?.Realisasi ?? 0) + (m?.RealManual ?? 0)
+                    }
+                ).ToList();
+
+
+                // =========================
+                // 5) GROUP BERDASARKAN OPD
+                // =========================
+                var groupOpd = merged
+                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        Target = g.Sum(y => y.Target),
+                        Realisasi = g.Sum(y => y.Realisasi),
+                        SubRincians = g.ToList()
+                    })
+                    .ToList();
+
+
+                decimal totalTarget = 0;
+                decimal totalRealisasi = 0;
+
+                foreach (var opd in groupOpd)
                 {
-                    var resOpd = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
-                    resOpd.Col.Kode = opd.KodeOpd;
-                    resOpd.Col.Nama = opd.NamaOpd;
-                    resOpd.Col.Target = opd.Target;
-                    resOpd.Col.Realisasi = opd.Realisasi;
-                    resOpd.Col.Persentase = opd.Target > 0 ? Math.Round((opd.Realisasi / opd.Target) * 100, 2) : 0;
+                    var vmOpd = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
+                    vmOpd.Col.Kode = opd.KodeOpd;
+                    vmOpd.Col.Nama = opd.NamaOpd;
+                    vmOpd.Col.Target = opd.Target;
+                    vmOpd.Col.Realisasi = opd.Realisasi;
+                    vmOpd.Col.Persentase = opd.Target > 0 ? Math.Round((opd.Realisasi / opd.Target) * 100, 2) : 0;
 
-                    totalTargetSemuaOpd += opd.Target;
-                    totalRealisasiSemuaOpd += opd.Realisasi;
+                    totalTarget += opd.Target;
+                    totalRealisasi += opd.Realisasi;
 
-                    // Isi sub rincian di dalam OPD
+                    // Sub Rincian
                     foreach (var sub in opd.SubRincians)
                     {
-                        var resSub = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
-                        resSub.Col.Kode = sub.SubRincian;
-                        resSub.Col.Nama = sub.NamaSubRincian;
-                        resSub.Col.Target = sub.Target;
-                        resSub.Col.Realisasi = sub.Realisasi;
-                        resSub.Col.Persentase = sub.Target > 0 ? Math.Round((sub.Realisasi / sub.Target) * 100, 2) : 0;
+                        var vmSub = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
+                        vmSub.Col.Kode = sub.SubRincian;
+                        vmSub.Col.Nama = sub.NamaSubRincian;
+                        vmSub.Col.Target = sub.Target;
+                        vmSub.Col.Realisasi = sub.Realisasi;
+                        vmSub.Col.Persentase =
+                            sub.Target > 0 ? Math.Round((sub.Realisasi / sub.Target) * 100, 2) : 0;
 
-                        resOpd.RekSubRincians.Add(resSub);
+                        vmOpd.RekSubRincians.Add(vmSub);
                     }
 
-                    result.Add(resOpd);
+                    result.Add(vmOpd);
                 }
 
-                var totalOpd = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
-                totalOpd.Col.Kode = "";
-                totalOpd.Col.Nama = "TOTAL SEMUA OPD";
-                totalOpd.Col.Target = totalTargetSemuaOpd;
-                totalOpd.Col.Realisasi = totalRealisasiSemuaOpd;
-                totalOpd.Col.Persentase = totalTargetSemuaOpd > 0
-                    ? Math.Round((totalRealisasiSemuaOpd / totalTargetSemuaOpd) * 100, 2)
-                    : 0;
+                // TOTAL BARIS
+                var totalRow = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
+                totalRow.Col.Kode = "";
+                totalRow.Col.Nama = "TOTAL SEMUA OPD";
+                totalRow.Col.Target = totalTarget;
+                totalRow.Col.Realisasi = totalRealisasi;
+                totalRow.Col.Persentase =
+                    totalTarget > 0 ? Math.Round((totalRealisasi / totalTarget) * 100, 2) : 0;
 
-                result.Insert(0, totalOpd);
+                result.Insert(0, totalRow);
 
                 return result;
             }
+
         }
     }
 }

@@ -2981,12 +2981,9 @@ namespace MonPDReborn.Models
 
                         // Group berdasarkan kode layanan (gabungan 01 & 25 sudah diproses)
                         var groupByLayanan = semuaData
-                        .Where(x =>
-                            int.TryParse(x.KODE_LAYANAN, out int kode) &&
-                            Enum.IsDefined(typeof(EJenisPBB), kode)
-                        )
-                        .GroupBy(x => x.KODE_LAYANAN)
-                        .ToList();
+                            .Where(x => x.KODE_LAYANAN != "07" && x.KODE_LAYANAN != "10" && x.KODE_LAYANAN != "13" && x.KODE_LAYANAN != "15" && x.KODE_LAYANAN != "16" && x.KODE_LAYANAN != "28" && x.KODE_LAYANAN != "29" && x.KODE_LAYANAN != "37" && x.KODE_LAYANAN != "06" && x.KODE_LAYANAN != "88" && x.KODE_LAYANAN != "09")
+                            .GroupBy(x => x.KODE_LAYANAN)
+                            .ToList();
 
                         foreach (var group in groupByLayanan)
                         {
@@ -3001,11 +2998,7 @@ namespace MonPDReborn.Models
                             {
                                 var dataBulan = group.Where(x => x.Bulan == bulan);
 
-                                var masuk = dataBulan.Count(x =>
-                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses ||
-                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Selesai ||
-                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Ditolak ||
-                                    x.STATUS_SELESAI == (int)EStatusLayananPBB.Dibatalkan);
+                                var masuk = dataBulan.Count();
 
                                 var proses = dataBulan.Count(x =>
                                     x.STATUS_SELESAI == (int)EStatusLayananPBB.SedangProses);
