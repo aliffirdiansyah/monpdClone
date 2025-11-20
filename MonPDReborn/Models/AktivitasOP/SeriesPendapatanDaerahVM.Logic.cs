@@ -572,7 +572,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 return result;
             }
 
-            public static List<ViewModel.SudutPandangRekeningJenisObjekOpd.Jenis>GetDataSudutPandangRekeningJenisObjekOpd(int tahunBuku)
+            public static List<ViewModel.SudutPandangRekeningJenisObjekOpd.Jenis> GetDataSudutPandangRekeningJenisObjekOpd(int tahunBuku)
             {
                 var result = new List<ViewModel.SudutPandangRekeningJenisObjekOpd.Jenis>();
 
