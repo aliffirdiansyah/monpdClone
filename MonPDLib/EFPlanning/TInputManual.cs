@@ -102,7 +102,6 @@ public partial class TInputManual
     [Column("TANGGAL", TypeName = "DATE")]
     public DateTime Tanggal { get; set; }
 
-    [Column("REALISASI")]
-    [Precision(10)]
-    public int? Realisasi { get; set; }
+    [Column("REALISASI", TypeName = "NUMBER(18,2)")]
+    public decimal? Realisasi { get; set; }
 }

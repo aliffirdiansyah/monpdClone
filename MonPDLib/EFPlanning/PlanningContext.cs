@@ -31,6 +31,10 @@ public partial class PlanningContext : DbContext
 
     public virtual DbSet<TTransaksiTemp> TTransaksiTemps { get; set; }
 
+    public virtual DbSet<TblAsal> TblAsals { get; set; }
+
+    public virtual DbSet<TblTarget> TblTargets { get; set; }
+
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //        => optionsBuilder.UseOracle("User Id=planning;Password=Bapenda@2025;Data Source=10.21.39.80:1521/DEVDB;");
@@ -114,6 +118,11 @@ public partial class PlanningContext : DbContext
             entity.HasOne(d => d.IdOpdNavigation).WithMany(p => p.TTransaksiTemps)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_M_OPD_TRANSAKSI");
+        });
+
+        modelBuilder.Entity<TblAsal>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("SYS_C0035992");
         });
         modelBuilder.HasSequence("SEQ_M_USER_ROLE");
         modelBuilder.HasSequence("SEQ_T_TRANSAKSI");
