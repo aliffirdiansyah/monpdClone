@@ -80,7 +80,7 @@
 
     //controller pengawasan reklame
     var PengawasanReklameController = new[] {
-        "REKLAMESUMMARY", "REKLAME", "PENDATAANREKLAME", "PENCARIANREKLAME", "INPUTREKLAME"
+        "REKLAMESUMMARY", "REKLAME", "PENDATAANREKLAME", "PENCARIANREKLAME", "INPUTREKLAME", "REKLAMETEMUAN"
     };
     var isPengawasanReklameActive = PengawasanReklameController.Contains(currentController);
 
@@ -410,6 +410,12 @@
                                     <a class="nav-link @(currentController == "REKLAMESUMMARY" ? "active" : "")"
                                        href="@Url.Action("Index", "ReklameSummary")" data-key="t-reksummary">
                                         Reklame Summary
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(currentController == "REKLAMETEMUAN" ? "active" : "")"
+                                       href="@Url.Action("Index", "ReklameTemuan")" data-key="t-rekTemuan">
+                                        Reklame Temuan
                                     </a>
                                 </li>
                                 <li class="nav-item">

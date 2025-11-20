@@ -84,18 +84,18 @@
             width: 20px;
             height: 20px;
         }
-        /* 
-        .dx-datagrid .dx-data-row > td {
-            border: 1px solid black !important; 
-        }
+        /*
+                .dx-datagrid .dx-data-row > td {
+                    border: 1px solid black !important;
+                }
 
-        .dx-datagrid-filter-row .dx-editor-cell {
-            border: 1px solid black !important; 
-        } */
+                .dx-datagrid-filter-row .dx-editor-cell {
+                    border: 1px solid black !important;
+                } */
 
 
 
-       
+
 
 
 
@@ -125,10 +125,10 @@
             }
 
         /* .menu-dropdown {
-            padding-left: 0 !important;
-            margin-left: 0 !important;
-            width: 100% !important;
-        } */
+                    padding-left: 0 !important;
+                    margin-left: 0 !important;
+                    width: 100% !important;
+                } */
         [data-layout=vertical][data-sidebar-size=sm] .navbar-menu .navbar-nav .nav-item {
             color: #ffffff !important;
             font-weight: normal !important;
@@ -137,42 +137,43 @@
             border-radius: 4px !important;
             display: block !important;
         }
-            .menu-dropdown ul.nav-sm {
-                padding-left: 0 !important;
-                margin-left: 0 !important;
-                list-style: none !important;
+
+        .menu-dropdown ul.nav-sm {
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+            list-style: none !important;
+        }
+
+            .menu-dropdown ul.nav-sm .nav-item {
+                margin: 0 !important;
+                padding: 0rem 0.75rem 0rem 1.75rem !important;
             }
 
-                .menu-dropdown ul.nav-sm .nav-item {
-                    margin: 0 !important;
-                    padding: 0rem 0.75rem 0rem 1.75rem !important;
-                }
+            .menu-dropdown ul.nav-sm .nav-link {
+                color: #ffffff !important;
+                font-weight: normal !important;
+                text-decoration: none !important;
+                transition: background-color 0.2s, color 0.2s !important;
+                border-radius: 4px !important;
+                display: block !important;
+            }
 
-                .menu-dropdown ul.nav-sm .nav-link {
+                .menu-dropdown ul.nav-sm .nav-link:hover {
+                    background-color: #AFD4D2 !important;
                     color: #ffffff !important;
-                    font-weight: normal !important;
-                    text-decoration: none !important;
-                    transition: background-color 0.2s, color 0.2s !important;
-                    border-radius: 4px !important;
-                    display: block !important;
                 }
 
-                    .menu-dropdown ul.nav-sm .nav-link:hover {
-                        background-color: #AFD4D2 !important;
-                        color: #ffffff !important;
-                    }
-
-                    .menu-dropdown ul.nav-sm .nav-link.active {
-                        background-color: #5EA8A4 !important;
+                .menu-dropdown ul.nav-sm .nav-link.active {
+                    background-color: #5EA8A4 !important;
                     color: #1E2640 !important;
-                    }
+                }
 
         [data-layout=vertical][data-sidebar-size=sm] .menu-dropdown.collapse {
             background-color: #5EA8A4 !important;
             padding: 0 !important;
             margin: 0 !important;
             border-radius: 4px;
-            z-index: 2050; 
+            z-index: 2050;
         }
 
             [data-layout=vertical][data-sidebar-size=sm] .menu-dropdown.collapse ul.nav-sm .nav-link {
@@ -188,8 +189,6 @@
                     background-color: #AFD4D2 !important;
                     color: #ffffff !important;
                 }
-
-
 
     </style>
 
@@ -301,20 +300,24 @@
         .bg-dashboard-satu {
             background: linear-gradient(135deg, #00712D, #2575fc);
         }
-        .bg-dashboard-dua{
+
+        .bg-dashboard-dua {
             background: linear-gradient(135deg, #6A0DAD, #C63C51);
         }
-        .bg-dashboard-tiga{
+
+        .bg-dashboard-tiga {
             background: linear-gradient(135deg, #525FE1, #836096);
         }
-        .bg-dashboard-empat{
+
+        .bg-dashboard-empat {
             background: linear-gradient(135deg, #025464, #7149C6);
         }
 
         .bg-dashboard-total {
             background: linear-gradient(135deg, #F31559, #0802A3);
         }
-        .bg-header-color{
+
+        .bg-header-color {
             background-color: rgba(54, 186, 152, 0.5);
         }
 
@@ -352,10 +355,10 @@
             color: #0d6efd;
         }
 
-        .value-link-primary:hover {
-            color: #084298;
-            text-decoration: underline;
-        }
+            .value-link-primary:hover {
+                color: #084298;
+                text-decoration: underline;
+            }
 
         /* Hijau (success) */
         .value-link-success {
@@ -398,7 +401,8 @@
             }
 
     </style>
-    <style> /* style detail potensi */
+    <style>
+        /* style detail potensi */
         .text-wrap {
             white-space: normal; /* Izinkan teks meluncur ke baris baru */
         }
@@ -434,7 +438,7 @@
         }
 
     </style>
-   @*  <style>
+    @*  <style>
         #modalDetailKategori {
             z-index: 1070 !important; /* di atas modal pertama */
         }
@@ -448,10 +452,10 @@
 </head>
 
 <body>
-     <div id="loader" class="loader" style="display: block">
-    <div class="logo_sby">
-    <img src="~/assets/images/logo-surabaya.png" height="100" />
-    </div>
+    <div id="loader" class="loader" style="display: block">
+        <div class="logo_sby">
+            <img src="~/assets/images/logo-surabaya.png" height="100" />
+        </div>
     </div>
 
     <!-- Begin page -->
@@ -520,7 +524,6 @@
     </button>
     <!--end back-to-top-->
     <!-- JAVASCRIPT -->
-
     @*VELZON JS*@
     @* <script src="~/assets/js/jquery.js"></script> *@
     <script src="~/assets/js/jquery-ui.js"></script>

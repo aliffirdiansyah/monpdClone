@@ -40,4 +40,8 @@ public partial class MUserLogin
     [StringLength(50)]
     [Unicode(false)]
     public string InsertBy { get; set; } = null!;
+
+    [Column("STATUS")]
+    [Precision(1)]
+    public bool? Status { get; set; }
 }

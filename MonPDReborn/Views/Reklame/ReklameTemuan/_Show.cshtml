@@ -1,0 +1,90 @@
+﻿@using static MonPDReborn.Models.Reklame.ReklameTemuanVM.ViewModel
+@model MonPDReborn.Models.Reklame.ReklameTemuanVM.Show
+
+<div class="table-responsive">
+    @(
+    Html.DevExtreme().DataGrid<Rekap>()
+        .ID("rekapupayagrid")
+        .DataSource(Model.Data)
+        .ShowBorders(true)
+        .ShowColumnHeaders(true)
+        .ShowColumnLines(true)
+        .ShowRowLines(true)
+        .AllowColumnResizing(true)
+        .RowAlternationEnabled(true)
+        .ColumnAutoWidth(true)
+            @* .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(false))
+            .FilterRow(f => f.Visible(true)) *@
+            .HeaderFilter(h => h.Visible(true))
+            .Sorting(s => s.Mode(GridSortingMode.Multiple))
+        .Paging(p => p.PageSize(20))
+        .Pager(p => p
+            .ShowPageSizeSelector(true)
+            .AllowedPageSizes(new[] { 10, 20, 50 })
+            .ShowInfo(true)
+        )
+        .SearchPanel(sp => sp
+            .Visible(true)
+            .Width(240)
+            .Placeholder("Cari...")
+        )
+        .Export(e => e.Enabled(true).AllowExportSelectedData(false).Formats(new[] { "xlsx", "pdf" }))
+        .OnExporting("exportGrid")
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.BulanNama).Caption("BULAN");
+            columns.AddFor(m => m.Survey).Caption("Survey").Format("#,##0").CellTemplate(new JS("surveyCellTemplate"));
+            columns.AddFor(m => m.Pemberitahuan).Caption("Pemberitahuan").Format("#,##0").CellTemplate(new JS("pemberitahuanCellTemplate"));
+            columns.AddFor(m => m.Silang).Caption("Silang").Format("#,##0").CellTemplate(new JS("silangCellTemplate"));
+            columns.AddFor(m => m.Bongkar).Caption("Bongkar").Format("#,##0").CellTemplate(new JS("bongkarCellTemplate"));
+            columns.AddFor(m => m.Bantip).Caption("Bantip").Format("#,##0").CellTemplate(new JS("bantipCellTemplate"));
+            columns.AddFor(m => m.JmlKetetapan).Caption("Jumlah Ketetapan").Format("#,##0");
+            columns.AddFor(m => m.NominalKetetapan).Caption("Nominal Ketetapan").Format("#,##0");
+                            
+        })
+        .Summary(summary => {
+            summary.TotalItems(items =>
+            {
+                items.AddFor(m => m.BulanNama)
+                        .SummaryType(SummaryType.Sum)
+                        .DisplayFormat("Total");
+
+                items.AddFor(m => m.Survey)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Pemberitahuan)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Silang)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Bongkar)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                items.AddFor(m => m.Bantip)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                items.AddFor(m => m.JmlKetetapan)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("{0}");
+
+                items.AddFor(m => m.NominalKetetapan)
+                        .SummaryType(SummaryType.Sum)
+                        .ValueFormat("#,##0")
+                        .DisplayFormat("Rp {0}");
+                                
+            });
+        })
+    )
+</div>

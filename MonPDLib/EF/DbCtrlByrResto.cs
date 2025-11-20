@@ -10,7 +10,7 @@ namespace MonPDLib.EF;
 public partial class DbCtrlByrResto
 {
     [Column("NOP")]
-    [StringLength(100)]
+    [StringLength(50)]
     [Unicode(false)]
     public string? Nop { get; set; }
 
@@ -24,7 +24,7 @@ public partial class DbCtrlByrResto
     public decimal? KategoriId { get; set; }
 
     [Column("NAMA_KATEGORI")]
-    [StringLength(38)]
+    [StringLength(150)]
     [Unicode(false)]
     public string? NamaKategori { get; set; }
 

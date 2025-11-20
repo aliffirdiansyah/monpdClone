@@ -1,0 +1,263 @@
+﻿@model MonPDReborn.Models.Reklame.ReklameTemuanVM.Index
+
+@{
+    ViewData["Title"] = "Reklame Temuan";
+    Layout = "_Layout";
+}
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex bg-header-color align-items-center">
+                <div class="flex-grow-1">
+                    <h4 class="card-title text-dark fs-16 mb-1">
+                        Reklame Temuan
+                    </h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <select id="tahunFilter" name="tahun"
+                            class="form-select rounded-pill mb-3"
+                            aria-label="Pilih Tahun"
+                            style="max-width: 200px;">
+                        <option value="" disabled>Pilih Tahun</option>
+                        @for (int t = DateTime.Now.Year; t >= 2024; t--)
+                        {
+                            if (t == DateTime.Now.Year)
+                            {
+                                <option value="@t" selected>@t</option>
+                            }
+                            else
+                            {
+                                <option value="@t">@t</option>
+                            }
+                        }
+
+                    </select>
+
+                    <button type="button" class="btn btn-success rounded-pill mb-3">
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center">
+                    <div id="loading2-Show" class="spinner-border text-primary" style="display: none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="Show"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            // Tahun default dari dropdown (sudah diset oleh Razor)
+            var tahunDefault = $("#tahunFilter").val();
+
+            // --- Fungsi pemanggil Show ---
+            function loadShow(tahun) {
+                $("#loading2-Show").show();
+
+                $.ajax({
+                    url: '/ReklameTemuan/Show',
+                    type: 'GET',
+                    data: { tahun: tahun },
+                    success: function (result) {
+                        $("#Show").html(result);
+                    },
+                    complete: function () {
+                        $("#loading2-Show").hide();
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengambil data.");
+                    }
+                });
+            }
+
+            // --- Auto load saat halaman dibuka ---
+            loadShow(tahunDefault);
+
+            // --- Klik tombol filter ---
+            $(".btn.btn-success").on("click", function () {
+                var tahun = $("#tahunFilter").val();
+                loadShow(tahun);
+            });
+
+        });
+    </script>
+    <script>
+        function surveyCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const ket = "PENDATAAN SURVEY"
+
+             const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    loadDetail(tahun, bulan, ket);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function pemberitahuanCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const ket = "PEMBERITAHUAN"
+
+             const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    loadDetail(tahun, bulan, ket);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function silangCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const ket = "PENYILANGAN"
+
+             const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    loadDetail(tahun, bulan, ket);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function bongkarCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const ket = "PEMBONGKARAN"
+
+             const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    loadDetail(tahun, bulan, ket);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function bantipCellTemplate(cellElement, cellInfo) {
+            const jumlah = cellInfo.value ?? 0;
+            const tahun = cellInfo.data.Tahun;
+            const bulan = cellInfo.data.Bulan;
+            const ket = "BANTIP REKLAME"
+
+             const $link = $('<a>')
+                .addClass('value-link text-decoration-none')
+                .attr('href', 'javascript:void(0);')
+                .attr('title', 'Lihat Detail')
+                .text(jumlah.toLocaleString('id-ID'))
+                .on('click', () => {
+                    loadDetail(tahun, bulan, ket);
+                });
+
+            const $wrapper = $('<div>')
+                .css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                })
+                .append($link);
+
+            $(cellElement).append($wrapper);
+        }
+        function loadDetail(tahun, bulan, ket) {
+            $.ajax({
+                url: '/ReklameTemuan/Detail',
+                type: 'GET',
+                data: { tahun, bulan, ket},
+                beforeSend: function () {
+                    $("#loader").show();
+                    $("#staticBackdropLargeScrollable").modal('hide');
+                },
+                success: function (response) {
+                    $("#loader").hide();
+                    if (response.Status === undefined) {
+                        $("#staticBackdropLargeScrollable .modal-title").html("Detail");
+                        $("#staticBackdropLargeScrollable .modal-body").html(response);
+                        $("#staticBackdropLargeScrollable").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function () {
+                    $("#loader").hide();
+                    $("#staticBackdropLargeScrollable .modal-title").html("Detail");
+                    $("#staticBackdropLargeScrollable .modal-body").html('<p class="text-danger">Terjadi kesalahan saat memuat data.</p>');
+                    $("#staticBackdropLargeScrollable").modal('show');
+                },
+                complete: function () {
+                    $("#loader").hide();
+                }
+            });
+        }
+    </script>
+
+}

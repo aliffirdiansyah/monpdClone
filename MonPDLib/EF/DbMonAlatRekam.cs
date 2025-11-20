@@ -10,7 +10,7 @@ namespace MonPDLib.EF;
 public partial class DbMonAlatRekam
 {
     [Column("NOP")]
-    [StringLength(30)]
+    [StringLength(50)]
     [Unicode(false)]
     public string? Nop { get; set; }
 
