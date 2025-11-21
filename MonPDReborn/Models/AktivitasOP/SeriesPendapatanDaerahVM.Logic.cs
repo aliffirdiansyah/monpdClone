@@ -428,8 +428,11 @@ namespace MonPDReborn.Models.AktivitasOP
                 var result = new List<ViewModel.SudutPandangRekeningJenisObjekOpd.Jenis>();
 
                 var context = DBClass.GetContext();
+                var planning = DBClass.GetEPlanningContext();
+                int tahunBerjalan = DateTime.Now.Year;
 
-                var query = context.DbPendapatanDaerahs
+                // 1. TARGET (selalu dari DbPendapatanDaerah)
+                var target = context.DbPendapatanDaerahs
                     .Where(x => x.TahunBuku == tahunBuku)
                     .GroupBy(x => new
                     {
@@ -442,20 +445,105 @@ namespace MonPDReborn.Models.AktivitasOP
                         x.SubRincian,
                         x.NamaSubRincian
                     })
-                    .Select(x => new
+                    .Select(g => new
                     {
-                        x.Key.Jenis,
-                        x.Key.NamaJenis,
-                        x.Key.Objek,
-                        x.Key.NamaObjek,
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        x.Key.SubRincian,
-                        x.Key.NamaSubRincian,
-                        Target = x.Sum(y => y.Target),
-                        Realisasi = x.Sum(y => y.Realisasi)
+                        g.Key.Jenis,
+                        g.Key.NamaJenis,
+                        g.Key.Objek,
+                        g.Key.NamaObjek,
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.SubRincian,
+                        g.Key.NamaSubRincian,
+                        Target = g.Sum(y => y.Target)
                     })
                     .ToList();
+
+                // 2. REALISASI manual jika tahun berjalan
+
+                var realisasi =
+                    (tahunBuku == tahunBerjalan)
+                    ? planning.TInputManuals
+                        .Where(x => x.Tanggal <= DateTime.Now)
+                        .GroupBy(x => new
+                        {
+                            x.Jenis,
+                            x.NamaJenis,
+                            x.Objek,
+                            x.NamaObjek,
+                            x.KodeOpd,
+                            x.NamaOpd,
+                            x.SubRincian,
+                            x.NamaSubRincian
+                        })
+                        .Select(g => new
+                        {
+                            g.Key.Jenis,
+                            g.Key.NamaJenis,
+                            g.Key.Objek,
+                            g.Key.NamaObjek,
+                            g.Key.KodeOpd,
+                            g.Key.NamaOpd,
+                            g.Key.SubRincian,
+                            g.Key.NamaSubRincian,
+                            Realisasi = g.Sum(y => y.Realisasi.GetValueOrDefault())
+                        })
+                        .ToList()
+                    : context.DbPendapatanDaerahs
+                        .Where(x => x.TahunBuku == tahunBuku)
+                        .GroupBy(x => new
+                        {
+                            x.Jenis,
+                            x.NamaJenis,
+                            x.Objek,
+                            x.NamaObjek,
+                            x.KodeOpd,
+                            x.NamaOpd,
+                            x.SubRincian,
+                            x.NamaSubRincian
+                        })
+                        .Select(g => new
+                        {
+                            g.Key.Jenis,
+                            g.Key.NamaJenis,
+                            g.Key.Objek,
+                            g.Key.NamaObjek,
+                            g.Key.KodeOpd,
+                            g.Key.NamaOpd,
+                            g.Key.SubRincian,
+                            g.Key.NamaSubRincian,
+                            Realisasi = g.Sum(y => y.Realisasi)
+                        })
+                        .ToList();
+
+                // ============================================================
+                // 3. JOIN TARGET + REALISASI (SAMA PERSIS REFERENSI)
+                // ============================================================
+                var query =
+                    (from t in target
+                     join r in realisasi
+                        on new { t.Jenis, t.Objek, t.KodeOpd, t.SubRincian }
+                        equals new { r.Jenis, r.Objek, r.KodeOpd, r.SubRincian }
+                        into jr
+                     from r in jr.DefaultIfEmpty()
+                     select new
+                     {
+                         t.Jenis,
+                         t.NamaJenis,
+                         t.Objek,
+                         t.NamaObjek,
+                         t.KodeOpd,
+                         t.NamaOpd,
+                         t.SubRincian,
+                         t.NamaSubRincian,
+
+                         Target = t.Target,
+                         Realisasi = r?.Realisasi ?? 0
+                     }).ToList();
+
+                // ============================================================
+                // 4. MULAI PAKAI HIERARKI ASLI ANDA (TIDAK DIUBAH)
+                // ============================================================
 
                 var groupByJenis = query
                     .GroupBy(x => new { x.Jenis, x.NamaJenis })
@@ -475,9 +563,11 @@ namespace MonPDReborn.Models.AktivitasOP
                     resJenis.Col.Nama = jenis.NamaJenis;
                     resJenis.Col.Target = jenis.Target;
                     resJenis.Col.Realisasi = jenis.Realisasi;
-                    resJenis.Col.Persentase = jenis.Target > 0 ? Math.Round((jenis.Realisasi / jenis.Target) * 100, 2) : 0;
+                    resJenis.Col.Persentase = jenis.Target > 0
+                        ? Math.Round((decimal)jenis.Realisasi / jenis.Target * 100, 2)
+                        : 0;
 
-                    // Grouping level Obyek
+                    // OBJEK
                     var groupByObjek = query
                         .Where(x => x.Jenis == jenis.Jenis)
                         .GroupBy(x => new { x.Objek, x.NamaObjek })
@@ -497,9 +587,11 @@ namespace MonPDReborn.Models.AktivitasOP
                         resObjek.Col.Nama = objek.NamaObjek;
                         resObjek.Col.Target = objek.Target;
                         resObjek.Col.Realisasi = objek.Realisasi;
-                        resObjek.Col.Persentase = objek.Target > 0 ? Math.Round((objek.Realisasi / objek.Target) * 100, 2) : 0;
+                        resObjek.Col.Persentase = objek.Target > 0
+                            ? Math.Round((decimal)objek.Realisasi / objek.Target * 100, 2)
+                            : 0;
 
-                        // Grouping level OPD
+                        // OPD
                         var groupByOpd = query
                             .Where(x => x.Jenis == jenis.Jenis && x.Objek == objek.Objek)
                             .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
@@ -519,11 +611,15 @@ namespace MonPDReborn.Models.AktivitasOP
                             resOpd.Col.Nama = opd.NamaOpd;
                             resOpd.Col.Target = opd.Target;
                             resOpd.Col.Realisasi = opd.Realisasi;
-                            resOpd.Col.Persentase = opd.Target > 0 ? Math.Round((opd.Realisasi / opd.Target) * 100, 2) : 0;
+                            resOpd.Col.Persentase = opd.Target > 0
+                                ? Math.Round((decimal)opd.Realisasi / opd.Target * 100, 2)
+                                : 0;
 
-                            // Grouping level Sub OPD
+                            // SUBRINCIAN
                             var groupBySubRincian = query
-                                .Where(x => x.Jenis == jenis.Jenis && x.Objek == objek.Objek && x.KodeOpd == opd.KodeOpd)
+                                .Where(x => x.Jenis == jenis.Jenis &&
+                                            x.Objek == objek.Objek &&
+                                            x.KodeOpd == opd.KodeOpd)
                                 .GroupBy(x => new { x.SubRincian, x.NamaSubRincian })
                                 .Select(x => new
                                 {
@@ -534,16 +630,18 @@ namespace MonPDReborn.Models.AktivitasOP
                                 })
                                 .ToList();
 
-                            foreach (var subrincian in groupBySubRincian)
+                            foreach (var sub in groupBySubRincian)
                             {
-                                var resSubRincian = new ViewModel.SudutPandangRekeningJenisObjekOpd.SubRincian();
-                                resSubRincian.Col.Kode = subrincian.SubRincian;
-                                resSubRincian.Col.Nama = subrincian.NamaSubRincian;
-                                resSubRincian.Col.Target = subrincian.Target;
-                                resSubRincian.Col.Realisasi = subrincian.Realisasi;
-                                resSubRincian.Col.Persentase = subrincian.Target > 0 ? Math.Round((subrincian.Realisasi / subrincian.Target) * 100, 2) : 0;
+                                var resSub = new ViewModel.SudutPandangRekeningJenisObjekOpd.SubRincian();
+                                resSub.Col.Kode = sub.SubRincian;
+                                resSub.Col.Nama = sub.NamaSubRincian;
+                                resSub.Col.Target = sub.Target;
+                                resSub.Col.Realisasi = sub.Realisasi;
+                                resSub.Col.Persentase = sub.Target > 0
+                                    ? Math.Round((decimal)sub.Realisasi / sub.Target * 100, 2)
+                                    : 0;
 
-                                resOpd.RekSubRincians.Add(resSubRincian);
+                                resOpd.RekSubRincians.Add(resSub);
                             }
 
                             resObjek.RekOpds.Add(resOpd);
