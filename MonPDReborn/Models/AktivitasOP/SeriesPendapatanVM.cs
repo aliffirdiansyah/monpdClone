@@ -111,8 +111,6 @@ namespace MonPDReborn.Models.AktivitasOP
                 var context = DBClass.GetContext();
                 var planning = DBClass.GetEPlanningContext();
 
-                DateTime today = DateTime.Now.Date;
-
                 // =========================
                 // 1) TARGET
                 // =========================
@@ -140,7 +138,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 // 2) REALISASI OTOMATIS
                 // =========================
                 var realisasiDb = context.DbPendapatanDaerahs
-                    .Where(x => x.TahunBuku == year)
+                    .Where(x => x.TahunBuku == year && x.Kelompok == "4.2" && x.Jenis == "4.1.03")
                     .GroupBy(x => new
                     {
                         x.KodeOpd,
@@ -163,7 +161,7 @@ namespace MonPDReborn.Models.AktivitasOP
                 // 3) REALISASI MANUAL
                 // =========================
                 var realManual = planning.TInputManuals
-                    .Where(x => x.Tanggal <= today)
+                    .Where(x => x.Tanggal.Year == year)
                     .GroupBy(x => new
                     {
                         x.KodeOpd,

@@ -1,6 +1,7 @@
 ﻿using DevExpress.PivotGrid.OLAP;
 using MonPDLib;
 using System.Globalization;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace MonPDReborn.Models.AktivitasOP
@@ -31,14 +32,14 @@ namespace MonPDReborn.Models.AktivitasOP
             public string Bulan { get; set; } = null!;
             public Show(int bulan)
             {
-                Data = Method.GetSudutPandangRekeningJenisObjekOpdData(bulan);
+                Data = Method.GetSudutPandangRekeningJenisObjekOpdDataNonAkumulasi(bulan);
                 Bulan = new DateTime(DateTime.Now.Year, bulan, 1).ToString("MMMM", new CultureInfo("id-ID"));
             }
         }
         public class Akumulasi
         {
             public List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> Data { get; set; } = new();
-            public string Bulan { get;set; } = null!;
+            public string Bulan { get; set; } = null!;
             public Akumulasi(int bulan)
             {
                 Data = Method.GetSudutPandangRekeningJenisObjekOpdDataAkumulasi(bulan);
@@ -135,216 +136,73 @@ namespace MonPDReborn.Models.AktivitasOP
         }
         public class Method
         {
-            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>GetSudutPandangRekeningJenisObjekOpdData(int month)
+            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> GetSudutPandangRekeningJenisObjekOpdDataNonAkumulasi(int month)
             {
                 var result = new List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>();
                 var context = DBClass.GetContext();
                 var planningContext = DBClass.GetEPlanningContext();
 
                 var yearNow = DateTime.Now.Year;
-                var yearMin1 = yearNow - 1;
+                var yearMines = yearNow - 1;
 
-                // ============================
-                // 1. TARGET & REALISASI AKUNTANSI (DbPendapatanDaerah)
-                // ============================
-                var akpQuery = context.DbPendapatanDaerahs
-                    .Where(x => (x.TahunBuku == yearNow || x.TahunBuku == yearMin1)
-                             && x.Bulan == month)
-                    .GroupBy(x => new
+                // 🔹 Ambil data DbPendapatanDaerah HANYA untuk bulan yang dipilih
+                //    Terapkan filter khusus hanya untuk tahun sekarang
+                var query = context.DbPendapatanDaerahs
+                    .Where(x =>
+                        (x.TahunBuku == yearNow && x.Bulan == month && x.Kelompok != "4.2" && x.Jenis != "4.1.03") ||
+                        (x.TahunBuku == yearMines && x.Bulan == month))
+                    .ToList();
+
+                // 🔹 Ambil data input manual untuk bulan & tahun sekarang (tanpa filter khusus)
+                var inputManual = planningContext.TInputManuals
+                    .Where(x => x.Tanggal.Year == yearNow && x.Tanggal.Month == month)
+                    .Select(x => new
                     {
                         x.KodeOpd,
                         x.NamaOpd,
                         x.SubRincian,
                         x.NamaSubRincian,
-                        x.TahunBuku
-                    })
-                    .Select(x => new
-                    {
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        x.Key.SubRincian,
-                        x.Key.NamaSubRincian,
-                        x.Key.TahunBuku,
-                        Target = x.Sum(y => y.Target),
-                        Realisasi = x.Sum(y => y.Realisasi)
+                        TahunBuku = x.Tanggal.Year,
+                        Target = 0m,
+                        Realisasi = x.Realisasi
                     })
                     .ToList();
 
-
-                // ============================
-                // 2. REALISASI MANUAL (TInputManuals)
-                // ============================
-                var realisasiManualQuery = planningContext.TInputManuals
-                    .Where(x => x.Tanggal.Year == yearNow && x.Tanggal.Month == month)
-                    .GroupBy(x => new
+                // 🔹 Gabungkan DbPendapatanDaerah dan input manual
+                // 🔹 Ambil DbPendapatanDaerah
+                var dbData = query
+                    .Select(x => new PendapatanTemp
                     {
-                        x.KodeOpd,
-                        x.NamaOpd,
-                        x.SubRincian,
-                        x.NamaSubRincian
-                    })
-                    .Select(x => new
-                    {
-                        x.Key.KodeOpd,
-                        x.Key.NamaOpd,
-                        x.Key.SubRincian,
-                        x.Key.NamaSubRincian,
-                        RealisasiManual = x.Sum(y => y.Realisasi)
+                        KodeOpd = x.KodeOpd,
+                        NamaOpd = x.NamaOpd,
+                        SubRincian = x.SubRincian,
+                        NamaSubRincian = x.NamaSubRincian,
+                        TahunBuku = x.TahunBuku,
+                        Target = x.Target,
+                        Realisasi = x.Realisasi
                     })
                     .ToList();
 
-
-                // ============================
-                // 3. MERGE (AKUNTANSI + MANUAL)
-                // ============================
-                var merged =
-                 from a in akpQuery
-                 join m in realisasiManualQuery
-                     on new { a.KodeOpd, a.SubRincian }
-                     equals new { m.KodeOpd, m.SubRincian }
-                     into gj
-                 from m in gj.DefaultIfEmpty()
-                 select new
-                 {
-                     a.KodeOpd,
-                     a.NamaOpd,
-                     a.SubRincian,
-                     a.NamaSubRincian,
-                     a.TahunBuku,
-
-                     Target = a.Target,
-
-                     // ⚡ FIX:
-                     // Tahun sekarang = Akuntansi + manual
-                     // Tahun lalu = akuntansi saja (TIDAK BOLEH ditambah manual)
-                     RealisasiAccrual =
-                         (a.TahunBuku == yearNow)
-                         ? a.Realisasi + (m?.RealisasiManual ?? 0)
-                         : a.Realisasi
-                 };
-
-
-
-                // ============================
-                // 4. COMBINE: Tahun Ini & Tahun Lalu
-                // ============================
-                var combined = merged
-                    .GroupBy(x => new
+                // 🔹 Ambil input manual
+                var manualData = inputManual
+                    .Select(x => new PendapatanTemp
                     {
-                        x.KodeOpd,
-                        x.NamaOpd,
-                        x.SubRincian,
-                        x.NamaSubRincian
-                    })
-                    .Select(g => new
-                    {
-                        g.Key.KodeOpd,
-                        g.Key.NamaOpd,
-                        g.Key.SubRincian,
-                        g.Key.NamaSubRincian,
-
-                        Target = g.Where(y => y.TahunBuku == yearNow).Sum(y => y.Target),
-                        RealisasiNow = g.Where(y => y.TahunBuku == yearNow).Sum(y => y.RealisasiAccrual),
-                        RealisasiMinSatu = g.Where(y => y.TahunBuku == yearMin1).Sum(y => y.RealisasiAccrual)
+                        KodeOpd = x.KodeOpd,
+                        NamaOpd = x.NamaOpd,
+                        SubRincian = x.SubRincian,
+                        NamaSubRincian = x.NamaSubRincian,
+                        TahunBuku = x.TahunBuku,
+                        Target = x.Target,
+                        Realisasi = x.Realisasi ?? 0
                     })
                     .ToList();
 
-
-                // ============================
-                // 5. GROUP OPD
-                // ============================
-                var groupByOpd = combined
-                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
-                    .Select(g => new
-                    {
-                        g.Key.KodeOpd,
-                        g.Key.NamaOpd,
-                        Target = g.Sum(y => y.Target),
-                        RealisasiNow = g.Sum(y => y.RealisasiNow),
-                        RealisasiMinSatu = g.Sum(y => y.RealisasiMinSatu),
-                        Subs = g.ToList()
-                    })
-                    .OrderBy(x => x.KodeOpd)
-                    .ToList();
+                // 🔹 Gabungkan semua
+                var allData = dbData.Concat(manualData).ToList();
 
 
-                // ============================
-                // 6. MAPPING VIEWMODEL
-                // ============================
-                decimal totalTarget = 0, totalNow = 0, totalPrev = 0;
-
-                foreach (var opd in groupByOpd)
-                {
-                    var vm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
-                    vm.Col.Kode = opd.KodeOpd;
-                    vm.Col.Nama = opd.NamaOpd;
-                    vm.Col.Target = opd.Target;
-                    vm.Col.RealisasiNow = opd.RealisasiNow;
-                    vm.Col.RealisasiMinSatu = opd.RealisasiMinSatu;
-                    vm.Col.Selisih = opd.RealisasiNow - opd.RealisasiMinSatu;
-                    vm.Col.Persentase = opd.Target > 0
-                        ? Math.Round((opd.RealisasiNow / opd.Target) * 100, 2)
-                        : 0;
-
-                    totalTarget += opd.Target;
-                    totalNow += opd.RealisasiNow;
-                    totalPrev += opd.RealisasiMinSatu;
-
-                    foreach (var s in opd.Subs)
-                    {
-                        var subVm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
-                        subVm.Col.Kode = s.SubRincian;
-                        subVm.Col.Nama = s.NamaSubRincian;
-                        subVm.Col.Target = s.Target;
-                        subVm.Col.RealisasiNow = s.RealisasiNow;
-                        subVm.Col.RealisasiMinSatu = s.RealisasiMinSatu;
-                        subVm.Col.Selisih = s.RealisasiNow - s.RealisasiMinSatu;
-                        subVm.Col.Persentase = s.Target > 0
-                            ? Math.Round((s.RealisasiNow / s.Target) * 100, 2)
-                            : 0;
-
-                        vm.RekSubRincians.Add(subVm);
-                    }
-
-                    result.Add(vm);
-                }
-
-                // ============================
-                // 7. TOTAL
-                // ============================
-                var totalRow = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
-                totalRow.Col.Kode = "";
-                totalRow.Col.Nama = "TOTAL SEMUA OPD";
-                totalRow.Col.Target = totalTarget;
-                totalRow.Col.RealisasiNow = totalNow;
-                totalRow.Col.RealisasiMinSatu = totalPrev;
-                totalRow.Col.Selisih = totalNow - totalPrev;
-                totalRow.Col.Persentase = totalTarget > 0
-                    ? Math.Round((totalNow / totalTarget) * 100, 2)
-                    : 0;
-
-                result.Insert(0, totalRow);
-
-                return result;
-            }
-
-            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>
-                GetSudutPandangRekeningJenisObjekOpdDataAkumulasi(int month)
-            {
-                var result = new List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>();
-                var context = DBClass.GetContext();
-                var planningContext = DBClass.GetEPlanningContext();
-
-                var yearNow = DateTime.Now.Year;
-                var yearMin1 = yearNow - 1;
-
-                // ============================================================================
-                // 1) AMBIL DATA AKUNTANSI (AKUMULASI JANUARI sd BULAN)
-                // ============================================================================
-                var akpQuery = context.DbPendapatanDaerahs
-                    .Where(x =>
-                        (x.TahunBuku == yearNow && x.Bulan <= month) ||
-                        (x.TahunBuku == yearMin1 && x.Bulan <= month))
+                // 🔹 Group by untuk menghitung Target & Realisasi per tahun
+                var rawData = allData
                     .GroupBy(x => new
                     {
                         x.KodeOpd,
@@ -365,11 +223,8 @@ namespace MonPDReborn.Models.AktivitasOP
                     })
                     .ToList();
 
-                // ============================================================================
-                // 2) REALISASI MANUAL (Manual hanya tahun berjalan, akumulasi juga)
-                // ============================================================================
-                var realisasiManualQuery = planningContext.TInputManuals
-                    .Where(x => x.Tanggal.Year == yearNow && x.Tanggal.Month <= month)
+                // 🔹 Gabungkan data tahun ini dan tahun sebelumnya per OPD/SubRincian
+                var combined = rawData
                     .GroupBy(x => new
                     {
                         x.KodeOpd,
@@ -383,95 +238,42 @@ namespace MonPDReborn.Models.AktivitasOP
                         g.Key.NamaOpd,
                         g.Key.SubRincian,
                         g.Key.NamaSubRincian,
-                        RealManual = g.Sum(y => y.Realisasi)
-                    })
-                    .ToList();
-
-                // 3) MERGE = AKUNTANSI + MANUAL (tahun ini boleh tambah manual)
-
-
-                var merged =
-                    from a in akpQuery
-                    join m in realisasiManualQuery
-                        on new { a.KodeOpd, a.SubRincian }
-                        equals new { m.KodeOpd, m.SubRincian }
-                        into gj
-                    from m in gj.DefaultIfEmpty()
-                    select new
-                    {
-                        a.KodeOpd,
-                        a.NamaOpd,
-                        a.SubRincian,
-                        a.NamaSubRincian,
-                        a.TahunBuku,
-                        Target = a.Target,
-
-                        // 🔥 PENTING:
-                        // Tahun berjalan = akuntansi + manual
-                        // Tahun lalu = akuntansi saja
-                        RealisasiAccrual = a.TahunBuku == yearNow
-                            ? a.Realisasi + (m?.RealManual ?? 0)
-                            : a.Realisasi
-                    };
-
-
-                // 4) COMBINE PER SUBRINCIAN
-
-                var combined = merged
-                    .GroupBy(x => new
-                    {
-                        x.KodeOpd,
-                        x.NamaOpd,
-                        x.SubRincian,
-                        x.NamaSubRincian
-                    })
-                    .Select(g => new
-                    {
-                        g.Key.KodeOpd,
-                        g.Key.NamaOpd,
-                        g.Key.SubRincian,
-                        g.Key.NamaSubRincian,
-
                         Target = g.Where(y => y.TahunBuku == yearNow).Sum(y => y.Target),
-                        RealisasiNow = g.Where(y => y.TahunBuku == yearNow).Sum(y => y.RealisasiAccrual),
-                        RealisasiMinSatu = g.Where(y => y.TahunBuku == yearMin1).Sum(y => y.RealisasiAccrual)
+                        RealisasiNow = g.Where(y => y.TahunBuku == yearNow).Sum(y => y.Realisasi),
+                        RealisasiMinSatu = g.Where(y => y.TahunBuku == yearMines).Sum(y => y.Realisasi)
                     })
                     .ToList();
 
-
-                // 5) GROUP OPD
-
+                // 🔹 Group by OPD untuk bentuk ViewModel
                 var groupByOpd = combined
                     .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
                     .Select(g => new
                     {
                         g.Key.KodeOpd,
                         g.Key.NamaOpd,
-                        Target = g.Sum(y => y.Target),
-                        RealisasiNow = g.Sum(y => y.RealisasiNow),
-                        RealisasiMinSatu = g.Sum(y => y.RealisasiMinSatu),
-                        Subs = g.ToList()
+                        Target = g.Sum(q => q.Target),
+                        RealisasiNow = g.Sum(q => q.RealisasiNow),
+                        RealisasiMinSatu = g.Sum(q => q.RealisasiMinSatu),
+                        SubRincians = g.OrderBy(x => x.SubRincian).ToList()
                     })
                     .OrderBy(x => x.KodeOpd)
                     .ToList();
 
-
-                // 6) MAPPING VIEWMODEL
-
-                decimal totalTarget = 0, totalNow = 0, totalPrev = 0;
+                decimal totalTarget = 0;
+                decimal totalNow = 0;
+                decimal totalPrev = 0;
 
                 foreach (var opd in groupByOpd)
                 {
-                    var vm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
-                    vm.Col.Kode = opd.KodeOpd;
-                    vm.Col.Nama = opd.NamaOpd;
-                    vm.Col.Bulan = new DateTime(yearNow, month, 1)
-                        .ToString("MMMM", new CultureInfo("id-ID"));
-                    vm.Col.Target = opd.Target;
-                    vm.Col.RealisasiNow = opd.RealisasiNow;
-                    vm.Col.RealisasiMinSatu = opd.RealisasiMinSatu;
-                    vm.Col.Selisih = opd.RealisasiNow - opd.RealisasiMinSatu;
-                    vm.Col.Persentase = opd.Target > 0
+                    var opdVm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
+                    opdVm.Col.Kode = opd.KodeOpd;
+                    opdVm.Col.Bulan = new DateTime(DateTime.Now.Year, month, 1).ToString("MMMM", new CultureInfo("id-ID"));
+                    opdVm.Col.Nama = opd.NamaOpd;
+                    opdVm.Col.Target = opd.Target;
+                    opdVm.Col.RealisasiNow = opd.RealisasiNow;
+                    opdVm.Col.RealisasiMinSatu = opd.RealisasiMinSatu;
+                    opdVm.Col.Selisih = opd.RealisasiNow - opd.RealisasiMinSatu;
+                    opdVm.Col.Persentase = opd.Target > 0
                         ? Math.Round((opd.RealisasiNow / opd.Target) * 100, 2)
                         : 0;
 
@@ -479,43 +281,212 @@ namespace MonPDReborn.Models.AktivitasOP
                     totalNow += opd.RealisasiNow;
                     totalPrev += opd.RealisasiMinSatu;
 
-                    foreach (var s in opd.Subs)
+                    // 🔹 Tambahkan daftar SubRincian
+                    foreach (var sub in opd.SubRincians)
                     {
                         var subVm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
-                        subVm.Col.Kode = s.SubRincian;
-                        subVm.Col.Nama = s.NamaSubRincian;
-                        subVm.Col.Target = s.Target;
-                        subVm.Col.RealisasiNow = s.RealisasiNow;
-                        subVm.Col.RealisasiMinSatu = s.RealisasiMinSatu;
-                        subVm.Col.Selisih = s.RealisasiNow - s.RealisasiMinSatu;
-                        subVm.Col.Persentase = s.Target > 0
-                            ? Math.Round((s.RealisasiNow / s.Target) * 100, 2)
+                        subVm.Col.Kode = sub.SubRincian;
+                        subVm.Col.Nama = sub.NamaSubRincian;
+                        subVm.Col.Target = sub.Target;
+                        subVm.Col.RealisasiNow = sub.RealisasiNow;
+                        subVm.Col.RealisasiMinSatu = sub.RealisasiMinSatu;
+                        subVm.Col.Selisih = sub.RealisasiNow - sub.RealisasiMinSatu;
+                        subVm.Col.Persentase = sub.Target > 0
+                            ? Math.Round((sub.RealisasiNow / sub.Target) * 100, 2)
                             : 0;
 
-                        vm.RekSubRincians.Add(subVm);
+                        opdVm.RekSubRincians.Add(subVm);
                     }
 
-                    result.Add(vm);
+                    result.Add(opdVm);
                 }
 
-                // 7) ROW TOTAL
-
-                var totalRow = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
-                totalRow.Col.Kode = "";
-                totalRow.Col.Nama = $"TOTAL SEMUA OPD (JANUARI - {new DateTime(1, month, 1):MMMM})";
-                totalRow.Col.Target = totalTarget;
-                totalRow.Col.RealisasiNow = totalNow;
-                totalRow.Col.RealisasiMinSatu = totalPrev;
-                totalRow.Col.Selisih = totalNow - totalPrev;
-                totalRow.Col.Persentase = totalTarget > 0
+                // 🔹 Tambahkan total akhir
+                var total = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
+                total.Col.Kode = "";
+                total.Col.Nama = $"TOTAL SEMUA OPD ({new DateTime(1, month, 1):MMMM})";
+                total.Col.Target = totalTarget;
+                total.Col.RealisasiNow = totalNow;
+                total.Col.RealisasiMinSatu = totalPrev;
+                total.Col.Selisih = totalNow - totalPrev;
+                total.Col.Persentase = totalTarget > 0
                     ? Math.Round((totalNow / totalTarget) * 100, 2)
                     : 0;
 
-                result.Insert(0, totalRow);
+                result.Insert(0, total);
+
+                return result;
+            }
+            public static List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd> GetSudutPandangRekeningJenisObjekOpdDataAkumulasi(int month)
+            {
+                var result = new List<ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd>();
+                var context = DBClass.GetContext();
+                var planningContext = DBClass.GetEPlanningContext();
+
+                var yearNow = DateTime.Now.Year;
+                var yearMines = yearNow - 1;
+
+                // 🔹 Ambil DbPendapatanDaerah dari bulan 1 sampai bulan yang dipilih
+                var dbData = context.DbPendapatanDaerahs
+                    .Where(x =>
+                        (x.TahunBuku == yearNow && x.Bulan <= month && x.Kelompok != "4.2" && x.Jenis != "4.1.03") ||
+                        (x.TahunBuku == yearMines && x.Bulan <= month))
+                    .Select(x => new PendapatanTemp
+                    {
+                        KodeOpd = x.KodeOpd,
+                        NamaOpd = x.NamaOpd,
+                        SubRincian = x.SubRincian,
+                        NamaSubRincian = x.NamaSubRincian,
+                        TahunBuku = x.TahunBuku,
+                        Target = x.Target,
+                        Realisasi = x.Realisasi
+                    })
+                    .ToList();
+
+                // 🔹 Ambil input manual untuk bulan 1 sampai bulan yang dipilih
+                var manualData = planningContext.TInputManuals
+                    .Where(x => x.Tanggal.Year == yearNow && x.Tanggal.Month <= month)
+                    .Select(x => new PendapatanTemp
+                    {
+                        KodeOpd = x.KodeOpd,
+                        NamaOpd = x.NamaOpd,
+                        SubRincian = x.SubRincian,
+                        NamaSubRincian = x.NamaSubRincian,
+                        TahunBuku = x.Tanggal.Year,
+                        Target = 0m,
+                        Realisasi = x.Realisasi ?? 0
+                    })
+                    .ToList();
+
+                // 🔹 Gabungkan semua data
+                var allData = dbData.Concat(manualData).ToList();
+
+                // 🔹 Group by untuk menghitung Target & Realisasi per tahun
+                var rawData = allData
+                    .GroupBy(x => new
+                    {
+                        x.KodeOpd,
+                        x.NamaOpd,
+                        x.SubRincian,
+                        x.NamaSubRincian,
+                        x.TahunBuku
+                    })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.SubRincian,
+                        g.Key.NamaSubRincian,
+                        g.Key.TahunBuku,
+                        Target = g.Sum(y => y.Target),
+                        Realisasi = g.Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
+                // 🔹 Gabungkan data tahun ini dan tahun sebelumnya per OPD/SubRincian
+                var combined = rawData
+                    .GroupBy(x => new
+                    {
+                        x.KodeOpd,
+                        x.NamaOpd,
+                        x.SubRincian,
+                        x.NamaSubRincian
+                    })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        g.Key.SubRincian,
+                        g.Key.NamaSubRincian,
+                        Target = g.Where(y => y.TahunBuku == yearNow).Sum(y => y.Target),
+                        RealisasiNow = g.Where(y => y.TahunBuku == yearNow).Sum(y => y.Realisasi),
+                        RealisasiMinSatu = g.Where(y => y.TahunBuku == yearMines).Sum(y => y.Realisasi)
+                    })
+                    .ToList();
+
+                // 🔹 Group by OPD untuk bentuk ViewModel
+                var groupByOpd = combined
+                    .GroupBy(x => new { x.KodeOpd, x.NamaOpd })
+                    .Select(g => new
+                    {
+                        g.Key.KodeOpd,
+                        g.Key.NamaOpd,
+                        Target = g.Sum(q => q.Target),
+                        RealisasiNow = g.Sum(q => q.RealisasiNow),
+                        RealisasiMinSatu = g.Sum(q => q.RealisasiMinSatu),
+                        SubRincians = g.OrderBy(x => x.SubRincian).ToList()
+                    })
+                    .OrderBy(x => x.KodeOpd)
+                    .ToList();
+
+                decimal totalTarget = 0;
+                decimal totalNow = 0;
+                decimal totalPrev = 0;
+
+                foreach (var opd in groupByOpd)
+                {
+                    var opdVm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
+                    opdVm.Col.Kode = opd.KodeOpd;
+                    opdVm.Col.Bulan = new DateTime(DateTime.Now.Year, month, 1).ToString("MMMM", new CultureInfo("id-ID"));
+                    opdVm.Col.Nama = opd.NamaOpd;
+                    opdVm.Col.Target = opd.Target;
+                    opdVm.Col.RealisasiNow = opd.RealisasiNow;
+                    opdVm.Col.RealisasiMinSatu = opd.RealisasiMinSatu;
+                    opdVm.Col.Selisih = opd.RealisasiNow - opd.RealisasiMinSatu;
+                    opdVm.Col.Persentase = opd.Target > 0
+                        ? Math.Round((opd.RealisasiNow / opd.Target) * 100, 2)
+                        : 0;
+
+                    totalTarget += opd.Target;
+                    totalNow += opd.RealisasiNow;
+                    totalPrev += opd.RealisasiMinSatu;
+
+                    foreach (var sub in opd.SubRincians)
+                    {
+                        var subVm = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.SubRincian();
+                        subVm.Col.Kode = sub.SubRincian;
+                        subVm.Col.Nama = sub.NamaSubRincian;
+                        subVm.Col.Target = sub.Target;
+                        subVm.Col.RealisasiNow = sub.RealisasiNow;
+                        subVm.Col.RealisasiMinSatu = sub.RealisasiMinSatu;
+                        subVm.Col.Selisih = sub.RealisasiNow - sub.RealisasiMinSatu;
+                        subVm.Col.Persentase = sub.Target > 0
+                            ? Math.Round((sub.RealisasiNow / sub.Target) * 100, 2)
+                            : 0;
+
+                        opdVm.RekSubRincians.Add(subVm);
+                    }
+
+                    result.Add(opdVm);
+                }
+
+                // 🔹 Tambahkan total akhir
+                var total = new ViewModels.ShowSeriesSudutPandangRekeningJenisObjekOpd.Opd();
+                total.Col.Kode = "";
+                total.Col.Nama = $"TOTAL SEMUA OPD (JANUARI - {new DateTime(1, month, 1):MMMM})";
+                total.Col.Target = totalTarget;
+                total.Col.RealisasiNow = totalNow;
+                total.Col.RealisasiMinSatu = totalPrev;
+                total.Col.Selisih = totalNow - totalPrev;
+                total.Col.Persentase = totalTarget > 0
+                    ? Math.Round((totalNow / totalTarget) * 100, 2)
+                    : 0;
+
+                result.Insert(0, total);
 
                 return result;
             }
 
+        }
+        public class PendapatanTemp
+        {
+            public string KodeOpd { get; set; }
+            public string NamaOpd { get; set; }
+            public string SubRincian { get; set; }
+            public string NamaSubRincian { get; set; }
+            public decimal TahunBuku { get; set; }
+            public decimal Target { get; set; }
+            public decimal Realisasi { get; set; }
         }
     }
 }
