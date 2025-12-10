@@ -631,7 +631,7 @@ namespace MonPDReborn.Models
                 var context = DBClass.GetContext();
                 var currentYear = DateTime.Now.Year;
                 // Target
-                var dataTargetMamin = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
+                //var dataTargetMamin = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.MakananMinuman).Sum(x => x.Target);
                 var dataTargetHotel = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaPerhotelan).Sum(x => x.Target);
                 var dataTargetHiburan = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaKesenianHiburan).Sum(x => x.Target);
                 var dataTargetParkir = context.DbAkunTargets.Where(x => x.TahunBuku == currentYear && x.PajakId == (int)EnumFactory.EPajak.JasaParkir).Sum(x => x.Target);
@@ -657,7 +657,7 @@ namespace MonPDReborn.Models
                 var dataRealisasiOpsenBbnkb = context.DbMonOpsenBbnkbs.Where(x => x.TglSspd.Year == currentYear).Sum(x => x.JmlPokok);
 
                 // Total keseluruhan
-                decimal TotalTarget = dataTargetMamin + dataTargetHotel + dataTargetHiburan + dataTargetParkir + dataTargetListrik + dataTargetReklame
+                decimal TotalTarget =  dataTargetHotel + dataTargetHiburan + dataTargetParkir + dataTargetListrik + dataTargetReklame
                                     + dataTargetPbb + dataTargetBphtb + dataTargetAbt + dataTargetOpsenPkb + dataTargetOpsenBbnkb;
 
                 decimal TotalRealisasi = dataRealisasiMamin + dataRealisasiHotel + dataRealisasiHiburan + dataRealisasiParkir + dataRealisasiListrik + dataRealisasiReklame
@@ -695,10 +695,10 @@ namespace MonPDReborn.Models
                     TotalPersentase = Math.Round(TotalPersentase, 2),
                     TotalJumlahOp = 0,
 
-                    TargetMamin = dataTargetMamin,
-                    RealisasiMamin = dataRealisasiMamin,
-                    PersentaseMamin = dataTargetMamin != 0 ? Math.Round((dataRealisasiMamin / dataTargetMamin) * 100, 2) : 0,
-                    JumlahOpMamin = OpRestoAkhir,
+                    //TargetMamin = dataTargetMamin,
+                    //RealisasiMamin = dataRealisasiMamin,
+                    //PersentaseMamin = dataTargetMamin != 0 ? Math.Round((dataRealisasiMamin / dataTargetMamin) * 100, 2) : 0,
+                    //JumlahOpMamin = OpRestoAkhir,
 
                     TargetHotel = dataTargetHotel,
                     RealisasiHotel = dataRealisasiHotel,
@@ -3428,34 +3428,34 @@ namespace MonPDReborn.Models
                     var resKel = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Kelompok();
                     resKel.Col.Kode = kel.Kelompok;
                     resKel.Col.Nama = kel.NamaKelompok;
-                    resKel.Col.AkpTahun = kel.AkpTahun;
-                    resKel.Col.RealisasiHariAccrual = kel.RealisasiHariAccrual;
-                    resKel.Col.RealisasiSDHariAccrual = kel.RealisasiSDHariAccrual;
-                    resKel.Col.PersenAccrual = kel.AkpTahun > 0 ? Math.Round((kel.RealisasiSDHariAccrual / kel.AkpTahun) * 100, 2) : 0;
+                    resKel.Col.AkpTahun = 0;
+                    resKel.Col.RealisasiHariAccrual = 0;
+                    resKel.Col.RealisasiSDHariAccrual = 0;
+                    resKel.Col.PersenAccrual = 0;
 
-                    totalAkp += kel.AkpTahun;
-                    totalHari += kel.RealisasiHariAccrual;
-                    totalSd += kel.RealisasiSDHariAccrual;
+                    totalAkp += 0;
+                    totalHari += 0;
+                    totalSd += 0;
 
                     foreach (var jen in kel.JenisList)
                     {
                         var resJen = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Jenis();
                         resJen.Col.Kode = jen.Jenis;
                         resJen.Col.Nama = jen.NamaJenis;
-                        resJen.Col.AkpTahun = jen.AkpTahun;
-                        resJen.Col.RealisasiHariAccrual = jen.RealisasiHariAccrual;
-                        resJen.Col.RealisasiSDHariAccrual = jen.RealisasiSDHariAccrual;
-                        resJen.Col.PersenAccrual = jen.AkpTahun > 0 ? Math.Round((jen.RealisasiSDHariAccrual / jen.AkpTahun) * 100, 2) : 0;
+                        resJen.Col.AkpTahun = 0;
+                        resJen.Col.RealisasiHariAccrual = 0;
+                        resJen.Col.RealisasiSDHariAccrual = 0;
+                        resJen.Col.PersenAccrual = 0;
 
                         foreach (var obj in jen.ObjekList)
                         {
                             var resObj = new ViewModel.ShowSeriesSudutPandangRekeningJenisObjekOpd.Obyek();
                             resObj.Col.Kode = obj.Objek;
                             resObj.Col.Nama = obj.NamaObjek;
-                            resObj.Col.AkpTahun = obj.AkpTahun;
-                            resObj.Col.RealisasiHariAccrual = obj.RealisasiHariAccrual;
-                            resObj.Col.RealisasiSDHariAccrual = obj.RealisasiSDHariAccrual;
-                            resObj.Col.PersenAccrual = obj.AkpTahun > 0 ? Math.Round((obj.RealisasiSDHariAccrual / obj.AkpTahun) * 100, 2) : 0;
+                            resObj.Col.AkpTahun = 0;
+                            resObj.Col.RealisasiHariAccrual = 0;
+                            resObj.Col.RealisasiSDHariAccrual = 0;
+                            resObj.Col.PersenAccrual = 0;
 
                             resJen.RekObyeks.Add(resObj);
                         }
